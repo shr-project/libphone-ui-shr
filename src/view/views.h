@@ -1,0 +1,74 @@
+#ifndef _VIEWS_H
+#define _VIEWS_H
+
+#include <dbus/dbus-glib.h>
+#include <glib.h>
+#include <Ecore_Evas.h>
+#include <Ecore.h>
+#include <Edje.h>
+#include <Etk.h>
+#include <stdlib.h>
+#include <assert.h>
+#include "helper.h"
+#include "elm_my_contactlist.h"
+#include "async.h"
+#include "window.h"
+
+#define D_(String) dgettext(PACKAGE, String)
+
+#define CALL_FILE "@DATADIR@/libframeworkd-phonegui-efl/call.edj"
+#define CONTACTS_FILE "@DATADIR@/libframeworkd-phonegui-efl/contacts.edj"
+#define DIALER_FILE "@DATADIR@/libframeworkd-phonegui-efl/dialer.edj"
+#define DIALOG_FILE "@DATADIR@/libframeworkd-phonegui-efl/dialog.edj"
+//#define INCOMING_MESSAGE_FILE "@DATADIR@/libframeworkd-phonegui-efl/incoming-message.edj"
+#define KEYPAD_FILE "@DATADIR@/libframeworkd-phonegui-efl/keypad.edj"
+#define MESSAGE_FILE "@DATADIR@/libframeworkd-phonegui-efl/messages.edj"
+#define SIM_AUTH_FILE "@DATADIR@/libframeworkd-phonegui-efl/sim-auth.edj"
+#define USSD_FILE "@DATADIR@/libframeworkd-phonegui-efl/ussd.edj"
+
+#define DELETE_TEXT_ICON "@DATADIR@/libframeworkd-phonegui-efl/edit-undo.png"
+
+void *dialer_view_show(struct Window *win, void *_options);
+void dialer_view_hide(void *_data);
+
+void *dialog_view_show(struct Window *win, void *_options);
+void dialog_view_hide(void *_data);
+
+void *message_new_view_show(struct Window *win, void *_options);
+void message_new_view_hide(void *_data);
+
+void *message_folder_view_show(struct Window *win, void *_options);
+void message_folder_view_hide(void *_data);
+
+void *message_show_view_show(struct Window *win, void *_options);
+void message_show_view_hide(void *_data);
+
+void *message_delete_view_show(struct Window *win, void *_options);
+void message_delete_view_hide(void *_data);
+
+void *message_list_view_show(struct Window *win, void *_options);
+void message_list_view_hide(void *_data);
+
+void *sim_auth_input_view_show(struct Window *win, void *_options);
+void sim_auth_input_view_hide(void *_data);
+
+void *call_incoming_view_show(struct Window *win, void *_options);
+void call_incoming_view_hide(void *_data);
+
+void *call_active_view_show(struct Window *win, void *_options);
+void call_active_view_hide(void *_data);
+
+void *contact_list_view_show(struct Window *win, void *_options);
+void contact_list_view_hide(void *_data);
+
+void *contact_edit_view_show(struct Window *win, void *_options);
+void contact_edit_view_hide(void *_data);
+
+void *contact_delete_view_show(struct Window *win, void *_options);
+void contact_delete_view_hide(void *_data);
+
+void *ussd_view_show(struct Window *win, void *_options);
+void ussd_view_hide(void *_data);
+
+#endif
+
