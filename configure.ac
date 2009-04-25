@@ -44,12 +44,12 @@ AC_ARG_WITH(edje-cc,
 ])
 AC_SUBST(edje_cc)
 
-#EXPAND(DATADIR, $datadir)
-#
-#ALL_LINGUAS="fi pl"
-#AC_SUBST(ALL_LINGUAS)
-#AM_GNU_GETTEXT([external])
-#AM_GNU_GETTEXT_VERSION([0.12.1])
+AC_SUBST(DATADIR, $datadir)
+
+ALL_LINGUAS="ar ca de es fi pl ru"
+AC_SUBST(ALL_LINGUAS)
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.12.1])
 
 # output stuff
 AC_OUTPUT([

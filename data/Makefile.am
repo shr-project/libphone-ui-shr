@@ -1,6 +1,6 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-filesdir = $(datadir)/libframeworkd-phonegui-efl/
+filesdir = $(datadir)/libframeworkd-phonegui-efl2/
 files_DATA = sim-auth.edj dialer.edj messages.edj contacts.edj incoming-message.edj keypad.edj call.edj dialog.edj ussd.edj \
              elm-resizing-label.edj \
              edit-undo.png
