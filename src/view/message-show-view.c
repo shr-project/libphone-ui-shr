@@ -174,11 +174,9 @@ static void name_callback(GError *error, char *name, void *_data)
 {
     g_debug("name callbacking...");
     if (error == NULL && *name) {
-
         struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
         data->name = strdup(name);
         async_trigger(name_callback2, data);
-        g_hash_table_destroy(data->query);
     }
 }
 
@@ -204,8 +202,8 @@ static void retrieve_callback(GError *error, char *status, char *number, char *c
 
     g_debug("number = %s --> querying name...", number);
     GValue *value = g_slice_alloc0(sizeof(GValue));
-	g_value_init(value, G_TYPE_STRING);
-	g_value_set_string(value, data->number);
+    g_value_init(value, G_TYPE_STRING);
+    g_value_set_string(value, data->number);
     g_hash_table_insert(data->query, "Phone", value);
     opimd_contacts_get_single_contact_single_field(data->query, "Name", name_callback, data);
 
