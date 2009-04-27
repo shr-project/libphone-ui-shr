@@ -1,4 +1,3 @@
-
 #include "views.h"
 
 
@@ -20,51 +19,44 @@ static void frame_dialer_exit_clicked(void *_data, Evas_Object *obj, void *event
 static void frame_dialer_save_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void frame_dialer_message_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void frame_dialer_delete_mouse_down(void *_data, Evas_Object *o, const char *emission, const char *source);
-static void frame_dialer_delete(void *_data, Evas_Object *o, void *event_info);
+static void frame_dialer_delete(void *_data, Evas_Object *o, const char *emission, const char *source);
 static void frame_dialer_number_clicked(void *_data, Evas_Object *o, const char *emission, const char *source);
 static int frame_dialer_number_clear(void *_data);
-static void frame_dialer_number_update(struct DialerViewData *data);
-static void frame_dialer_initiate_callback(GError *error, int call_id, void *_data);
-static void frame_dialer_initiate_callback2(struct DialerViewData *data);
+static void frame_dialer_number_update(void *_data);
+static void frame_dialer_initiate_callback(GError *error, int call_id, void *userdata);
+static void frame_dialer_initiate_callback2(void *_data);
 
 
-/* --- dialer view ---------------------------------------------------------------- */
 
-void *dialer_view_show(struct Window *win, void *_options)
-{
-    g_debug("dialer_view_show()");
-
+void *dialer_view_show(struct Window *win, void *_options) {
+    GHashTable *options = (GHashTable *)_options;
     struct DialerViewData *data = g_slice_alloc0(sizeof(struct DialerViewData));
-
     data->win = win;
     data->number[0] = '\0';
     data->delete_timer = NULL;
 
     window_frame_show(win, data, frame_dialer_show, frame_dialer_hide);
     window_show(win);
-
     return data;
 }
 
-void dialer_view_hide(void *data)
-{
-    g_slice_free(struct DialerViewData, data);
+void dialer_view_hide(void *_data) {
+    g_slice_free(struct DialerViewData, _data);
 }
 
 
-/* --- frame "dialer" ------------------------------------------------------------- */
+/*
+ * Frame "dialer"
+ */
 
-static void frame_dialer_show(void *_data)
-{
+static void frame_dialer_show(void *_data) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
     struct Window *win = data->win;
-
-    g_debug("frame_dialer_show()");
-
     window_layout_set(win, DIALER_FILE, "main");
     
-    data->text_number = elm_resizing_label_add( window_evas_object_get(win) );
-    elm_resizing_label_label_set( data->text_number,  "");
+    data->text_number = elm_label_add( window_evas_object_get(win) );
+    elm_label_label_set( data->text_number,  "");
+    evas_object_size_hint_align_set(data->text_number, 0.0, 0.5);
     window_swallow(win, "text_number", data->text_number);
     evas_object_show(data->text_number);
 
@@ -86,7 +78,7 @@ static void frame_dialer_show(void *_data)
     evas_object_show(data->delete_text_icon);
     
 
-    data->keypad = elm_keypad_add(window_evas_object_get(win));
+    data->keypad = (Evas_Object *)elm_keypad_add(window_evas_object_get(win));
     evas_object_smart_callback_add(data->keypad, "clicked", frame_dialer_keypad_clicked, data);
     window_swallow(win, "keypad", data->keypad);
     evas_object_show(data->keypad);
@@ -111,7 +103,7 @@ static void frame_dialer_show(void *_data)
 
     edje_object_signal_callback_add(window_layout_get(win), "click", "number", frame_dialer_number_clicked, data);
     edje_object_signal_callback_add(window_layout_get(win), "mouse_down", "delete", frame_dialer_delete_mouse_down, data);
-    
+
     /* Options */
     data->hv = elm_hover_add(window_evas_object_get(win));
     elm_hover_parent_set(data->hv, window_evas_object_get(win));
@@ -139,11 +131,9 @@ static void frame_dialer_show(void *_data)
     elm_hover_content_set(data->hv, "top", data->bx);
 }
 
-static void frame_dialer_hide(void *_data)
-{
+static void frame_dialer_hide(void *_data) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
-
-    g_debug("frame_dialer_hide()");
+    struct Window *win = data->win;
 
     evas_object_smart_callback_del(data->keypad, "clicked", frame_dialer_keypad_clicked);
     evas_object_del(data->keypad);
@@ -159,22 +149,18 @@ static void frame_dialer_hide(void *_data)
     evas_object_del(data->delete_text_button);
 }
 
-static void frame_dialer_options_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
+static void frame_dialer_options_clicked(void *_data, Evas_Object *obj, void *event_info) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
     evas_object_show(data->hv);
 }
 
-static void frame_dialer_exit_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
+static void frame_dialer_exit_clicked(void *_data, Evas_Object *obj, void *event_info) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
     window_destroy(data->win, NULL);
 }
 
-static void frame_dialer_save_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
+static void frame_dialer_save_clicked(void *_data, Evas_Object *obj, void *event_info) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
-
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "number", data->number);
 
@@ -185,14 +171,16 @@ static void frame_dialer_save_clicked(void *_data, Evas_Object *obj, void *event
     window_destroy(data->win, NULL);
 }
 
-static void frame_dialer_call_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
+static void frame_dialer_call_clicked(void *_data, Evas_Object *obj, void *event_info) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
-
     if(strlen(data->number)) {
         if((data->number[strlen(data->number)-1] == '#') || (strlen(data->number) <= 2)) {
             g_debug("USSD Request");
             ogsmd_network_send_ussd_request(data->number, NULL, NULL);
+            //Clean number in dialer
+            data->number[0] = '\0';
+            frame_dialer_number_update(data);
+            edje_object_signal_emit(window_layout_get(data->win), "number_empty", "elm");
         } else {
             g_debug("Initiate Call");
             ogsmd_call_initiate(data->number, "voice", frame_dialer_initiate_callback, data);
@@ -200,10 +188,8 @@ static void frame_dialer_call_clicked(void *_data, Evas_Object *obj, void *event
     }
 }
 
-static void frame_dialer_message_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
+static void frame_dialer_message_clicked(void *_data, Evas_Object *obj, void *event_info) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
-
     GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(options, "recipient", data->number);
 
@@ -214,10 +200,8 @@ static void frame_dialer_message_clicked(void *_data, Evas_Object *obj, void *ev
     window_destroy(data->win, NULL);
 }
 
-static void frame_dialer_keypad_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
+static void frame_dialer_keypad_clicked(void *_data, Evas_Object *obj, void *event_info) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
-
     char input = ((char *)event_info)[0];
     int length = strlen( data->number );
     
@@ -235,11 +219,9 @@ static void frame_dialer_keypad_clicked(void *_data, Evas_Object *obj, void *eve
     }
 }
 
-static void frame_dialer_delete(void *_data, Evas_Object *o, void *event_info)
-{
+static void frame_dialer_delete(void *_data, Evas_Object *o, const char *emission, const char *source) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
-
-    int length = strlen(data->number);
+    int length = strlen( data->number);
     
     if(data->delete_timer != NULL) {
         ecore_timer_del(data->delete_timer);
@@ -258,19 +240,16 @@ static void frame_dialer_delete(void *_data, Evas_Object *o, void *event_info)
     }
 }
 
-static void frame_dialer_delete_mouse_down(void *_data, Evas_Object *o, const char *emission, const char *source)
-{
-    struct DialerViewData *data = (struct DialerViewData *)_data;
 
+static void frame_dialer_delete_mouse_down(void *_data, Evas_Object *o, const char *emission, const char *source) {
+    struct DialerViewData *data = (struct DialerViewData *)_data;
     if(data->delete_timer == NULL) {
         data->delete_timer = ecore_timer_add(0.5, frame_dialer_number_clear, data);
     }
 }
 
-static void frame_dialer_number_clicked(void *_data, Evas_Object *o, const char *emission, const char *source)
-{
+static void frame_dialer_number_clicked(void *_data, Evas_Object *o, const char *emission, const char *source) {
     struct DialerViewData *data = (struct DialerViewData *)_data;
-
     if(!strlen(data->number)) {
         struct Window *win = window_new(D_("Contacts"));
         window_init(win);
@@ -280,35 +259,67 @@ static void frame_dialer_number_clicked(void *_data, Evas_Object *o, const char 
     }
 }
 
-static void frame_dialer_number_update(struct DialerViewData *data)
-{
-    elm_resizing_label_label_set(data->text_number,  data->number);
+static void frame_dialer_number_update(void *_data) {
+    struct DialerViewData *data = (struct DialerViewData *)_data;
+    int length = strlen( data->number );
+    char *number = data->number;
+    static char tmp[73];
+
+    if (length < 7)
+        elm_object_scale_set( data->text_number, 4.0 );
+    else if (length < 9)
+        elm_object_scale_set( data->text_number, 3.0 );
+    else if (length < 24) {
+        elm_object_scale_set( data->text_number, 2.0 );
+        if (length > 12) {
+            tmp[0] = 0;
+            strncat(tmp, number, 12);
+            strcat(tmp, "<br>");
+            strcat(tmp, number+12);
+            number = tmp;
+        }
+    } else {
+        elm_object_scale_set( data->text_number, 1.0 );
+        if (length > 52) {
+            tmp[0] = 0;
+            strncat(tmp, number, 26);
+            strcat(tmp, "<br>");
+            strncat(tmp, number+26, 26);
+            strcat(tmp, "<br>");
+            strcat(tmp, number+52);
+            number = tmp;
+        } else if (length > 26) {
+            tmp[0] = 0;
+            strncat(tmp, number, 26);
+            strcat(tmp, "<br>");
+            strcat(tmp, number+26);
+            number = tmp;
+        }
+    }
+
+    elm_label_label_set( data->text_number, number );
 }
 
-static int frame_dialer_number_clear(void *_data)
-{
-    struct DialerViewData *data = (struct DialerViewData *)_data;
 
+static int frame_dialer_number_clear(void *_data) {
+    struct DialerViewData *data = (struct DialerViewData *)_data;
     if(data->delete_timer != NULL) {
         data->delete_timer = NULL;
 
         data->number[0] = '\0';
         frame_dialer_number_update(data);
 
-        g_debug("emitting 'number_empty' signal");
         edje_object_signal_emit(window_layout_get(data->win), "number_empty", "elm");
     }
     return (0);
 }
 
-static void frame_dialer_initiate_callback(GError *error, int call_id, void *_data)
-{
-    struct DialerViewData *data = (struct DialerViewData *)_data;
-    async_trigger(frame_dialer_initiate_callback2, data);
+static void frame_dialer_initiate_callback(GError *error, int call_id, void *userdata) {
+    async_trigger(frame_dialer_initiate_callback2, userdata);
 }
 
-static void frame_dialer_initiate_callback2(struct DialerViewData *data)
-{
+static void frame_dialer_initiate_callback2(void *_data) {
+    struct DialerViewData *data = (struct DialerViewData *)_data;
     window_destroy(data->win, NULL);
 }
 

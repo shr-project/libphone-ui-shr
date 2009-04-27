@@ -3,6 +3,5 @@
 
 #define CONTACTS_FILE "@DATADIR@/libframeworkd-phonegui-efl/contacts.edj"
 #define KEYPAD_FILE "@DATADIR@/libframeworkd-phonegui-efl/keypad.edj"
-#define ELM_RESIZING_LABEL "@DATADIR@/libframeworkd-phonegui-efl/elm-resizing-label.edj"
 
 #endif
