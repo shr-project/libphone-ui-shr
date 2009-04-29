@@ -5,7 +5,7 @@
 
 struct ContactDeleteViewData {
     struct Window *win;
-    int id;
+    char *path;
     void (*callback)();
     void *callback_data;
     Evas_Object *bt_yes, *bt_no, *info_label;
@@ -36,9 +36,9 @@ void *contact_delete_view_show(struct Window *win, void *_options)
     data->win = win;
 
     if(options == NULL) {
-        g_error("At least option[id] must be set.");
-    } else {
-        data->id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
+        g_error("At least option[path] must be set.");
+    } else {  
+        data->path = g_hash_table_lookup(options, "id");
         data->callback = g_hash_table_lookup(options, "delete_callback"); 
         data->callback_data = g_hash_table_lookup(options, "delete_callback_data"); 
     }
@@ -112,7 +112,7 @@ static void frame_delete_yes_clicked(void *userdata, Evas_Object *obj, void *eve
 
     window_frame_show(data->win, data, frame_deleting_show, NULL);
 
-    ogsmd_sim_delete_entry("contacts", data->id, delete_callback, data);
+	 opimd_contact_delete(data->path);
 }
 
 

@@ -218,7 +218,7 @@ static void frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event
     GHashTable *properties = elm_my_contactlist_selected_row_get(data->list);
     if(properties != NULL) {
         GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-        g_hash_table_insert(options, "id", g_hash_table_lookup(properties, "id"));
+        g_hash_table_insert(options, "path", g_hash_table_lookup(properties, "path"));
         g_hash_table_insert(options, "delete_callback", frame_list_refresh);
         g_hash_table_insert(options, "delete_callback_data", data);
 
