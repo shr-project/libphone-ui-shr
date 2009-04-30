@@ -38,7 +38,7 @@ void *contact_delete_view_show(struct Window *win, void *_options)
     if(options == NULL) {
         g_error("At least option[path] must be set.");
     } else {  
-        data->path = g_hash_table_lookup(options, "id");
+        data->path = g_hash_table_lookup(options, "path");
         data->callback = g_hash_table_lookup(options, "delete_callback"); 
         data->callback_data = g_hash_table_lookup(options, "delete_callback_data"); 
     }
@@ -108,7 +108,7 @@ static void frame_delete_yes_clicked(void *userdata, Evas_Object *obj, void *eve
 {
     struct ContactDeleteViewData *data = (struct ContactDeleteViewData *) userdata;
 
-    g_debug("frame_delte_yes_clicked()");
+    g_debug("frame_delete_yes_clicked() --> deleting contact '%s'", data->path);
 
     window_frame_show(data->win, data, frame_deleting_show, NULL);
 
