@@ -208,7 +208,7 @@ static void frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_i
     window_frame_show(data->win, data, frame_loading_show, frame_loading_hide);
 
     if (data->path) {
-        // TODO: when opimd knows saving...
+        opimd_contact_update(data->path, contact_data, frame_edit_save_callback, data);
     }
     else {
         opimd_contacts_add(contact_data, frame_edit_save_callback, data);
