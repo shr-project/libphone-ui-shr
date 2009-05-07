@@ -26,7 +26,8 @@ static void frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_i
 static void frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info);
 static char* frame_edit_value_get(Evas_Object *entry);
 static gboolean frame_edit_needs_saving(struct ContactEditViewData *data);
-static void frame_edit_save_callback(GError *error, char *path, void *_data);
+static void frame_edit_save_new_callback(GError *error, char *path, void *_data);
+static void frame_edit_save_update_callback(GError *error, void *_data);
 static void frame_edit_save_callback2(struct ContactEditViewData *data);
 
 static void frame_close_show(void *_data);
@@ -82,9 +83,11 @@ void contact_edit_view_hide(void *_data)
     g_debug("contact_edit_view_hide()");
 
     if(data->saved && data->callback != NULL) {
+        g_debug("calling data->callback...");
         data->callback(data->callback_data);
     }
 
+    g_debug("deleting ContactEditViewData");
     g_slice_free(struct ContactEditViewData, _data);
 }
 
@@ -208,10 +211,10 @@ static void frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_i
     window_frame_show(data->win, data, frame_loading_show, frame_loading_hide);
 
     if (data->path) {
-        opimd_contact_update(data->path, contact_data, frame_edit_save_callback, data);
+        opimd_contact_update(data->path, contact_data, frame_edit_save_update_callback, data);
     }
     else {
-        opimd_contacts_add(contact_data, frame_edit_save_callback, data);
+        opimd_contacts_add(contact_data, frame_edit_save_new_callback, data);
     }
 
     data->saved = TRUE;
@@ -223,15 +226,19 @@ static void frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_i
 }
 
 
-static void frame_edit_save_callback(GError *error, char *path, void *_data)
+static void frame_edit_save_new_callback(GError *error, char *path, void *_data)
 {
     struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
-
-    g_debug("frame_edit_save_callback()");
-
+    g_debug("frame_edit_save_new_callback() --> %s", path);
     async_trigger(frame_edit_save_callback2, data);
 }
 
+static void frame_edit_save_update_callback(GError *error, void *_data)
+{
+    struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
+    g_debug("frame_edit_save_update_callback()");
+    async_trigger(frame_edit_save_callback2, data);
+}
 
 static void frame_edit_save_callback2(struct ContactEditViewData *data)
 {
