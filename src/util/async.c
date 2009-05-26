@@ -4,18 +4,21 @@
 
 static PipeHandler pipe_handler;
 
-void async_init() 
+void 
+async_init(void) 
 {
 	pipe_handler = pipe_create();
 }
 
-int async_fd_input_get()
+int 
+async_fd_input_get(void)
 {
 	return pipe_handler.input;
 }
 
 
-void async_dispatch() 
+void 
+async_dispatch() 
 {
 	PipeMessage *m;
 	while ((m = pipe_read(pipe_handler)) != NULL) {
@@ -25,7 +28,8 @@ void async_dispatch()
 	}
 }
 
-void async_trigger(void (*cb)(), void *userdata) 
+void 
+async_trigger(void (*cb)(), void *userdata) 
 {
 	pipe_write(pipe_handler, cb, userdata);
 }

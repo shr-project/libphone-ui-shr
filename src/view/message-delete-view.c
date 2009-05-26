@@ -12,23 +12,33 @@ struct MessageDeleteViewData {
 };
 
 
-void message_delete_yes_clicked(void *userdata, Evas_Object *obj, void *event_info);
-void message_delete_no_clicked(void *userdata, Evas_Object *obj, void *event_info);
-static void delete_callback(GError *error, gpointer _data);
-static void delete_callback2(struct MessageDeleteViewData *data);
+void 
+message_delete_yes_clicked(void *userdata, Evas_Object *obj, void *event_info);
+void 
+message_delete_no_clicked(void *userdata, Evas_Object *obj, void *event_info);
+static void 
+delete_callback(GError *error, gpointer _data);
+static void 
+delete_callback2(struct MessageDeleteViewData *data);
 
-static void frame_delete_show(void *_data);
-static void frame_delete_hide(void *_data);
-static void frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_delete_show(void *_data);
+static void 
+frame_delete_hide(void *_data);
+static void 
+frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info);
 
-static void frame_deleting_show(void *data);
+static void 
+frame_deleting_show(void *data);
 
 
 
-/* --- message delete view -------------------------------------------------------- */
+/* --- message delete view -------------------------------------------------- */
 
-void *message_delete_view_show(struct Window *win, void *_options)
+void *
+message_delete_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -53,21 +63,24 @@ void *message_delete_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void message_delete_view_hide(void *data)
+void 
+message_delete_view_hide(void *data)
 {
 	g_debug("message_delete_view_hide()");
 
 	g_slice_free(struct MessageDeleteViewData, data);
 }
 
-static void delete_callback(GError *error, gpointer _data)
+static void 
+delete_callback(GError *error, gpointer _data)
 {
 	struct MessageDeleteViewData *data = (struct MessageDeleteViewData *)_data;
 
 	async_trigger(delete_callback2, data);
 }
 
-static void delete_callback2(struct MessageDeleteViewData *data)
+static void 
+delete_callback2(struct MessageDeleteViewData *data)
 {
 	if (data->callback != NULL)
 		data->callback(data->callback_data);
@@ -77,9 +90,10 @@ static void delete_callback2(struct MessageDeleteViewData *data)
 
 
 
-/* --- frame "delete" ------------------------------------------------------------- */
+/* --- frame "delete" ------------------------------------------------------- */
 
-static void frame_delete_show(void *_data)
+static void 
+frame_delete_show(void *_data)
 {
 	struct MessageDeleteViewData *data = (struct MessageDeleteViewData *)_data;
 	struct Window *win = data->win;
@@ -103,7 +117,8 @@ static void frame_delete_show(void *_data)
 	evas_object_show(data->bt_no);
 }
 
-static void frame_delete_hide(void *_data)
+static void 
+frame_delete_hide(void *_data)
 {
 	struct MessageDeleteViewData *data = (struct MessageDeleteViewData *)_data;
 
@@ -113,7 +128,8 @@ static void frame_delete_hide(void *_data)
 	evas_object_del(data->bt_no);
 }
 
-static void frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageDeleteViewData *data = (struct MessageDeleteViewData *)_data;
 
@@ -122,7 +138,8 @@ static void frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_i
 	window_destroy(data->win, NULL);
 }
 
-static void frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageDeleteViewData *data = (struct MessageDeleteViewData *)_data;
 
@@ -135,9 +152,10 @@ static void frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_
 
 
 
-/* --- frame "deleting" ----------------------------------------------------------- */
+/* --- frame "deleting" ----------------------------------------------------- */
 
-static void frame_deleting_show(void *_data)
+static void 
+frame_deleting_show(void *_data)
 {
 	struct MessageDeleteViewData *data = (struct MessageDeleteViewData *)_data;
 	struct Window *win = data->win;

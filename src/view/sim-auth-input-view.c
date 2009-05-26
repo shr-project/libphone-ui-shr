@@ -30,34 +30,56 @@ enum SimAuthModes {
 };
 
 
-void sim_auth_update(struct SimAuthInputViewData *data);
-void sim_auth_clear(struct SimAuthInputViewData *data);
+void 
+sim_auth_update(struct SimAuthInputViewData *data);
+void 
+sim_auth_clear(struct SimAuthInputViewData *data);
 
-void pin_callback(GError* error, gpointer data);
-gboolean pin_wrong_callback(void *_data);
-void puk_callback(GError* error, gpointer data);
-void puk_callback2(struct SimAuthInputViewData *data);
-int pins_different_callback(struct SimAuthInputViewData *data);
-void sim_auth_callback(GError *error, int status, gpointer data);
-int reset_callback(void *data);
+void 
+pin_callback(GError* error, gpointer data);
+gboolean 
+pin_wrong_callback(void *_data);
+void 
+puk_callback(GError* error, gpointer data);
+void 
+puk_callback2(struct SimAuthInputViewData *data);
+int 
+pins_different_callback(struct SimAuthInputViewData *data);
+void 
+sim_auth_callback(GError *error, int status, gpointer data);
+int 
+reset_callback(void *data);
 
-void sim_auth_keypad_clicked(void *_data, Evas_Object *obj, char input);
-void sim_auth_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-void sim_auth_ok_clicked(void *_data, Evas_Object *obj, void *event_info);
+void 
+sim_auth_keypad_clicked(void *_data, Evas_Object *obj, char input);
+void 
+sim_auth_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
+void 
+sim_auth_ok_clicked(void *_data, Evas_Object *obj, void *event_info);
 
-static void frame_input_show(void *data);
-static void frame_input_hide(void *data);
-static void frame_checking_show(void *data);
-static void frame_pins_different_show(void *data);
-static void frame_pin_correct_show(void *data);
-static void frame_pin_wrong_show(void *data);
-static void frame_puk_correct_show(void *data);
-static void frame_puk_wrong_show(void *data);
-static void frame_pin_invalid_length_show(void *data);
+static void 
+frame_input_show(void *data);
+static void 
+frame_input_hide(void *data);
+static void 
+frame_checking_show(void *data);
+static void 
+frame_pins_different_show(void *data);
+static void 
+frame_pin_correct_show(void *data);
+static void 
+frame_pin_wrong_show(void *data);
+static void 
+frame_puk_correct_show(void *data);
+static void 
+frame_puk_wrong_show(void *data);
+static void 
+frame_pin_invalid_length_show(void *data);
 
 
 
-void *sim_auth_input_view_show(struct Window *win, void *_options)
+void *
+sim_auth_input_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -85,7 +107,8 @@ void *sim_auth_input_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void sim_auth_input_view_hide(void *_data)
+void 
+sim_auth_input_view_hide(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -100,7 +123,8 @@ void sim_auth_input_view_hide(void *_data)
 	sleep(1);
 }
 
-void sim_auth_update(struct SimAuthInputViewData *data)
+void 
+sim_auth_update(struct SimAuthInputViewData *data)
 {
 	int length;
 
@@ -120,7 +144,8 @@ void sim_auth_update(struct SimAuthInputViewData *data)
 	window_text_set(data->win, "input_text", data->stars); 
 }
 
-void sim_auth_clear(struct SimAuthInputViewData *data)
+void 
+sim_auth_clear(struct SimAuthInputViewData *data)
 {
 	data->pin[0] = 0;
 	data->pin_length = 0;
@@ -130,7 +155,8 @@ void sim_auth_clear(struct SimAuthInputViewData *data)
 	data->pin_confirm_length = 0;
 }
 
-void pin_callback(GError* error, gpointer _data)
+void 
+pin_callback(GError* error, gpointer _data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -147,13 +173,15 @@ void pin_callback(GError* error, gpointer _data)
 	}
 }
 
-gboolean pin_wrong_callback(void *_data)
+gboolean 
+pin_wrong_callback(void *_data)
 {
 	ogsmd_sim_get_auth_status(sim_auth_callback, _data);
 	return FALSE;
 }
 
-void puk_callback(GError* error, gpointer _data)
+void 
+puk_callback(GError* error, gpointer _data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -169,14 +197,16 @@ void puk_callback(GError* error, gpointer _data)
 	}
 }
 
-void puk_callback2(struct SimAuthInputViewData *data)
+void 
+puk_callback2(struct SimAuthInputViewData *data)
 {
 	g_debug("puk_callback2()");
 	window_frame_show(data->win, data, frame_puk_wrong_show, NULL);
 	ecore_timer_add(2, reset_callback, data);
 }
 
-int reset_callback(void *_data)
+int 
+reset_callback(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -186,7 +216,8 @@ int reset_callback(void *_data)
 	return 0;
 }
 
-void sim_auth_callback(GError *error, int status, gpointer _data)
+void 
+sim_auth_callback(GError *error, int status, gpointer _data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -202,7 +233,8 @@ void sim_auth_callback(GError *error, int status, gpointer _data)
 	async_trigger(reset_callback, _data);
 }
 
-void sim_auth_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
+void 
+sim_auth_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -259,7 +291,8 @@ void sim_auth_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
 	}
 }
 
-void sim_auth_keypad_clicked(void *_data, Evas_Object *obj, char input)
+void 
+sim_auth_keypad_clicked(void *_data, Evas_Object *obj, char input)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 	char *string;
@@ -288,7 +321,8 @@ void sim_auth_keypad_clicked(void *_data, Evas_Object *obj, char input)
 	}
 }
 
-void sim_auth_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
+void 
+sim_auth_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 	char *string;
@@ -314,7 +348,8 @@ void sim_auth_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
 	}
 }
 
-static void frame_input_show(void *_data)
+static void 
+frame_input_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 	struct Window *win = data->win;
@@ -346,7 +381,8 @@ static void frame_input_show(void *_data)
 	evas_object_show(data->keypad);
 }
 
-static void frame_input_hide(void *_data)
+static void 
+frame_input_hide(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 	struct Window *win = data->win;
@@ -359,7 +395,8 @@ static void frame_input_hide(void *_data)
 	evas_object_del(data->keypad);
 }
 
-static void frame_checking_show(void *_data)
+static void 
+frame_checking_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -367,7 +404,8 @@ static void frame_checking_show(void *_data)
 	window_text_set(data->win, "text", D_("Checking"));
 }
 
-static void frame_pin_correct_show(void *_data)
+static void 
+frame_pin_correct_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -375,7 +413,8 @@ static void frame_pin_correct_show(void *_data)
 	window_text_set(data->win, "text", D_("PIN correct"));
 }
 
-static void frame_pin_wrong_show(void *_data)
+static void 
+frame_pin_wrong_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -383,7 +422,8 @@ static void frame_pin_wrong_show(void *_data)
 	window_text_set(data->win, "text", D_("PIN wrong"));
 }
 
-static void frame_pins_different_show(void *_data)
+static void 
+frame_pins_different_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -391,7 +431,8 @@ static void frame_pins_different_show(void *_data)
 	window_text_set(data->win, "text", D_("PIN confirmation wrong"));
 }
 
-static void frame_puk_correct_show(void *_data)
+static void 
+frame_puk_correct_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -399,7 +440,8 @@ static void frame_puk_correct_show(void *_data)
 	window_text_set(data->win, "text", D_("New PIN saved"));
 }
 
-static void frame_puk_wrong_show(void *_data)
+static void 
+frame_puk_wrong_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 
@@ -407,7 +449,8 @@ static void frame_puk_wrong_show(void *_data)
 	window_text_set(data->win, "text", D_("PUK wrong"));
 }
 
-static void frame_pin_invalid_length_show(void *_data)
+static void 
+frame_pin_invalid_length_show(void *_data)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 

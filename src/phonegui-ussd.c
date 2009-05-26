@@ -4,14 +4,24 @@
 #include "async.h"
 #include "views.h"
 
+
 static struct Window *win_ussd = NULL;
 
-static void _show(GHashTable *options);
-static void _hide();
-static void _reset();
 
 
-void phonegui_ussd_show(int mode, const char *message) 
+static void 
+_show(GHashTable *options);
+
+static void 
+_hide();
+
+static void 
+_reset();
+
+
+
+void 
+phonegui_ussd_show(int mode, const char *message) 
 {
 	g_debug("phonegui_ussd_show(mode=%d, message=%s)", mode, message);
 	if (win_ussd == NULL) {
@@ -25,13 +35,21 @@ void phonegui_ussd_show(int mode, const char *message)
 	}
 }
 
-void phonegui_ussd_hide() 
+void 
+phonegui_ussd_hide() 
 {
 	g_debug("phonegui_ussd_hide()");
 	async_trigger(_hide, NULL);
 }
 
-static void _show(GHashTable *options) 
+
+
+
+/* --- EFL thread functions * ----------------------------------------------- */
+
+
+static void 
+_show(GHashTable *options) 
 {
 	g_debug("_show()");
 	assert(win_ussd != NULL);
@@ -39,13 +57,15 @@ static void _show(GHashTable *options)
 	window_view_show(win_ussd, options, ussd_view_show, ussd_view_hide);
 }
 
-static void _hide() 
+static void 
+_hide(void) 
 {
 	g_debug("_hide()");
 	window_destroy(win_ussd, NULL);
 }
 
-static void _reset() 
+static void 
+_reset(void) 
 {
 	g_debug("_reset()");
 	win_ussd = NULL;

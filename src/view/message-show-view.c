@@ -27,27 +27,41 @@ typedef enum {
 
 
 
-void *message_show_view_show(struct Window *win, void *_options);
-void message_show_view_hide(void *_data);
+void *
+message_show_view_show(struct Window *win, void *_options);
+void 
+message_show_view_hide(void *_data);
 
-static void message_show_view_close_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void message_show_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void message_show_view_delete_callback(void *_data);
-static void message_show_view_delete_callback_callback(struct MessageShowViewData *data);
-static void message_show_view_call_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_show_view_close_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_show_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_show_view_delete_callback(void *_data);
+static void 
+message_show_view_delete_callback_callback(struct MessageShowViewData *data);
+static void 
+message_show_view_call_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info);
 
-static void name_callback(GError *error, char *name, gpointer _data);
-static void name_callback2(struct MessageShowViewData *data);
-static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer data);
-static void retrieve_callback2(struct MessageShowViewData *data);
+static void 
+name_callback(GError *error, char *name, gpointer _data);
+static void 
+name_callback2(struct MessageShowViewData *data);
+static void 
+retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer data);
+static void 
+retrieve_callback2(struct MessageShowViewData *data);
 
 
 
-/* --- main message show view functions ------------------------------------------- */
+/* --- main message show view functions ------------------------------------- */
 
-void *message_show_view_show(struct Window *win, void *_options)
+void *
+message_show_view_show(struct Window *win, void *_options)
 {
 	assert(win != NULL);
 	assert(_options != NULL);
@@ -69,7 +83,8 @@ void *message_show_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void message_show_view_hide(void *_data)
+void 
+message_show_view_hide(void *_data)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 	struct Window *win = data->win;
@@ -88,9 +103,10 @@ void message_show_view_hide(void *_data)
 }
 
 
-/* --- evas callbacks ------------------------------------------------------------- */
+/* --- evas callbacks ------------------------------------------------------- */
 
-static void message_show_view_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+message_show_view_close_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
@@ -99,7 +115,8 @@ static void message_show_view_close_clicked(void *_data, Evas_Object *obj, void 
 	window_destroy(data->win, NULL);
 }
 
-static void message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
@@ -113,7 +130,8 @@ static void message_show_view_answer_clicked(void *_data, Evas_Object *obj, void
 	window_view_show(win, options, message_new_view_show, message_new_view_hide);
 }
 
-static void message_show_view_call_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+message_show_view_call_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
@@ -122,7 +140,8 @@ static void message_show_view_call_clicked(void *_data, Evas_Object *obj, void *
 	ogsmd_call_initiate(data->number, "voice", NULL, NULL);
 }
 
-static void message_show_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+message_show_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
@@ -138,7 +157,8 @@ static void message_show_view_delete_clicked(void *_data, Evas_Object *obj, void
 	window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
 }
 
-static void message_show_view_delete_callback(void *_data)
+static void 
+message_show_view_delete_callback(void *_data)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
@@ -147,7 +167,8 @@ static void message_show_view_delete_callback(void *_data)
 	async_trigger(message_show_view_delete_callback_callback, data);
 }
 
-static void message_show_view_delete_callback_callback(struct MessageShowViewData *data)
+static void 
+message_show_view_delete_callback_callback(struct MessageShowViewData *data)
 {
 	window_destroy(data->win, NULL);
 
@@ -155,7 +176,8 @@ static void message_show_view_delete_callback_callback(struct MessageShowViewDat
 		data->callback(data->callback_data);
 }
 
-static void my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
+static void 
+my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
 {
 	Evas_Object *hv = (Evas_Object *)_data;
 
@@ -166,10 +188,11 @@ static void my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
 
 
 
-/* --- dbus/libframeworkd callbacks ----------------------------------------------- */
+/* --- dbus/libframeworkd callbacks ----------------------------------------- */
 
 
-static void name_callback(GError *error, char *name, void *_data)
+static void 
+name_callback(GError *error, char *name, void *_data)
 {
 	g_debug("name callbacking...");
 	if (error == NULL && *name) {
@@ -180,13 +203,15 @@ static void name_callback(GError *error, char *name, void *_data)
 }
 
 
-static void name_callback2(struct MessageShowViewData *data)
+static void 
+name_callback2(struct MessageShowViewData *data)
 {
 	g_debug("name updating...");
 	window_text_set(data->win, "text_number", data->name);
 }
 
-static void retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer _data) 
+static void 
+retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer _data) 
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
@@ -211,7 +236,8 @@ static void retrieve_callback(GError *error, char *status, char *number, char *c
 	async_trigger(retrieve_callback2, data);
 }
 
-static void retrieve_callback2(struct MessageShowViewData *data)
+static void 
+retrieve_callback2(struct MessageShowViewData *data)
 {
 	struct Window *win = data->win;
 

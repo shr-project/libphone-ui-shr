@@ -20,28 +20,44 @@ struct ContactEditViewData {
 
 
 
-static void frame_edit_show(void *_data);
-static void frame_edit_hide(void *_data);
-static void frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info);
-static char* frame_edit_value_get(Evas_Object *entry);
-static gboolean frame_edit_needs_saving(struct ContactEditViewData *data);
-static void frame_edit_save_new_callback(GError *error, char *path, void *_data);
-static void frame_edit_save_update_callback(GError *error, void *_data);
-static void frame_edit_save_callback2(struct ContactEditViewData *data);
+static void 
+frame_edit_show(void *_data);
+static void 
+frame_edit_hide(void *_data);
+static void 
+frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info);
+static char* 
+frame_edit_value_get(Evas_Object *entry);
+static gboolean 
+frame_edit_needs_saving(struct ContactEditViewData *data);
+static void 
+frame_edit_save_new_callback(GError *error, char *path, void *_data);
+static void 
+frame_edit_save_update_callback(GError *error, void *_data);
+static void 
+frame_edit_save_callback2(struct ContactEditViewData *data);
 
-static void frame_close_show(void *_data);
-static void frame_close_hide(void *_data);
-static void frame_close_yes_clicked(void *data, Evas_Object *obj, void *event_info);
-static void frame_close_no_clicked(void *data, Evas_Object *obj, void *event_info);
+static void 
+frame_close_show(void *_data);
+static void 
+frame_close_hide(void *_data);
+static void 
+frame_close_yes_clicked(void *data, Evas_Object *obj, void *event_info);
+static void 
+frame_close_no_clicked(void *data, Evas_Object *obj, void *event_info);
 
-static void frame_loading_show(void *data);
-static void frame_loading_hide(void *data);
+static void 
+frame_loading_show(void *data);
+static void 
+frame_loading_hide(void *data);
 
 
-/* --- main contact edit view ----------------------------------------------------- */
+/* --- main contact edit view ----------------------------------------------- */
 
-void *contact_edit_view_show(struct Window *win, void *_options)
+void *
+contact_edit_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -75,7 +91,8 @@ void *contact_edit_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void contact_edit_view_hide(void *_data)
+void 
+contact_edit_view_hide(void *_data)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -96,7 +113,8 @@ void contact_edit_view_hide(void *_data)
 
 /* --- frame "edit" --------------------------------------------------------------- */
 
-static void frame_edit_show(void *_data)
+static void 
+frame_edit_show(void *_data)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -159,7 +177,8 @@ static void frame_edit_show(void *_data)
 }
 
 
-static void frame_edit_hide(void *_data)
+static void 
+frame_edit_hide(void *_data)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -186,7 +205,8 @@ static void frame_edit_hide(void *_data)
 }
 
 
-static void frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -218,21 +238,24 @@ static void frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_i
 }
 
 
-static void frame_edit_save_new_callback(GError *error, char *path, void *_data)
+static void 
+frame_edit_save_new_callback(GError *error, char *path, void *_data)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 	g_debug("frame_edit_save_new_callback() --> %s", path);
 	async_trigger(frame_edit_save_callback2, data);
 }
 
-static void frame_edit_save_update_callback(GError *error, void *_data)
+static void 
+frame_edit_save_update_callback(GError *error, void *_data)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 	g_debug("frame_edit_save_update_callback()");
 	async_trigger(frame_edit_save_callback2, data);
 }
 
-static void frame_edit_save_callback2(struct ContactEditViewData *data)
+static void 
+frame_edit_save_callback2(struct ContactEditViewData *data)
 {
 	g_debug("frame_edit_save_callback2()");
 	if (data->name)
@@ -244,7 +267,8 @@ static void frame_edit_save_callback2(struct ContactEditViewData *data)
 }
 
 
-static void frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -257,7 +281,8 @@ static void frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_
 }
 
 
-static char* frame_edit_value_get(Evas_Object *entry)
+static char* 
+frame_edit_value_get(Evas_Object *entry)
 {
 	g_debug("frame_edit_value_get()");
 
@@ -268,7 +293,8 @@ static char* frame_edit_value_get(Evas_Object *entry)
 }
 
 
-static gboolean frame_edit_needs_saving(struct ContactEditViewData *data)
+static 
+gboolean frame_edit_needs_saving(struct ContactEditViewData *data)
 {
 	gboolean ret = TRUE;
 	char *temp_name = frame_edit_value_get(data->entry_name);
@@ -306,7 +332,8 @@ static gboolean frame_edit_needs_saving(struct ContactEditViewData *data)
 
 /* --- frame "close" (confirm changes) -------------------------------------------- */
 
-static void frame_close_show(void *_data)
+static void 
+frame_close_show(void *_data)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -332,7 +359,8 @@ static void frame_close_show(void *_data)
 	evas_object_show(data->bt2);
 }
 
-static void frame_close_hide(void *_data)
+static void 
+frame_close_hide(void *_data)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -343,7 +371,8 @@ static void frame_close_hide(void *_data)
 	evas_object_del(data->close_information);
 }
 
-static void frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 
@@ -352,7 +381,8 @@ static void frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_i
 	window_destroy(data->win, NULL);
 }
 
-static void frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 	window_frame_show(data->win, data, frame_edit_show, frame_edit_hide);
@@ -363,7 +393,8 @@ static void frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_in
  * Frame "loading"
  */
 
-static void frame_loading_show(void *_data) 
+static void 
+frame_loading_show(void *_data) 
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 	window_layout_set(data->win, CONTACTS_FILE, "loading");
@@ -373,7 +404,8 @@ static void frame_loading_show(void *_data)
 	evas_object_show(data->loading);
 }
 
-static void frame_loading_hide(void *_data) 
+static void 
+frame_loading_hide(void *_data) 
 {
 	struct ContactEditViewData *data = (struct ContactEditViewData *)_data;
 	evas_object_del(data->loading);

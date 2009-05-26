@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <glib-2.0/glib.h>
 
-PipeHandler pipe_create() 
+PipeHandler 
+pipe_create() 
 {
 	int r;
 	int fds[2];
@@ -23,7 +24,8 @@ PipeHandler pipe_create()
 	return h;
 }
 
-PipeMessage* pipe_read(PipeHandler h) 
+PipeMessage* 
+pipe_read(PipeHandler h) 
 {
 	int r;
 	PipeMessage *m = malloc(sizeof(PipeMessage));
@@ -34,7 +36,8 @@ PipeMessage* pipe_read(PipeHandler h)
 		return m;
 }
 
-void pipe_write(PipeHandler h, void (*callback)(), void *userdata) 
+void 
+pipe_write(PipeHandler h, void (*callback)(), void *userdata) 
 {
 	PipeMessage m;
 	m.callback = callback;

@@ -24,18 +24,25 @@ struct _Widget_Data
 
 DBusGProxy *GQuery = NULL;
 
-static void _del_hook(Evas_Object *obj);
-static void _sizing_eval(Evas_Object *obj);
-static void _changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info);
+static void 
+_del_hook(Evas_Object *obj);
+static void 
+_sizing_eval(Evas_Object *obj);
+static void 
+_changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info);
 //static void _sub_del(void *data, Evas_Object *obj, void *event_info);
-static void _signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source);
-static void _retrieve_callback2(void *data);
-static void _process_entry(gpointer _entry, gpointer data);
+static void 
+_signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source);
+static void 
+_retrieve_callback2(void *data);
+static void 
+_process_entry(gpointer _entry, gpointer data);
 
 
 
 
-static void _del_hook(Evas_Object *obj)
+static void 
+_del_hook(Evas_Object *obj)
 {
 
 	Widget_Data *wd = (Widget_Data *)elm_widget_data_get(obj);
@@ -44,7 +51,8 @@ static void _del_hook(Evas_Object *obj)
 	free(wd);
 }
 
-static void _sizing_eval(Evas_Object *obj)
+static void 
+_sizing_eval(Evas_Object *obj)
 {
 	Widget_Data *wd = (Widget_Data *)elm_widget_data_get(obj);
 	Evas_Coord minw = -1, minh = -1, maxw = -1, maxh = -1;
@@ -54,7 +62,8 @@ static void _sizing_eval(Evas_Object *obj)
 	evas_object_size_hint_max_set(obj, maxw, maxh);
 }
 
-static void _changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info)
+static void 
+_changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info)
 {
 	return; // TODO: Confirm this line
 
@@ -83,14 +92,16 @@ static void _changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *eve
    */ 
 
 
-static void _signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source)
+static void 
+_signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source)
 {
 	Widget_Data *wd = (Widget_Data *)elm_widget_data_get(data);
 	evas_object_smart_callback_call(wd->widget, "clicked", emission[0]);
 }
 
 
-static gint _compare_entries(gconstpointer _a, gconstpointer _b)
+static gint 
+_compare_entries(gconstpointer _a, gconstpointer _b)
 {
 	GHashTable **a = (GHashTable **)_a;
 	GHashTable **b = (GHashTable **)_b;
@@ -117,13 +128,15 @@ static gint _compare_entries(gconstpointer _a, gconstpointer _b)
 }
 
 
-static void _row_delete_callback(void *row_data)
+static void 
+_row_delete_callback(void *row_data)
 {
 	g_hash_table_destroy(row_data);
 }
 
 
-static void _process_entry(gpointer _entry, gpointer data)
+static void 
+_process_entry(gpointer _entry, gpointer data)
 {
 	GHashTable *entry = (GHashTable *)_entry;
 	Widget_Data *wd = (Widget_Data *)elm_widget_data_get(data);
@@ -144,7 +157,8 @@ static void _process_entry(gpointer _entry, gpointer data)
 }
 
 
-static void _retrieve_callback(GError *error, GPtrArray *messages, void *data)
+static void 
+_retrieve_callback(GError *error, GPtrArray *messages, void *data)
 {
 	Evas_Object **widget = (Evas_Object **) data;
 
@@ -166,7 +180,8 @@ static void _retrieve_callback(GError *error, GPtrArray *messages, void *data)
 
 
 
-static void _retrieve_callback2(void *data)
+static void 
+_retrieve_callback2(void *data)
 {
 	Evas_Object **widget = (Evas_Object **) data;
 
@@ -192,7 +207,8 @@ static void _retrieve_callback2(void *data)
 }
 
 
-static void _result_callback(GError *error, int count, void *data)
+static void 
+_result_callback(GError *error, int count, void *data)
 {
 	g_debug("_result_callback");
 	if (error == NULL) {
@@ -203,7 +219,8 @@ static void _result_callback(GError *error, int count, void *data)
 
 
 
-static void _query_callback(GError *error, char *query_path, void *data)
+static void 
+_query_callback(GError *error, char *query_path, void *data)
 {
 	g_debug("_query_callback");
 	if (error == NULL) {
@@ -215,7 +232,8 @@ static void _query_callback(GError *error, char *query_path, void *data)
 
 
 
-Evas_Object *elm_my_contactlist_add(Evas_Object *parent)
+Evas_Object *
+elm_my_contactlist_add(Evas_Object *parent)
 {
 	// Evas_Object *obj; Instead I'm using the wd->widget variable
 	Evas *e;
@@ -272,7 +290,8 @@ Evas_Object *elm_my_contactlist_add(Evas_Object *parent)
 
 
 
-GHashTable *elm_my_contactlist_selected_row_get(void *data)
+GHashTable *
+elm_my_contactlist_selected_row_get(void *data)
 {
 	Widget_Data *wd = (Widget_Data *)elm_widget_data_get(data);
 	Etk_Tree_Row *row = (Etk_Tree_Row *)etk_tree_selected_row_get((Etk_Tree *)wd->tree);
@@ -285,7 +304,8 @@ GHashTable *elm_my_contactlist_selected_row_get(void *data)
 
 
 
-void elm_my_contactlist_refresh(void *data)
+void 
+elm_my_contactlist_refresh(void *data)
 {
 	g_debug("elm_my_contactlist_refresh");
 	Widget_Data *wd = (Widget_Data *)elm_widget_data_get(data);

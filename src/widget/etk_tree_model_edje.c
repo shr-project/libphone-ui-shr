@@ -38,18 +38,27 @@ typedef struct Etk_Tree_Model_Edje_Data
 } Etk_Tree_Model_Edje_Data;
 
 
-static void _edje_model_free(Etk_Tree_Model *model);
-static void _edje_cell_data_free(Etk_Tree_Model *model, void *cell_data);
-static void _edje_cell_data_set(Etk_Tree_Model *model, void *cell_data, va_list *args);
-static void _edje_cell_data_get(Etk_Tree_Model *model, void *cell_data, va_list *args);
-static void _edje_objects_cache(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL]);
-static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geometry geometry, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL], Evas *evas);
-static int _edje_width_get(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL]);
-static void _edje_cache_remove(Etk_Tree_Model *model, const char *filename, const char *key);
+static void 
+_edje_model_free(Etk_Tree_Model *model);
+static void 
+_edje_cell_data_free(Etk_Tree_Model *model, void *cell_data);
+static void 
+_edje_cell_data_set(Etk_Tree_Model *model, void *cell_data, va_list *args);
+static void 
+_edje_cell_data_get(Etk_Tree_Model *model, void *cell_data, va_list *args);
+static void 
+_edje_objects_cache(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL]);
+static Etk_Bool 
+_edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geometry geometry, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL], Evas *evas);
+static int 
+_edje_width_get(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL]);
+static void 
+_edje_cache_remove(Etk_Tree_Model *model, const char *filename, const char *key);
 
 
 /* The function to create the model */
-Etk_Tree_Model *etk_tree_model_edje_new(const char *file, const char *part)
+Etk_Tree_Model *
+etk_tree_model_edje_new(const char *file, const char *part)
 {
 	Etk_Tree_Model *model;
 	Etk_Tree_Model_Edje *edje_model;
@@ -75,7 +84,8 @@ Etk_Tree_Model *etk_tree_model_edje_new(const char *file, const char *part)
 }
 
 /* Edje: model_free() */
-static void _edje_model_free(Etk_Tree_Model *model)
+static void 
+_edje_model_free(Etk_Tree_Model *model)
 {
 	Etk_Tree_Model_Edje *edje_model;
 
@@ -85,7 +95,8 @@ static void _edje_model_free(Etk_Tree_Model *model)
 }
 
 /* Edje: cell_data_free() */
-static void _edje_cell_data_free(Etk_Tree_Model *model, void *cell_data)
+static void 
+_edje_cell_data_free(Etk_Tree_Model *model, void *cell_data)
 {
 	Etk_Tree_Model_Edje_Data *edje_data;
 
@@ -96,7 +107,8 @@ static void _edje_cell_data_free(Etk_Tree_Model *model, void *cell_data)
 }
 
 /* Edje: cell_data_set() */
-static void _edje_cell_data_set(Etk_Tree_Model *model, void *cell_data, va_list *args)
+static void 
+_edje_cell_data_set(Etk_Tree_Model *model, void *cell_data, va_list *args)
 {
 	Etk_Tree_Model_Edje_Data *edje_data;
 	GHashTable *parameters;
@@ -116,7 +128,8 @@ static void _edje_cell_data_set(Etk_Tree_Model *model, void *cell_data, va_list 
 }
 
 /* Edje: cell_data_get() */
-static void _edje_cell_data_get(Etk_Tree_Model *model, void *cell_data, va_list *args)
+static void 
+_edje_cell_data_get(Etk_Tree_Model *model, void *cell_data, va_list *args)
 {
 	Etk_Tree_Model_Edje_Data *edje_data;
 	GHashTable **parameters;
@@ -130,7 +143,8 @@ static void _edje_cell_data_get(Etk_Tree_Model *model, void *cell_data, va_list 
 }
 
 /* Edje: objects_cache() */
-static void _edje_objects_cache(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL])
+static void 
+_edje_objects_cache(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL])
 {
 	Etk_Tree_Model_Edje *edje_model;
 	Etk_Tree_Model_Edje_Data *edje_data;
@@ -149,7 +163,8 @@ static void _edje_objects_cache(Etk_Tree_Model *model, void *cell_data, Evas_Obj
 
 
 /* Edje: set_text_cb() */
-void _edje_set_text_cb(gpointer key, gpointer value, gpointer user_data)
+void 
+_edje_set_text_cb(gpointer key, gpointer value, gpointer user_data)
 {
 	//g_debug("SET: %s", key);
 	Evas_Object *cell_object = user_data;
@@ -158,7 +173,8 @@ void _edje_set_text_cb(gpointer key, gpointer value, gpointer user_data)
 
 
 /* Edje: render() */
-static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geometry geometry, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL], Evas *evas)
+static Etk_Bool 
+_edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geometry geometry, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL], Evas *evas)
 {
 	g_debug("render called");
 
@@ -192,7 +208,8 @@ static Etk_Bool _edje_render(Etk_Tree_Model *model, Etk_Tree_Row *row, Etk_Geome
 }
 
 /* Edje: width_get() */
-static int _edje_width_get(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL])
+static int 
+_edje_width_get(Etk_Tree_Model *model, void *cell_data, Evas_Object *cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL])
 {
 	Etk_Tree_Model_Edje *edje_model;
 	int w;
@@ -205,7 +222,8 @@ static int _edje_width_get(Etk_Tree_Model *model, void *cell_data, Evas_Object *
 }
 
 /* Edje: delete a certain evas object from the model's cache */
-static void _edje_cache_remove(Etk_Tree_Model *model, const char *filename, const char *key)
+static void 
+_edje_cache_remove(Etk_Tree_Model *model, const char *filename, const char *key)
 {
 	Etk_Tree_Model_Edje *edje_model;
 

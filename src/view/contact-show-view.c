@@ -6,7 +6,8 @@
  */
 
 
-void contacts_button_call_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
+void 
+contacts_button_call_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
 {
 	if (win->contacts_mode == MODE_LIST) {
 		Etk_Tree_Row *row = etk_tree_selected_row_get(win->tree);
@@ -22,7 +23,8 @@ void contacts_button_call_clicked(struct ContactsWindow *win, Evas_Object *obj, 
 	}
 }
 
-void contacts_button_options_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
+void 
+contacts_button_options_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
 {
 	Etk_Tree_Row *row = etk_tree_selected_row_get(win->tree);
 	if (row != NULL) {
@@ -32,7 +34,9 @@ void contacts_button_options_clicked(struct ContactsWindow *win, Evas_Object *ob
 	}
 }
 
-void contacts_button_save_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) {
+void 
+contacts_button_save_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info)
+{
 	if (strcmp(etk_entry_text_get(win->entry_name), "") && strcmp(etk_entry_text_get(win->entry_number), "")) {
 		if (win->contacts_mode == MODE_NEW) {
 			g_debug("NEW");
@@ -61,18 +65,21 @@ void contacts_button_save_clicked(struct ContactsWindow *win, Evas_Object *obj, 
 	}
 }
 
-void contacts_button_back_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
+void 
+contacts_button_back_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
 {
 	win->contacts_mode = MODE_LIST;
 	window_frame_show(win, contacts_list_show, contacts_list_hide);
 }
 
-void contacts_button_delete_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
+void 
+contacts_button_delete_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
 {
 	window_frame_show(win, contacts_delete_show, contacts_delete_hide);
 }
 
-void contacts_button_delete_yes_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
+void 
+contacts_button_delete_yes_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
 {
 	ogsmd_sim_delete_entry(
 			"contacts",
@@ -83,12 +90,14 @@ void contacts_button_delete_yes_clicked(struct ContactsWindow *win, Evas_Object 
 	pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST, win);
 }
 
-void contacts_button_delete_no_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
+void 
+contacts_button_delete_no_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
 {
 	pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED, win);
 }
 
-void contacts_button_close_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
+void 
+contacts_button_close_clicked(struct ContactsWindow *win, Evas_Object *obj, void *event_info) 
 {
 	pipe_write(pipe_handler, contacts_event, EVENT_MODE_LIST_CACHED, win);
 }
@@ -96,7 +105,8 @@ void contacts_button_close_clicked(struct ContactsWindow *win, Evas_Object *obj,
 
 // Views
 
-void contacts_list_show(struct ContactsWindow *win) 
+void 
+contacts_list_show(struct ContactsWindow *win) 
 {
 	window_layout_set(win, UI_FILE, "list");
 
@@ -158,7 +168,8 @@ void contacts_list_show(struct ContactsWindow *win)
 	g_debug("Swallowed!");
 }
 
-void contacts_list_hide(struct ContactsWindow *win) 
+void 
+contacts_list_hide(struct ContactsWindow *win) 
 {
 	evas_object_del(win->bt1);
 	evas_object_del(win->bt2);
@@ -166,7 +177,8 @@ void contacts_list_hide(struct ContactsWindow *win)
 	etk_widget_hide_all(win->container);
 }
 
-void contacts_options_show(struct ContactsWindow *win) 
+void 
+contacts_options_show(struct ContactsWindow *win) 
 {
 	window_layout_set(win, UI_FILE, "options");
 	window_text_set(win, "name", g_value_get_string(g_value_array_get_nth(win->tmp_entry, 1)));
@@ -197,7 +209,8 @@ void contacts_options_show(struct ContactsWindow *win)
 	evas_object_show(win->bt4);
 }
 
-void contacts_options_hide(struct ContactsWindow *win) 
+void 
+contacts_options_hide(struct ContactsWindow *win) 
 {
 	evas_object_del(win->bt1);
 	evas_object_del(win->bt2);
@@ -205,7 +218,8 @@ void contacts_options_hide(struct ContactsWindow *win)
 	evas_object_del(win->bt4);
 }
 
-void contacts_modify_show(struct ContactsWindow *win) 
+void 
+contacts_modify_show(struct ContactsWindow *win) 
 {
 	contacts_new_hide(win);
 
@@ -215,12 +229,14 @@ void contacts_modify_show(struct ContactsWindow *win)
 	etk_entry_text_set(win->entry_name, g_value_get_string(g_value_array_get_nth(win->tmp_entry, 1)));
 }
 
-void contacts_modify_hide(struct ContactsWindow *win) 
+void 
+contacts_modify_hide(struct ContactsWindow *win) 
 {
 	contacts_new_hide(win);
 }
 
-void contacts_new_show(struct ContactsWindow *win) 
+void 
+contacts_new_show(struct ContactsWindow *win) 
 {
 	window_kbd_show(win, KEYBOARD_ALPHA);
 
@@ -252,7 +268,8 @@ void contacts_new_show(struct ContactsWindow *win)
 	window_swallow(win, "name", etk_embed_object_get(ETK_EMBED(win->container_name)));
 }
 
-void contacts_new_hide(struct ContactsWindow *win) 
+void 
+contacts_new_hide(struct ContactsWindow *win) 
 {
 	evas_object_del(win->bt1);
 	evas_object_del(win->bt2);
@@ -262,7 +279,8 @@ void contacts_new_hide(struct ContactsWindow *win)
 	window_kbd_hide(win);
 }
 
-void contacts_delete_show(struct ContactsWindow *win) 
+void 
+contacts_delete_show(struct ContactsWindow *win) 
 {
 	window_layout_set(win, UI_FILE, "delete");
 
@@ -279,13 +297,15 @@ void contacts_delete_show(struct ContactsWindow *win)
 	evas_object_show(win->bt2);
 }
 
-void contacts_delete_hide(struct ContactsWindow *win) 
+void 
+contacts_delete_hide(struct ContactsWindow *win) 
 {
 	evas_object_del(win->bt1);
 	evas_object_del(win->bt2);
 }
 
-void contacts_sim_full_show(struct ContactsWindow *win) 
+void 
+contacts_sim_full_show(struct ContactsWindow *win) 
 {
 	window_layout_set(win, UI_FILE, "dialog");
 	window_text_set(win, "content", D_("Your storage is full. Before adding new contacts, you have to delete some old ones."));
@@ -297,7 +317,8 @@ void contacts_sim_full_show(struct ContactsWindow *win)
 	evas_object_show(win->bt1);
 }
 
-void contacts_sim_full_hide(struct ContactsWindow *win) 
+void 
+contacts_sim_full_hide(struct ContactsWindow *win) 
 {
 	evas_object_del(win->bt1);
 }

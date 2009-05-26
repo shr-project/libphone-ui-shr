@@ -8,7 +8,8 @@ struct CallIncomingViewData {
 };
 
 
-void *call_incoming_view_show(struct Window *win, void *_options)
+void *
+call_incoming_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -48,7 +49,8 @@ void *call_incoming_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void call_incoming_view_hide(void *_data)
+void 
+call_incoming_view_hide(void *_data)
 {
 	struct CallIncomingViewData *data = (struct CallIncomingViewData *)_data;
 

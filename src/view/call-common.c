@@ -2,7 +2,8 @@
 #include "call-common.h"
 
 
-void call_button_keypad_clicked(void *_data, Evas_Object *obj, void *event_info)
+void 
+call_button_keypad_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct CallViewData *data = (struct CallViewData *)_data;
 	char string[2];
@@ -12,7 +13,8 @@ void call_button_keypad_clicked(void *_data, Evas_Object *obj, void *event_info)
 	ogsmd_call_send_dtmf(strdup(string), NULL, NULL);
 }
 
-void call_button_accept_clicked(void *_data, Evas_Object *obj, void *event_info)
+void 
+call_button_accept_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct CallViewData *data = (struct CallViewData *)_data;
 
@@ -26,7 +28,8 @@ void call_button_accept_clicked(void *_data, Evas_Object *obj, void *event_info)
 	window_view_show(data->win, options, call_active_view_show, call_active_view_hide);
 }
 
-void call_button_release_clicked(void *_data, Evas_Object *obj, void *event_info)
+void 
+call_button_release_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct CallViewData *data = (struct CallViewData *)_data;
 
@@ -35,7 +38,8 @@ void call_button_release_clicked(void *_data, Evas_Object *obj, void *event_info
 	ogsmd_call_release(data->id, NULL, NULL);
 }
 
-void call_button_speaker_clicked(void *_data, Evas_Object *obj, void *event_info)
+void 
+call_button_speaker_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct CallViewData *data = (struct CallViewData *)_data;
 	g_debug("speaker_clicked()");
@@ -51,7 +55,8 @@ void call_button_speaker_clicked(void *_data, Evas_Object *obj, void *event_info
 	}
 }
 
-void call_button_dtmf_clicked(void *_data, Evas_Object *obj, void *event_info)
+void 
+call_button_dtmf_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct CallViewData *data = (struct CallViewData *)_data;
 
@@ -69,7 +74,8 @@ void call_button_dtmf_clicked(void *_data, Evas_Object *obj, void *event_info)
 	}
 }
 
-void call_dtmf_enable(struct CallViewData *data)
+void 
+call_dtmf_enable(struct CallViewData *data)
 {
 	g_debug("call_dtmf_enable()");
 
@@ -79,7 +85,8 @@ void call_dtmf_enable(struct CallViewData *data)
 	evas_object_show(data->keypad);
 }
 
-void call_dtmf_disable(struct CallViewData *data)
+void 
+call_dtmf_disable(struct CallViewData *data)
 {
 	g_debug("call_dtmf_disable()");
 
@@ -87,13 +94,15 @@ void call_dtmf_disable(struct CallViewData *data)
 	evas_object_del(data->keypad);
 }
 
-void call_speaker_enable()
+void 
+call_speaker_enable()
 {
 	g_debug("call_speaker_enable()");
 	odeviced_audio_pull_scenario(NULL, NULL);
 }
 
-void call_speaker_disable()
+void 
+call_speaker_disable()
 {
 	g_debug("call_speaker_disable()");
 	odeviced_audio_push_scenario("gsmspeakerout", NULL, NULL);

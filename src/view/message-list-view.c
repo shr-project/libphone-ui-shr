@@ -15,25 +15,38 @@ struct MessageListViewData {
 };
 
 
-static void message_list_view_new_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_list_view_new_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info);
 
-static void retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data);
-static void retrieve_messagebook_callback2(struct MessageListViewData *data);
-static void process_message(gpointer _message, gpointer _data);
+static void 
+retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data);
+static void 
+retrieve_messagebook_callback2(struct MessageListViewData *data);
+static void 
+process_message(gpointer _message, gpointer _data);
 
-static void add_integer_timestamp_to_message(gpointer _message, gpointer _data); 
-static gint compare_messages(gconstpointer _a, gconstpointer _b);
-static void message_list_view_message_deleted(void *_data);
-static void message_list_view_message_deleted_callback(struct MessageListViewData *data);
+static void 
+add_integer_timestamp_to_message(gpointer _message, gpointer _data); 
+static 
+gint compare_messages(gconstpointer _a, gconstpointer _b);
+static void 
+message_list_view_message_deleted(void *_data);
+static void 
+message_list_view_message_deleted_callback(struct MessageListViewData *data);
 
 
-/* --- message list view ---------------------------------------------------------- */
+/* --- message list view ---------------------------------------------------- */
 
-void *message_list_view_show(struct Window *win, void *_options) 
+void *
+message_list_view_show(struct Window *win, void *_options) 
 {
 	g_debug("message_list_view_show()");
 
@@ -120,7 +133,8 @@ void *message_list_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void message_list_view_hide(void *_data) 
+void 
+message_list_view_hide(void *_data) 
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 	struct Window *win = data->win;
@@ -146,9 +160,10 @@ void message_list_view_hide(void *_data)
 
 
 
-/* --- evas callbacks ------------------------------------------------------------- */
+/* --- evas callbacks ------------------------------------------------------- */
 
-static void message_list_view_new_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void 
+message_list_view_new_clicked(void *_data, Evas_Object *obj, void *event_info) 
 {
 	g_debug("message_list_view_new_clicked()");
 
@@ -157,7 +172,8 @@ static void message_list_view_new_clicked(void *_data, Evas_Object *obj, void *e
 	window_view_show(win, NULL, message_new_view_show, message_new_view_hide);
 }
 
-static void message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void 
+message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info) 
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 
@@ -178,7 +194,8 @@ static void message_list_view_show_clicked(void *_data, Evas_Object *obj, void *
 	}
 }
 
-static void message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void 
+message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info) 
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 
@@ -199,7 +216,8 @@ static void message_list_view_answer_clicked(void *_data, Evas_Object *obj, void
 	}
 }
 
-static void message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void 
+message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info) 
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 
@@ -222,7 +240,8 @@ static void message_list_view_delete_clicked(void *_data, Evas_Object *obj, void
 	}
 }
 
-static void my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info) 
+static void 
+my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info) 
 {
 	Evas_Object *hv = (Evas_Object *)_data;
 	evas_object_show(hv);
@@ -230,9 +249,10 @@ static void my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
 
 
 
-/* --- dbus/libframeworkd callbacks ----------------------------------------------- */
+/* --- dbus/libframeworkd callbacks ----------------------------------------- */
 
-static void retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data) 
+static void 
+retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data) 
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 
@@ -245,12 +265,14 @@ static void retrieve_messagebook_callback(GError *error, GPtrArray *messages, vo
 	async_trigger(retrieve_messagebook_callback2, data);
 }
 
-static void retrieve_messagebook_callback2(struct MessageListViewData *data) 
+static void 
+retrieve_messagebook_callback2(struct MessageListViewData *data) 
 {
 	g_ptr_array_foreach(data->messages, process_message, data);
 }
 
-static void process_message(gpointer _message, gpointer _data) 
+static void 
+process_message(gpointer _message, gpointer _data) 
 {
 	GValueArray *message = (GValueArray *)_message;
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
@@ -273,9 +295,10 @@ static void process_message(gpointer _message, gpointer _data)
 
 
 
-/* --- helper functions ----------------------------------------------------------- */
+/* --- helper functions ----------------------------------------------------- */
 
-static void add_integer_timestamp_to_message(gpointer _message, gpointer _data) 
+static void 
+add_integer_timestamp_to_message(gpointer _message, gpointer _data) 
 {
 	GValueArray *message = (GValueArray *)_message;
 
@@ -287,9 +310,10 @@ static void add_integer_timestamp_to_message(gpointer _message, gpointer _data)
 
 
 
-/* --- helper functions ----------------------------------------------------------- */
+/* --- helper functions ----------------------------------------------------- */
 
-static void add_integer_timestamp_to_message(gpointer _message, gpointer _data) 
+static void 
+add_integer_timestamp_to_message(gpointer _message, gpointer _data) 
 {
 	GValueArray *message = (GValueArray *)_message;
 
@@ -304,7 +328,8 @@ static void add_integer_timestamp_to_message(gpointer _message, gpointer _data)
 	g_hash_table_insert(details, strdup("timestamp_int"), value);
 }
 
-static gint compare_messages(gconstpointer _a, gconstpointer _b) 
+static gint 
+compare_messages(gconstpointer _a, gconstpointer _b) 
 {
 	GValueArray **a = (GValueArray **)_a;
 	GValueArray **b = (GValueArray **)_b;
@@ -322,12 +347,14 @@ static gint compare_messages(gconstpointer _a, gconstpointer _b)
 		return 0;
 }
 
-static void message_list_view_message_deleted(void *data) 
+static void 
+message_list_view_message_deleted(void *data) 
 {
 	async_trigger(message_list_view_message_deleted_callback, (struct MessageListViewData *)data);
 }
 
-static void message_list_view_message_deleted_callback(struct MessageListViewData *data) 
+static void 
+message_list_view_message_deleted_callback(struct MessageListViewData *data) 
 {
 	// TODO: Reload list instead of deleting the selected message
 	data->selected_row = etk_tree_selected_row_get(data->tree);

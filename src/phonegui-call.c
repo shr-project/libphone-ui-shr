@@ -17,34 +17,50 @@ struct Call {
 };
 
 
-static void _show(const int id, const int status, const char *number, int type);
-static void _show_async(void *_options);
-static void _hide(void *_data);
-static void _delete(void *data, Evas_Object *win, void *event_info);
+
+static void 
+_show(const int id, const int status, const char *number, int type);
+
+static void 
+_show_async(void *_options);
+
+static void 
+_hide(void *_data);
+
+static void 
+_delete(void *data, Evas_Object *win, void *event_info);
 
 
-void phonegui_incoming_call_show(const int id, const int status, const char *number) 
+
+
+void 
+phonegui_incoming_call_show(const int id, const int status, const char *number) 
 {
 	_show(id, status, number, CALL_INCOMING);
 }
 
-void phonegui_incoming_call_hide(const int id) 
+void 
+phonegui_incoming_call_hide(const int id) 
 {
 	async_trigger(_hide, GINT_TO_POINTER(id));
 }
 
-void phonegui_outgoing_call_show(const int id, const int status, const char *number) 
+void 
+phonegui_outgoing_call_show(const int id, const int status, const char *number) 
 {
 	_show(id, status, number, CALL_ACTIVE);
 }
 
-void phonegui_outgoing_call_hide(const int id) 
+void 
+phonegui_outgoing_call_hide(const int id) 
 {
 	async_trigger(_hide, GINT_TO_POINTER(id));
 }
 
 
-static void _show(const int id, const int status, const char *number, int type) 
+
+static void 
+_show(const int id, const int status, const char *number, int type) 
 {
 	struct Window *win = window_new(D_("Call"));
 	window_delete_callback_set(win, _delete);
@@ -60,7 +76,8 @@ static void _show(const int id, const int status, const char *number, int type)
 	async_trigger(_show_async, options);
 }
 
-static void _show_async(void *_options) 
+static void 
+_show_async(void *_options) 
 {
 	GHashTable *options = (GHashTable *)_options;
 	struct Window *win = g_hash_table_lookup(options, "win");
@@ -81,7 +98,8 @@ static void _show_async(void *_options)
 	window_show(win);
 }
 
-static void _hide(void *_data) 
+static void 
+_hide(void *_data) 
 {
 	int id = GPOINTER_TO_INT(_data);
 	g_debug("call_hide(id=%d)", id);
@@ -91,10 +109,12 @@ static void _hide(void *_data)
 	window_destroy(win, NULL);
 }
 
-static void _delete(void *data, Evas_Object *win, void *event_info) 
+static void 
+_delete(void *data, Evas_Object *win, void *event_info) 
 {
 	g_debug("call_delete(), release call!");
 	//ogsmd_call_release(call_id, NULL, NULL);
 	//window_destroy(win, NULL);
 }
+
 

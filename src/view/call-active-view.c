@@ -8,7 +8,8 @@ struct CallActiveViewData {
 };
 
 
-void *call_active_view_show(struct Window *win, void *_options)
+void *
+call_active_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -55,7 +56,8 @@ void *call_active_view_show(struct Window *win, void *_options)
 }
 
 
-void call_active_view_hide(void *_data)
+void 
+call_active_view_hide(void *_data)
 {
 	struct CallActiveViewData *data = (struct CallActiveViewData *)_data;
 

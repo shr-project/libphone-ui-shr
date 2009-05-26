@@ -12,21 +12,32 @@ struct ContactListViewData {
 
 
 
-static void frame_list_show(void *_data);
-static void frame_list_hide(void *_data);
-static void frame_list_new_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_list_call_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_list_options_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_list_message_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_list_edit_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_list_refresh(void *_data);
-static void frame_list_refresh_callback(struct ContactListViewData *data);
+static void 
+frame_list_show(void *_data);
+static void 
+frame_list_hide(void *_data);
+static void 
+frame_list_new_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_list_call_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_list_options_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_list_message_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_list_edit_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_list_refresh(void *_data);
+static void 
+frame_list_refresh_callback(struct ContactListViewData *data);
 
 
-/* --- main contact list view ----------------------------------------------------- */
+/* --- main contact list view ----------------------------------------------- */
 
-void *contact_list_view_show(struct Window *win, void *_options)
+void *
+contact_list_view_show(struct Window *win, void *_options)
 {
 	struct ContactListViewData *data = g_slice_alloc0(sizeof(struct ContactListViewData));
 	data->win = win;
@@ -39,7 +50,8 @@ void *contact_list_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void contact_list_view_hide(void *_data)
+void 
+contact_list_view_hide(void *_data)
 {
 	g_debug("contact_list_view_hide()");
 	g_slice_free(struct ContactListViewData, _data);
@@ -47,9 +59,10 @@ void contact_list_view_hide(void *_data)
 
 
 
-/* --- frame "list" --------------------------------------------------------------- */
+/* --- frame "list" --------------------------------------------------------- */
 
-static void frame_list_show(void *_data)
+static void 
+frame_list_show(void *_data)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 	struct Window *win = data->win;
@@ -115,7 +128,8 @@ static void frame_list_show(void *_data)
 	elm_hover_content_set(data->hv, "top", data->bx);
 }
 
-static void frame_list_hide(void *_data)
+static void 
+frame_list_hide(void *_data)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 
@@ -127,7 +141,8 @@ static void frame_list_hide(void *_data)
 	evas_object_del(data->list);
 }
 
-static void frame_list_new_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_list_new_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 
@@ -142,7 +157,8 @@ static void frame_list_new_clicked(void *_data, Evas_Object *obj, void *event_in
 	window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
 }
 
-static void frame_list_call_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_list_call_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 
@@ -153,7 +169,8 @@ static void frame_list_call_clicked(void *_data, Evas_Object *obj, void *event_i
 		ogsmd_call_initiate(g_hash_table_lookup(properties, "number"), "voice", NULL, NULL);
 }
 
-static void frame_list_options_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_list_options_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 
@@ -162,7 +179,8 @@ static void frame_list_options_clicked(void *_data, Evas_Object *obj, void *even
 	evas_object_show(data->hv);
 }
 
-static void frame_list_message_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_list_message_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 
@@ -183,7 +201,8 @@ static void frame_list_message_clicked(void *_data, Evas_Object *obj, void *even
 	}
 }
 
-static void frame_list_edit_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_list_edit_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 
@@ -206,7 +225,8 @@ static void frame_list_edit_clicked(void *_data, Evas_Object *obj, void *event_i
 	}
 }
 
-static void frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 
@@ -227,14 +247,16 @@ static void frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event
 	}
 }
 
-static void frame_list_refresh(void *_data)
+static void 
+frame_list_refresh(void *_data)
 {
 	g_debug("frame_list_refresh");
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
 	async_trigger(frame_list_refresh_callback, data);
 }
 
-static void frame_list_refresh_callback(struct ContactListViewData *data)
+static void 
+frame_list_refresh_callback(struct ContactListViewData *data)
 {
 	g_debug("frame_list_refresh_callback");
 	elm_my_contactlist_refresh(data->list);

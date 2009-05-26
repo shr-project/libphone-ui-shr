@@ -6,7 +6,8 @@
 #include <string.h>
 #include <glib.h>
 
-time_t time_stringtotimestamp(const char *str) 
+time_t 
+time_stringtotimestamp(const char *str) 
 {
 	time_t ts = 0;
 	struct tm date;
@@ -22,7 +23,8 @@ time_t time_stringtotimestamp(const char *str)
 }
 
 
-void string_strip_html(char *string) 
+void 
+string_strip_html(char *string) 
 {
 	char *in_p = string, *out_p = string;
 	while (*in_p) {
@@ -35,7 +37,8 @@ void string_strip_html(char *string)
 }
 
 
-void string_replace_newline(char *string) 
+void 
+string_replace_newline(char *string) 
 {
 	char *in_p = string, *out_p = string;
 	for (; *in_p; in_p++, out_p++) {
@@ -54,7 +57,8 @@ void string_replace_newline(char *string)
 
 
 
-char *string_replace_with_tags(char *string)
+char 
+*string_replace_with_tags(char *string)
 {
 	int newlen = 0;
 	char *in_p = string, *out_p;
@@ -101,7 +105,8 @@ char *string_replace_with_tags(char *string)
 }
 
 
-gboolean string_is_number(const char *string) 
+gboolean 
+string_is_number(const char *string) 
 {
 	if (!strlen(string))
 		return FALSE;
@@ -119,7 +124,8 @@ gboolean string_is_number(const char *string)
 	return TRUE;
 }
 
-gboolean string_is_pin(const char *string) 
+gboolean 
+string_is_pin(const char *string) 
 {
 	if (strlen(string) < 4 || strlen(string) > 8)
 		return FALSE;
@@ -135,7 +141,8 @@ gboolean string_is_pin(const char *string)
 }
 
 
-gboolean string_is_puk(const char *string) 
+gboolean 
+string_is_puk(const char *string) 
 {
 	if (strlen(string) != 8)
 		return FALSE;

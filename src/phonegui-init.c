@@ -10,7 +10,8 @@
 
 int event_callback(void *data, Ecore_Fd_Handler *fdh);
 
-void ui_init() 
+void 
+ui_init() 
 {
 
 	// Initializations
@@ -33,7 +34,9 @@ void ui_init()
 	elm_run();
 }
 
-void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
+void 
+phonegui_init(int argc, char **argv, void (*exit_cb)()) 
+{
 
 	// Initialize gettext
 	setlocale (LC_ALL, "");
@@ -59,7 +62,8 @@ void phonegui_init(int argc, char **argv, void (*exit_cb)()) {
 
 
 
-int event_callback(void *data, Ecore_Fd_Handler *fdh) 
+int 
+event_callback(void *data, Ecore_Fd_Handler *fdh) 
 {
 	g_debug("event_callback()");
 	async_dispatch();

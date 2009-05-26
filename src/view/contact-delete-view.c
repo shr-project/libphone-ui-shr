@@ -12,19 +12,26 @@ struct ContactDeleteViewData {
 };
 
 
-static void frame_delete_show(void *_data);
-static void frame_delete_hide(void *_data);
-static void frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_delete_show(void *_data);
+static void 
+frame_delete_hide(void *_data);
+static void 
+frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info);
 
-static void frame_deleting_show(void *_data);
+static void 
+frame_deleting_show(void *_data);
 
-static void delete_callback(GError *error, gpointer _data);
-static void delete_callback2(struct ContactDeleteViewData *data);
+static void 
+delete_callback(GError *error, gpointer _data);
+static void 
+delete_callback2(struct ContactDeleteViewData *data);
 
 
 
-/* --- main contact delete view --------------------------------------------------- */
+/* --- main contact delete view --------------------------------------------- */
 
 void *contact_delete_view_show(struct Window *win, void *_options)
 {
@@ -57,9 +64,10 @@ void contact_delete_view_hide(void *_data)
 
 
 
-/* --- frame "delete" ------------------------------------------------------------- */
+/* --- frame "delete" ------------------------------------------------------- */
 
-static void frame_delete_show(void *userdata)
+static void 
+frame_delete_show(void *userdata)
 {
 	struct ContactDeleteViewData *data = (struct ContactDeleteViewData *) userdata;
 	struct Window *win = data->win;
@@ -86,7 +94,8 @@ static void frame_delete_show(void *userdata)
 	evas_object_show(data->bt_no);
 }
 
-static void frame_delete_hide(void *_data)
+static void 
+frame_delete_hide(void *_data)
 {
 	struct ContactDeleteViewData *data = (struct ContactDeleteViewData *)_data;
 
@@ -97,7 +106,8 @@ static void frame_delete_hide(void *_data)
 	evas_object_del(data->info_label);
 }
 
-static void frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactDeleteViewData *data = (struct ContactDeleteViewData *)_data;
 
@@ -106,7 +116,8 @@ static void frame_delete_no_clicked(void *_data, Evas_Object *obj, void *event_i
 	window_destroy(data->win, NULL);
 }
 
-static void frame_delete_yes_clicked(void *userdata, Evas_Object *obj, void *event_info)
+static void 
+frame_delete_yes_clicked(void *userdata, Evas_Object *obj, void *event_info)
 {
 	struct ContactDeleteViewData *data = (struct ContactDeleteViewData *) userdata;
 
@@ -119,9 +130,10 @@ static void frame_delete_yes_clicked(void *userdata, Evas_Object *obj, void *eve
 
 
 
-/* --- frame "deleting" ----------------------------------------------------------- */
+/* --- frame "deleting" ----------------------------------------------------- */
 
-static void frame_deleting_show(void *_data)
+static void 
+frame_deleting_show(void *_data)
 {
 	struct ContactDeleteViewData *data = (struct ContactDeleteViewData *)_data;
 
@@ -132,15 +144,17 @@ static void frame_deleting_show(void *_data)
 
 
 
-/* --- dbus/libframeworkd callbacks ----------------------------------------------- */
+/* --- dbus/libframeworkd callbacks ----------------------------------------- */
 
-static void delete_callback(GError *error, gpointer _data)
+static void 
+delete_callback(GError *error, gpointer _data)
 {
 	struct ContactDeleteViewData *data = (struct ContactDeleteViewData *)_data;
 	async_trigger(delete_callback2, data);
 }
 
-static void delete_callback2(struct ContactDeleteViewData *data)
+static void 
+delete_callback2(struct ContactDeleteViewData *data)
 {
 	if (data->callback != NULL)
 		data->callback(data->callback_data);

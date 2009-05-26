@@ -20,13 +20,18 @@ struct MessageFolderViewData {
 };
 
 
-static void message_folder_view_retrieve_messagebook_callback(GError*error, GPtrArray*messages, void *data);
-static void message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData *data);
-static void messages_button_new_clicked(void *data, Evas_Object *obj, void *event_info);
-static void messages_button_show_clicked(void *data, Evas_Object *obj, void *event_info);
+static void 
+message_folder_view_retrieve_messagebook_callback(GError*error, GPtrArray*messages, void *data);
+static void 
+message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData *data);
+static void 
+messages_button_new_clicked(void *data, Evas_Object *obj, void *event_info);
+static void 
+messages_button_show_clicked(void *data, Evas_Object *obj, void *event_info);
 
 
-void *message_folder_view_show(struct Window *win, void *_options)
+void *
+message_folder_view_show(struct Window *win, void *_options)
 {
 	struct MessageFolderViewData *data = g_slice_alloc0(sizeof(struct MessageFolderViewData));
 	data->win = win;
@@ -40,7 +45,8 @@ void *message_folder_view_show(struct Window *win, void *_options)
 	return (data);
 }
 
-void message_folder_view_hide(void *_data)
+void 
+message_folder_view_hide(void *_data)
 {
 	struct MessageFolderViewData *data = (struct MessageFolderViewData *)_data;
 	evas_object_del(data->bt1);
@@ -50,7 +56,8 @@ void message_folder_view_hide(void *_data)
 
 
 
-static void message_folder_view_retrieve_messagebook_callback(GError*error, GPtrArray*messages, void *_data) 
+static void 
+message_folder_view_retrieve_messagebook_callback(GError*error, GPtrArray*messages, void *_data) 
 {
 	g_debug("retrieve_messagebook_callback()");
 	struct MessageFolderViewData *data = (struct MessageFolderViewData *)_data;
@@ -60,7 +67,8 @@ static void message_folder_view_retrieve_messagebook_callback(GError*error, GPtr
 }
 
 
-static void message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData *data) 
+static void 
+message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData *data) 
 {
 
 	struct Window *win = data->win;
@@ -115,7 +123,8 @@ static void message_folder_view_retrieve_messagebook_callback2(struct MessageFol
 
 
 
-static void messages_button_new_clicked(void *data, Evas_Object *obj, void *event_info) 
+static void 
+messages_button_new_clicked(void *data, Evas_Object *obj, void *event_info) 
 {
 	g_debug("messages_button_new_clicked()");
 
@@ -125,7 +134,8 @@ static void messages_button_new_clicked(void *data, Evas_Object *obj, void *even
 }
 
 
-static void messages_button_show_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void 
+messages_button_show_clicked(void *_data, Evas_Object *obj, void *event_info) 
 {
 	g_debug("messages_button_show_clicked()");
 	struct MessageFolderViewData *data = (struct MessageFolderViewData *)_data;

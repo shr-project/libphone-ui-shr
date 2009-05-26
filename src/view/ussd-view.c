@@ -13,15 +13,19 @@ struct UssdViewData {
 };
 
 
-static void frame_ussd_show(void *data);
-static void frame_ussd_hide(void *data);
-static void frame_ussd_close_clicked(void *data, Evas_Object *obj, void *event_info);
+static void 
+frame_ussd_show(void *data);
+static void 
+frame_ussd_hide(void *data);
+static void 
+frame_ussd_close_clicked(void *data, Evas_Object *obj, void *event_info);
 //static void frame_ussd_keypad_clicked(struct UssdViewData *data, Evas_Object *obj, void *event_info);
 
 
-/* --- ussd view ------------------------------------------------------------------ */
+/* --- ussd view ------------------------------------------------------------ */
 
-void *ussd_view_show(struct Window *win, void *_options)
+void *
+ussd_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -43,7 +47,8 @@ void *ussd_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void ussd_view_hide(void *_data)
+void 
+ussd_view_hide(void *_data)
 {
 	struct UssdViewData *data = (struct UssdViewData *)_data;
 
@@ -54,9 +59,10 @@ void ussd_view_hide(void *_data)
 }
 
 
-/* --- frame "ussd" --------------------------------------------------------------- */
+/* --- frame "ussd" --------------------------------------------------------- */
 
-static void frame_ussd_show(void *_data)
+static void 
+frame_ussd_show(void *_data)
 {
 	struct UssdViewData *data = (struct UssdViewData *)_data;
 	struct Window *win = data->win;
@@ -79,7 +85,8 @@ static void frame_ussd_show(void *_data)
 	   */
 }
 
-static void frame_ussd_hide(void *_data)
+static void 
+frame_ussd_hide(void *_data)
 {
 	struct UssdViewData *data = (struct UssdViewData *)_data;
 	struct Window *win = data->win;
@@ -93,7 +100,8 @@ static void frame_ussd_hide(void *_data)
 	   */
 }
 
-static void frame_ussd_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_ussd_close_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct UssdViewData *data = (struct UssdViewData *)_data;
 	window_destroy(data->win, NULL);

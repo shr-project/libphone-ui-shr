@@ -29,46 +29,76 @@ struct MessageNewViewData {
 
 //static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data);
 
-static void frame_content_show(void *_data);
-static void frame_content_hide(void *_data);
-static void frame_content_close_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_content_continue_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_content_show(void *_data);
+static void 
+frame_content_hide(void *_data);
+static void 
+frame_content_close_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_content_continue_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info);
 
-static void frame_recipient_show(void *_data);
-static void frame_recipient_hide(void *_data);
-static void frame_recipient_back_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_recipient_contact_add_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_recipient_number_add_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_recipient_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_recipient_continue_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_recipient_process_recipient(gpointer _properties, gpointer _data);
-static void frame_recipient_send_callback(GError *error, int transaction_index, const char *timestamp, void *data);
-static void frame_recipient_send_callback2(struct MessageNewViewData *data);
+static void 
+frame_recipient_show(void *_data);
+static void 
+frame_recipient_hide(void *_data);
+static void 
+frame_recipient_back_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_recipient_contact_add_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_recipient_number_add_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_recipient_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_recipient_continue_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_recipient_process_recipient(gpointer _properties, gpointer _data);
+static void 
+frame_recipient_send_callback(GError *error, int transaction_index, const char *timestamp, void *data);
+static void 
+frame_recipient_send_callback2(struct MessageNewViewData *data);
 
-static void frame_contact_add_show(void *_data);
-static void frame_contact_add_hide(void *_data);
-static void frame_contact_add_back_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_contact_add_add_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_contact_add_show(void *_data);
+static void 
+frame_contact_add_hide(void *_data);
+static void 
+frame_contact_add_back_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_contact_add_add_clicked(void *_data, Evas_Object *obj, void *event_info);
 
-static void frame_number_add_show(void *_data);
-static void frame_number_add_hide(void *_data);
-static void frame_number_add_add_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_number_add_back_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_number_add_show(void *_data);
+static void 
+frame_number_add_hide(void *_data);
+static void 
+frame_number_add_add_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_number_add_back_clicked(void *_data, Evas_Object *obj, void *event_info);
 
-static void frame_close_show(void *_data);
-static void frame_close_hide(void *_data);
-static void frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_close_show(void *_data);
+static void 
+frame_close_hide(void *_data);
+static void 
+frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_info);
 
-static void frame_sending_show(void *_data);
-static void frame_sending_hide(void *_data);
+static void 
+frame_sending_show(void *_data);
+static void 
+frame_sending_hide(void *_data);
 
 
 
 /* --- main message new view functions -------------------------------------------- */
 
-void *message_new_view_show(struct Window *win, void *_options)
+void *
+message_new_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -99,7 +129,8 @@ void *message_new_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void message_new_view_hide(void *_data)
+void 
+message_new_view_hide(void *_data)
 {
 	g_debug("message_new_view_hide()");
 	//g_slice_free(struct MessageNewViewData, data);
@@ -114,7 +145,8 @@ void message_new_view_hide(void *_data)
 
 /* --- frame "content" ------------------------------------------------------------ */
 
-static void frame_content_show(void *_data)
+static void 
+frame_content_show(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
@@ -149,7 +181,8 @@ static void frame_content_show(void *_data)
 	elm_object_focus(data->entry);
 }
 
-static void frame_content_hide(void *_data)
+static void 
+frame_content_hide(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
@@ -169,7 +202,8 @@ static void frame_content_hide(void *_data)
 	window_kbd_hide(win);
 }
 
-static void frame_content_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_content_close_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -178,7 +212,8 @@ static void frame_content_close_clicked(void *_data, Evas_Object *obj, void *eve
 	window_frame_show(data->win, data, frame_close_show, frame_close_hide);
 }
 
-static void frame_content_continue_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_content_continue_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -192,7 +227,8 @@ static void frame_content_continue_clicked(void *_data, Evas_Object *obj, void *
 	free(content);
 }
 
-static void frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
@@ -208,9 +244,10 @@ static void frame_content_content_changed(void *_data, Evas_Object *obj, void *e
 
 
 
-/* --- frame "recipient" ---------------------------------------------------------- */
+/* --- frame "recipient" ---------------------------------------------------- */
 
-static void frame_recipient_show(void *_data)
+static void 
+frame_recipient_show(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
@@ -276,7 +313,8 @@ static void frame_recipient_show(void *_data)
 	g_ptr_array_foreach(data->recipients, frame_recipient_process_recipient, data);
 }
 
-static void frame_recipient_hide(void *_data)
+static void 
+frame_recipient_hide(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
@@ -291,7 +329,8 @@ static void frame_recipient_hide(void *_data)
 	evas_object_del(data->container_recipients_eo);
 }
 
-static void frame_recipient_back_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_recipient_back_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -301,7 +340,8 @@ static void frame_recipient_back_clicked(void *_data, Evas_Object *obj, void *ev
 	window_frame_show(data->win, data, frame_content_show, frame_content_hide);
 }
 
-static void frame_recipient_contact_add_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_recipient_contact_add_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -311,7 +351,8 @@ static void frame_recipient_contact_add_clicked(void *_data, Evas_Object *obj, v
 	window_frame_show(data->win, data, frame_contact_add_show, frame_contact_add_hide);
 }
 
-static void frame_recipient_number_add_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_recipient_number_add_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -321,7 +362,8 @@ static void frame_recipient_number_add_clicked(void *_data, Evas_Object *obj, vo
 	window_frame_show(data->win, data, frame_number_add_show, frame_number_add_hide);
 }
 
-static void frame_recipient_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_recipient_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -336,7 +378,8 @@ static void frame_recipient_delete_clicked(void *_data, Evas_Object *obj, void *
 	}
 }
 
-static void frame_recipient_continue_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_recipient_continue_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -359,7 +402,8 @@ static void frame_recipient_continue_clicked(void *_data, Evas_Object *obj, void
 	}
 }
 
-static void frame_recipient_send_callback(GError *error, int transaction_index, const char *timestamp, void *_data)
+static void 
+frame_recipient_send_callback(GError *error, int transaction_index, const char *timestamp, void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	data->messages_sent++;
@@ -369,12 +413,14 @@ static void frame_recipient_send_callback(GError *error, int transaction_index, 
 	}
 }
 
-static void frame_recipient_send_callback2(struct MessageNewViewData *data)
+static void 
+frame_recipient_send_callback2(struct MessageNewViewData *data)
 {
 	window_destroy(data->win, NULL);
 }
 
-static void frame_recipient_process_recipient(gpointer _properties, gpointer _data)
+static void 
+frame_recipient_process_recipient(gpointer _properties, gpointer _data)
 {
 	GHashTable *properties = (GHashTable *)_properties;
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
@@ -385,9 +431,10 @@ static void frame_recipient_process_recipient(gpointer _properties, gpointer _da
 
 
 
-/* --- frame "contact_add" -------------------------------------------------------- */
+/* --- frame "contact_add" -------------------------------------------------- */
 
-static void frame_contact_add_show(void *_data)
+static void 
+frame_contact_add_show(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
@@ -415,7 +462,8 @@ static void frame_contact_add_show(void *_data)
 	evas_object_show(data->list_contacts);
 }
 
-static void frame_contact_add_hide(void *_data)
+static void 
+frame_contact_add_hide(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -426,7 +474,8 @@ static void frame_contact_add_hide(void *_data)
 	evas_object_del(data->list_contacts);
 }
 
-static void frame_contact_add_back_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_contact_add_back_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -436,7 +485,8 @@ static void frame_contact_add_back_clicked(void *_data, Evas_Object *obj, void *
 	window_frame_show(data->win, data, frame_recipient_show, frame_recipient_hide);
 }
 
-static void frame_contact_add_add_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_contact_add_add_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -452,9 +502,10 @@ static void frame_contact_add_add_clicked(void *_data, Evas_Object *obj, void *e
 
 
 
-/* --- frame "number_add" --------------------------------------------------------- */
+/* --- frame "number_add" --------------------------------------------------- */
 
-static void frame_number_add_show(void *_data)
+static void 
+frame_number_add_show(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
@@ -489,7 +540,8 @@ static void frame_number_add_show(void *_data)
 	window_kbd_show(win, KEYBOARD_NUMERIC);
 }
 
-static void frame_number_add_hide(void *_data)
+static void 
+frame_number_add_hide(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -503,7 +555,8 @@ static void frame_number_add_hide(void *_data)
 	window_kbd_hide(data->win);
 }
 
-static void frame_number_add_back_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_number_add_back_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -513,7 +566,8 @@ static void frame_number_add_back_clicked(void *_data, Evas_Object *obj, void *e
 	window_frame_show(data->win, data, frame_recipient_show, frame_recipient_hide);
 }
 
-static void frame_number_add_add_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_number_add_add_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -536,9 +590,10 @@ static void frame_number_add_add_clicked(void *_data, Evas_Object *obj, void *ev
 }
 
 
-/* --- frame "close" -------------------------------------------------------------- */
+/* --- frame "close" -------------------------------------------------------- */
 
-static void frame_close_show(void *_data)
+static void 
+frame_close_show(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
@@ -565,7 +620,8 @@ static void frame_close_show(void *_data)
 	evas_object_show(data->bt2);
 }
 
-static void frame_close_hide(void *_data)
+static void 
+frame_close_hide(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -576,7 +632,8 @@ static void frame_close_hide(void *_data)
 	evas_object_del(data->information);
 }
 
-static void frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -585,7 +642,8 @@ static void frame_close_yes_clicked(void *_data, Evas_Object *obj, void *event_i
 	window_destroy(data->win, NULL);
 }
 
-static void frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -596,9 +654,10 @@ static void frame_close_no_clicked(void *_data, Evas_Object *obj, void *event_in
 
 
 
-/* --- frame "sending" ------------------------------------------------------------ */
+/* --- frame "sending" ------------------------------------------------------ */
 
-static void frame_sending_show(void *_data)
+static void 
+frame_sending_show(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 
@@ -608,7 +667,8 @@ static void frame_sending_show(void *_data)
 	window_text_set(data->win, "text", D_("Sending.."));
 }
 
-static void frame_sending_hide(void *data)
+static void 
+frame_sending_hide(void *data)
 {
 	g_debug("frame_sending_hide()");
 }

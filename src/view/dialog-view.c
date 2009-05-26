@@ -10,10 +10,12 @@ struct DialogViewData {
 
 
 
-static void dialog_view_close_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void 
+dialog_view_close_clicked(void *_data, Evas_Object *obj, void *event_info);
 
 
-void *dialog_view_show(struct Window *win, void *_options)
+void *
+dialog_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *)_options;
 
@@ -46,13 +48,15 @@ void *dialog_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void dialog_view_hide(void *_data)
+void 
+dialog_view_hide(void *_data)
 {
 	struct DialogViewData *data = (struct DialogViewData *)_data;
 	evas_object_del(data->bt_close);
 }
 
-static void dialog_view_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void 
+dialog_view_close_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct DialogViewData *data = (struct DialogViewData *)_data;
 	window_destroy(data->win, NULL);
