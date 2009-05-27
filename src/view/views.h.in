@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "helper.h"
-#include "elm_my_contactlist.h"
 #include "async.h"
 #include "window.h"
 
