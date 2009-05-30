@@ -2,6 +2,7 @@
 #include "call-common.h"
 
 
+/*FIXME: why does button_keypad_clicked get the data parametr? */
 void 
 call_button_keypad_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
@@ -14,21 +15,6 @@ call_button_keypad_clicked(void *_data, Evas_Object *obj, void *event_info)
 }
 
 void 
-call_button_accept_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
-	struct CallViewData *data = (struct CallViewData *)_data;
-
-	g_debug("accept_clicked()");
-
-	ogsmd_call_activate(data->id, NULL, NULL);
-
-	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "id", GINT_TO_POINTER(data->id));
-	g_hash_table_insert(options, "number", strdup(data->number));
-	window_view_show(data->win, options, call_active_view_show, call_active_view_hide);
-}
-
-void 
 call_button_release_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct CallViewData *data = (struct CallViewData *)_data;
@@ -38,41 +24,7 @@ call_button_release_clicked(void *_data, Evas_Object *obj, void *event_info)
 	ogsmd_call_release(data->id, NULL, NULL);
 }
 
-void 
-call_button_speaker_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
-	struct CallViewData *data = (struct CallViewData *)_data;
-	g_debug("speaker_clicked()");
-	if (speaker_active) {
-		speaker_active = FALSE;
-		call_speaker_enable();
-		window_text_set(data->win, "text_speaker", D_("Speaker"));
-	} 
-	else {
-		speaker_active = TRUE;
-		call_speaker_disable();
-		window_text_set(data->win, "text_speaker", D_("No Speaker"));
-	}
-}
 
-void 
-call_button_dtmf_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
-	struct CallViewData *data = (struct CallViewData *)_data;
-
-	g_debug("dtmf_clicked()");
-
-	if (data->dtmf_active) {
-		data->dtmf_active = FALSE;
-		call_dtmf_disable(data);
-		window_text_set(data->win, "text_dtmf", D_("Show Keypad"));
-	} 
-	else {
-		data->dtmf_active = TRUE;
-		call_dtmf_enable(data);
-		window_text_set(data->win, "text_dtmf", D_("Hide Keypad"));
-	}
-}
 
 void 
 call_dtmf_enable(struct CallViewData *data)

@@ -8,6 +8,14 @@ struct CallActiveViewData {
 };
 
 
+static void 
+call_button_speaker_clicked(void *_data, Evas_Object *obj, void *event_info);
+
+static void 
+call_button_dtmf_clicked(void *_data, Evas_Object *obj, void *event_info);
+
+
+
 void *
 call_active_view_show(struct Window *win, void *_options)
 {
@@ -77,4 +85,42 @@ call_active_view_hide(void *_data)
 	evas_object_del(data->bt2);
 	evas_object_del(data->bt3);
 }
+
+/* FIXME: Should fix to handle bt/headset as well */
+void 
+call_button_speaker_clicked(void *_data, Evas_Object *obj, void *event_info)
+{
+	struct CallViewData *data = (struct CallViewData *)_data;
+	g_debug("speaker_clicked()");
+	if (speaker_active) {
+		speaker_active = FALSE;
+		call_speaker_enable();
+		window_text_set(data->win, "text_speaker", D_("Speaker"));
+	} 
+	else {
+		speaker_active = TRUE;
+		call_speaker_disable();
+		window_text_set(data->win, "text_speaker", D_("Handset"));
+	}
+}
+
+void 
+call_button_dtmf_clicked(void *_data, Evas_Object *obj, void *event_info)
+{
+	struct CallViewData *data = (struct CallViewData *)_data;
+
+	g_debug("dtmf_clicked()");
+
+	if (data->dtmf_active) {
+		data->dtmf_active = FALSE;
+		call_dtmf_disable(data);
+		window_text_set(data->win, "text_dtmf", D_("Keypad"));
+	} 
+	else {
+		data->dtmf_active = TRUE;
+		call_dtmf_enable(data);
+		window_text_set(data->win, "text_dtmf", D_("Hide Keypad"));
+	}
+}
+
 

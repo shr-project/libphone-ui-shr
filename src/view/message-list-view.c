@@ -295,20 +295,6 @@ process_message(gpointer _message, gpointer _data)
 
 
 
-/* --- helper functions ----------------------------------------------------- */
-
-static void 
-add_integer_timestamp_to_message(gpointer _message, gpointer _data) 
-{
-	GValueArray *message = (GValueArray *)_message;
-
-	g_hash_table_insert(parameters, strdup("date"), strdup(datestr));
-
-	Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(data->tree), NULL, data->col1, parameters, NULL);
-	etk_tree_row_data_set(row, g_value_array_copy(message));
-}
-
-
 
 /* --- helper functions ----------------------------------------------------- */
 

@@ -8,6 +8,11 @@ struct CallIncomingViewData {
 };
 
 
+static void 
+call_button_accept_clicked(void *_data, Evas_Object *obj, void *event_info);
+
+
+
 void *
 call_incoming_view_show(struct Window *win, void *_options)
 {
@@ -41,7 +46,7 @@ call_incoming_view_show(struct Window *win, void *_options)
 	evas_object_show(data->bt1);
 
 	data->bt2 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt2, D_("Release"));
+	elm_button_label_set(data->bt2, D_("Reject"));
 	evas_object_smart_callback_add(data->bt2, "clicked", call_button_release_clicked, data);
 	window_swallow(win, "button_release", data->bt2);
 	evas_object_show(data->bt2);
@@ -68,5 +73,20 @@ call_incoming_view_hide(void *_data)
 
 	if (speaker_active)
 		call_speaker_disable();
+}
+
+void 
+call_button_accept_clicked(void *_data, Evas_Object *obj, void *event_info)
+{
+	struct CallViewData *data = (struct CallViewData *)_data;
+
+	g_debug("accept_clicked()");
+
+	ogsmd_call_activate(data->id, NULL, NULL);
+
+	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+	g_hash_table_insert(options, "id", GINT_TO_POINTER(data->id));
+	g_hash_table_insert(options, "number", strdup(data->number));
+	window_view_show(data->win, options, call_active_view_show, call_active_view_hide);
 }
 

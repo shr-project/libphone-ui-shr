@@ -16,16 +16,23 @@ struct CallViewData {
 
 static gboolean speaker_active = FALSE;
 
-void call_button_keypad_clicked(void *_data, Evas_Object *obj, void *event_info);
-void call_button_accept_clicked(void *_data, Evas_Object *obj, void *event_info);
-void call_button_release_clicked(void *_data, Evas_Object *obj, void *event_info);
-void call_button_speaker_clicked(void *_data, Evas_Object *obj, void *event_info);
-void call_button_dtmf_clicked(void *_data, Evas_Object *obj, void *event_info);
+void 
+call_button_release_clicked(void *_data, Evas_Object *obj, void *event_info);
 
-void call_dtmf_enable(struct CallViewData *data);
-void call_dtmf_disable(struct CallViewData *data);
-void call_speaker_enable();
-void call_speaker_disable();
+void 
+call_button_keypad_clicked(void *_data, Evas_Object *obj, void *event_info);
+
+void 
+call_dtmf_enable(struct CallViewData *data);
+
+void 
+call_dtmf_disable(struct CallViewData *data);
+
+void 
+call_speaker_enable();
+
+void 
+call_speaker_disable();
 
 #endif
 
