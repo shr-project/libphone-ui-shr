@@ -147,6 +147,8 @@ frame_edit_show(void *_data)
 
 	data->sc_name = elm_scroller_add(data->win->win);
 	data->entry_name = elm_entry_add(data->win->win);
+	evas_object_size_hint_weight_set(data->entry_name, 1.0, 1.0);
+	evas_object_size_hint_align_set(data->entry_name, -1.0, -1.0);
 	if (data->name)
 		elm_entry_entry_set(data->entry_name, data->name);
 	elm_widget_focus_set(data->entry_name, 1);
@@ -164,6 +166,8 @@ frame_edit_show(void *_data)
 
 	data->sc_number = elm_scroller_add(data->win->win);
 	data->entry_number = elm_entry_add(data->win->win);
+	evas_object_size_hint_weight_set(data->entry_number, 1.0, 1.0);
+	evas_object_size_hint_align_set(data->entry_number, -1.0, -1.0);
 	if (data->number)
 		elm_entry_entry_set(data->entry_number, data->number);
 
