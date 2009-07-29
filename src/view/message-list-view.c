@@ -5,15 +5,14 @@
 struct MessageListViewData {
 	struct Window *win;
 
-	Evas_Object *content_entry, *bt1, *bt2, *bt3, *hv, *bx, *button_answer, *button_delete;
+	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer, *button_delete;
 
-	Etk_Widget *container, *tree;
-	Etk_Tree_Row *selected_row;
-	Etk_Tree_Col *col1;
+	Elm_Genlist_Item *selected_row;
 
 	GPtrArray *messages;
 };
 
+static Elm_Genlist_Item_Class itc;
 
 static void 
 message_list_view_new_clicked(void *_data, Evas_Object *obj, void *event_info);
@@ -44,6 +43,48 @@ message_list_view_message_deleted_callback(struct MessageListViewData *data);
 
 
 /* --- message list view ---------------------------------------------------- */
+
+static char *
+gl_label_get(const void *data, Evas_Object *obj, const char *part)
+{
+	GHashTable *parameters = (GHashTable *)data;
+	char *label = NULL;
+
+	g_debug("setting label '%s'", part);
+	if (!strcmp(part, "elm.date"))
+		label = g_hash_table_lookup(parameters, "date");
+	else if (!strcmp(part, "elm.number"))
+		label = g_hash_table_lookup(parameters, "number");
+	else if (!strcmp(part, "elm.content"))
+		label = g_hash_table_lookup(parameters, "content");
+	else if (!strcmp(part, "elm.text"))
+		label = g_strdup_printf("%s %s", g_hash_table_lookup(parameters, "date"), 
+				g_hash_table_lookup(parameters, "number"));
+	else if (!strcmp(part, "elm.text.sub"))
+		label = g_hash_table_lookup(parameters, "content");
+
+	return (g_strdup(label));
+}
+
+static Evas_Object *
+gl_icon_get(const void *data, Evas_Object *obj, const char *part)
+{
+	return (NULL);
+}
+
+
+static Eina_Bool
+gl_state_get(const void *data, Evas_Object *obj, const char *part)
+{
+	return (0);
+}
+
+static void
+gl_del(const void *data, Evas_Object *obj)
+{
+}
+
+
 
 void *
 message_list_view_show(struct Window *win, void *_options) 
@@ -102,32 +143,24 @@ message_list_view_show(struct Window *win, void *_options)
 	window_swallow(win, "button_show", data->bt3);
 	evas_object_show(data->bt3);
 
+	g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
+	elm_theme_extension_add(MESSAGELIST_FILE);
 
-	g_debug("tree init");
-
-	data->tree = etk_tree_new();
-	etk_tree_rows_height_set(ETK_TREE(data->tree), 80);
-	etk_tree_mode_set(ETK_TREE(data->tree), ETK_TREE_MODE_LIST);
-	etk_tree_headers_visible_set(ETK_TREE(data->tree), ETK_FALSE);
-	etk_tree_multiple_select_set(ETK_TREE(data->tree), ETK_FALSE);
-
-	data->col1 = etk_tree_col_new(ETK_TREE(data->tree), "Title", 300, 0.0);
-	etk_tree_col_model_add(data->col1, etk_tree_model_edje_new(MESSAGE_FILE, "message_row"));
-	etk_tree_build(ETK_TREE(data->tree));
-
-	Etk_Scrolled_View *scrolled_view = etk_tree_scrolled_view_get(ETK_TREE(data->tree));
-	etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_TRUE);
-	etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_FALSE);
-	etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view), ETK_POLICY_HIDE, ETK_POLICY_HIDE);
-
-	data->container = etk_embed_new(evas_object_evas_get(window_evas_object_get(win)));
-	etk_container_add(ETK_CONTAINER(data->container), data->tree);
-	etk_widget_show_all(data->container);
-
-	window_swallow(win, "list", etk_embed_object_get(ETK_EMBED(data->container)));
-
+	data->list = elm_genlist_add(window_evas_object_get(data->win));
+	elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
+	elm_widget_scale_set(data->list, 1.0);
+	window_swallow(data->win, "list", data->list);
+	itc.item_style     = "message";
+	itc.func.label_get = gl_label_get;
+	itc.func.icon_get  = gl_icon_get;
+	itc.func.state_get = gl_state_get;
+	itc.func.del       = gl_del;
+	//elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_AUTO);
+	//evas_object_size_hint_weight_set(data->list, 1.0, 1.0);
+	evas_object_show(data->list);
 
 	ogsmd_sim_retrieve_messagebook("all", retrieve_messagebook_callback, data);
+
 	window_show(win);
 
 	return data;
@@ -139,6 +172,8 @@ message_list_view_hide(void *_data)
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 	struct Window *win = data->win;
 
+	g_debug("hiding the message list");
+
 	evas_object_del(data->bt1);
 	evas_object_del(data->bt2);
 	evas_object_del(data->bt3);
@@ -147,15 +182,7 @@ message_list_view_hide(void *_data)
 	evas_object_del(data->button_delete);
 	evas_object_del(data->bx);
 	evas_object_del(data->hv);
-
-	window_unswallow(win, data->container);
-	etk_widget_hide_all(data->container);
-
-	// TODO: Free tree memory
-	//etk_object_destroy(col1);
-	//etk_object_destroy(tree);
-	//etk_object_destroy(scrolled_view);
-	//etk_object_destroy(container);
+	evas_object_del(data->list);
 }
 
 
@@ -179,12 +206,12 @@ message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info)
 
 	g_debug("message_list_view_show_clicked()");
 
-	data->selected_row = etk_tree_selected_row_get(data->tree);
+	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
-		GValueArray *message = etk_tree_row_data_get(data->selected_row);
+		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "id", GINT_TO_POINTER(g_value_get_int(g_value_array_get_nth(message, 0))));
+		g_hash_table_insert(options, "id", g_hash_table_lookup(parameters, "id"));
 		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
 
@@ -203,12 +230,12 @@ message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info
 
 	evas_object_hide(data->hv);
 
-	data->selected_row = etk_tree_selected_row_get(data->tree);
+	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
-		GValueArray *message = etk_tree_row_data_get(data->selected_row);
+		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "recipient", (gpointer)g_value_get_string(g_value_array_get_nth(message, 2))); /* lose the const */
+		g_hash_table_insert(options, "recipient", g_hash_table_lookup(parameters, "number"));
 
 		struct Window *win = window_new(D_("SMS Answer"));
 		window_init(win);
@@ -225,15 +252,18 @@ message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info
 
 	evas_object_hide(data->hv);
 
-	data->selected_row = etk_tree_selected_row_get(data->tree);
+	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
-		GValueArray *message = etk_tree_row_data_get(data->selected_row);
+		g_debug("found a selected row to delete...");
+		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
 
+		g_debug("filling options...");
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "id", g_value_get_int(g_value_array_get_nth(message, 0)));
+		g_hash_table_insert(options, "id", g_hash_table_lookup(parameters, "id"));
 		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
 
+		g_debug("calling confirmation window...");
 		struct Window *win = window_new(D_("Delete Message"));
 		window_init(win);
 		window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
@@ -280,17 +310,18 @@ process_message(gpointer _message, gpointer _data)
 	GHashTable *details = g_value_get_boxed(g_value_array_get_nth(message, 4));
 	long timestamp = g_value_get_long(g_hash_table_lookup(details, "timestamp_int"));
 	char datestr[32];
-	strftime(datestr, 31, "%e.%m.%Y, %H:%M", localtime(&timestamp));
+	strftime(datestr, 31, "%d.%m.%Y %H:%M", localtime(&timestamp));
 
-	GHashTable *parameters = g_hash_table_new(NULL, NULL);
+	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+	g_hash_table_insert(parameters, strdup("id"), GINT_TO_POINTER(g_value_get_int(g_value_array_get_nth(message, 0)))); 
 	g_hash_table_insert(parameters, strdup("number"), strdup(g_value_get_string(g_value_array_get_nth(message, 2))));
 	char *content = strdup(g_value_get_string(g_value_array_get_nth(message, 3)));
 	string_replace_newline(content);
 	g_hash_table_insert(parameters, strdup("content"), content);
 	g_hash_table_insert(parameters, strdup("date"), strdup(datestr));
 
-	Etk_Tree_Row *row = etk_tree_row_append(ETK_TREE(data->tree), NULL, data->col1, parameters, NULL);
-	etk_tree_row_data_set(row, g_value_array_copy(message));
+	g_debug("adding message from %s", datestr);
+	elm_genlist_item_append(data->list, &itc, parameters, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
 
 
@@ -343,9 +374,11 @@ static void
 message_list_view_message_deleted_callback(struct MessageListViewData *data) 
 {
 	// TODO: Reload list instead of deleting the selected message
-	data->selected_row = etk_tree_selected_row_get(data->tree);
-	if (data->selected_row != NULL)
-		etk_tree_row_delete(data->selected_row);
+	data->selected_row = elm_genlist_selected_item_get(data->list);
+	if (data->selected_row != NULL) {
+		elm_genlist_item_del(data->selected_row);
+		data->selected_row = NULL;
+	}
 }
 
 

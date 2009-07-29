@@ -22,6 +22,7 @@
 //#define INCOMING_MESSAGE_FILE "@DATADIR@/libframeworkd-phonegui-efl2/incoming-message.edj"
 #define KEYPAD_FILE "@DATADIR@/libframeworkd-phonegui-efl2/keypad.edj"
 #define MESSAGE_FILE "@DATADIR@/libframeworkd-phonegui-efl2/messages.edj"
+#define MESSAGELIST_FILE "@DATADIR@/libframeworkd-phonegui-efl2/messagelist.edj"
 #define SIM_AUTH_FILE "@DATADIR@/libframeworkd-phonegui-efl2/sim-auth.edj"
 #define USSD_FILE "@DATADIR@/libframeworkd-phonegui-efl2/ussd.edj"
 

@@ -1,10 +1,10 @@
 MAINTAINERCLEANFILES = Makefile.in
 
 filesdir = $(datadir)/libframeworkd-phonegui-efl2/
-files_DATA = sim-auth.edj dialer.edj messages.edj contacts.edj incoming-message.edj keypad.edj call.edj dialog.edj ussd.edj \
+files_DATA = sim-auth.edj dialer.edj messages.edj messagelist.edj contacts.edj incoming-message.edj keypad.edj call.edj dialog.edj ussd.edj \
              edit-undo.png
 
-EXTRA_DIST = sim-auth.edc dialer.edc messages.edc contacts.edc incoming-message.edc keypad.edc call.edc dialog.edc ussd.edc
+EXTRA_DIST = sim-auth.edc dialer.edc messages.edc messagelist.edc contacts.edc incoming-message.edc keypad.edc call.edc dialog.edc ussd.edc
 
 clean-local:
 	rm -f *.edj
@@ -17,6 +17,9 @@ dialer.edj:
 
 messages.edj:
 	@edje_cc@ messages.edc
+
+messagelist.edj:
+	@edje_cc@ messagelist.edc
 
 contacts.edj:
 	@edje_cc@ contacts.edc
