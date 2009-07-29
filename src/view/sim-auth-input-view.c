@@ -51,7 +51,7 @@ int
 reset_callback(void *data);
 
 void 
-sim_auth_keypad_clicked(void *_data, Evas_Object *obj, char input);
+sim_auth_keypad_clicked(void *_data, Evas_Object *obj, void *event_info);
 void 
 sim_auth_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
 void 
@@ -292,11 +292,12 @@ sim_auth_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
 }
 
 void 
-sim_auth_keypad_clicked(void *_data, Evas_Object *obj, char input)
+sim_auth_keypad_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct SimAuthInputViewData *data = (struct SimAuthInputViewData *)_data;
 	char *string;
 	int *length;
+	char input = ((char *)event_info)[0];
 
 	g_debug("MODE: %d", data->mode);
 
