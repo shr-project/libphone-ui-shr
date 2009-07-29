@@ -64,7 +64,7 @@ contact_list_view_hide(void *_data)
 
 /* --- frame "list" --------------------------------------------------------- */
 
-char *
+static char *
 gl_label_get(const void *data, Evas_Object *obj, const char *part)
 {
 	GHashTable *parameters = (GHashTable *)data;
@@ -81,21 +81,21 @@ gl_label_get(const void *data, Evas_Object *obj, const char *part)
 }
 
 
-Evas_Object *
+static Evas_Object *
 gl_icon_get(const void *data, Evas_Object *obj, const char *part)
 {
 	return NULL;
 }
 
 
-Evas_Bool 
+static Eina_Bool 
 gl_state_get(const void *data, Evas_Object *obj, const char *part)
 {
 	return 0;
 }
 
 
-void 
+static void 
 gl_del(const void *data, Evas_Object *obj)
 {
 }
@@ -190,6 +190,7 @@ frame_list_show(void *_data)
 	window_layout_set(win, CONTACTS_FILE, "list");
 
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
+	elm_widget_scale_set(data->list, 1.0);
 	window_swallow(data->win, "list", data->list);
 	itc.item_style     = "double_label";
 	itc.func.label_get = gl_label_get;
