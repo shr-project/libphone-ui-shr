@@ -1,11 +1,13 @@
 #include "views.h"
 #include "call-common.h"
 
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
 
 
 static void call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_release_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_sound_state_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info); //albacore
+
 
 struct CallIncomingViewData*
 call_incoming_view_show(struct Window *win, GHashTable *options) {
@@ -17,13 +19,16 @@ call_incoming_view_show(struct Window *win, GHashTable *options) {
 	data->parent.id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
 	data->parent.number = g_hash_table_lookup(options, "number");
 	data->parent.dtmf_active = FALSE;
-
+	data->number_state = CALL_NUMBER_NUMBER;
+	
 	window_layout_set(win, CALL_FILE, "incoming_call");
 
 	data->number = elm_label_add( window_evas_object_get(win) );
 	elm_label_label_set( data->number,  data->parent.number);
 	window_swallow(win, "number", data->number);
 	evas_object_show(data->number);
+
+	phonegui_contact_lookup(number, call_common_contact_callback, data);
 
 	data->information = elm_label_add( window_evas_object_get(win) );
 	elm_label_label_set( data->information,  D_("Incoming call"));
@@ -63,6 +68,7 @@ call_incoming_view_hide(struct CallIncomingViewData *data) {
 
 	evas_object_del(data->information);
 	evas_object_del(data->number);
+	data->number_state = CALL_NUMBER_NULL;
 	evas_object_del(data->bt_accept);
 	evas_object_del(data->bt_reject);
 	evas_object_del(data->bt_sound_state); //albacore

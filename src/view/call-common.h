@@ -11,11 +11,18 @@ enum ActiveCallState {
 	CALL_STATE_PENDING
 };
 
+enum CallNumberState {
+	CALL_NUMBER_NULL,
+	CALL_NUMBER_CONTACT,
+	CALL_NUMBER_NUMBER
+};
+
 struct CallViewData {
     struct Window *win;
     GHashTable *options;
     int id;
     char *number;
+    enum CallNumberState number_state;
     gboolean dtmf_active;
     Evas_Object *keypad;
 };
@@ -51,6 +58,8 @@ enum _CallSoundState {
 	CALL_SOUND_STATE_INIT
 };
 typedef enum _CallSoundState CallSoundState;
+
+static void call_common_contact_callback(GError *error, char *name, void *_data);
 
 int call_common_active_call_add(struct CallActiveViewData *win);
 int call_common_active_call_remove(int id);

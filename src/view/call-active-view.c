@@ -5,6 +5,7 @@ static void call_button_sound_state_clicked(struct CallActiveViewData *data, Eva
 static void call_button_dtmf_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_state_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
 
+
 struct CallActiveViewData *
 call_active_view_show(struct Window *win, GHashTable *options)
 {
@@ -24,6 +25,10 @@ call_active_view_show(struct Window *win, GHashTable *options)
 	elm_label_label_set( data->number,  data->parent.number);
 	window_swallow(win, "number", data->number);
 	evas_object_show(data->number);
+
+	if (data->number_state == CALL_NUMBER_NUMBER) {
+		phonegui_contact_lookup(number, call_common_contact_callback, data);
+	}
 
 	data->information = elm_label_add( window_evas_object_get(win) );
 	elm_label_label_set( data->information,  D_("Active call"));
