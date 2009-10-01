@@ -12,6 +12,7 @@
 #include "helper.h"
 #include "async.h"
 #include "window.h"
+#include "call-common.h"
 
 #define D_(String) dgettext(PACKAGE, String)
 
@@ -52,11 +53,10 @@ void message_list_view_hide(void *_data);
 void *sim_auth_input_view_show(struct Window *win, void *_options);
 void sim_auth_input_view_hide(void *_data);
 
-void *call_incoming_view_show(struct Window *win, void *_options);
-void call_incoming_view_hide(void *_data);
-
-void *call_active_view_show(struct Window *win, void *_options);
-void call_active_view_hide(void *_data);
+void call_incoming_view_hide(struct CallIncomingViewData *data);
+struct CallActiveViewData * call_active_view_show(struct Window *win, GHashTable *options);
+struct CallIncomingViewData* call_incoming_view_show(struct Window *win, GHashTable *options);
+void call_active_view_hide(struct CallActiveViewData *data);
 
 void *contact_list_view_show(struct Window *win, void *_options);
 void contact_list_view_hide(void *_data);

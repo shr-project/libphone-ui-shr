@@ -18,6 +18,8 @@ call_active_view_show(struct Window *win, GHashTable *options)
 	data->parent.number = g_hash_table_lookup(options, "number");
 	data->parent.dtmf_active = FALSE;
 	data->state = CALL_STATE_ACTIVE;
+	/* FIXME: next line should actually be passed as an opitoin */
+	data->parent.number_state = CALL_NUMBER_NUMBER;
 
 	window_layout_set(win, CALL_FILE, "call");
 
@@ -26,8 +28,8 @@ call_active_view_show(struct Window *win, GHashTable *options)
 	window_swallow(win, "number", data->number);
 	evas_object_show(data->number);
 
-	if (data->number_state == CALL_NUMBER_NUMBER) {
-		phonegui_contact_lookup(number, call_common_contact_callback, data);
+	if (data->parent.number_state == CALL_NUMBER_NUMBER) {
+		phonegui_contact_lookup(data->parent.number, call_common_contact_callback, data);
 	}
 
 	data->information = elm_label_add( window_evas_object_get(win) );
@@ -68,6 +70,7 @@ call_active_view_hide(struct CallActiveViewData *data)
 		call_dtmf_disable(&(data->parent));
 	}
 
+	data->parent.number_state = CALL_NUMBER_NULL;
 	evas_object_del(data->information);
 	evas_object_del(data->number);
 	evas_object_del(data->bt_call_state);

@@ -42,11 +42,12 @@ call_common_activate_call(struct CallActiveViewData *win)
 static void
 call_common_contact_callback(GError *error, char *name, void *_data)
 {
+	struct CallIncomingViewData *data = (struct CallIncomingViewData *) _data;
 	/* data->number is used to make sure this still exists
 	 * FIXME: locking needed! I'm not doing it here since
 	 * it's needed everywhere, will happen in the rewrite*/
-	if (error == NULL && *name && data->number_state) {
-		data->number_state = CALL_NUMBER_CONTACT;
+	if (error == NULL && *name && data->parent.number_state) {
+		data->parent.number_state = CALL_NUMBER_CONTACT;
 		data->parent.number = strdup(name);
 		elm_label_label_set( data->number,  data->parent.number);
 	}
