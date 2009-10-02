@@ -50,7 +50,7 @@ enum _CallSoundState {
 };
 typedef enum _CallSoundState CallSoundState;
 
-static void call_common_contact_callback(GError *error, char *name, void *_data);
+void call_common_contact_callback(GError *error, char *name, void *_data);
 
 int call_common_active_call_add(struct CallActiveViewData *win);
 int call_common_active_call_remove(int id);
