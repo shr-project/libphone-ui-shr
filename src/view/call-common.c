@@ -1,6 +1,6 @@
 #include "views.h"
 #include "call-common.h"
-#include "call-dbus.h"
+
 
 /* speaker state */
 static CallSoundState sound_state = CALL_SOUND_STATE_CLEAR;
@@ -60,21 +60,6 @@ call_common_get_sound_state ()
 	return sound_state;
 }
 
-//albacore
-CallSoundMode
-call_common_get_sound_mode ()
-{
-	return sound_mode;
-}
-
-
-GQueue* 
-call_common_get_active_calls_list()
-{
-	return active_calls_list;
-}
-//end albacore
-
 
 int
 call_common_set_sound_state (CallSoundState state)
@@ -120,64 +105,6 @@ call_common_set_sound_state (CallSoundState state)
 		
 }
 
-//albacore
-int
-call_common_set_sound_mode (CallSoundMode mode)
-{	
-	g_debug("%s:%d setting sound mode (%d)", __FILE__, __LINE__, mode);
-
-	DBusGProxy* proxy_vibrator;
-	DBusGProxy* proxy_alsa;
-	DBusGConnection* bus;
-	GError* error = NULL;
-	
-	sound_mode = mode;
-	int brightness=-1;
-	int sound=-1;
-	
-	switch (sound_mode) {
-		case CALL_SOUND_MODE_ACTIVE:
-			brightness=100;sound=1;
-			break;
-		case CALL_SOUND_MODE_SILENT:
-			brightness=0;sound=0;
-			break;
-		default:
-			break;
-	}	
-	
-	g_type_init();	
-	bus = init_g_connection();
-
-	if(init_proxy(bus, &proxy_alsa, ODEVICED_BUS, DEVICE_AUDIO_PATH, DEVICE_AUDIO_IFACE))
-		return 1;	
-    if(sound==1) {
-		g_debug("Play Sound!\n");
-		dbus_g_proxy_call (proxy_alsa, "PlaySound", &error, G_TYPE_STRING, ringtone_name, G_TYPE_INT, sound, G_TYPE_INT, sound_lenght, G_TYPE_INVALID, G_TYPE_INVALID);
-	}
-	else if (sound==0) {
-		g_debug("Stop Sound!\n");
-		if(!org_freesmartphone_Device_Audio_stop_sound (proxy_alsa, ringtone_name, &error)) {
-			g_debug ("Stop Sound failed: %s", error->message);
-			g_error_free (error);
-		}	
-	}
-	
-	if(init_proxy(bus, &proxy_vibrator, ODEVICED_BUS, DEVICE_VIBRATOR_PATH, DEVICE_VIBRATOR_IFACE))
-		return 1;		
-        if(brightness!=-1) {
-		if(!dbus_g_proxy_call (proxy_vibrator, "SetBrightness", &error, G_TYPE_INT, brightness, G_TYPE_INVALID, G_TYPE_INVALID)) {		
-			g_debug ("Stop vibrator failed: %s", error->message);
-			g_error_free (error);
-		}
-        }
-	if(brightness==100) {
-		dbus_g_proxy_call (proxy_vibrator, "SetBlinking", &error, G_TYPE_INT, on_duration , G_TYPE_INT, off_duration , G_TYPE_INVALID, G_TYPE_INVALID);
-	}	
-	return 0;		
-}
-//end albacore
-
 void
 call_common_window_update_state(struct CallActiveViewData *win, CallSoundState state)
 {
@@ -202,26 +129,6 @@ call_common_window_update_state(struct CallActiveViewData *win, CallSoundState s
 	
 	elm_button_label_set(win->bt_sound_state, state_string);
 }
-
-//albacore
-void
-call_common_window_update_mode(struct CallIncomingViewData *win, CallSoundMode mode)
-{
-	const char *mode_string = "";
-		
-	switch (mode) {
-		case CALL_SOUND_MODE_SILENT:
-			mode_string = D_("Ringtone");
-			break;
-		default:
-			mode_string = D_("Silent");
-			break;
-	}
-	
-	elm_button_label_set(win->bt_sound_state, mode_string);
-}
-//end albacore
-
 
 static void
 _foreach_new_active(struct CallActiveViewData *win, int id)

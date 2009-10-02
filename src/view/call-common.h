@@ -36,18 +36,9 @@ struct CallActiveViewData {
 
 struct CallIncomingViewData {
     struct CallViewData parent;
-    Evas_Object *bt_accept, *bt_reject, *bt_sound_state; //albacore
+    Evas_Object *bt_accept, *bt_reject; 
     Evas_Object *information, *number;
 };
-
-//albacore
-enum _CallSoundMode {	
-	CALL_SOUND_MODE_ACTIVE,
-	CALL_SOUND_MODE_SILENT,
-	CALL_SOUND_MODE_INIT
-};
-//end albacore
-typedef enum _CallSoundMode CallSoundMode;
 
 enum _CallSoundState {
 	CALL_SOUND_STATE_SPEAKER,
@@ -73,12 +64,6 @@ void call_common_window_update_state(struct CallActiveViewData *win, CallSoundSt
 void call_common_window_update_state(struct CallActiveViewData *win, CallSoundState state);
 int call_common_set_sound_state (CallSoundState state);
 CallSoundState call_common_get_sound_state();
-//albacore
-GQueue* call_common_get_active_calls_list();
-int call_common_set_sound_mode(CallSoundMode mode);
-CallSoundMode call_common_get_sound_mode();
-void call_common_window_update_mode(struct CallIncomingViewData *win, CallSoundMode mode);
-//end albacore
 
 
 void call_button_keypad_clicked(struct CallViewData *data, Evas_Object *obj, void *event_info);
