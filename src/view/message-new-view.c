@@ -232,12 +232,30 @@ frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
+	int limit; /* the limit of the sms */
+	int len; /* the number of characters in the sms */
+	int size; /* the "memory" size of the sms */
+	char text[64];
+
 	string_strip_html(content);
 
 	//g_debug("content: %s", content);
 
-	char text[64];
-	sprintf(text, D_("%d characters left [%d]"), 160 - (strlen(content) % 160), (strlen(content) / 160) + 1);
+
+	for (size = 0, len = 0; content[size]; len++) 
+		evas_common_font_utf8_get_next((unsigned char *)content, &size);
+
+	/* if it includes chars that can't be represented
+	* with 7bit encoding, this sms will be sent as ucs-2 treat
+	* it this way! */
+	if (size > len) 
+		limit = 70; /* ucs-2 number of chars limit */
+	else 
+		limit = 160; /* regular number of chars limit */
+
+
+	/*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
+	sprintf(text, D_("%d characters left [%d]"), limit - (len % limit), (len / limit) + 1);
 	window_text_set(data->win, "characters_left", text);
 	free(content);
 }

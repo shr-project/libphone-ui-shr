@@ -293,7 +293,8 @@ message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info
 		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "recipient", g_hash_table_lookup(parameters, "number"));
+		g_hash_table_insert(options, "name", g_hash_table_lookup(parameters, "name"));
+		g_hash_table_insert(options, "number", g_hash_table_lookup(parameters, "number"));
 
 		struct Window *win = window_new(D_("SMS Answer"));
 		window_init(win);
