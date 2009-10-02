@@ -46,7 +46,7 @@ call_common_contact_callback(GError *error, char *name, void *_data)
 	/* data->number is used to make sure this still exists
 	 * FIXME: locking needed! I'm not doing it here since
 	 * it's needed everywhere, will happen in the rewrite*/
-	g_debug("got contact: %s", name);
+	g_debug("got contact: \"%s\" error? (%d)", name, error);
 	if (error == NULL && *name && data->parent.number_state) {
 		data->parent.number_state = CALL_NUMBER_CONTACT;
 		data->parent.number = strdup(name);

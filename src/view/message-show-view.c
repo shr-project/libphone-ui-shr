@@ -192,14 +192,18 @@ my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
 
 
 static void 
-name_callback(GError *error, char *name, void *_data)
+message_common_name_callback(GError *error, char *name, void *_data)
 {
-	g_debug("name callbacking...");
+	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	
+	g_debug("got contact: \"%s\" error? (%d)", name, error);
 	if (error == NULL && *name) {
-		struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 		data->name = strdup(name);
-		async_trigger(name_callback2, data);
 	}
+	else {
+		data->name = NULL;
+	}
+	async_trigger(name_callback2, data);
 }
 
 
@@ -207,7 +211,12 @@ static void
 name_callback2(struct MessageShowViewData *data)
 {
 	g_debug("name updating...");
-	window_text_set(data->win, "text_number", data->name);
+	if (data->name) {
+		window_text_set(data->win, "text_number", data->name);
+	}
+	else {
+		window_text_set(data->win, "text_number", data->number);
+	}
 }
 
 static void 
@@ -219,17 +228,13 @@ retrieve_callback(GError *error, char *status, char *number, char *content, GHas
 
 	data->status = strdup(status);
 	data->number = strdup(number);
-	data->name = "";
+	data->name = NULL;
 	data->content = strdup(content);
 	data->properties = properties; // TODO: copy
-	data->query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+	//data->query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 
 	g_debug("number = %s --> querying name...", number);
-	GValue *value = g_slice_alloc0(sizeof(GValue));
-	g_value_init(value, G_TYPE_STRING);
-	g_value_set_string(value, data->number);
-	g_hash_table_insert(data->query, "Phone", value);
-	opimd_contacts_get_single_contact_single_field(data->query, "Name", name_callback, data);
+	phonegui_contact_lookup(data->number, message_common_name_callback, data);
 
 	g_debug("loading message data...");
 

@@ -1,6 +1,8 @@
 #include "views.h"
 #include "call-common.h"
 
+#include <frameworkd-phonegui/frameworkd-phonegui.h>
+
 static void call_button_sound_state_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_dtmf_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_state_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
@@ -18,7 +20,7 @@ call_active_view_show(struct Window *win, GHashTable *options)
 	data->parent.number = g_hash_table_lookup(options, "number");
 	data->parent.dtmf_active = FALSE;
 	data->state = CALL_STATE_ACTIVE;
-	/* FIXME: next line should actually be passed as an opitoin */
+	/* FIXME: next line should actually be passed as an option */
 	data->parent.number_state = CALL_NUMBER_NUMBER;
 
 	window_layout_set(win, CALL_FILE, "call");
