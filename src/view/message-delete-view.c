@@ -102,8 +102,7 @@ frame_delete_show(void *_data)
 
 	window_layout_set(win, MESSAGE_FILE, "delete");
 
-	//window_text_set(win, "info", D_("Do you really want to delete it?"));
-	window_text_set(win, "info", D_("Deletion is not yet implemented!"));
+	window_text_set(win, "info", D_("Do you really want to delete it?"));
 
 	data->bt_yes = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt_yes, D_("Yes"));
@@ -148,7 +147,7 @@ frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
 
 	window_frame_show(data->win, data, frame_deleting_show, NULL);
 
-	g_debug("not yet implemented");
+	opimd_message_delete(data->path, delete_callback, data);
 }
 
 

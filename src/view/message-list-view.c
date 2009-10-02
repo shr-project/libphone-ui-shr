@@ -317,7 +317,7 @@ message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info
 
 		g_debug("filling options...");
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "path", data->path);
+		g_hash_table_insert(options, "path", g_hash_table_lookup(parameters, "path"));
 		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
 
