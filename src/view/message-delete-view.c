@@ -5,7 +5,7 @@
 
 struct MessageDeleteViewData {
 	struct Window *win;
-	int id;
+	char *path;
 	void (*callback)();
 	void *callback_data;
 	Evas_Object *bt_yes, *bt_no;
@@ -50,11 +50,11 @@ message_delete_view_show(struct Window *win, void *_options)
 	if (options == NULL)
 		g_error("At least option[id] must be set.");
 	else {
-		data->id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
+		data->path = g_hash_table_lookup(options, "path");
 		data->callback = g_hash_table_lookup(options, "delete_callback"); 
 		data->callback_data = g_hash_table_lookup(options, "delete_callback_data"); 
 
-		g_debug("Delete view with message id = %d", data->id);
+		g_debug("Delete view with message path = %s", data->path);
 	}
 
 	window_frame_show(win, data, frame_delete_show, frame_delete_hide);
@@ -102,7 +102,8 @@ frame_delete_show(void *_data)
 
 	window_layout_set(win, MESSAGE_FILE, "delete");
 
-	window_text_set(win, "info", D_("Do you really want to delete it?"));
+	//window_text_set(win, "info", D_("Do you really want to delete it?"));
+	window_text_set(win, "info", D_("Deletion is not yet implemented!"));
 
 	data->bt_yes = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt_yes, D_("Yes"));
@@ -147,7 +148,7 @@ frame_delete_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
 
 	window_frame_show(data->win, data, frame_deleting_show, NULL);
 
-	ogsmd_sim_delete_message(data->id, delete_callback, data);
+	g_debug("not yet implemented");
 }
 
 

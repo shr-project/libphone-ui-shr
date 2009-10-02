@@ -4,7 +4,7 @@
 
 struct MessageListViewData {
 	struct Window *win;
-
+	char *path;
 	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer, *button_delete;
 
 	Elm_Genlist_Item *selected_row;
@@ -267,7 +267,7 @@ message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info)
 		g_hash_table_insert(options, "direction", g_hash_table_lookup(parameters, "direction"));
 		g_hash_table_insert(options, "status", g_hash_table_lookup(parameters, "status"));
 		g_hash_table_insert(options, "date", g_hash_table_lookup(parameters, "date"));
-		
+		g_hash_table_insert(options, "path", g_hash_table_lookup(parameters, "path"));
 
 		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
@@ -317,7 +317,7 @@ message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info
 
 		g_debug("filling options...");
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "id", g_hash_table_lookup(parameters, "id"));
+		g_hash_table_insert(options, "path", data->path);
 		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
 
@@ -353,6 +353,15 @@ retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data)
 	g_ptr_array_foreach(data->messages, process_message, data);	
 }
 
+void
+_remove_tel(char *number)
+{
+	if (!strncmp("tel:",number,4)) {
+		char *tmp = strdup(number);
+		strcpy(number, &tmp[4]);
+		free(tmp);
+	}
+}
 static void 
 process_message(gpointer _entry, gpointer _data) 
 {
@@ -365,9 +374,14 @@ process_message(gpointer _entry, gpointer _data)
 
 	g_debug("processing entry");
 	strftime(datestr, 31, "%d.%m.%Y %H:%M", localtime(&timestamp));
- 
+
+ 	char *tmp;
+
+ 	tmp = strdup(g_value_get_string(g_hash_table_lookup(entry, "Sender")));
+ 	_remove_tel(tmp);
+ 	
 	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
-	g_hash_table_insert(parameters, "number", strdup(g_value_get_string(g_hash_table_lookup(entry, "Sender"))));
+	g_hash_table_insert(parameters, "number", tmp);
 	g_hash_table_insert(parameters, "content", strdup(g_value_get_string(g_hash_table_lookup(entry, "Content"))));
 	g_hash_table_insert(parameters, "direction", strdup(g_value_get_string(g_hash_table_lookup(entry, "Direction"))));
 	if (g_value_get_boolean(g_hash_table_lookup(entry, "MessageRead"))) {
@@ -376,7 +390,8 @@ process_message(gpointer _entry, gpointer _data)
 	else {
 		g_hash_table_insert(parameters, "status", strdup("Unread"));
 	}
-	g_hash_table_insert(parameters, "date", strdup(datestr));    
+	g_hash_table_insert(parameters, "date", strdup(datestr));
+	g_hash_table_insert(parameters, "path", strdup(g_value_get_string(g_hash_table_lookup(entry, "Path"))));
 
 
 	elm_genlist_item_append(data->list, &itc, parameters, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);

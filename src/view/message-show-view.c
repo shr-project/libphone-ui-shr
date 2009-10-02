@@ -5,7 +5,7 @@
 
 struct MessageShowViewData {
 	struct Window *win;
-	char *status, *number, *content, *name, *date;
+	char *status, *number, *content, *name, *date, *path;
 	int id;
 	GHashTable *properties;
 	GHashTable *query;
@@ -77,7 +77,8 @@ message_show_view_show(struct Window *win, void *_options)
 	direction = g_hash_table_lookup(options, "direction");
 	tmp = malloc(strlen(status) + strlen(direction) + 4);
 	sprintf(tmp, "%s (%s)", status, direction);
-	
+
+	data->path = g_hash_table_lookup(options, "path");
 	data->name = g_hash_table_lookup(options, "name");
 	data->number = g_hash_table_lookup(options, "number");
 	data->content = g_hash_table_lookup(options, "content");
@@ -159,7 +160,7 @@ message_show_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info
 	g_debug("message_show_view_delete_clicked()");
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "id", GINT_TO_POINTER(data->id));
+	g_hash_table_insert(options, "path", data->path);
 	g_hash_table_insert(options, "delete_callback", message_show_view_delete_callback);
 	g_hash_table_insert(options, "delete_callback_data", data);
 
