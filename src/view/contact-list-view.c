@@ -370,7 +370,7 @@ frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
 	evas_object_hide(data->hv);
 
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
-	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *properties = (it) ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);

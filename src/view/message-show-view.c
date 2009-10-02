@@ -5,8 +5,8 @@
 
 struct MessageShowViewData {
 	struct Window *win;
+	char *status, *number, *content, *name, *date;
 	int id;
-	char *status, *number, *content, *name;
 	GHashTable *properties;
 	GHashTable *query;
 	GValueArray *message;
@@ -52,7 +52,7 @@ name_callback(GError *error, char *name, gpointer _data);
 static void 
 name_callback2(struct MessageShowViewData *data);
 static void 
-retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer data);
+retrieve_callback(GHashTable *properties, gpointer _data);
 static void 
 retrieve_callback2(struct MessageShowViewData *data);
 
@@ -71,14 +71,25 @@ message_show_view_show(struct Window *win, void *_options)
 
 	struct MessageShowViewData *data = g_slice_alloc0(sizeof(struct MessageShowViewData));
 	data->win = win;
-	data->id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
 
+	char *direction, *status, *tmp;
+	status = g_hash_table_lookup(options, "status");
+	direction = g_hash_table_lookup(options, "direction");
+	tmp = malloc(strlen(status) + strlen(direction) + 4);
+	sprintf(tmp, "%s (%s)", status, direction);
+	
+	data->name = g_hash_table_lookup(options, "name");
+	data->number = g_hash_table_lookup(options, "number");
+	data->content = g_hash_table_lookup(options, "content");
+	data->status = tmp;
+	data->date = g_hash_table_lookup(options, "date");
+		
 	if (options != NULL) {
 		data->callback = g_hash_table_lookup(options, "delete_callback"); 
 		data->callback_data = g_hash_table_lookup(options, "delete_callback_data"); 
 	}
 
-	ogsmd_sim_retrieve_message(data->id, retrieve_callback, data);
+	retrieve_callback(options, data);
 
 	return data;
 }
@@ -220,16 +231,12 @@ name_callback2(struct MessageShowViewData *data)
 }
 
 static void 
-retrieve_callback(GError *error, char *status, char *number, char *content, GHashTable *properties, gpointer _data) 
+retrieve_callback(GHashTable *properties, gpointer _data) 
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
 
 	g_debug("retrieve_callback()");
 
-	data->status = strdup(status);
-	data->number = strdup(number);
-	data->name = NULL;
-	data->content = strdup(content);
 	data->properties = properties; // TODO: copy
 	//data->query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 
@@ -247,23 +254,13 @@ retrieve_callback2(struct MessageShowViewData *data)
 
 	window_layout_set(win, MESSAGE_FILE, "message_show");
 
-	time_t timestamp = 0;
-	GValue *value = g_hash_table_lookup(data->properties, "timestamp");
-	if (value) {
-		const char *timestr = g_value_get_string(value);
-		timestamp = time_stringtotimestamp(timestr);
-	}
-	char *status = data->status;
-	char *number = data->number;
+
 	char *content = string_replace_with_tags(data->content);
 
-	char datestr[32];
-	strftime(datestr, 31, "%d.%m.%Y, %H:%M", localtime(&timestamp));
-
-	window_text_set(win, "text_status", status);
-	window_text_set(win, "text_number", number);
+	window_text_set(win, "text_status", data->status);
+	window_text_set(win, "text_number", data->number);
 	window_text_set(win, "text_content", content);
-	window_text_set(win, "text_date", datestr);
+	window_text_set(win, "text_date", data->date);
 	window_text_set(win, "label_number", D_("From:"));
 	window_text_set(win, "label_date", D_("Date:"));
 	window_text_set(win, "label_status", D_("Status:"));

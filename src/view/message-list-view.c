@@ -262,9 +262,16 @@ message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info)
 		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "id", g_hash_table_lookup(parameters, "id"));
+		g_hash_table_insert(options, "number", g_hash_table_lookup(parameters, "number"));
+		g_hash_table_insert(options, "content", g_hash_table_lookup(parameters, "content"));
+		g_hash_table_insert(options, "direction", g_hash_table_lookup(parameters, "direction"));
+		g_hash_table_insert(options, "status", g_hash_table_lookup(parameters, "status"));
+		g_hash_table_insert(options, "date", g_hash_table_lookup(parameters, "date"));
+		
+
 		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
+
 
 		struct Window *win = window_new(D_("Show Message"));
 		window_init(win);
@@ -360,12 +367,17 @@ process_message(gpointer _entry, gpointer _data)
 	strftime(datestr, 31, "%d.%m.%Y %H:%M", localtime(&timestamp));
  
 	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
-	//g_hash_table_insert(parameters, "id", strdup(g_value_get_string(g_hash_table_lookup(entry, "Id"))));
 	g_hash_table_insert(parameters, "number", strdup(g_value_get_string(g_hash_table_lookup(entry, "Sender"))));
 	g_hash_table_insert(parameters, "content", strdup(g_value_get_string(g_hash_table_lookup(entry, "Content"))));
 	g_hash_table_insert(parameters, "direction", strdup(g_value_get_string(g_hash_table_lookup(entry, "Direction"))));
-	//g_hash_table_insert(parameters, "date", strdup(g_value_get_string(g_hash_table_lookup(entry, "Timestamp"))));
-	g_hash_table_insert(parameters, "date", strdup(datestr));  
+	if (g_value_get_boolean(g_hash_table_lookup(entry, "MessageRead"))) {
+		g_hash_table_insert(parameters, "status", strdup("Read"));
+	}
+	else {
+		g_hash_table_insert(parameters, "status", strdup("Unread"));
+	}
+	g_hash_table_insert(parameters, "date", strdup(datestr));    
+
 
 	elm_genlist_item_append(data->list, &itc, parameters, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
