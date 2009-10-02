@@ -233,7 +233,6 @@ retrieve_callback(GError *error, char *status, char *number, char *content, GHas
 	data->properties = properties; // TODO: copy
 	//data->query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 
-	g_debug("number = %s --> querying name...", number);
 	phonegui_contact_lookup(data->number, message_common_name_callback, data);
 
 	g_debug("loading message data...");
