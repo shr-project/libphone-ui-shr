@@ -12,7 +12,7 @@ struct ContactListViewData {
 
 
 static Elm_Genlist_Item_Class itc;
-DBusGProxy *GQuery = NULL;
+static DBusGProxy *GQuery = NULL;
 
 
 static void 
