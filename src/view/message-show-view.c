@@ -108,6 +108,7 @@ message_show_view_hide(void *_data)
 	evas_object_del(data->bt3);
 	evas_object_del(data->hbt1);
 	evas_object_del(data->hbt2);
+	evas_object_del(data->hbt3);
 	evas_object_del(data->bx);
 	evas_object_del(data->hv);
 
@@ -135,7 +136,8 @@ message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info
 	g_debug("message_show_view_answer_clicked()");
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "recipient", data->number);
+	g_hash_table_insert(options, "name", data->name);
+	g_hash_table_insert(options, "number", data->number);
 
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
@@ -212,9 +214,6 @@ message_common_name_callback(GError *error, char *name, void *_data)
 	if (error == NULL && *name) {
 		data->name = strdup(name);
 	}
-	else {
-		data->name = NULL;
-	}
 	async_trigger(name_callback2, data);
 }
 
@@ -246,6 +245,11 @@ retrieve_callback(GHashTable *properties, gpointer _data)
 	g_debug("loading message data...");
 
 	async_trigger(retrieve_callback2, data);
+}
+
+static void
+message_show_view_new_contact_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
+	phonegui_contacts_new_show(NULL, data->number);
 }
 
 static void 
@@ -292,18 +296,25 @@ retrieve_callback2(struct MessageShowViewData *data)
 
 	data->hbt1 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->hbt1, D_("Delete"));
-	evas_object_size_hint_min_set(data->hbt1, 130, 80);
+	evas_object_size_hint_min_set(data->hbt1, 140, 80);
 	evas_object_smart_callback_add(data->hbt1, "clicked", message_show_view_delete_clicked, data);
 	evas_object_show(data->hbt1);
 	elm_box_pack_end(data->bx, data->hbt1);
 
 	data->hbt2 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->hbt2, D_("Call"));
-	evas_object_size_hint_min_set(data->hbt2, 130, 80);
+	evas_object_size_hint_min_set(data->hbt2, 140, 80);
 	evas_object_smart_callback_add(data->hbt2, "clicked", message_show_view_call_clicked, data);
 	evas_object_show(data->hbt2);
 	elm_box_pack_end(data->bx, data->hbt2);
 
+	data->hbt3 = elm_button_add(window_evas_object_get(win));
+	elm_button_label_set(data->hbt3, D_("Add Contact"));
+	evas_object_size_hint_min_set(data->hbt3, 140, 80);
+	evas_object_smart_callback_add(data->hbt3, "clicked", message_show_view_new_contact_clicked, data);
+	evas_object_show(data->hbt3);
+	elm_box_pack_end(data->bx, data->hbt3);
+    
 	elm_hover_content_set(data->hv, "top", data->bx);
 
 
