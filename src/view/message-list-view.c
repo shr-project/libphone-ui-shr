@@ -12,6 +12,7 @@ struct MessageListViewData {
 	GPtrArray *messages;
 };
 
+
 static DBusGProxy *GQuery = NULL;
 static Elm_Genlist_Item_Class itc;
 
@@ -30,6 +31,8 @@ static void
 retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data);
 static void 
 retrieve_messagebook_callback2(struct MessageListViewData *data);
+static void
+process_messages(void *_data);
 static void 
 process_message(gpointer _message, gpointer _data);
 
@@ -51,20 +54,14 @@ gl_label_get(const void *data, Evas_Object *obj, const char *part)
 	GHashTable *parameters = (GHashTable *)data;
 	char *label = NULL;
 
-	g_debug("setting label '%s'", part);
-	if (!strcmp(part, "elm.date"))
-		label = g_hash_table_lookup(parameters, "date");
-	else if (!strcmp(part, "elm.number"))
-		label = g_hash_table_lookup(parameters, "number");
-	else if (!strcmp(part, "elm.content"))
-		label = g_hash_table_lookup(parameters, "content");
-	else if (!strcmp(part, "elm.text"))
-		label = g_strdup_printf("%s %s", g_hash_table_lookup(parameters, "date"), 
-				g_hash_table_lookup(parameters, "number"));
+	g_debug("getting label for %s", part);
+	if (!strcmp(part, "elm.text"))
+		return (g_strdup_printf("%s %s", g_hash_table_lookup(parameters, "date"),
+			g_hash_table_lookup(parameters, "number")));
 	else if (!strcmp(part, "elm.text.sub"))
-		label = g_hash_table_lookup(parameters, "content");
+		return (g_strdup(g_hash_table_lookup(parameters, "content")));
 
-	return (g_strdup(label));
+	return (NULL);
 }
 
 static Evas_Object *
@@ -77,7 +74,7 @@ gl_icon_get(const void *data, Evas_Object *obj, const char *part)
 static Eina_Bool
 gl_state_get(const void *data, Evas_Object *obj, const char *part)
 {
-	return (0);
+	return (EINA_FALSE);
 }
 
 static void
@@ -194,20 +191,21 @@ message_list_view_show(struct Window *win, void *_options)
 	window_swallow(win, "button_show", data->bt3);
 	evas_object_show(data->bt3);
 
-	g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
-	elm_theme_extension_add(MESSAGELIST_FILE);
+	//g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
+	//elm_theme_extension_add(MESSAGELIST_FILE);
 
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
-	elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
+	//elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
 	elm_widget_scale_set(data->list, 1.0);
 	window_swallow(data->win, "list", data->list);
-	itc.item_style     = "message";
+	itc.item_style     = "double_label";
 	itc.func.label_get = gl_label_get;
 	itc.func.icon_get  = gl_icon_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del       = gl_del;
-	//elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_AUTO);
-	//evas_object_size_hint_weight_set(data->list, 1.0, 1.0);
+	//elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
+	//evas_object_size_hint_align_set(data->list, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	//evas_object_size_hint_weight_set(data->list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_show(data->list);
 
 	_retrieve_messagebook(retrieve_messagebook_callback, data);
@@ -351,7 +349,7 @@ retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data)
 	//g_ptr_array_foreach(data->messages, add_integer_timestamp_to_message, NULL);
 	//g_ptr_array_sort(data->messages, compare_messages);
 
-	g_ptr_array_foreach(data->messages, process_message, data);	
+	async_trigger(process_messages, data);
 }
 
 void
@@ -363,8 +361,16 @@ _remove_tel(char *number)
 		free(tmp);
 	}
 }
-static void 
-process_message(gpointer _entry, gpointer _data) 
+
+static void
+process_messages(void *_data)
+{
+	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	g_ptr_array_foreach(data->messages, process_message, data);
+}
+
+static void
+process_message(gpointer _entry, gpointer _data)
 {
 	GHashTable *entry = (GHashTable *)_entry;
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
@@ -394,9 +400,10 @@ process_message(gpointer _entry, gpointer _data)
 	g_hash_table_insert(parameters, "date", strdup(datestr));
 	g_hash_table_insert(parameters, "path", strdup(g_value_get_string(g_hash_table_lookup(entry, "Path"))));
 
-
 	elm_genlist_item_append(data->list, &itc, parameters, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
+
+
 
 
 
