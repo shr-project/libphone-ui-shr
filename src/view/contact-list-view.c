@@ -131,7 +131,15 @@ _process_entry(gpointer _entry, gpointer _data)
 {
 	GHashTable *entry = (GHashTable *)_entry;
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
-	const char *number = g_value_get_string(g_hash_table_lookup(entry, "Phone"));
+	const char *number;
+	GValue *tmp = g_hash_table_lookup(entry, "Phone");
+	
+	if (tmp) {
+		number = g_value_get_string();
+	}
+	else {
+		number = "No Number";
+	}
 
 	if (number[0] == 't' && number[1] == 'e' && number[2] == 'l' && number[3] == ':')
 		number += 4;

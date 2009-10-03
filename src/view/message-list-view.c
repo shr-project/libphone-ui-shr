@@ -373,9 +373,19 @@ static void
 process_message(gpointer _entry, gpointer _data)
 {
 	GHashTable *entry = (GHashTable *)_entry;
+	GValue *gval_tmp;
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 
-	long timestamp = (long) g_value_get_double(g_hash_table_lookup(entry, "Timestamp"));
+	long timestamp;
+	gval_tmp = g_hash_table_lookup(entry, "Timestamp")
+	
+	if (tmp) {
+		timestamp = (long) g_value_get_double(gval_tmp);
+	}
+	else {
+		timestamp = 0;
+	}
+	
 
  	char datestr[32];
 
@@ -384,14 +394,42 @@ process_message(gpointer _entry, gpointer _data)
 
  	char *tmp;
 
- 	tmp = strdup(g_value_get_string(g_hash_table_lookup(entry, "Sender")));
+ 	gval_tmp = g_hash_table_lookup(entry, "Sender")
+	
+	if (tmp) {
+		tmp = strdup(g_value_get_string(gval_tmp));
+	}
+	else {
+		tmp = strdup("Missing sender");
+	}
  	_remove_tel(tmp);
  	
 	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	g_hash_table_insert(parameters, "number", tmp);
-	g_hash_table_insert(parameters, "content", strdup(g_value_get_string(g_hash_table_lookup(entry, "Content"))));
-	g_hash_table_insert(parameters, "direction", strdup(g_value_get_string(g_hash_table_lookup(entry, "Direction"))));
-	if (g_value_get_boolean(g_hash_table_lookup(entry, "MessageRead"))) {
+	
+	gval_tmp = g_hash_table_lookup(entry, "Content")
+	
+	if (tmp) {
+		tmp = strdup(g_value_get_string(gval_tmp));
+	}
+	else {
+		tmp = strdup("Missing content");
+	}
+	
+	g_hash_table_insert(parameters, "content", tmp);
+
+	gval_tmp = g_hash_table_lookup(entry, "Direction")
+	
+	if (tmp) {
+		tmp = strdup(g_value_get_string(gval_tmp));
+	}
+	else {
+		tmp = strdup("Missing direction");
+	}
+	g_hash_table_insert(parameters, "direction", direction);
+
+	gval_tmp = g_hash_table_lookup(entry, "MessageRead");
+	if (gval_tmp && g_value_get_boolean(g_hash_table_lookup(gval_tmp))) {
 		g_hash_table_insert(parameters, "status", strdup("Read"));
 	}
 	else {
