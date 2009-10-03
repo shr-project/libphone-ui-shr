@@ -1,5 +1,7 @@
 #include "views.h"
 
+#include <phone-utils.h>
+
 
 enum MessageNewModes {
 	MODE_CONTENT,
@@ -231,24 +233,20 @@ static void
 frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
-	char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
+	char *content;
 	int limit; /* the limit of the sms */
 	int len; /* the number of characters in the sms */
-	int size; /* the "memory" size of the sms */
 	char text[64];
+	/*FIXME: consider changing to an iterative way by using get_size (emulating what's
+	 * being done in phone_utils) as calculating for all the string on every keystroke is a bit sluggish. */
+	content = g_strstrip(strdup(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry))));
 
-	string_strip_html(content);
-
-	//g_debug("content: %s", content);
-
-
-	for (size = 0, len = 0; content[size]; len++) 
-		evas_common_font_utf8_get_next((unsigned char *)content, &size);
+	len = phone_utils_gsm_sms_strlen(content);
 
 	/* if it includes chars that can't be represented
 	* with 7bit encoding, this sms will be sent as ucs-2 treat
 	* it this way! */
-	if (size > len) 
+	if (phone_utils_gsm_is_ucs(content)) 
 		limit = 70; /* ucs-2 number of chars limit */
 	else 
 		limit = 160; /* regular number of chars limit */
