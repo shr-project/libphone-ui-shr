@@ -377,9 +377,9 @@ process_message(gpointer _entry, gpointer _data)
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 
 	long timestamp;
-	gval_tmp = g_hash_table_lookup(entry, "Timestamp")
+	gval_tmp = g_hash_table_lookup(entry, "Timestamp");
 	
-	if (tmp) {
+	if (gval_tmp) {
 		timestamp = (long) g_value_get_double(gval_tmp);
 	}
 	else {
@@ -394,9 +394,9 @@ process_message(gpointer _entry, gpointer _data)
 
  	char *tmp;
 
- 	gval_tmp = g_hash_table_lookup(entry, "Sender")
+ 	gval_tmp = g_hash_table_lookup(entry, "Sender");
 	
-	if (tmp) {
+	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
 	}
 	else {
@@ -407,9 +407,9 @@ process_message(gpointer _entry, gpointer _data)
 	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	g_hash_table_insert(parameters, "number", tmp);
 	
-	gval_tmp = g_hash_table_lookup(entry, "Content")
+	gval_tmp = g_hash_table_lookup(entry, "Content");
 	
-	if (tmp) {
+	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
 	}
 	else {
@@ -418,18 +418,18 @@ process_message(gpointer _entry, gpointer _data)
 	
 	g_hash_table_insert(parameters, "content", tmp);
 
-	gval_tmp = g_hash_table_lookup(entry, "Direction")
+	gval_tmp = g_hash_table_lookup(entry, "Direction");
 	
-	if (tmp) {
+	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
 	}
 	else {
-		tmp = strdup("Missing direction");
+		tmp = strdup("");
 	}
-	g_hash_table_insert(parameters, "direction", direction);
+	g_hash_table_insert(parameters, "direction", tmp);
 
 	gval_tmp = g_hash_table_lookup(entry, "MessageRead");
-	if (gval_tmp && g_value_get_boolean(g_hash_table_lookup(gval_tmp))) {
+	if (gval_tmp && g_value_get_boolean(gval_tmp)) {
 		g_hash_table_insert(parameters, "status", strdup("Read"));
 	}
 	else {
