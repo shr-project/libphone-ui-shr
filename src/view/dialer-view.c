@@ -225,7 +225,7 @@ frame_dialer_message_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct DialerViewData *data = (struct DialerViewData *)_data;
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "recipient", data->number);
+	g_hash_table_insert(options, "number", data->number);
 
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
