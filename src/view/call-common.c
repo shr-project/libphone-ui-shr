@@ -50,10 +50,19 @@ call_common_contact_callback(GError *error, char *name, void *_data)
 	if (error == NULL && *name && data->parent.number_state) {
 		data->parent.number_state = CALL_NUMBER_CONTACT;
 		data->parent.number = strdup(name);
-		elm_label_label_set( data->number,  data->parent.number);
+		async_trigger(call_common_contact_callback2, data);
 	}
 
 }
+
+
+void call_common_contact_callback2(void *_data)
+{
+	struct CallIncomingViewData *data = (struct CallIncomingViewData *) _data;
+	elm_label_label_set(data->number, data->parent.number);
+}
+
+
 
 CallSoundState
 call_common_get_sound_state ()
