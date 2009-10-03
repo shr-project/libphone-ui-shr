@@ -1,6 +1,6 @@
 #include "views.h"
 
-#include <frameworkd-phonegui/frameworkd-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 struct MessageListViewData {
 	struct Window *win;

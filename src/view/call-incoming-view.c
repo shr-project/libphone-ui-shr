@@ -1,7 +1,7 @@
 #include "views.h"
 #include "call-common.h"
 
-#include <frameworkd-phonegui/frameworkd-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 
 static void call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object *obj, void *event_info);
