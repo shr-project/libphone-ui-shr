@@ -326,7 +326,8 @@ frame_list_message_clicked(void *_data, Evas_Object *obj, void *event_info)
 		assert(g_hash_table_lookup(properties, "number") != NULL);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "recipient", g_hash_table_lookup(properties, "number"));
+		g_hash_table_insert(options, "name", g_hash_table_lookup(properties, "name"));
+		g_hash_table_insert(options, "number", g_hash_table_lookup(properties, "number"));
 
 		struct Window *win = window_new(D_("Compose SMS"));
 		window_init(win);

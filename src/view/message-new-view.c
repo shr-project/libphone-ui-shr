@@ -115,11 +115,17 @@ message_new_view_show(struct Window *win, void *_options)
 	data->messages_sent = 0;
 
 	if (options != NULL) {
-		char *recipient = g_hash_table_lookup(options, "recipient");
-		if (recipient != NULL) {
+		char *name = g_hash_table_lookup(options, "name");
+		char *number = g_hash_table_lookup(options, "number");
+		if (!name) {
+			name = "Number";
+		}
+		
+		if (number) {
 			GHashTable *properties = g_hash_table_new(g_str_hash, g_str_equal);
-			g_hash_table_insert(properties, strdup("name"), strdup("Number"));
-			g_hash_table_insert(properties, strdup("number"), strdup(recipient));
+
+			g_hash_table_insert(properties, strdup("name"), strdup(name));
+			g_hash_table_insert(properties, strdup("number"), strdup(number));
 			g_ptr_array_add(data->recipients, properties);
 		}
 	}
