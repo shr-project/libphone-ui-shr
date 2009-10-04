@@ -266,8 +266,12 @@ frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info)
 	}
 
 
+	int left = limit - (len % limit);
+	if (left == limit && (len / limit) + 1 > 1) {
+		left = 0;
+	}
 	/*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
-	sprintf(text, D_("%d characters left [%d]"), limit - (len % limit), (len / limit) + 1);
+	sprintf(text, D_("%d characters left [%d]"), left, (len / limit) + 1);
 	window_text_set(data->win, "characters_left", text);
 	free(content);
 }
