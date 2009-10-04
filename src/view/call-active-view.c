@@ -1,7 +1,7 @@
 #include "views.h"
 #include "call-common.h"
 
-#include <frameworkd-phonegui/frameworkd-phonegui.h>
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 static void call_button_sound_state_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
 static void call_button_dtmf_clicked(struct CallActiveViewData *data, Evas_Object *obj, void *event_info);
