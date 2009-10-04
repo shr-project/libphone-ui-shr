@@ -191,14 +191,15 @@ message_list_view_show(struct Window *win, void *_options)
 	window_swallow(win, "button_show", data->bt3);
 	evas_object_show(data->bt3);
 
-	//g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
-	//elm_theme_extension_add(MESSAGELIST_FILE);
+	g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
+	elm_theme_extension_add(MESSAGELIST_FILE);
 
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
 	//elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
 	elm_widget_scale_set(data->list, 1.0);
 	window_swallow(data->win, "list", data->list);
-	itc.item_style     = "double_label";
+	//itc.item_style     = "double_label";
+	itc.item_style     = "message";
 	itc.func.label_get = gl_label_get;
 	itc.func.icon_get  = gl_icon_get;
 	itc.func.state_get = gl_state_get;

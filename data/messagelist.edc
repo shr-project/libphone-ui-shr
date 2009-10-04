@@ -137,10 +137,10 @@ collections {
                text {
                   font: "redensek";
                   size: 10;
-		  elipsis: 0.0;
+		  elipsis: 1.0;
                   min: 1 1;
 //                  min: 0 1;
-                  align: 0.0 0.5;
+                  align: -1.0 0.5;
                }
             }
          }
