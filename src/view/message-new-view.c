@@ -252,10 +252,18 @@ frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info)
 	/* if it includes chars that can't be represented
 	* with 7bit encoding, this sms will be sent as ucs-2 treat
 	* it this way! */
-	if (phone_utils_gsm_is_ucs(content)) 
+	if (phone_utils_gsm_is_ucs(content)) {
 		limit = 70; /* ucs-2 number of chars limit */
-	else 
+		if (len > limit) {
+			limit = 67;
+		}
+	}
+	else {
 		limit = 160; /* regular number of chars limit */
+		if (len > limit) {
+			limit  = 153;
+		}
+	}
 
 
 	/*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
