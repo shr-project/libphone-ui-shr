@@ -101,7 +101,7 @@ _process_entry(gpointer _entry, gpointer _data)
 	const char *number;
 	GValue *tmp = g_hash_table_lookup(entry, "Phone");
 	if (tmp) {
-	        number = g_value_get_string();
+	        number = g_value_get_string(tmp);
 	}
 	else {
 	        number = "No Number";
