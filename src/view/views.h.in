@@ -13,11 +13,13 @@
 #include "async.h"
 #include "window.h"
 #include "call-common.h"
+#include "contact-list-common.h"
 
 #define D_(String) dgettext(PACKAGE, String)
 
 #define CALL_FILE "@DATADIR@/libframeworkd-phonegui-efl2/call.edj"
 #define CONTACTS_FILE "@DATADIR@/libframeworkd-phonegui-efl2/contacts.edj"
+#define CONTACTLIST_FILE "@DATADIR@/libframeworkd-phonegui-efl2/contactlist.edj"
 #define DIALER_FILE "@DATADIR@/libframeworkd-phonegui-efl2/dialer.edj"
 #define DIALOG_FILE "@DATADIR@/libframeworkd-phonegui-efl2/dialog.edj"
 //#define INCOMING_MESSAGE_FILE "@DATADIR@/libframeworkd-phonegui-efl2/incoming-message.edj"
