@@ -253,15 +253,15 @@ frame_content_content_changed(void *_data, Evas_Object *obj, void *event_info)
 	* with 7bit encoding, this sms will be sent as ucs-2 treat
 	* it this way! */
 	if (phone_utils_gsm_is_ucs(content)) {
-		limit = 70; /* ucs-2 number of chars limit */
+		limit = PHONE_UTILS_GSM_SMS_UCS_LIMIT; /* ucs-2 number of chars limit */
 		if (len > limit) {
-			limit = 67;
+			limit = PHONE_UTILS_GSM_SMS_UCS_SPLIT_LIMIT;
 		}
 	}
 	else {
-		limit = 160; /* regular number of chars limit */
+		limit = PHONE_UTILS_GSM_SMS_TEXT_LIMIT; /* regular number of chars limit */
 		if (len > limit) {
-			limit  = 153;
+			limit  = PHONE_UTILS_GSM_SMS_TEXT_SPLIT_LIMIT;
 		}
 	}
 
