@@ -427,6 +427,8 @@ frame_recipient_continue_clicked(void *_data, Evas_Object *obj, void *event_info
 		window_frame_show(data->win, data, frame_sending_show, frame_sending_hide);
 
 		phonegui_send_sms(data->content, data->recipients, NULL, NULL);
+
+		async_trigger(frame_recipient_send_callback2, data);
 	}
 }
 
