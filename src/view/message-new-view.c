@@ -1,5 +1,6 @@
 #include "views.h"
 
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 #include <phone-utils.h>
 
 
@@ -425,17 +426,7 @@ frame_recipient_continue_clicked(void *_data, Evas_Object *obj, void *event_info
 	if (data->recipients->len) {
 		window_frame_show(data->win, data, frame_sending_show, frame_sending_hide);
 
-		int i;
-		for (i = 0 ; i < data->recipients->len; i++) {
-			GHashTable *properties = (GHashTable *) g_ptr_array_index(data->recipients, i);
-			char *number = (char *) g_hash_table_lookup(properties, "number");
-			assert(number != NULL);
-
-			GHashTable *options = g_hash_table_new(NULL, NULL);
-			// TODO: Remove strdup
-			ogsmd_sms_send_message(strdup(number), strdup(data->content), options, frame_recipient_send_callback, data);
-			frame_recipient_send_callback(NULL, 1, "", data);
-		}
+		phonegui_send_sms(data->content, data->recipients, NULL, NULL);
 	}
 }
 
