@@ -3,37 +3,27 @@
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
 
-struct ContactListViewData {
-	struct Window *win;
-	Evas_Object *list;
-	Evas_Object *bx, *hv;
-	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
-};
 
 
-static Elm_Genlist_Item_Class itc;
-static DBusGProxy *GQuery = NULL;
-
-
-static void 
+static void
 frame_list_show(void *_data);
-static void 
+static void
 frame_list_hide(void *_data);
-static void 
+static void
 frame_list_new_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
+static void
 frame_list_call_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
+static void
 frame_list_options_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
+static void
 frame_list_message_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
+static void
 frame_list_edit_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
+static void
 frame_list_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
+static void
 frame_list_refresh(void *_data);
-static void 
+static void
 frame_list_refresh_callback(struct ContactListViewData *data);
 
 
@@ -44,6 +34,7 @@ contact_list_view_show(struct Window *win, void *_options)
 {
 	struct ContactListViewData *data = g_slice_alloc0(sizeof(struct ContactListViewData));
 	data->win = win;
+	data->query = NULL;
 
 	g_debug("contact_list_view_show()");
 
@@ -53,7 +44,7 @@ contact_list_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void 
+void
 contact_list_view_hide(void *_data)
 {
 	g_debug("contact_list_view_hide()");
@@ -64,130 +55,9 @@ contact_list_view_hide(void *_data)
 
 /* --- frame "list" --------------------------------------------------------- */
 
-static char *
-gl_label_get(const void *data, Evas_Object *obj, const char *part)
-{
-	GHashTable *parameters = (GHashTable *)data;
-	char *label = NULL;
-
-	//g_debug("gl_label_get(part=%s)", part);
-
-	if (!strcmp(part, "elm.text"))
-		label = g_hash_table_lookup(parameters, "name");
-	else if (!strcmp(part, "elm.text.sub"))
-		label = g_hash_table_lookup(parameters, "number");
-
-	return strdup(label);
-}
 
 
-static Evas_Object *
-gl_icon_get(const void *data, Evas_Object *obj, const char *part)
-{
-	return NULL;
-}
-
-
-static Eina_Bool 
-gl_state_get(const void *data, Evas_Object *obj, const char *part)
-{
-	return 0;
-}
-
-
-static void 
-gl_del(const void *data, Evas_Object *obj)
-{
-}
-
-
-static gint 
-_compare_entries(gconstpointer _a, gconstpointer _b)
-{
-	GHashTable **a = (GHashTable **)_a;
-	GHashTable **b = (GHashTable **)_b;
-	gpointer p; 
-	const char *name_a, *name_b;
-
-	p = g_hash_table_lookup(*a, "Name");
-	if (!p) {
-		name_a = "";
-		g_debug("name a not found!!!!");
-	} else
-		name_a = g_value_get_string(p);
-
-	p = g_hash_table_lookup(*b, "Name");
-	if (!p) {
-		name_b = "";
-		g_debug("name b not found!!!!");
-	} else
-		name_b = g_value_get_string(p);
-
-	return (strcasecmp(name_a, name_b));
-}
-
-static void 
-_process_entry(gpointer _entry, gpointer _data)
-{
-	GHashTable *entry = (GHashTable *)_entry;
-	struct ContactListViewData *data = (struct ContactListViewData *)_data;
-	const char *number;
-	GValue *tmp = g_hash_table_lookup(entry, "Phone");
-	
-	if (tmp) {
-		number = g_value_get_string(tmp);
-	}
-	else {
-		number = "No Number";
-	}
-
-	if (number[0] == 't' && number[1] == 'e' && number[2] == 'l' && number[3] == ':')
-		number += 4;
-
-	g_debug("number is '%s'", number);
-
-	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-	g_hash_table_insert(parameters, "path", strdup(g_value_get_string(g_hash_table_lookup(entry, "Path"))));
-	g_hash_table_insert(parameters, "name", strdup(g_value_get_string(g_hash_table_lookup(entry, "Name"))));
-	g_hash_table_insert(parameters, "number", strdup(number));
-
-	elm_genlist_item_append(data->list, &itc, parameters/*item data*/, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-}
-
-static void 
-_retrieve_callback(GError *error, GPtrArray *messages, void *data)
-{
-	if (error != NULL || messages == NULL) {
-		g_debug("dbus error !!!");
-		return;
-	}
-
-	g_ptr_array_sort(messages, _compare_entries);
-	g_ptr_array_foreach(messages, _process_entry, data);
-}
-
-static void 
-_result_callback(GError *error, int count, void *data)
-{
-	if (error == NULL) {
-		g_debug("result gave %d entries --> retrieving", count);
-		opimd_contact_query_get_multiple_results(GQuery, count, _retrieve_callback, data);
-	}
-}
-
-static void 
-_query_callback(GError *error, char *query_path, void *data)
-{
-	if (error == NULL) {
-		g_debug("query path is %s", query_path);
-		GQuery = dbus_connect_to_opimd_contact_query (query_path);
-		opimd_contact_query_get_result_count (GQuery, _result_callback, data);
-	}
-}
-
-
-
-static void 
+static void
 frame_list_show(void *_data)
 {
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
@@ -197,15 +67,10 @@ frame_list_show(void *_data)
 
 	window_layout_set(win, CONTACTS_FILE, "list");
 
-	data->list = elm_genlist_add(window_evas_object_get(data->win));
-	elm_widget_scale_set(data->list, 1.0);
-	window_swallow(data->win, "list", data->list);
-	itc.item_style     = "double_label";
-	itc.func.label_get = gl_label_get;
-	itc.func.icon_get  = gl_icon_get;
-	itc.func.state_get = gl_state_get;
-	itc.func.del       = gl_del;
-	evas_object_show(data->list);
+	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
+	elm_theme_extension_add(CONTACTLIST_FILE);
+
+	contact_list_add(data);
 
 	data->bt1 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt1, D_("New"));
@@ -259,10 +124,7 @@ frame_list_show(void *_data)
 
 	elm_hover_content_set(data->hv, "top", data->bx);
 
-	/* .. */
-	GHashTable *qry = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-	opimd_contacts_query(qry, _query_callback, data);
-	g_hash_table_destroy(qry);
+	contact_list_fill(data);
 }
 
 static void 
@@ -276,6 +138,7 @@ frame_list_hide(void *_data)
 	evas_object_del(data->bt2);
 	evas_object_del(data->bt_options);
 	evas_object_del(data->list);
+	evas_object_del(data->index);
 }
 
 static void 
@@ -407,8 +270,6 @@ frame_list_refresh_callback(struct ContactListViewData *data)
 	g_debug("frame_list_refresh_callback");
 	elm_genlist_clear(data->list);
 
-	GHashTable *qry = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-	opimd_contacts_query(qry, _query_callback, data);
-	g_hash_table_destroy(qry);
+	contact_list_fill(data);
 }
 

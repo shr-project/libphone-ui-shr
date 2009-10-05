@@ -1,6 +1,6 @@
 collections {
 
-   group { name: "elm/genlist/item/message/default";
+   group { name: "elm/genlist/item/contact/default";
       data.item: "stacking" "above";
       data.item: "selectraise" "on";
       data.item: "labels" "elm.text elm.text.sub";
@@ -140,7 +140,7 @@ collections {
 		  elipsis: 1.0;
                   min: 1 1;
 //                  min: 0 1;
-                  align: -1.0 0.5;
+                  align: 0.0 0.5;
                }
             }
          }
@@ -226,7 +226,7 @@ collections {
          }
       }
    }
-   group { name: "elm/genlist/item_odd/message/default";
+   group { name: "elm/genlist/item_odd/contact/default";
       data.item: "stacking" "above";
       data.item: "selectraise" "on";
       data.item: "labels" "elm.text elm.text.sub";
@@ -453,5 +453,6 @@ collections {
    }
 
 }
+
 
 

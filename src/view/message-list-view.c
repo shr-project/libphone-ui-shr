@@ -191,14 +191,15 @@ message_list_view_show(struct Window *win, void *_options)
 	window_swallow(win, "button_show", data->bt3);
 	evas_object_show(data->bt3);
 
-	//g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
-	//elm_theme_extension_add(MESSAGELIST_FILE);
+	g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
+	elm_theme_extension_add(MESSAGELIST_FILE);
 
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
 	//elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
 	elm_widget_scale_set(data->list, 1.0);
 	window_swallow(data->win, "list", data->list);
-	itc.item_style     = "double_label";
+	//itc.item_style     = "double_label";
+	itc.item_style     = "message";
 	itc.func.label_get = gl_label_get;
 	itc.func.icon_get  = gl_icon_get;
 	itc.func.state_get = gl_state_get;
@@ -378,48 +379,42 @@ process_message(gpointer _entry, gpointer _data)
 
 	long timestamp;
 	gval_tmp = g_hash_table_lookup(entry, "Timestamp");
-	
 	if (gval_tmp) {
-		timestamp = (long) g_value_get_double(gval_tmp);
+	        timestamp = (long) g_value_get_double(gval_tmp);
 	}
 	else {
-		timestamp = 0;
+	        timestamp = 0;
 	}
-	
 
- 	char datestr[32];
+
+	char datestr[32];
 
 	g_debug("processing entry");
 	strftime(datestr, 31, "%d.%m.%Y %H:%M", localtime(&timestamp));
 
- 	char *tmp;
+	char *tmp;
 
- 	gval_tmp = g_hash_table_lookup(entry, "Sender");
-	
+	gval_tmp = g_hash_table_lookup(entry, "Sender");
 	if (gval_tmp) {
-		tmp = strdup(g_value_get_string(gval_tmp));
+	        tmp = strdup(g_value_get_string(gval_tmp));
 	}
 	else {
-		tmp = strdup("Missing sender");
+	        tmp = strdup("Missing sender");
 	}
- 	_remove_tel(tmp);
- 	
+	_remove_tel(tmp);
+
 	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	g_hash_table_insert(parameters, "number", tmp);
-	
 	gval_tmp = g_hash_table_lookup(entry, "Content");
-	
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
 	}
 	else {
 		tmp = strdup("Missing content");
 	}
-	
 	g_hash_table_insert(parameters, "content", tmp);
 
 	gval_tmp = g_hash_table_lookup(entry, "Direction");
-	
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
 	}

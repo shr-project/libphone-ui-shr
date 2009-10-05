@@ -24,6 +24,8 @@ struct MessageNewViewData {
 	Etk_Widget *container_recipients, *tree_recipients;
 	Etk_Tree_Col *col1_recipients;
 
+	struct ContactListViewData *cdata;
+
 	int messages_sent;
 };
 
@@ -113,6 +115,7 @@ message_new_view_show(struct Window *win, void *_options)
 	data->content = NULL;
 	data->recipients = g_ptr_array_new();
 	data->messages_sent = 0;
+	data->cdata = NULL;
 
 	if (options != NULL) {
 		char *name = g_hash_table_lookup(options, "name");
@@ -473,6 +476,9 @@ frame_contact_add_show(void *_data)
 	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
 	struct Window *win = data->win;
 
+	data->cdata = g_slice_alloc0(sizeof(struct ContactListViewData));
+	data->cdata->win = data->win;
+
 	g_debug("frame_contact_add_show()");
 
 	window_layout_set(win, MESSAGE_FILE, "recipient_contact_add");
@@ -491,9 +497,11 @@ frame_contact_add_show(void *_data)
 	window_swallow(win, "button_add", data->bt2);
 	evas_object_show(data->bt2);
 
-	data->list_contacts = elm_my_contactlist_add(win->win);
-	window_swallow(win, "list", data->list_contacts);
-	evas_object_show(data->list_contacts);
+	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
+	elm_theme_extension_add(CONTACTLIST_FILE);
+
+	contact_list_add(data->cdata);
+	contact_list_fill(data->cdata);
 }
 
 static void 
@@ -505,7 +513,8 @@ frame_contact_add_hide(void *_data)
 
 	evas_object_del(data->bt1);
 	evas_object_del(data->bt2);
-	evas_object_del(data->list_contacts);
+	if (data->cdata)
+		evas_object_del(data->cdata->list);
 }
 
 static void 
@@ -522,11 +531,12 @@ frame_contact_add_back_clicked(void *_data, Evas_Object *obj, void *event_info)
 static void 
 frame_contact_add_add_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
-	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
-
 	g_debug("frame_contact_add_add_clicked()");
 
-	GHashTable *properties = elm_my_contactlist_selected_row_get(data->list_contacts);
+	struct MessageNewViewData *data = (struct MessageNewViewData *)_data;
+	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->cdata->list);
+	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+
 	if (properties != NULL) {
 		g_ptr_array_add(data->recipients, properties);
 		data->mode = MODE_RECIPIENT;
