@@ -3,6 +3,7 @@
 
 #include <Ecore_X.h>
 #include <Elementary.h>
+#include <Evas.h>
 #include <glib.h>
 
 
@@ -16,6 +17,12 @@ struct Window {
 
     void (*frame_hide_cb)();
 };
+
+struct InwinButton {
+	char *label;
+	void (*callback)(void *, Evas_Object *, void *);
+};
+
 
 typedef enum {
     KEYBOARD_OFF = ECORE_X_VIRTUAL_KEYBOARD_STATE_OFF,
@@ -41,5 +48,6 @@ void window_frame_hide(struct Window *win, void *data);
 void window_kbd_show(struct Window *win, KeyboardMode mode);
 void window_kbd_hide(struct Window *win);
 void window_destroy(struct Window *win, void *data);
+Evas_Object *window_inwin_dialog(struct Window *win, const char *label, GList *buttons, void *data);
 
 #endif

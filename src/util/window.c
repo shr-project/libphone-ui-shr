@@ -215,6 +215,48 @@ window_destroy(struct Window *win, void *options)
 }
 
 
+Evas_Object *
+window_inwin_dialog(struct Window *win, const char *label, GList *buttons, void *data)
+{
+	Evas_Object *inwin = elm_win_inwin_add(window_evas_object_get(win));
+
+	Evas_Object *bx = elm_box_add(window_evas_object_get(win));
+	elm_box_homogenous_set(bx, 1);
+
+	Evas_Object *e = elm_label_add(window_evas_object_get(win));
+	elm_label_label_set(e, label);
+	evas_object_show(e);
+	elm_box_pack_end(bx, e);
+
+	Evas_Object *bx2 = elm_box_add(window_evas_object_get(win));
+	elm_box_horizontal_set(bx2, 1);
+	elm_box_homogenous_set(bx2, 1);
+
+	for (buttons = g_list_first(buttons); buttons; buttons = g_list_next(buttons))
+	{
+		e = elm_button_add(window_evas_object_get(win));
+		elm_button_label_set(e, ((struct InwinButton *)buttons->data)->label);
+		evas_object_smart_callback_add(e, "clicked", ((struct InwinButton *)buttons->data)->callback, data);
+		evas_object_show(e);
+		elm_box_pack_end(bx2, e);
+		g_free(buttons->data);
+	}
+
+	g_list_free(buttons);
+
+	evas_object_show(bx2);
+	elm_box_pack_end(bx, bx2);
+	evas_object_show(bx);
+
+	elm_win_inwin_content_set(inwin, bx);
+
+	evas_object_show(inwin);
+
+	return (inwin);
+}
+
+
+
 static void 
 _window_delete_callback(void *data, Evas_Object *win, void *event_info) 
 {
