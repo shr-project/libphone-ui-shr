@@ -7,12 +7,12 @@
 #include "async.h"
 #include "views.h"
 
-static void _show(GHashTable *options);
+static void _show(GHashTable * options);
 static void _hide(struct Window *win);
 
 
-void 
-phonegui_backend_dialog_show(int type) 
+void
+phonegui_backend_dialog_show(int type)
 {
 	struct Window *win = window_new(D_("Information"));
 	instance_manager_add(INSTANCE_DIALOG, type, win);
@@ -24,8 +24,8 @@ phonegui_backend_dialog_show(int type)
 	async_trigger(_show, options);
 }
 
-void 
-phonegui_backend_dialog_hide(int type) 
+void
+phonegui_backend_dialog_hide(int type)
 {
 	struct Window *win = instance_manager_remove(INSTANCE_DIALOG, type);
 	assert(win != NULL);
@@ -34,8 +34,8 @@ phonegui_backend_dialog_hide(int type)
 }
 
 
-static void 
-_show(GHashTable *options) 
+static void
+_show(GHashTable * options)
 {
 	struct Window *win = g_hash_table_lookup(options, "win");
 	assert(win != NULL);
@@ -44,9 +44,8 @@ _show(GHashTable *options)
 	window_view_show(win, options, dialog_view_show, dialog_view_hide);
 }
 
-static void 
-_hide(struct Window *win) 
+static void
+_hide(struct Window *win)
 {
 	window_destroy(win, NULL);
 }
-

@@ -5,7 +5,8 @@
 struct MessageListViewData {
 	struct Window *win;
 	char *path;
-	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer, *button_delete;
+	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer,
+		*button_delete;
 
 	Elm_Genlist_Item *selected_row;
 
@@ -16,48 +17,63 @@ struct MessageListViewData {
 static DBusGProxy *GQuery = NULL;
 static Elm_Genlist_Item_Class itc;
 
-static void 
-message_list_view_new_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info);
-
-static void 
-retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data);
-static void 
-retrieve_messagebook_callback2(struct MessageListViewData *data);
 static void
-process_messages(void *_data);
-static void 
-process_message(gpointer _message, gpointer _data);
 
-static void 
-add_integer_timestamp_to_message(gpointer _message, gpointer _data); 
-static 
+
+message_list_view_new_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void
+
+
+message_list_view_show_clicked(void *_data, Evas_Object * obj,
+			       void *event_info);
+static void
+
+
+message_list_view_answer_clicked(void *_data, Evas_Object * obj,
+				 void *event_info);
+static void
+
+
+message_list_view_delete_clicked(void *_data, Evas_Object * obj,
+				 void *event_info);
+static void
+  my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
+
+static void
+
+
+retrieve_messagebook_callback(GError * error, GPtrArray * messages,
+			      void *_data);
+static void
+  retrieve_messagebook_callback2(struct MessageListViewData *data);
+static void
+  process_messages(void *_data);
+static void
+  process_message(gpointer _message, gpointer _data);
+
+static void
+  add_integer_timestamp_to_message(gpointer _message, gpointer _data);
+static
 gint compare_messages(gconstpointer _a, gconstpointer _b);
-static void 
-message_list_view_message_deleted(void *_data);
-static void 
-message_list_view_message_deleted_callback(struct MessageListViewData *data);
+static void
+  message_list_view_message_deleted(void *_data);
+static void
+  message_list_view_message_deleted_callback(struct MessageListViewData *data);
 
 
 /* --- message list view ---------------------------------------------------- */
 
 static char *
-gl_label_get(const void *data, Evas_Object *obj, const char *part)
+gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
-	GHashTable *parameters = (GHashTable *)data;
+	GHashTable *parameters = (GHashTable *) data;
 	char *label = NULL;
 
 	g_debug("getting label for %s", part);
 	if (!strcmp(part, "elm.text"))
-		return (g_strdup_printf("%s %s", g_hash_table_lookup(parameters, "date"),
-			g_hash_table_lookup(parameters, "number")));
+		return (g_strdup_printf
+			("%s %s", g_hash_table_lookup(parameters, "date"),
+			 g_hash_table_lookup(parameters, "number")));
 	else if (!strcmp(part, "elm.text.sub"))
 		return (g_strdup(g_hash_table_lookup(parameters, "content")));
 
@@ -65,89 +81,95 @@ gl_label_get(const void *data, Evas_Object *obj, const char *part)
 }
 
 static Evas_Object *
-gl_icon_get(const void *data, Evas_Object *obj, const char *part)
+gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 {
 	return (NULL);
 }
 
 
 static Eina_Bool
-gl_state_get(const void *data, Evas_Object *obj, const char *part)
+gl_state_get(const void *data, Evas_Object * obj, const char *part)
 {
 	return (EINA_FALSE);
 }
 
 static void
-gl_del(const void *data, Evas_Object *obj)
+gl_del(const void *data, Evas_Object * obj)
 {
 }
 
 struct _messages_pack {
-	void (*callback)(GError *, GPtrArray *, void *);
+	void (*callback) (GError *, GPtrArray *, void *);
 	void *data;
 };
 
 
-static void 
-_result_callback(GError *error, int count, void *_data)
+static void
+_result_callback(GError * error, int count, void *_data)
 {
 	struct _messages_pack *data = (struct _messages_pack *) _data;
 	if (error == NULL) {
 		g_debug("result gave %d entries --> retrieving", count);
-		opimd_message_query_get_multiple_results(GQuery, count, data->callback, data->data);
-	}
-}
-
-static void 
-_query_callback(GError *error, char *query_path, void *data)
-{
-	if (error == NULL) {
-		g_debug("query path is %s", query_path);
-		GQuery = dbus_connect_to_opimd_message_query (query_path);
-		opimd_message_query_get_result_count (GQuery, _result_callback, data);
+		opimd_message_query_get_multiple_results(GQuery, count,
+							 data->callback,
+							 data->data);
 	}
 }
 
 static void
-_retrieve_messagebook (void (*callback)(GError *, GPtrArray *, void *), void *_data)
+_query_callback(GError * error, char *query_path, void *data)
+{
+	if (error == NULL) {
+		g_debug("query path is %s", query_path);
+		GQuery = dbus_connect_to_opimd_message_query(query_path);
+		opimd_message_query_get_result_count(GQuery, _result_callback,
+						     data);
+	}
+}
+
+static void
+_retrieve_messagebook(void (*callback) (GError *, GPtrArray *, void *),
+		      void *_data)
 {
 	struct _messages_pack *data;
 	g_debug("retrieving messagebook");
-	/*FIXME: I need to free, I allocate and don't free*/
+	/*FIXME: I need to free, I allocate and don't free */
 	data = malloc(sizeof(struct _messages_pack *));
 	data->callback = callback;
 	data->data = _data;
-	GHashTable *query = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL); /*g_slice_alloc0 needs freeing */ 
+	GHashTable *query = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);	/*g_slice_alloc0 needs freeing */
 
 	GValue *sortby = g_slice_alloc0(sizeof(GValue));
 	g_value_init(sortby, G_TYPE_STRING);
 	g_value_set_string(sortby, "Timestamp");
 	g_hash_table_insert(query, "_sortby", sortby);
-	
+
 	GValue *sortdesc = g_slice_alloc0(sizeof(GValue));
 	g_value_init(sortdesc, G_TYPE_BOOLEAN);
 	g_value_set_boolean(sortdesc, 1);
 	g_hash_table_insert(query, "_sortdesc", sortdesc);
-	
+
 	opimd_messages_query(query, _query_callback, data);
 	g_hash_table_destroy(query);
 }
 
 
 void *
-message_list_view_show(struct Window *win, void *_options) 
+message_list_view_show(struct Window *win, void *_options)
 {
 	g_debug("message_list_view_show()");
 
-	struct MessageListViewData *data = g_slice_alloc0(sizeof(struct MessageListViewData));
+	struct MessageListViewData *data =
+		g_slice_alloc0(sizeof(struct MessageListViewData));
 	data->win = win;
 
 	window_layout_set(win, MESSAGE_FILE, "list");
-	window_text_set(win, "title", D_("Inbox")); 
+	window_text_set(win, "title", D_("Inbox"));
 
 	data->bt1 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt1, D_("New"));
-	evas_object_smart_callback_add(data->bt1, "clicked", message_list_view_new_clicked, data);
+	evas_object_smart_callback_add(data->bt1, "clicked",
+				       message_list_view_new_clicked, data);
 	window_swallow(win, "button_new", data->bt1);
 	evas_object_show(data->bt1);
 
@@ -156,7 +178,8 @@ message_list_view_show(struct Window *win, void *_options)
 
 	data->bt2 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt2, D_("Options"));
-	evas_object_smart_callback_add(data->bt2, "clicked", my_hover_bt_1, data->hv);
+	evas_object_smart_callback_add(data->bt2, "clicked", my_hover_bt_1,
+				       data->hv);
 	window_swallow(win, "button_options", data->bt2);
 	evas_object_show(data->bt2);
 
@@ -171,14 +194,16 @@ message_list_view_show(struct Window *win, void *_options)
 	data->button_answer = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->button_answer, D_("Answer"));
 	evas_object_size_hint_min_set(data->button_answer, 130, 80);
-	evas_object_smart_callback_add(data->button_answer, "clicked", message_list_view_answer_clicked, data);
+	evas_object_smart_callback_add(data->button_answer, "clicked",
+				       message_list_view_answer_clicked, data);
 	evas_object_show(data->button_answer);
 	elm_box_pack_end(data->bx, data->button_answer);
 
 	data->button_delete = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->button_delete, D_("Delete"));
 	evas_object_size_hint_min_set(data->button_delete, 130, 80);
-	evas_object_smart_callback_add(data->button_delete, "clicked", message_list_view_delete_clicked, data);
+	evas_object_smart_callback_add(data->button_delete, "clicked",
+				       message_list_view_delete_clicked, data);
 	evas_object_show(data->button_delete);
 	elm_box_pack_end(data->bx, data->button_delete);
 
@@ -187,7 +212,8 @@ message_list_view_show(struct Window *win, void *_options)
 
 	data->bt3 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt3, D_("Show"));
-	evas_object_smart_callback_add(data->bt3, "clicked", message_list_view_show_clicked, data);
+	evas_object_smart_callback_add(data->bt3, "clicked",
+				       message_list_view_show_clicked, data);
 	window_swallow(win, "button_show", data->bt3);
 	evas_object_show(data->bt3);
 
@@ -199,11 +225,11 @@ message_list_view_show(struct Window *win, void *_options)
 	elm_widget_scale_set(data->list, 1.0);
 	window_swallow(data->win, "list", data->list);
 	//itc.item_style     = "double_label";
-	itc.item_style     = "message";
+	itc.item_style = "message";
 	itc.func.label_get = gl_label_get;
-	itc.func.icon_get  = gl_icon_get;
+	itc.func.icon_get = gl_icon_get;
 	itc.func.state_get = gl_state_get;
-	itc.func.del       = gl_del;
+	itc.func.del = gl_del;
 	//elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
 	//evas_object_size_hint_align_set(data->list, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	//evas_object_size_hint_weight_set(data->list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -216,10 +242,10 @@ message_list_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void 
-message_list_view_hide(void *_data) 
+void
+message_list_view_hide(void *_data)
 {
-	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 	struct Window *win = data->win;
 
 	g_debug("hiding the message list");
@@ -239,49 +265,62 @@ message_list_view_hide(void *_data)
 
 /* --- evas callbacks ------------------------------------------------------- */
 
-static void 
-message_list_view_new_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void
+message_list_view_new_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	g_debug("message_list_view_new_clicked()");
 
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
-	window_view_show(win, NULL, message_new_view_show, message_new_view_hide);
+	window_view_show(win, NULL, message_new_view_show,
+			 message_new_view_hide);
 }
 
-static void 
-message_list_view_show_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void
+message_list_view_show_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	g_debug("message_list_view_show_clicked()");
 
 	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
-		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
+		GHashTable *parameters =
+			(GHashTable *) elm_genlist_item_data_get(data->
+								 selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "number", g_hash_table_lookup(parameters, "number"));
-		g_hash_table_insert(options, "content", g_hash_table_lookup(parameters, "content"));
-		g_hash_table_insert(options, "direction", g_hash_table_lookup(parameters, "direction"));
-		g_hash_table_insert(options, "status", g_hash_table_lookup(parameters, "status"));
-		g_hash_table_insert(options, "date", g_hash_table_lookup(parameters, "date"));
-		g_hash_table_insert(options, "path", g_hash_table_lookup(parameters, "path"));
+		g_hash_table_insert(options, "number",
+				    g_hash_table_lookup(parameters, "number"));
+		g_hash_table_insert(options, "content",
+				    g_hash_table_lookup(parameters, "content"));
+		g_hash_table_insert(options, "direction",
+				    g_hash_table_lookup(parameters,
+							"direction"));
+		g_hash_table_insert(options, "status",
+				    g_hash_table_lookup(parameters, "status"));
+		g_hash_table_insert(options, "date",
+				    g_hash_table_lookup(parameters, "date"));
+		g_hash_table_insert(options, "path",
+				    g_hash_table_lookup(parameters, "path"));
 
-		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
+		g_hash_table_insert(options, "delete_callback",
+				    message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
 
 
 		struct Window *win = window_new(D_("Show Message"));
 		window_init(win);
-		window_view_show(win, options, message_show_view_show, message_show_view_hide);
+		window_view_show(win, options, message_show_view_show,
+				 message_show_view_hide);
 	}
 }
 
-static void 
-message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void
+message_list_view_answer_clicked(void *_data, Evas_Object * obj,
+				 void *event_info)
 {
-	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	g_debug("message_list_view_answer_clicked()");
 
@@ -289,22 +328,28 @@ message_list_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info
 
 	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
-		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
+		GHashTable *parameters =
+			(GHashTable *) elm_genlist_item_data_get(data->
+								 selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "name", g_hash_table_lookup(parameters, "name"));
-		g_hash_table_insert(options, "number", g_hash_table_lookup(parameters, "number"));
+		g_hash_table_insert(options, "name",
+				    g_hash_table_lookup(parameters, "name"));
+		g_hash_table_insert(options, "number",
+				    g_hash_table_lookup(parameters, "number"));
 
 		struct Window *win = window_new(D_("SMS Answer"));
 		window_init(win);
-		window_view_show(win, options, message_new_view_show, message_new_view_hide);
+		window_view_show(win, options, message_new_view_show,
+				 message_new_view_hide);
 	}
 }
 
-static void 
-message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info) 
+static void
+message_list_view_delete_clicked(void *_data, Evas_Object * obj,
+				 void *event_info)
 {
-	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	g_debug("message_list_view_delete_clicked()");
 
@@ -313,25 +358,30 @@ message_list_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info
 	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
 		g_debug("found a selected row to delete...");
-		GHashTable *parameters = (GHashTable *)elm_genlist_item_data_get(data->selected_row);
+		GHashTable *parameters =
+			(GHashTable *) elm_genlist_item_data_get(data->
+								 selected_row);
 
 		g_debug("filling options...");
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "path", g_hash_table_lookup(parameters, "path"));
-		g_hash_table_insert(options, "delete_callback", message_list_view_message_deleted);
+		g_hash_table_insert(options, "path",
+				    g_hash_table_lookup(parameters, "path"));
+		g_hash_table_insert(options, "delete_callback",
+				    message_list_view_message_deleted);
 		g_hash_table_insert(options, "delete_callback_data", data);
 
 		g_debug("calling confirmation window...");
 		struct Window *win = window_new(D_("Delete Message"));
 		window_init(win);
-		window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
+		window_view_show(win, options, message_delete_view_show,
+				 message_delete_view_hide);
 	}
 }
 
-static void 
-my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info) 
+static void
+my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 {
-	Evas_Object *hv = (Evas_Object *)_data;
+	Evas_Object *hv = (Evas_Object *) _data;
 	evas_object_show(hv);
 }
 
@@ -339,10 +389,10 @@ my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
 
 /* --- dbus/libframeworkd callbacks ----------------------------------------- */
 
-static void 
-retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data) 
+static void
+retrieve_messagebook_callback(GError * error, GPtrArray * messages, void *_data)
 {
-	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	g_debug("retrieve messagebook callback(error=%d)", error);
 
@@ -356,7 +406,7 @@ retrieve_messagebook_callback(GError *error, GPtrArray *messages, void *_data)
 void
 _remove_tel(char *number)
 {
-	if (!strncmp("tel:",number,4)) {
+	if (!strncmp("tel:", number, 4)) {
 		char *tmp = strdup(number);
 		strcpy(number, &tmp[4]);
 		free(tmp);
@@ -366,24 +416,24 @@ _remove_tel(char *number)
 static void
 process_messages(void *_data)
 {
-	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 	g_ptr_array_foreach(data->messages, process_message, data);
 }
 
 static void
 process_message(gpointer _entry, gpointer _data)
 {
-	GHashTable *entry = (GHashTable *)_entry;
+	GHashTable *entry = (GHashTable *) _entry;
 	GValue *gval_tmp;
-	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	long timestamp;
 	gval_tmp = g_hash_table_lookup(entry, "Timestamp");
 	if (gval_tmp) {
-	        timestamp = (long) g_value_get_int(gval_tmp);
+		timestamp = (long) g_value_get_int(gval_tmp);
 	}
 	else {
-	        timestamp = 0;
+		timestamp = 0;
 	}
 
 
@@ -394,10 +444,11 @@ process_message(gpointer _entry, gpointer _data)
 
 	char *tmp;
 
-	
 
-	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
-	
+
+	GHashTable *parameters =
+		g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
+
 	gval_tmp = g_hash_table_lookup(entry, "Direction");
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
@@ -407,7 +458,7 @@ process_message(gpointer _entry, gpointer _data)
 	}
 	g_hash_table_insert(parameters, "direction", tmp);
 
-	
+
 	if (!strncmp(tmp, "in", 2)) {
 		gval_tmp = g_hash_table_lookup(entry, "Sender");
 	}
@@ -415,14 +466,14 @@ process_message(gpointer _entry, gpointer _data)
 		gval_tmp = g_hash_table_lookup(entry, "Recipient");
 	}
 	if (gval_tmp) {
-	        tmp = strdup(g_value_get_string(gval_tmp));
-	        _remove_tel(tmp);
+		tmp = strdup(g_value_get_string(gval_tmp));
+		_remove_tel(tmp);
 	}
 	else {
-	        tmp = strdup("Missing sender");
+		tmp = strdup("Missing sender");
 	}
 	g_hash_table_insert(parameters, "number", tmp);
-	
+
 	gval_tmp = g_hash_table_lookup(entry, "Content");
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
@@ -440,9 +491,12 @@ process_message(gpointer _entry, gpointer _data)
 		g_hash_table_insert(parameters, "status", strdup("Unread"));
 	}
 	g_hash_table_insert(parameters, "date", strdup(datestr));
-	g_hash_table_insert(parameters, "path", strdup(g_value_get_string(g_hash_table_lookup(entry, "Path"))));
+	g_hash_table_insert(parameters, "path",
+			    strdup(g_value_get_string
+				   (g_hash_table_lookup(entry, "Path"))));
 
-	elm_genlist_item_append(data->list, &itc, parameters, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	elm_genlist_item_append(data->list, &itc, parameters, NULL,
+				ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
 
 
@@ -452,13 +506,15 @@ process_message(gpointer _entry, gpointer _data)
 
 /* --- helper functions ----------------------------------------------------- */
 
-static void 
-add_integer_timestamp_to_message(gpointer _message, gpointer _data) 
+static void
+add_integer_timestamp_to_message(gpointer _message, gpointer _data)
 {
-	GValueArray *message = (GValueArray *)_message;
+	GValueArray *message = (GValueArray *) _message;
 
-	GHashTable *details = g_value_get_boxed(g_value_array_get_nth(message, 4));
-	const char *timestr = g_value_get_string(g_hash_table_lookup(details, "timestamp"));
+	GHashTable *details =
+		g_value_get_boxed(g_value_array_get_nth(message, 4));
+	const char *timestr =
+		g_value_get_string(g_hash_table_lookup(details, "timestamp"));
 	time_t timestamp = time_stringtotimestamp(timestr);
 
 	// Insert integer timestamp into array
@@ -468,11 +524,11 @@ add_integer_timestamp_to_message(gpointer _message, gpointer _data)
 	g_hash_table_insert(details, strdup("timestamp_int"), value);
 }
 
-static gint 
-compare_messages(gconstpointer _a, gconstpointer _b) 
+static gint
+compare_messages(gconstpointer _a, gconstpointer _b)
 {
-	GValueArray **a = (GValueArray **)_a;
-	GValueArray **b = (GValueArray **)_b;
+	GValueArray **a = (GValueArray **) _a;
+	GValueArray **b = (GValueArray **) _b;
 	GHashTable *h1 = g_value_get_boxed(g_value_array_get_nth(*a, 4));
 	GHashTable *h2 = g_value_get_boxed(g_value_array_get_nth(*b, 4));
 
@@ -487,14 +543,15 @@ compare_messages(gconstpointer _a, gconstpointer _b)
 		return 0;
 }
 
-static void 
-message_list_view_message_deleted(void *data) 
+static void
+message_list_view_message_deleted(void *data)
 {
-	async_trigger(message_list_view_message_deleted_callback, (struct MessageListViewData *)data);
+	async_trigger(message_list_view_message_deleted_callback,
+		      (struct MessageListViewData *) data);
 }
 
-static void 
-message_list_view_message_deleted_callback(struct MessageListViewData *data) 
+static void
+message_list_view_message_deleted_callback(struct MessageListViewData *data)
 {
 	// TODO: Reload list instead of deleting the selected message
 	data->selected_row = elm_genlist_selected_item_get(data->list);
@@ -503,6 +560,3 @@ message_list_view_message_deleted_callback(struct MessageListViewData *data)
 		data->selected_row = NULL;
 	}
 }
-
-
-

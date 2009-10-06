@@ -10,9 +10,10 @@ struct MessageShowViewData {
 	GHashTable *properties;
 	GHashTable *query;
 	GValueArray *message;
-	Evas_Object *content_entry, *bt1, *bt2, *bt3, *hv, *bx, *hbt1, *hbt2, *hbt3;
+	Evas_Object *content_entry, *bt1, *bt2, *bt3, *hv, *bx, *hbt1, *hbt2,
+		*hbt3;
 
-	void (*callback)();
+	void (*callback) ();
 	void *callback_data;
 };
 
@@ -27,34 +28,45 @@ typedef enum {
 
 
 
-void *
-message_show_view_show(struct Window *win, void *_options);
-void 
-message_show_view_hide(void *_data);
+void *message_show_view_show(struct Window *win, void *_options);
+void
+  message_show_view_hide(void *_data);
 
-static void 
-message_show_view_close_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-message_show_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-message_show_view_delete_callback(void *_data);
-static void 
-message_show_view_delete_callback_callback(struct MessageShowViewData *data);
-static void 
-message_show_view_call_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void 
-my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info);
+static void
 
-static void 
-name_callback(GError *error, char *name, gpointer _data);
-static void 
-name_callback2(struct MessageShowViewData *data);
-static void 
-retrieve_callback(GHashTable *properties, gpointer _data);
-static void 
-retrieve_callback2(struct MessageShowViewData *data);
+
+message_show_view_close_clicked(void *_data, Evas_Object * obj,
+				void *event_info);
+static void
+
+
+message_show_view_answer_clicked(void *_data, Evas_Object * obj,
+				 void *event_info);
+static void
+
+
+message_show_view_delete_clicked(void *_data, Evas_Object * obj,
+				 void *event_info);
+static void
+  message_show_view_delete_callback(void *_data);
+static void
+  message_show_view_delete_callback_callback(struct MessageShowViewData *data);
+static void
+
+
+message_show_view_call_clicked(void *_data, Evas_Object * obj,
+			       void *event_info);
+static void
+  my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
+
+static void
+  name_callback(GError * error, char *name, gpointer _data);
+static void
+  name_callback2(struct MessageShowViewData *data);
+static void
+  retrieve_callback(GHashTable * properties, gpointer _data);
+static void
+  retrieve_callback2(struct MessageShowViewData *data);
 
 
 
@@ -65,11 +77,12 @@ message_show_view_show(struct Window *win, void *_options)
 {
 	assert(win != NULL);
 	assert(_options != NULL);
-	GHashTable *options = (GHashTable *)_options;
+	GHashTable *options = (GHashTable *) _options;
 
 	g_debug("message_show_view_show()");
 
-	struct MessageShowViewData *data = g_slice_alloc0(sizeof(struct MessageShowViewData));
+	struct MessageShowViewData *data =
+		g_slice_alloc0(sizeof(struct MessageShowViewData));
 	data->win = win;
 
 	char *direction, *status, *tmp;
@@ -84,10 +97,12 @@ message_show_view_show(struct Window *win, void *_options)
 	data->content = g_hash_table_lookup(options, "content");
 	data->status = tmp;
 	data->date = g_hash_table_lookup(options, "date");
-		
+
 	if (options != NULL) {
-		data->callback = g_hash_table_lookup(options, "delete_callback"); 
-		data->callback_data = g_hash_table_lookup(options, "delete_callback_data"); 
+		data->callback =
+			g_hash_table_lookup(options, "delete_callback");
+		data->callback_data =
+			g_hash_table_lookup(options, "delete_callback_data");
 	}
 
 	retrieve_callback(options, data);
@@ -95,10 +110,10 @@ message_show_view_show(struct Window *win, void *_options)
 	return data;
 }
 
-void 
+void
 message_show_view_hide(void *_data)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 	struct Window *win = data->win;
 
 	g_debug("message_show_view_hide()");
@@ -118,20 +133,22 @@ message_show_view_hide(void *_data)
 
 /* --- evas callbacks ------------------------------------------------------- */
 
-static void 
-message_show_view_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void
+message_show_view_close_clicked(void *_data, Evas_Object * obj,
+				void *event_info)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_close_clicked()");
 
 	window_destroy(data->win, NULL);
 }
 
-static void 
-message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void
+message_show_view_answer_clicked(void *_data, Evas_Object * obj,
+				 void *event_info)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_answer_clicked()");
 
@@ -141,47 +158,51 @@ message_show_view_answer_clicked(void *_data, Evas_Object *obj, void *event_info
 
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
-	window_view_show(win, options, message_new_view_show, message_new_view_hide);
+	window_view_show(win, options, message_new_view_show,
+			 message_new_view_hide);
 }
 
-static void 
-message_show_view_call_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void
+message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_call_clicked()");
 
 	ogsmd_call_initiate(data->number, "voice", NULL, NULL);
 }
 
-static void 
-message_show_view_delete_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void
+message_show_view_delete_clicked(void *_data, Evas_Object * obj,
+				 void *event_info)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_delete_clicked()");
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "path", data->path);
-	g_hash_table_insert(options, "delete_callback", message_show_view_delete_callback);
+	g_hash_table_insert(options, "delete_callback",
+			    message_show_view_delete_callback);
 	g_hash_table_insert(options, "delete_callback_data", data);
 
 	struct Window *win = window_new(D_("Delete Message"));
 	window_init(win);
-	window_view_show(win, options, message_delete_view_show, message_delete_view_hide);
+	window_view_show(win, options, message_delete_view_show,
+			 message_delete_view_hide);
 }
 
-static void 
+static void
 message_show_view_delete_callback(void *_data)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_delete_callback()");
 
 	async_trigger(message_show_view_delete_callback_callback, data);
 }
 
-static void 
+static void
 message_show_view_delete_callback_callback(struct MessageShowViewData *data)
 {
 	window_destroy(data->win, NULL);
@@ -190,10 +211,10 @@ message_show_view_delete_callback_callback(struct MessageShowViewData *data)
 		data->callback(data->callback_data);
 }
 
-static void 
-my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
+static void
+my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 {
-	Evas_Object *hv = (Evas_Object *)_data;
+	Evas_Object *hv = (Evas_Object *) _data;
 
 	g_debug("my_hover_bt_1()");
 
@@ -205,11 +226,11 @@ my_hover_bt_1(void *_data, Evas_Object *obj, void *event_info)
 /* --- dbus/libframeworkd callbacks ----------------------------------------- */
 
 
-static void 
-message_common_name_callback(GError *error, char *name, void *_data)
+static void
+message_common_name_callback(GError * error, char *name, void *_data)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
-	
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
+
 	g_debug("got contact: \"%s\" error? (%d)", name, error);
 	if (error == NULL && *name) {
 		data->name = strdup(name);
@@ -218,7 +239,7 @@ message_common_name_callback(GError *error, char *name, void *_data)
 }
 
 
-static void 
+static void
 name_callback2(struct MessageShowViewData *data)
 {
 	g_debug("name updating...");
@@ -230,17 +251,18 @@ name_callback2(struct MessageShowViewData *data)
 	}
 }
 
-static void 
-retrieve_callback(GHashTable *properties, gpointer _data) 
+static void
+retrieve_callback(GHashTable * properties, gpointer _data)
 {
-	struct MessageShowViewData *data = (struct MessageShowViewData *)_data;
+	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("retrieve_callback()");
 
-	data->properties = properties; // TODO: copy
+	data->properties = properties;	// TODO: copy
 	//data->query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 
-	phonegui_contact_lookup(data->number, message_common_name_callback, data);
+	phonegui_contact_lookup(data->number, message_common_name_callback,
+				data);
 
 	g_debug("loading message data...");
 
@@ -248,11 +270,13 @@ retrieve_callback(GHashTable *properties, gpointer _data)
 }
 
 static void
-message_show_view_new_contact_clicked(struct MessageShowViewData *data, Evas_Object *obj, void *event_info) {
+message_show_view_new_contact_clicked(struct MessageShowViewData *data,
+				      Evas_Object * obj, void *event_info)
+{
 	phonegui_contacts_new_show(NULL, data->number);
 }
 
-static void 
+static void
 retrieve_callback2(struct MessageShowViewData *data)
 {
 	struct Window *win = data->win;
@@ -272,7 +296,8 @@ retrieve_callback2(struct MessageShowViewData *data)
 
 	data->bt1 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt1, D_("Close"));
-	evas_object_smart_callback_add(data->bt1, "clicked", message_show_view_close_clicked, data);
+	evas_object_smart_callback_add(data->bt1, "clicked",
+				       message_show_view_close_clicked, data);
 	window_swallow(win, "button_close", data->bt1);
 	evas_object_show(data->bt1);
 
@@ -282,7 +307,8 @@ retrieve_callback2(struct MessageShowViewData *data)
 
 	data->bt2 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt2, D_("Options"));
-	evas_object_smart_callback_add(data->bt2, "clicked", my_hover_bt_1, data->hv);
+	evas_object_smart_callback_add(data->bt2, "clicked", my_hover_bt_1,
+				       data->hv);
 	window_swallow(win, "button_options", data->bt2);
 	evas_object_show(data->bt2);
 
@@ -297,35 +323,38 @@ retrieve_callback2(struct MessageShowViewData *data)
 	data->hbt1 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->hbt1, D_("Delete"));
 	evas_object_size_hint_min_set(data->hbt1, 140, 80);
-	evas_object_smart_callback_add(data->hbt1, "clicked", message_show_view_delete_clicked, data);
+	evas_object_smart_callback_add(data->hbt1, "clicked",
+				       message_show_view_delete_clicked, data);
 	evas_object_show(data->hbt1);
 	elm_box_pack_end(data->bx, data->hbt1);
 
 	data->hbt2 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->hbt2, D_("Call"));
 	evas_object_size_hint_min_set(data->hbt2, 140, 80);
-	evas_object_smart_callback_add(data->hbt2, "clicked", message_show_view_call_clicked, data);
+	evas_object_smart_callback_add(data->hbt2, "clicked",
+				       message_show_view_call_clicked, data);
 	evas_object_show(data->hbt2);
 	elm_box_pack_end(data->bx, data->hbt2);
 
 	data->hbt3 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->hbt3, D_("Add Contact"));
 	evas_object_size_hint_min_set(data->hbt3, 140, 80);
-	evas_object_smart_callback_add(data->hbt3, "clicked", message_show_view_new_contact_clicked, data);
+	evas_object_smart_callback_add(data->hbt3, "clicked",
+				       message_show_view_new_contact_clicked,
+				       data);
 	evas_object_show(data->hbt3);
 	elm_box_pack_end(data->bx, data->hbt3);
-    
+
 	elm_hover_content_set(data->hv, "top", data->bx);
 
 
 	data->bt3 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt3, D_("Answer"));
-	evas_object_smart_callback_add(data->bt3, "clicked", message_show_view_answer_clicked, data);
+	evas_object_smart_callback_add(data->bt3, "clicked",
+				       message_show_view_answer_clicked, data);
 	window_swallow(win, "button_answer", data->bt3);
 	evas_object_show(data->bt3);
 
 
 	window_show(win);
 }
-
-

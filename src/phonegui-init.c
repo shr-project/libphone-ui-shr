@@ -8,10 +8,10 @@
 #include <glib.h>
 #include "async.h"
 
-int event_callback(void *data, Ecore_Fd_Handler *fdh);
+int event_callback(void *data, Ecore_Fd_Handler * fdh);
 
-void 
-ui_init() 
+void
+ui_init()
 {
 
 	// Initializations
@@ -23,23 +23,25 @@ ui_init()
 
 	// Add ecore exit callback
 	/*if(phonegui_exit_cb != NULL) {
-	  g_debug("Added exit callback to ecore.");
-	  ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, phonegui_exit_cb, NULL);
-	  }*/
+	 * g_debug("Added exit callback to ecore.");
+	 * ecore_event_handler_add(ECORE_EVENT_SIGNAL_EXIT, phonegui_exit_cb, NULL);
+	 * } */
 
 	// Add ecore pipe handler
-	Ecore_Fd_Handler *handler = ecore_main_fd_handler_add(async_fd_input_get(), ECORE_FD_READ, event_callback, NULL, NULL, NULL);
-	ecore_main_fd_handler_active_set(handler, ECORE_FD_READ);    
+	Ecore_Fd_Handler *handler =
+		ecore_main_fd_handler_add(async_fd_input_get(), ECORE_FD_READ,
+					  event_callback, NULL, NULL, NULL);
+	ecore_main_fd_handler_active_set(handler, ECORE_FD_READ);
 
 	elm_run();
 }
 
-void 
-phonegui_backend_init(int argc, char **argv, void (*exit_cb)()) 
+void
+phonegui_backend_init(int argc, char **argv, void (*exit_cb) ())
 {
 
 	// Initialize gettext
-	setlocale (LC_ALL, "");
+	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
 
@@ -54,7 +56,7 @@ phonegui_backend_init(int argc, char **argv, void (*exit_cb)())
 	// Create thread for ecore loop
 	g_debug("Entering ecore loop");
 	pthread_t thread;
-	int rc = pthread_create(&thread, NULL, (void*) ui_init, NULL);
+	int rc = pthread_create(&thread, NULL, (void *) ui_init, NULL);
 	if (rc) {
 		g_error("Return code from pthread_create() is %d", rc);
 	}
@@ -62,11 +64,10 @@ phonegui_backend_init(int argc, char **argv, void (*exit_cb)())
 
 
 
-int 
-event_callback(void *data, Ecore_Fd_Handler *fdh) 
+int
+event_callback(void *data, Ecore_Fd_Handler * fdh)
 {
 	g_debug("event_callback()");
 	async_dispatch();
 	return (1);
 }
-

@@ -5,4 +5,3 @@ void phonegui_backend_contacts_hide();
 void phonegui_backend_contacts_hide();
 
 #endif
-

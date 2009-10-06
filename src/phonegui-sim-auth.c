@@ -7,12 +7,12 @@
 
 static struct Window *win = NULL;
 
-static void _show(GHashTable *options);
+static void _show(GHashTable * options);
 static void _hide(struct Window *win);
 
 
-void 
-phonegui_backend_sim_auth_show(const int status) 
+void
+phonegui_backend_sim_auth_show(const int status)
 {
 	g_debug("phonegui_backend_sim_auth_show()");
 
@@ -26,8 +26,8 @@ phonegui_backend_sim_auth_show(const int status)
 	}
 }
 
-void 
-phonegui_backend_sim_auth_hide(const int status) 
+void
+phonegui_backend_sim_auth_hide(const int status)
 {
 	g_debug("phonegui_backend_sim_auth_hide()");
 
@@ -44,8 +44,8 @@ phonegui_backend_sim_auth_hide(const int status)
 }
 
 
-static void 
-_show(GHashTable *options) 
+static void
+_show(GHashTable * options)
 {
 	g_debug("_show()");
 
@@ -53,14 +53,14 @@ _show(GHashTable *options)
 	assert(win != NULL);
 
 	window_init(win);
-	window_view_show(win, options, sim_auth_input_view_show, sim_auth_input_view_hide);
+	window_view_show(win, options, sim_auth_input_view_show,
+			 sim_auth_input_view_hide);
 	window_show(win);
 }
 
-static void 
-_hide(struct Window *win) 
+static void
+_hide(struct Window *win)
 {
 	g_debug("_hide()");
 	window_destroy(win, NULL);
 }
-

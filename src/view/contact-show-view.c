@@ -24,19 +24,19 @@ struct ContactViewData {
 };
 
 static void
-frame_show_show(void *_data);
+  frame_show_show(void *_data);
 static void
-frame_show_hide(void *_data);
+  frame_show_hide(void *_data);
 
 static void
-frame_photo_show(void *_data);
+  frame_photo_show(void *_data);
 static void
-frame_photo_hide(void *_data);
+  frame_photo_hide(void *_data);
 
 static void
-frame_edit_show(void *_data);
+  frame_edit_show(void *_data);
 static void
-frame_edit_hide(void *_data);
+  frame_edit_hide(void *_data);
 
 
 static Elm_Genlist_Item_Class itc;
@@ -47,30 +47,30 @@ static Elm_Genlist_Item_Class itc;
 static GValue *
 _new_gvalue_string(const char *value)
 {
-        GValue *val = calloc(1, sizeof(GValue));
-        if (!val) {
-                return NULL;
-        }
-        g_value_init(val, G_TYPE_STRING);
-        g_value_set_string(val, value);
+	GValue *val = calloc(1, sizeof(GValue));
+	if (!val) {
+		return NULL;
+	}
+	g_value_init(val, G_TYPE_STRING);
+	g_value_set_string(val, value);
 
-        return val;
+	return val;
 }
 
 /* --- smart callbacks --- */
 
 static void
-frame_show_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_close_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	window_destroy(data->win, NULL);
 }
 
 
 static void
-frame_show_edit_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	if (data->field) {
 		g_free(data->field->name);
 		g_free(data->field->value);
@@ -78,43 +78,45 @@ frame_show_edit_clicked(void *_data, Evas_Object *obj, void *event_info)
 	}
 	data->field = g_malloc(sizeof(struct ContactFieldData));
 	data->field->name = g_strdup("Name");
-	data->field->value = g_strdup(g_value_get_string(g_hash_table_lookup(data->properties, "Name")));
+	data->field->value =
+		g_strdup(g_value_get_string
+			 (g_hash_table_lookup(data->properties, "Name")));
 	window_frame_show(data->win, data, frame_edit_show, frame_edit_hide);
 }
 
 
 static void
-frame_show_actions_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_actions_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	evas_object_show(data->hv1);
 }
 
 
 
 static void
-frame_show_action_call_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_action_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	evas_object_hide(data->hv1);
 }
 
 
 static char *
-gl_field_label_get(const void *_data, Evas_Object *obj, const char *part)
+gl_field_label_get(const void *_data, Evas_Object * obj, const char *part)
 {
 	g_debug("gl_field_label_get (part=%s", part);
-	struct ContactFieldData *data = (struct ContactFieldData *)_data;
+	struct ContactFieldData *data = (struct ContactFieldData *) _data;
 	return (strdup(data->value));
 
 }
 
 
 static Evas_Object *
-gl_field_icon_get(const void *_data, Evas_Object *obj, const char *part)
+gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 {
 	g_debug("gl_field_icon_get (part=%s)", part);
-	struct ContactFieldData *data = (struct ContactFieldData *)_data;
+	struct ContactFieldData *data = (struct ContactFieldData *) _data;
 	Evas_Object *lbl = elm_label_add(obj);
 	evas_object_size_hint_align_set(obj, 1.0, 0.0);
 	elm_label_label_set(lbl, data->name);
@@ -123,10 +125,10 @@ gl_field_icon_get(const void *_data, Evas_Object *obj, const char *part)
 
 
 static void
-gl_field_del(const void *_data, Evas_Object *obj)
+gl_field_del(const void *_data, Evas_Object * obj)
 {
 	g_debug("gl_field_del");
-	struct ContactFieldData *data = (struct ContactFieldData *)_data;
+	struct ContactFieldData *data = (struct ContactFieldData *) _data;
 	if (data) {
 		if (data->name)
 			free(data->name);
@@ -140,31 +142,31 @@ gl_field_del(const void *_data, Evas_Object *obj)
 
 
 static void
-frame_show_action_sms_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_action_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	evas_object_hide(data->hv1);
 	window_frame_show(data->win, data, frame_photo_show, frame_photo_hide);
 }
 
 static void
-frame_show_name_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_name_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 }
 
 static void
-frame_show_number_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_number_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 }
 
 
 static void
-frame_show_photo_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_show_photo_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	g_debug("you clicked on the Photo :-)");
 }
 
-frame_show_edit_field(void *_data, Evas_Object *obj, void *event_info)
+frame_show_edit_field(void *_data, Evas_Object * obj, void *event_info)
 {
 	g_debug("editing field");
 }
@@ -177,7 +179,7 @@ frame_show_show(void *_data)
 	char *s;
 	GHashTableIter iter;
 	gpointer key, value;
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	Evas_Object *lbl;
 
 	g_debug("frame_show_show()");
@@ -216,7 +218,8 @@ frame_show_show(void *_data)
 	data->photo = elm_icon_add(window_evas_object_get(data->win));
 	elm_icon_file_set(data->photo, s, NULL);
 	window_swallow(data->win, "photo", data->photo);
-	evas_object_smart_callback_add(data->photo, "clicked", frame_show_photo_clicked, data);
+	evas_object_smart_callback_add(data->photo, "clicked",
+				       frame_show_photo_clicked, data);
 	evas_object_show(data->photo);
 
 	g_debug("loading field list");
@@ -226,7 +229,8 @@ frame_show_show(void *_data)
 	elm_theme_extension_add(CONTACTLIST_FILE);
 
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
-	elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_OFF, ELM_SCROLLER_POLICY_AUTO);
+	elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_OFF,
+				ELM_SCROLLER_POLICY_AUTO);
 	elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(data->list, 0.0, 0.0);
 	elm_widget_scale_set(data->list, 1.0);
@@ -239,21 +243,25 @@ frame_show_show(void *_data)
 
 	window_swallow(data->win, "fields", data->list);
 	evas_object_show(data->list);
-	evas_object_smart_callback_add(data->list, "longpressed", frame_show_edit_field, data);
+	evas_object_smart_callback_add(data->list, "longpressed",
+				       frame_show_edit_field, data);
 
 	g_hash_table_iter_init(&iter, data->properties);
 	while (g_hash_table_iter_next(&iter, &key, &value)) {
 
 		//if (!strcmp(key, "Path") || !strcmp(key, "Name") || !strcmp(key, "Phone"))
-		//	continue;
+		//      continue;
 
-		g_debug("adding field %s='%s' to list", key, g_value_get_string(value));
+		g_debug("adding field %s='%s' to list", key,
+			g_value_get_string(value));
 
-		struct ContactFieldData *fd = g_malloc(sizeof(struct ContactFieldData));
+		struct ContactFieldData *fd =
+			g_malloc(sizeof(struct ContactFieldData));
 		fd->name = g_strdup(key);
 		fd->value = g_strdup(g_value_get_string(value));
 
-		elm_genlist_item_append(data->list, &itc, fd, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+		elm_genlist_item_append(data->list, &itc, fd, NULL,
+					ELM_GENLIST_ITEM_NONE, NULL, NULL);
 	}
 
 	g_debug("setting up button bar");
@@ -261,19 +269,22 @@ frame_show_show(void *_data)
 	/* --- button bar --- */
 	data->bt1 = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(data->bt1, D_("Close"));
-	evas_object_smart_callback_add(data->bt1, "clicked", frame_show_close_clicked, data);
+	evas_object_smart_callback_add(data->bt1, "clicked",
+				       frame_show_close_clicked, data);
 	window_swallow(data->win, "button_back", data->bt1);
 	evas_object_show(data->bt1);
 
 	data->bt2 = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(data->bt2, D_("Edit"));
-	evas_object_smart_callback_add(data->bt2, "clicked", frame_show_edit_clicked, data);
+	evas_object_smart_callback_add(data->bt2, "clicked",
+				       frame_show_edit_clicked, data);
 	window_swallow(data->win, "button_edit", data->bt2);
 	evas_object_show(data->bt2);
 
 	data->bt3 = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(data->bt3, D_("Actions"));
-	evas_object_smart_callback_add(data->bt3, "clicked", frame_show_actions_clicked, data);
+	evas_object_smart_callback_add(data->bt3, "clicked",
+				       frame_show_actions_clicked, data);
 	window_swallow(data->win, "button_actions", data->bt3);
 	evas_object_show(data->bt3);
 
@@ -291,14 +302,16 @@ frame_show_show(void *_data)
 
 	Evas_Object *ico = elm_icon_add(window_evas_object_get(data->win));
 	elm_icon_file_set(ico, ICON_CALL, NULL);
-	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
+	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1,
+					 1);
 	evas_object_show(ico);
 	elm_box_pack_end(box2, ico);
 
 	Evas_Object *btn = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(btn, D_("Call"));
 	evas_object_size_hint_min_set(btn, 130, 80);
-	evas_object_smart_callback_add(btn, "clicked", frame_show_action_call_clicked, data);
+	evas_object_smart_callback_add(btn, "clicked",
+				       frame_show_action_call_clicked, data);
 	evas_object_show(btn);
 	elm_box_pack_end(box2, btn);
 
@@ -309,14 +322,16 @@ frame_show_show(void *_data)
 
 	ico = elm_icon_add(window_evas_object_get(data->win));
 	elm_icon_file_set(ico, ICON_SMS, NULL);
-	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
+	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1,
+					 1);
 	evas_object_show(ico);
 	elm_box_pack_end(box2, ico);
 
 	btn = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(btn, D_("SMS"));
 	evas_object_size_hint_min_set(btn, 130, 80);
-	evas_object_smart_callback_add(btn, "clicked", frame_show_action_sms_clicked, data);
+	evas_object_smart_callback_add(btn, "clicked",
+				       frame_show_action_sms_clicked, data);
 	evas_object_show(btn);
 	elm_box_pack_end(box2, btn);
 
@@ -332,7 +347,7 @@ static void
 frame_show_hide(void *_data)
 {
 	g_debug("frame_show_hide");
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	evas_object_del(data->bt1);
 	evas_object_del(data->bt2);
 	evas_object_del(data->bt3);
@@ -347,25 +362,25 @@ frame_show_hide(void *_data)
 /* === frame "photo" ===================================== */
 
 static void
-frame_photo_back_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_photo_back_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
 }
 
 
 static void
-frame_photo_select_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_photo_select_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
 }
 
 
 static void
-frame_photo_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_photo_remove_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
 }
 
@@ -377,7 +392,7 @@ frame_photo_show(void *_data)
 	char *s;
 
 	g_debug("frame_photo_show");
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 
 	window_layout_set(data->win, CONTACTS_FILE, "edit_photo");
 
@@ -405,19 +420,22 @@ frame_photo_show(void *_data)
 	data->bt1 = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(data->bt1, D_("Back"));
 	window_swallow(data->win, "button_back", data->bt1);
-	evas_object_smart_callback_add(data->bt1, "clicked", frame_photo_back_clicked, data);
+	evas_object_smart_callback_add(data->bt1, "clicked",
+				       frame_photo_back_clicked, data);
 	evas_object_show(data->bt1);
 
 	data->bt2 = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(data->bt2, D_("Back"));
 	window_swallow(data->win, "button_select", data->bt2);
-	evas_object_smart_callback_add(data->bt2, "clicked", frame_photo_select_clicked, data);
+	evas_object_smart_callback_add(data->bt2, "clicked",
+				       frame_photo_select_clicked, data);
 	evas_object_show(data->bt2);
 
 	data->bt3 = elm_button_add(window_evas_object_get(data->win));
 	elm_button_label_set(data->bt3, D_("Back"));
 	window_swallow(data->win, "button_remove", data->bt3);
-	evas_object_smart_callback_add(data->bt3, "clicked", frame_photo_remove_clicked, data);
+	evas_object_smart_callback_add(data->bt3, "clicked",
+				       frame_photo_remove_clicked, data);
 	evas_object_show(data->bt3);
 }
 
@@ -426,7 +444,7 @@ frame_photo_show(void *_data)
 static void
 frame_photo_hide(void *_data)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 
 	evas_object_del(data->photo);
 	evas_object_del(data->list);
@@ -440,8 +458,8 @@ frame_photo_hide(void *_data)
 
 
 
-static char* 
-frame_edit_value_get(Evas_Object *entry)
+static char *
+frame_edit_value_get(Evas_Object * entry)
 {
 	g_debug("frame_edit_value_get()");
 
@@ -453,7 +471,7 @@ frame_edit_value_get(Evas_Object *entry)
 
 
 gboolean
-frame_edit_data_changed(struct ContactViewData *data)
+frame_edit_data_changed(struct ContactViewData * data)
 {
 	char *s;
 
@@ -467,19 +485,23 @@ frame_edit_data_changed(struct ContactViewData *data)
 }
 
 
-static void 
-frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void
+frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 
 	g_debug("frame_edit_save_clicked()");
 
 	if (frame_edit_data_changed(data)) {
 		g_debug("---> %s needs saving", data->path);
-		GHashTable *field_data = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-		g_hash_table_insert(field_data, g_strdup(data->field->name), _new_gvalue_string(data->field->value));
+		GHashTable *field_data =
+			g_hash_table_new_full(g_str_hash, g_str_equal, free,
+					      free);
+		g_hash_table_insert(field_data, g_strdup(data->field->name),
+				    _new_gvalue_string(data->field->value));
 		if (data->path)
-			opimd_contact_update(data->path, field_data, NULL, NULL);
+			opimd_contact_update(data->path, field_data, NULL,
+					     NULL);
 		else
 			opimd_contacts_add(field_data, NULL, NULL);
 		g_debug("delegated save to lfg");
@@ -492,36 +514,36 @@ frame_edit_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 //static void 
 //frame_edit_save_new_callback(GError *error, char *path, void *_data)
 //{
-//	struct ContactViewData *data = (struct ContactViewData *)_data;
-//	g_debug("frame_edit_save_new_callback() --> %s", path);
-//	async_trigger(frame_edit_save_callback2, data);
+//      struct ContactViewData *data = (struct ContactViewData *)_data;
+//      g_debug("frame_edit_save_new_callback() --> %s", path);
+//      async_trigger(frame_edit_save_callback2, data);
 //}
 
 //static void 
 //frame_edit_save_update_callback(GError *error, void *_data)
 //{
-//	struct ContactViewData *data = (struct ContactViewData *)_data;
-//	g_debug("frame_edit_save_update_callback()");
-//	async_trigger(frame_edit_save_callback2, data);
+//      struct ContactViewData *data = (struct ContactViewData *)_data;
+//      g_debug("frame_edit_save_update_callback()");
+//      async_trigger(frame_edit_save_callback2, data);
 //}
 
 //static void 
 //frame_edit_save_callback2(struct ContactViewData *data)
 //{
-//	g_debug("frame_edit_save_callback2()");
-//	if (data->name)
-//		free(data->name);
-//	if (data->number)
-//		free(data->number);
-//	window_destroy(data->win, NULL);
+//      g_debug("frame_edit_save_callback2()");
+//      if (data->name)
+//              free(data->name);
+//      if (data->number)
+//              free(data->number);
+//      window_destroy(data->win, NULL);
 //
 //}
 
 
 static void
-frame_no_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_no_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	if (data->inwin) {
 		evas_object_del(data->inwin);
 		data->inwin = NULL;
@@ -530,9 +552,9 @@ frame_no_clicked(void *_data, Evas_Object *obj, void *event_info)
 
 
 static void
-frame_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
+frame_yes_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	if (data->inwin) {
 		evas_object_del(data->inwin);
 		data->inwin = NULL;
@@ -542,12 +564,12 @@ frame_yes_clicked(void *_data, Evas_Object *obj, void *event_info)
 
 
 
-static void 
-frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info)
+static void
+frame_edit_close_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct InwinButton *btn;
 	GList *buttons = NULL;
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 
 	g_debug("frame_edit_close_clicked()");
 
@@ -561,7 +583,10 @@ frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info)
 		btn->callback = frame_no_clicked;
 		buttons = g_list_append(buttons, btn);
 
-		data->inwin = window_inwin_dialog(data->win, D_("Really discard all changes?"), buttons, data);
+		data->inwin =
+			window_inwin_dialog(data->win,
+					    D_("Really discard all changes?"),
+					    buttons, data);
 
 		return;
 	}
@@ -573,11 +598,11 @@ frame_edit_close_clicked(void *_data, Evas_Object *obj, void *event_info)
 
 
 
-static void 
+static void
 frame_edit_show(void *_data)
 {
 	GValue *tmp;
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 
 	g_debug("frame_edit_show()");
 
@@ -587,18 +612,20 @@ frame_edit_show(void *_data)
 
 	data->bt1 = elm_button_add(data->win->win);
 	elm_button_label_set(data->bt1, D_("Back"));
-	evas_object_smart_callback_add(data->bt1, "clicked", frame_edit_close_clicked, data);
+	evas_object_smart_callback_add(data->bt1, "clicked",
+				       frame_edit_close_clicked, data);
 	window_swallow(data->win, "button_back", data->bt1);
 	evas_object_show(data->bt1);
 
 	data->bt2 = elm_button_add(data->win->win);
 	elm_button_label_set(data->bt2, D_("Save"));
-	evas_object_smart_callback_add(data->bt2, "clicked", frame_edit_save_clicked, data);
+	evas_object_smart_callback_add(data->bt2, "clicked",
+				       frame_edit_save_clicked, data);
 	window_swallow(data->win, "button_save", data->bt2);
 	evas_object_show(data->bt2);
 
 	data->label_name = elm_label_add(data->win->win);
-	elm_label_label_set( data->label_name,  D_("Field: "));
+	elm_label_label_set(data->label_name, D_("Field: "));
 	window_swallow(data->win, "label_name", data->label_name);
 	evas_object_show(data->label_name);
 
@@ -616,7 +643,7 @@ frame_edit_show(void *_data)
 	evas_object_show(data->sc_name);
 
 	data->label_number = elm_label_add(data->win->win);
-	elm_label_label_set( data->label_number,  D_("Value: "));
+	elm_label_label_set(data->label_number, D_("Value: "));
 	window_swallow(data->win, "label_number", data->label_number);
 	evas_object_show(data->label_number);
 
@@ -639,7 +666,7 @@ frame_edit_show(void *_data)
 static void
 frame_edit_hide(void *_data)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 
 	g_debug("frame_edit_hide()");
 
@@ -667,10 +694,11 @@ contact_show_view_show(struct Window *win, void *_data)
 {
 	g_debug("contact_view_show()");
 
-	struct ContactViewData *data = g_slice_alloc0(sizeof(struct ContactViewData));
+	struct ContactViewData *data =
+		g_slice_alloc0(sizeof(struct ContactViewData));
 	data->win = win;
 	if (_data) {
-		data->properties = (GHashTable *)_data;
+		data->properties = (GHashTable *) _data;
 		GValue *tmp = g_hash_table_lookup(data->properties, "Path");
 		if (tmp)
 			data->path = g_value_get_string(tmp);
@@ -678,7 +706,9 @@ contact_show_view_show(struct Window *win, void *_data)
 			data->path = NULL;
 	}
 	else {
-		data->properties = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+		data->properties =
+			g_hash_table_new_full(g_str_hash, g_str_equal, NULL,
+					      NULL);
 		g_hash_table_insert(data->properties, "Name", NULL);
 		g_hash_table_insert(data->properties, "Phone", NULL);
 		data->path = NULL;
@@ -699,8 +729,3 @@ contact_show_view_hide(void *_data)
 	g_debug("contact_view_hide()");
 
 }
-
-
-
-
-

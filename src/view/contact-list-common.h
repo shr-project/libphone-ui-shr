@@ -29,12 +29,9 @@ struct ContactListViewData {
 
 
 void
-contact_list_fill(struct ContactListViewData *data);
+  contact_list_fill(struct ContactListViewData *data);
 
-Evas_Object *
-contact_list_add(struct ContactListViewData *data);
+Evas_Object *contact_list_add(struct ContactListViewData *data);
 
 
 #endif // _CONTACTS_COMMON_H
-
-

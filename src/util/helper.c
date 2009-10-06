@@ -1,4 +1,4 @@
-#define _XOPEN_SOURCE /* glibc2 needs this for strptime */
+#define _XOPEN_SOURCE		/* glibc2 needs this for strptime */
 #include "time.h"
 #include <time.h>
 #include <locale.h>
@@ -6,8 +6,8 @@
 #include <string.h>
 #include <glib.h>
 
-time_t 
-time_stringtotimestamp(const char *str) 
+time_t
+time_stringtotimestamp(const char *str)
 {
 	time_t ts = 0;
 	struct tm date;
@@ -23,8 +23,8 @@ time_stringtotimestamp(const char *str)
 }
 
 
-void 
-string_strip_html(char *string) 
+void
+string_strip_html(char *string)
 {
 	char *in_p = string, *out_p = string;
 	while (*in_p) {
@@ -37,8 +37,8 @@ string_strip_html(char *string)
 }
 
 
-void 
-string_replace_newline(char *string) 
+void
+string_replace_newline(char *string)
 {
 	char *in_p = string, *out_p = string;
 	for (; *in_p; in_p++, out_p++) {
@@ -57,8 +57,9 @@ string_replace_newline(char *string)
 
 
 
-char 
-*string_replace_with_tags(char *string)
+char
+ *
+string_replace_with_tags(char *string)
 {
 	int newlen = 0;
 	char *in_p = string, *out_p;
@@ -66,8 +67,12 @@ char
 	/* scan the string to see how much longer we have to get */
 	while (*in_p) {
 		switch (*in_p++) {
-			case '\n':    newlen += 3; break;
-			case '\t':    newlen += 4; break;
+			case '\n':
+				newlen += 3;
+				break;
+			case '\t':
+				newlen += 4;
+				break;
 		}
 	}
 
@@ -75,7 +80,7 @@ char
 		return (string);
 
 	newlen += strlen(string);
-	char *newstring = malloc(newlen+1);
+	char *newstring = malloc(newlen + 1);
 	in_p = string;
 	out_p = newstring;
 	while (*in_p) {
@@ -105,8 +110,8 @@ char
 }
 
 
-gboolean 
-string_is_number(const char *string) 
+gboolean
+string_is_number(const char *string)
 {
 	if (!strlen(string))
 		return FALSE;
@@ -124,8 +129,8 @@ string_is_number(const char *string)
 	return TRUE;
 }
 
-gboolean 
-string_is_pin(const char *string) 
+gboolean
+string_is_pin(const char *string)
 {
 	if (strlen(string) < 4 || strlen(string) > 8)
 		return FALSE;
@@ -141,8 +146,8 @@ string_is_pin(const char *string)
 }
 
 
-gboolean 
-string_is_puk(const char *string) 
+gboolean
+string_is_puk(const char *string)
 {
 	if (strlen(string) != 8)
 		return FALSE;
@@ -159,11 +164,11 @@ string_is_puk(const char *string)
 
 
 
-const char *string_skip_tel_prefix(const char *string)
+const char *
+string_skip_tel_prefix(const char *string)
 {
-	if (string[0] == 't' && string[1] == 'e' && string[2] == 'l' && string[3] == ':')
-		return (string+4);
+	if (string[0] == 't' && string[1] == 'e' && string[2] == 'l'
+	    && string[3] == ':')
+		return (string + 4);
 	return (string);
 }
-
-

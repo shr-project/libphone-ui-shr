@@ -11,39 +11,48 @@
 
 typedef struct _Widget_Data Widget_Data;
 
-struct _Widget_Data
-{
+struct _Widget_Data {
 	Evas_Object *widget, *keypad;
 	Ecore_Timer *plus_timer;
 };
 
-static void 
-_del_hook(Evas_Object *obj);
-static void 
-_sizing_eval(Evas_Object *obj);
-static void 
-_changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info);
-static void 
-_sub_del(void *data, Evas_Object *obj, void *event_info);
-static void 
-_signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source);
-static void 
-_zero_mouse_down(void *data, Evas_Object *o, const char *emission, const char *source);
-static void 
-_zero_mouse_up(void *data, Evas_Object *o, const char *emission, const char *source);
-static int 
-_plus_trigered( void *data );
+static void
+  _del_hook(Evas_Object * obj);
+static void
+  _sizing_eval(Evas_Object * obj);
+static void
 
-static void 
-_del_hook(Evas_Object *obj)
+ _changed_size_hints(void *data, Evas * e, Evas_Object * obj, void *event_info);
+static void
+  _sub_del(void *data, Evas_Object * obj, void *event_info);
+static void
+
+
+_signal_clicked(void *data, Evas_Object * o, const char *emission,
+		const char *source);
+static void
+
+
+_zero_mouse_down(void *data, Evas_Object * o, const char *emission,
+		 const char *source);
+static void
+
+
+_zero_mouse_up(void *data, Evas_Object * o, const char *emission,
+	       const char *source);
+static int
+  _plus_trigered(void *data);
+
+static void
+_del_hook(Evas_Object * obj)
 {
 	Widget_Data *wd = elm_widget_data_get(obj);
 	evas_object_del(wd->keypad);
 	free(wd);
 }
 
-static void 
-_sizing_eval(Evas_Object *obj)
+static void
+_sizing_eval(Evas_Object * obj)
 {
 	Widget_Data *wd = elm_widget_data_get(obj);
 	Evas_Coord minw = -1, minh = -1, maxw = -1, maxh = -1;
@@ -53,10 +62,10 @@ _sizing_eval(Evas_Object *obj)
 	evas_object_size_hint_max_set(obj, maxw, maxh);
 }
 
-static void 
-_changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info)
+static void
+_changed_size_hints(void *data, Evas * e, Evas_Object * obj, void *event_info)
 {
-	return; // TODO: Confirm this line
+	return;			// TODO: Confirm this line
 
 	//Widget_Data *wd = elm_widget_data_get(data);
 	//if (obj != wd->icon) return;
@@ -81,23 +90,26 @@ _changed_size_hints(void *data, Evas *e, Evas_Object *obj, void *event_info)
    }
    */
 
-static void 
-_signal_clicked(void *data, Evas_Object *o, const char *emission, const char *source)
+static void
+_signal_clicked(void *data, Evas_Object * o, const char *emission,
+		const char *source)
 {
 	Widget_Data *wd = elm_widget_data_get(data);
 	evas_object_smart_callback_call(wd->widget, "clicked", emission);
 }
 
-static void 
-_zero_mouse_down(void *data, Evas_Object *o, const char *emission, const char *source)
+static void
+_zero_mouse_down(void *data, Evas_Object * o, const char *emission,
+		 const char *source)
 {
 	Widget_Data *wd = elm_widget_data_get(data);
 	if (wd->plus_timer == NULL)
 		wd->plus_timer = ecore_timer_add(0.5, _plus_trigered, data);
 }
 
-static void 
-_zero_mouse_up(void *data, Evas_Object *o, const char *emission, const char *source)
+static void
+_zero_mouse_up(void *data, Evas_Object * o, const char *emission,
+	       const char *source)
 {
 	Widget_Data *wd = elm_widget_data_get(data);
 
@@ -108,8 +120,8 @@ _zero_mouse_up(void *data, Evas_Object *o, const char *emission, const char *sou
 	}
 }
 
-static int 
-_plus_trigered( void *data )
+static int
+_plus_trigered(void *data)
 {
 	Widget_Data *wd = elm_widget_data_get(data);
 	wd->plus_timer = NULL;
@@ -118,7 +130,7 @@ _plus_trigered( void *data )
 }
 
 EAPI Evas_Object *
-elm_keypad_add(Evas_Object *parent)
+elm_keypad_add(Evas_Object * parent)
 {
 	// Evas_Object *obj; Instead I'm using the wd->widget variable
 	Evas *e;
@@ -133,9 +145,12 @@ elm_keypad_add(Evas_Object *parent)
 	wd->keypad = edje_object_add(e);
 	g_debug("keypad evas object: %d", wd->keypad);
 	edje_object_file_set(wd->keypad, KEYPAD_FILE, "keypad");
-	edje_object_signal_callback_add(wd->keypad, "*", "input", _signal_clicked, wd->widget);
-	edje_object_signal_callback_add(wd->keypad, "0", "mouse_up", _zero_mouse_up, wd->widget);
-	edje_object_signal_callback_add(wd->keypad, "0", "mouse_down", _zero_mouse_down, wd->widget);
+	edje_object_signal_callback_add(wd->keypad, "*", "input",
+					_signal_clicked, wd->widget);
+	edje_object_signal_callback_add(wd->keypad, "0", "mouse_up",
+					_zero_mouse_up, wd->widget);
+	edje_object_signal_callback_add(wd->keypad, "0", "mouse_down",
+					_zero_mouse_down, wd->widget);
 
 	edje_object_part_text_set(wd->keypad, "text2_desc", D_("ABC"));
 	edje_object_part_text_set(wd->keypad, "text3_desc", D_("DEF"));
@@ -153,4 +168,3 @@ elm_keypad_add(Evas_Object *parent)
 
 	return wd->widget;
 }
-

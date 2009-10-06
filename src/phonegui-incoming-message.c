@@ -6,12 +6,12 @@
 #include "async.h"
 #include "views.h"
 
-static void _show(GHashTable *options);
+static void _show(GHashTable * options);
 static void _hide(struct Window *win);
 
 
-void 
-phonegui_backend_message_show(const int id) 
+void
+phonegui_backend_message_show(const int id)
 {
 	g_debug("phonegui_backend_message_show(id=%d)", id);
 
@@ -24,17 +24,18 @@ phonegui_backend_message_show(const int id)
 	async_trigger(_show, options);
 }
 
-void 
-phonegui_backend_message_hide(int id) 
+void
+phonegui_backend_message_hide(int id)
 {
 	g_debug("phonegui_backend_message_hide()");
-	struct Window *win = instance_manager_remove(INSTANCE_INCOMING_MESSAGE, id);
+	struct Window *win =
+		instance_manager_remove(INSTANCE_INCOMING_MESSAGE, id);
 	async_trigger(_hide, win);
 }
 
 
-void 
-_show(GHashTable *options) 
+void
+_show(GHashTable * options)
 {
 	g_debug("_show()");
 
@@ -42,15 +43,14 @@ _show(GHashTable *options)
 	assert(win != NULL);
 
 	window_init(win);
-	window_view_show(win, options, message_show_view_show, message_show_view_hide);
+	window_view_show(win, options, message_show_view_show,
+			 message_show_view_hide);
 }
 
-void 
-_hide(struct Window *win) 
+void
+_hide(struct Window *win)
 {
 	g_debug("_hide()");
 	assert(win != NULL);
 	window_destroy(win, NULL);
 }
-
-
