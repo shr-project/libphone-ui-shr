@@ -186,22 +186,29 @@ frame_show_show(void *_data)
 
 	g_debug("loading name and number");
 	/* --- name and number --- */
-	tmp = g_hash_table_lookup(data->properties, "Name");
-	if (tmp)
-		s = g_value_get_string(tmp);
-	else
-		s = D_("Unknown");
-	window_text_set(data->win, "name", s);
+	if (data->path) {
+		tmp = g_hash_table_lookup(data->properties, "Name");
+		if (tmp)
+			s = g_value_get_string(tmp);
+		else
+			s = D_("Unknown");
+		window_text_set(data->win, "name", s);
 
-	tmp = g_hash_table_lookup(data->properties, "Phone");
-	if (tmp) {
-		s = g_value_get_string(tmp);
-		if (s[0] == 't' && s[1] == 'e' && s[2] == 'l' && s[3] == ':')
-			s += 4;
+		tmp = g_hash_table_lookup(data->properties, "Phone");
+		if (tmp) {
+			s = g_value_get_string(tmp);
+			if (s[0] == 't' && s[1] == 'e' && s[2] == 'l' && s[3] == ':')
+				s += 4;
+		}
+		else
+			s = "";
+		window_text_set(data->win, "number", s);
 	}
-	else
-		s = "";
-	window_text_set(data->win, "number", s);
+	else {
+		window_text_set(data->win, "name", D_("(New Contact)"));
+		window_text_set(data->win, "number", "");
+	}
+
 
 	g_debug("loading photo");
 	/* --- photo --- */
@@ -679,10 +686,11 @@ contact_show_view_show(struct Window *win, void *_data)
 	}
 	else {
 		data->properties = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
-		g_hash_table_insert(data->properties, "Name", NULL);
-		g_hash_table_insert(data->properties, "Phone", NULL);
+		g_hash_table_insert(data->properties, "Name", _new_gvalue_string(""));
+		g_hash_table_insert(data->properties, "Phone", _new_gvalue_string(""));
 		data->path = NULL;
 	}
+	data->field = NULL;
 
 	window_frame_show(win, data, frame_show_show, frame_show_hide);
 	window_show(win);
