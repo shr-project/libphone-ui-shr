@@ -394,26 +394,10 @@ process_message(gpointer _entry, gpointer _data)
 
 	char *tmp;
 
-	gval_tmp = g_hash_table_lookup(entry, "Sender");
-	if (gval_tmp) {
-	        tmp = strdup(g_value_get_string(gval_tmp));
-	}
-	else {
-	        tmp = strdup("Missing sender");
-	}
-	_remove_tel(tmp);
+	
 
 	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
-	g_hash_table_insert(parameters, "number", tmp);
-	gval_tmp = g_hash_table_lookup(entry, "Content");
-	if (gval_tmp) {
-		tmp = strdup(g_value_get_string(gval_tmp));
-	}
-	else {
-		tmp = strdup("Missing content");
-	}
-	g_hash_table_insert(parameters, "content", tmp);
-
+	
 	gval_tmp = g_hash_table_lookup(entry, "Direction");
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
@@ -422,6 +406,31 @@ process_message(gpointer _entry, gpointer _data)
 		tmp = strdup("");
 	}
 	g_hash_table_insert(parameters, "direction", tmp);
+
+	
+	if (!strncmp(tmp, "in", 2)) {
+		gval_tmp = g_hash_table_lookup(entry, "Sender");
+	}
+	else {
+		gval_tmp = g_hash_table_lookup(entry, "Recipient");
+	}
+	if (gval_tmp) {
+	        tmp = strdup(g_value_get_string(gval_tmp));
+	        _remove_tel(tmp);
+	}
+	else {
+	        tmp = strdup("Missing sender");
+	}
+	g_hash_table_insert(parameters, "number", tmp);
+	
+	gval_tmp = g_hash_table_lookup(entry, "Content");
+	if (gval_tmp) {
+		tmp = strdup(g_value_get_string(gval_tmp));
+	}
+	else {
+		tmp = strdup("Missing content");
+	}
+	g_hash_table_insert(parameters, "content", tmp);
 
 	gval_tmp = g_hash_table_lookup(entry, "MessageRead");
 	if (gval_tmp && g_value_get_boolean(gval_tmp)) {
