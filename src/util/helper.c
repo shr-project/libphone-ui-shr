@@ -158,3 +158,12 @@ string_is_puk(const char *string)
 }
 
 
+
+const char *string_skip_tel_prefix(const char *string)
+{
+	if (string[0] == 't' && string[1] == 'e' && string[2] == 'l' && string[3] == ':')
+		return (string+4);
+	return (string);
+}
+
+
