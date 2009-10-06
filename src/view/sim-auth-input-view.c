@@ -90,17 +90,17 @@ sim_auth_input_view_show(struct Window *win, void *_options)
 
 	int status = GPOINTER_TO_INT(g_hash_table_lookup(options, "status"));
 	switch (status) {
-		case SIM_PIN_REQUIRED:
-			g_debug("SIM_PIN_REQUIRED");
-			data->mode = MODE_PIN;
-			break;
-		case SIM_PUK_REQUIRED:
-			g_debug("SIM_PUK_REQUIRED");
-			data->mode = MODE_PUK;
-			break;
-		default:
-			g_error("Unknown status %d", status);
-			break;
+	case SIM_PIN_REQUIRED:
+		g_debug("SIM_PIN_REQUIRED");
+		data->mode = MODE_PIN;
+		break;
+	case SIM_PUK_REQUIRED:
+		g_debug("SIM_PUK_REQUIRED");
+		data->mode = MODE_PUK;
+		break;
+	default:
+		g_error("Unknown status %d", status);
+		break;
 	}
 
 	window_frame_show(win, data, frame_input_show, frame_input_hide);

@@ -37,9 +37,13 @@ static void
 
 
 
+
+
 message_show_view_close_clicked(void *_data, Evas_Object * obj,
 				void *event_info);
 static void
+
+
 
 
 
@@ -51,6 +55,8 @@ static void
 
 
 
+
+
 message_show_view_delete_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
@@ -58,6 +64,8 @@ static void
 static void
   message_show_view_delete_callback_callback(struct MessageShowViewData *data);
 static void
+
+
 
 
 

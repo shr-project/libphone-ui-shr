@@ -49,6 +49,8 @@ static void
 
 
 
+
+
 _edje_objects_cache(Etk_Tree_Model * model, void *cell_data,
 		    Evas_Object * cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL]);
 static Etk_Bool _edje_render(Etk_Tree_Model * model, Etk_Tree_Row * row,
@@ -61,9 +63,13 @@ static int
 
 
 
+
+
 _edje_width_get(Etk_Tree_Model * model, void *cell_data,
 		Evas_Object * cell_objects[ETK_TREE_MAX_OBJECTS_PER_MODEL]);
 static void
+
+
 
 
 

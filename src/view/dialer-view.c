@@ -19,6 +19,7 @@ static void
 static void
 
 
+
  frame_dialer_options_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
   frame_dialer_keypad_clicked(void *_data, Evas_Object * obj, void *event_info);
@@ -31,8 +32,11 @@ static void
 static void
 
 
+
  frame_dialer_message_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
+
+
 
 
 
@@ -44,9 +48,13 @@ static void
 
 
 
+
+
 frame_dialer_delete(void *_data, Evas_Object * o, const char *emission,
 		    const char *source);
 static void
+
+
 
 
 

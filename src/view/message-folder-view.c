@@ -25,6 +25,8 @@ static void
 
 
 
+
+
 message_folder_view_retrieve_messagebook_callback(GError * error,
 						  GPtrArray * messages,
 						  void *data);

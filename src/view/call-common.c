@@ -95,21 +95,20 @@ call_common_set_sound_state(CallSoundState state)
 	g_debug("%s:%d setting sound state (%d)", __FILE__, __LINE__, state);
 	sound_state = state;
 	switch (sound_state) {
-		case CALL_SOUND_STATE_SPEAKER:
-			odeviced_audio_push_scenario("gsmspeakerout", NULL,
-						     NULL);
-			break;
-		case CALL_SOUND_STATE_HEADSET:
-			break;
-		case CALL_SOUND_STATE_HANDSET:
-			odeviced_audio_push_scenario("gsmhandset", NULL, NULL);
-			break;
-		case CALL_SOUND_STATE_BT:
-			break;
-		case CALL_SOUND_STATE_CLEAR:
-			break;
-		default:
-			break;
+	case CALL_SOUND_STATE_SPEAKER:
+		odeviced_audio_push_scenario("gsmspeakerout", NULL, NULL);
+		break;
+	case CALL_SOUND_STATE_HEADSET:
+		break;
+	case CALL_SOUND_STATE_HANDSET:
+		odeviced_audio_push_scenario("gsmhandset", NULL, NULL);
+		break;
+	case CALL_SOUND_STATE_BT:
+		break;
+	case CALL_SOUND_STATE_CLEAR:
+		break;
+	default:
+		break;
 	}
 
 	if (active_calls_list) {
@@ -128,20 +127,20 @@ call_common_window_update_state(struct CallActiveViewData *win,
 	const char *state_string = "";
 
 	switch (state) {
-		case CALL_SOUND_STATE_SPEAKER:
-			state_string = D_("Handset");
-			break;
-		case CALL_SOUND_STATE_HEADSET:
-			break;
-			/* default to handset */
-		case CALL_SOUND_STATE_CLEAR:
-		case CALL_SOUND_STATE_HANDSET:
-			state_string = D_("Speaker");
-			break;
-		case CALL_SOUND_STATE_BT:
-			break;
-		default:
-			break;
+	case CALL_SOUND_STATE_SPEAKER:
+		state_string = D_("Handset");
+		break;
+	case CALL_SOUND_STATE_HEADSET:
+		break;
+		/* default to handset */
+	case CALL_SOUND_STATE_CLEAR:
+	case CALL_SOUND_STATE_HANDSET:
+		state_string = D_("Speaker");
+		break;
+	case CALL_SOUND_STATE_BT:
+		break;
+	default:
+		break;
 	}
 
 	elm_button_label_set(win->bt_sound_state, state_string);

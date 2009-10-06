@@ -23,10 +23,13 @@ static void
 static void
 
 
+
  _changed_size_hints(void *data, Evas * e, Evas_Object * obj, void *event_info);
 static void
   _sub_del(void *data, Evas_Object * obj, void *event_info);
 static void
+
+
 
 
 
@@ -38,9 +41,13 @@ static void
 
 
 
+
+
 _zero_mouse_down(void *data, Evas_Object * o, const char *emission,
 		 const char *source);
 static void
+
+
 
 
 
