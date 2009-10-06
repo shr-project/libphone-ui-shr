@@ -380,7 +380,7 @@ process_message(gpointer _entry, gpointer _data)
 	long timestamp;
 	gval_tmp = g_hash_table_lookup(entry, "Timestamp");
 	if (gval_tmp) {
-	        timestamp = (long) g_value_get_double(gval_tmp);
+	        timestamp = (long) g_value_get_int(gval_tmp);
 	}
 	else {
 	        timestamp = 0;
