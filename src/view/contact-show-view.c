@@ -166,9 +166,21 @@ frame_show_photo_clicked(void *_data, Evas_Object * obj, void *event_info)
 	g_debug("you clicked on the Photo :-)");
 }
 
-frame_show_edit_field(void *_data, Evas_Object * obj, void *event_info)
+static void
+frame_show_edit_field(void *_data, Evas_Object *obj, void *event_info)
 {
-	g_debug("editing field");
+	struct ContactViewData *data = (struct ContactViewData *)_data;
+	Elm_Genlist_Item *row = elm_genlist_selected_item_get(data->list);
+	if (!row) {
+		g_debug("no field selected?");
+		return;
+	}
+	struct ContactFieldData *fd = (struct ContactFieldData *)elm_genlist_item_data_get(row);
+	g_debug("editing field %s of %s", fd->name, data->path ? data->path : "new contact");
+	data->field = g_slice_alloc0(sizeof(struct ContactFieldData));
+	data->field->name = g_strdup(fd->name);
+	data->field->value = g_strdup(fd->value);
+	window_frame_show(data->win, data, frame_edit_show, frame_edit_hide);
 }
 
 
@@ -188,22 +200,29 @@ frame_show_show(void *_data)
 
 	g_debug("loading name and number");
 	/* --- name and number --- */
-	tmp = g_hash_table_lookup(data->properties, "Name");
-	if (tmp)
-		s = g_value_get_string(tmp);
-	else
-		s = D_("Unknown");
-	window_text_set(data->win, "name", s);
+	if (data->path) {
+		tmp = g_hash_table_lookup(data->properties, "Name");
+		if (tmp)
+			s = g_value_get_string(tmp);
+		else
+			s = D_("Unknown");
+		window_text_set(data->win, "name", s);
 
-	tmp = g_hash_table_lookup(data->properties, "Phone");
-	if (tmp) {
-		s = g_value_get_string(tmp);
-		if (s[0] == 't' && s[1] == 'e' && s[2] == 'l' && s[3] == ':')
-			s += 4;
+		tmp = g_hash_table_lookup(data->properties, "Phone");
+		if (tmp) {
+			s = g_value_get_string(tmp);
+			if (s[0] == 't' && s[1] == 'e' && s[2] == 'l' && s[3] == ':')
+				s += 4;
+		}
+		else
+			s = "";
+		window_text_set(data->win, "number", s);
 	}
-	else
-		s = "";
-	window_text_set(data->win, "number", s);
+	else {
+		window_text_set(data->win, "name", D_("(New Contact)"));
+		window_text_set(data->win, "number", "");
+	}
+
 
 	g_debug("loading photo");
 	/* --- photo --- */
@@ -713,6 +732,7 @@ contact_show_view_show(struct Window *win, void *_data)
 		g_hash_table_insert(data->properties, "Phone", NULL);
 		data->path = NULL;
 	}
+	data->field = NULL;
 
 	window_frame_show(win, data, frame_show_show, frame_show_hide);
 	window_show(win);
