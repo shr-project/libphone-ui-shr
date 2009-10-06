@@ -12,7 +12,7 @@ static void _hide(struct Window *win);
 
 
 void 
-phonegui_dialog_show(int type) 
+phonegui_backend_dialog_show(int type) 
 {
 	struct Window *win = window_new(D_("Information"));
 	instance_manager_add(INSTANCE_DIALOG, type, win);
@@ -25,7 +25,7 @@ phonegui_dialog_show(int type)
 }
 
 void 
-phonegui_dialog_hide(int type) 
+phonegui_backend_dialog_hide(int type) 
 {
 	struct Window *win = instance_manager_remove(INSTANCE_DIALOG, type);
 	assert(win != NULL);

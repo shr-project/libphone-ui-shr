@@ -35,7 +35,7 @@ ui_init()
 }
 
 void 
-phonegui_init(int argc, char **argv, void (*exit_cb)()) 
+phonegui_backend_init(int argc, char **argv, void (*exit_cb)()) 
 {
 
 	// Initialize gettext

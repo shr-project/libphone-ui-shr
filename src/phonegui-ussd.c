@@ -21,9 +21,9 @@ _reset();
 
 
 void 
-phonegui_ussd_show(int mode, const char *message) 
+phonegui_backend_ussd_show(int mode, const char *message) 
 {
-	g_debug("phonegui_ussd_show(mode=%d, message=%s)", mode, message);
+	g_debug("phonegui_backend_ussd_show(mode=%d, message=%s)", mode, message);
 	if (win_ussd == NULL) {
 		win_ussd = window_new(D_("Service Data"));
 
@@ -36,9 +36,9 @@ phonegui_ussd_show(int mode, const char *message)
 }
 
 void 
-phonegui_ussd_hide() 
+phonegui_backend_ussd_hide() 
 {
-	g_debug("phonegui_ussd_hide()");
+	g_debug("phonegui_backend_ussd_hide()");
 	async_trigger(_hide, NULL);
 }
 

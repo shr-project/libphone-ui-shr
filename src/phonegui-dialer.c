@@ -11,9 +11,9 @@ static void _hide(struct Window *win);
 
 
 void 
-phonegui_dialer_show() 
+phonegui_backend_dialer_show() 
 {
-	g_debug("phonegui_dialer_show()");
+	g_debug("phonegui_backend_dialer_show()");
 	if (win == NULL) {
 		win = window_new(D_("Dialer"));
 		async_trigger(_show, win);
@@ -21,9 +21,9 @@ phonegui_dialer_show()
 }
 
 void 
-phonegui_dialer_hide() 
+phonegui_backend_dialer_hide() 
 {
-	g_debug("phonegui_dialer_hide()");
+	g_debug("phonegui_backend_dialer_hide()");
 	if (win != NULL) {
 		async_trigger(_hide, win);
 	}

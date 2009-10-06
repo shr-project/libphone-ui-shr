@@ -12,9 +12,9 @@ static void _hide(struct Window *win);
 
 
 void 
-phonegui_sim_auth_show(const int status) 
+phonegui_backend_sim_auth_show(const int status) 
 {
-	g_debug("phonegui_sim_auth_show()");
+	g_debug("phonegui_backend_sim_auth_show()");
 
 	if (win == NULL) {
 		win = window_new(D_("SIM Auth"));
@@ -27,9 +27,9 @@ phonegui_sim_auth_show(const int status)
 }
 
 void 
-phonegui_sim_auth_hide(const int status) 
+phonegui_backend_sim_auth_hide(const int status) 
 {
-	g_debug("phonegui_sim_auth_hide()");
+	g_debug("phonegui_backend_sim_auth_hide()");
 
 	/*
 	 * The status variable is not needed here, because the view
