@@ -20,8 +20,12 @@ static Elm_Genlist_Item_Class itc;
 static void
 
 
+
+
 message_list_view_new_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
+
+
 
 
 message_list_view_show_clicked(void *_data, Evas_Object * obj,
@@ -29,9 +33,13 @@ message_list_view_show_clicked(void *_data, Evas_Object * obj,
 static void
 
 
+
+
 message_list_view_answer_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
+
+
 
 
 message_list_view_delete_clicked(void *_data, Evas_Object * obj,
@@ -40,6 +48,8 @@ static void
   my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 
 static void
+
+
 
 
 retrieve_messagebook_callback(GError * error, GPtrArray * messages,
@@ -286,8 +296,8 @@ message_list_view_show_clicked(void *_data, Evas_Object * obj, void *event_info)
 	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
 		GHashTable *parameters =
-			(GHashTable *) elm_genlist_item_data_get(data->
-								 selected_row);
+			(GHashTable *)
+			elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 		g_hash_table_insert(options, "number",
@@ -329,8 +339,8 @@ message_list_view_answer_clicked(void *_data, Evas_Object * obj,
 	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
 		GHashTable *parameters =
-			(GHashTable *) elm_genlist_item_data_get(data->
-								 selected_row);
+			(GHashTable *)
+			elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 		g_hash_table_insert(options, "name",
@@ -359,8 +369,8 @@ message_list_view_delete_clicked(void *_data, Evas_Object * obj,
 	if (data->selected_row != NULL) {
 		g_debug("found a selected row to delete...");
 		GHashTable *parameters =
-			(GHashTable *) elm_genlist_item_data_get(data->
-								 selected_row);
+			(GHashTable *)
+			elm_genlist_item_data_get(data->selected_row);
 
 		g_debug("filling options...");
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);

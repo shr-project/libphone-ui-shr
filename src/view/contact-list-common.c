@@ -202,8 +202,7 @@ _query_callback(GError * error, char *query_path, void *_data)
 		struct ContactListViewData *data =
 			(struct ContactListViewData *) _data;
 		g_debug("query path is %s", query_path);
-		data->query =
-			(DBusGProxy *)
+		data->query = (DBusGProxy *)
 			dbus_connect_to_opimd_contact_query(query_path);
 		opimd_contact_query_get_result_count(data->query,
 						     _result_callback, data);

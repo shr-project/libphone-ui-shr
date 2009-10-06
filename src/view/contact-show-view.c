@@ -167,16 +167,18 @@ frame_show_photo_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-frame_show_edit_field(void *_data, Evas_Object *obj, void *event_info)
+frame_show_edit_field(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct ContactViewData *data = (struct ContactViewData *)_data;
+	struct ContactViewData *data = (struct ContactViewData *) _data;
 	Elm_Genlist_Item *row = elm_genlist_selected_item_get(data->list);
 	if (!row) {
 		g_debug("no field selected?");
 		return;
 	}
-	struct ContactFieldData *fd = (struct ContactFieldData *)elm_genlist_item_data_get(row);
-	g_debug("editing field %s of %s", fd->name, data->path ? data->path : "new contact");
+	struct ContactFieldData *fd =
+		(struct ContactFieldData *) elm_genlist_item_data_get(row);
+	g_debug("editing field %s of %s", fd->name,
+		data->path ? data->path : "new contact");
 	data->field = g_slice_alloc0(sizeof(struct ContactFieldData));
 	data->field->name = g_strdup(fd->name);
 	data->field->value = g_strdup(fd->value);
@@ -211,7 +213,8 @@ frame_show_show(void *_data)
 		tmp = g_hash_table_lookup(data->properties, "Phone");
 		if (tmp) {
 			s = g_value_get_string(tmp);
-			if (s[0] == 't' && s[1] == 'e' && s[2] == 'l' && s[3] == ':')
+			if (s[0] == 't' && s[1] == 'e' && s[2] == 'l'
+			    && s[3] == ':')
 				s += 4;
 		}
 		else

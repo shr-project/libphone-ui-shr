@@ -15,8 +15,11 @@ struct MessageDeleteViewData {
 void
 
 
+
+
 message_delete_yes_clicked(void *userdata, Evas_Object * obj, void *event_info);
 void
+
 
  message_delete_no_clicked(void *userdata, Evas_Object * obj, void *event_info);
 static void

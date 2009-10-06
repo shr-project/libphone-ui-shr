@@ -22,10 +22,13 @@ static void
   _sizing_eval(Evas_Object * obj);
 static void
 
+
  _changed_size_hints(void *data, Evas * e, Evas_Object * obj, void *event_info);
 static void
   _sub_del(void *data, Evas_Object * obj, void *event_info);
 static void
+
+
 
 
 _signal_clicked(void *data, Evas_Object * o, const char *emission,
@@ -33,9 +36,13 @@ _signal_clicked(void *data, Evas_Object * o, const char *emission,
 static void
 
 
+
+
 _zero_mouse_down(void *data, Evas_Object * o, const char *emission,
 		 const char *source);
 static void
+
+
 
 
 _zero_mouse_up(void *data, Evas_Object * o, const char *emission,

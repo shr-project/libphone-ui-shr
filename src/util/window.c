@@ -243,11 +243,11 @@ window_inwin_dialog(struct Window *win, const char *label, GList * buttons,
 	     buttons = g_list_next(buttons)) {
 		e = elm_button_add(window_evas_object_get(win));
 		elm_button_label_set(e,
-				     ((struct InwinButton *) buttons->data)->
-				     label);
+				     ((struct InwinButton *) buttons->
+				      data)->label);
 		evas_object_smart_callback_add(e, "clicked",
-					       ((struct InwinButton *) buttons->
-						data)->callback, data);
+					       ((struct InwinButton *)
+						buttons->data)->callback, data);
 		evas_object_show(e);
 		elm_box_pack_end(bx2, e);
 		g_free(buttons->data);

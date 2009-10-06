@@ -44,9 +44,13 @@ static void
 static void
 
 
+
+
 frame_content_continue_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
+
+
 
 
 frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info);
@@ -57,8 +61,11 @@ static void
   frame_recipient_hide(void *_data);
 static void
 
+
  frame_recipient_back_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
+
+
 
 
 frame_recipient_contact_add_clicked(void *_data, Evas_Object * obj,
@@ -66,9 +73,13 @@ frame_recipient_contact_add_clicked(void *_data, Evas_Object * obj,
 static void
 
 
+
+
 frame_recipient_number_add_clicked(void *_data, Evas_Object * obj,
 				   void *event_info);
 static void
+
+
 
 
 frame_recipient_delete_clicked(void *_data, Evas_Object * obj,
@@ -76,11 +87,15 @@ frame_recipient_delete_clicked(void *_data, Evas_Object * obj,
 static void
 
 
+
+
 frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
   frame_recipient_process_recipient(gpointer _properties, gpointer _data);
 static void
+
+
 
 
 frame_recipient_send_callback(GError * error, int transaction_index,
@@ -95,9 +110,13 @@ static void
 static void
 
 
+
+
 frame_contact_add_back_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
+
+
 
 
 frame_contact_add_add_clicked(void *_data, Evas_Object * obj, void *event_info);
@@ -108,8 +127,11 @@ static void
   frame_number_add_hide(void *_data);
 static void
 
+
  frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
+
+
 
 
 frame_number_add_back_clicked(void *_data, Evas_Object * obj, void *event_info);

@@ -23,14 +23,16 @@ struct MessageFolderViewData {
 static void
 
 
+
+
 message_folder_view_retrieve_messagebook_callback(GError * error,
 						  GPtrArray * messages,
 						  void *data);
 static void
 
 
-message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData
-						   *data);
+  message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData
+						     *data);
 static void
   messages_button_new_clicked(void *data, Evas_Object * obj, void *event_info);
 static void
