@@ -13,7 +13,6 @@ src/view/call-active-view.c
 src/view/call-common.c
 src/view/call-incoming-view.c
 src/view/contact-delete-view.c
-src/view/contact-edit-view.c
 src/view/contact-list-view.c
 src/view/contact-show-view.c
 src/view/dialer-view.c

@@ -2,7 +2,7 @@ MAINTAINERCLEANFILES = Makefile.in
 
 filesdir = $(datadir)/libframeworkd-phonegui-efl2/
 files_DATA = sim-auth.edj dialer.edj messages.edj messagelist.edj contacts.edj contactlist.edj incoming-message.edj keypad.edj call.edj dialog.edj ussd.edj \
-             edit-undo.png
+             edit-undo.png contact.png
 
 EXTRA_DIST = sim-auth.edc dialer.edc messages.edc messagelist.edc contacts.edc contactlist.edc incoming-message.edc keypad.edc call.edc dialog.edc ussd.edc
 

@@ -31,7 +31,7 @@ libframeworkd_phonegui_efl2_la_SOURCES = \
 	view/dialog-view.c \
 	view/contact-list-common.h \
 	view/contact-list-common.c \
-	view/contact-edit-view.c \
+	view/contact-show-view.c \
 	view/contact-delete-view.c \
 	view/contact-list-view.c \
 	view/message-new-view.c \

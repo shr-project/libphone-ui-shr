@@ -1,5 +1,5 @@
 
-#include "contact-list-common.h"
+#include "views.h"
 
 static Elm_Genlist_Item_Class itc;
 
@@ -12,12 +12,21 @@ gl_label_get(const void *data, Evas_Object *obj, const char *part)
 	GHashTable *parameters = (GHashTable *)data;
 	char *label = NULL;
 
-	if (!strcmp(part, "elm.text"))
-		label = g_hash_table_lookup(parameters, "name");
-	else if (!strcmp(part, "elm.text.sub"))
-		label = g_hash_table_lookup(parameters, "number");
+	if (!strcmp(part, "elm.text")) {
+		label = g_value_get_string(g_hash_table_lookup(parameters, "Name"));
+	}
+	else if (!strcmp(part, "elm.text.sub")) {
+		GValue *tmp = g_hash_table_lookup(parameters, "Phone");
+		if (tmp) {
+			label = g_value_get_string(tmp);
+			if (label[0] == 't' && label[1] == 'e' && label[2] == 'l' && label[3] == ':')
+				label += 4;
+		}
+		else
+			label = "No Number";
+	}
 
-	return strdup(label);
+	return (strdup(label));
 }
 
 
@@ -25,7 +34,20 @@ gl_label_get(const void *data, Evas_Object *obj, const char *part)
 static Evas_Object *
 gl_icon_get(const void *data, Evas_Object *obj, const char *part)
 {
-	return NULL;
+	GHashTable *parameters = (GHashTable *)data;
+	if (!strcmp(part, "elm.swallow.icon")) {
+		const char *photo_file;
+		GValue *tmp = g_hash_table_lookup(parameters, "Photo");
+		if (tmp)
+			photo_file = g_value_get_string(tmp);
+		else
+			photo_file = CONTACT_DEFAULT_PHOTO;
+		Evas_Object *photo = elm_icon_add(obj);
+		elm_icon_file_set(photo, photo_file, NULL);
+		evas_object_size_hint_aspect_set(photo, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
+		return (photo);
+	}
+	return (NULL);
 }
 
 
@@ -33,7 +55,7 @@ gl_icon_get(const void *data, Evas_Object *obj, const char *part)
 static Eina_Bool
 gl_state_get(const void *data, Evas_Object *obj, const char *part)
 {
-	return 0;
+	return (0);
 }
 
 
@@ -68,7 +90,7 @@ _compare_entries(gconstpointer _a, gconstpointer _b)
 {
 	GHashTable **a = (GHashTable **)_a;
 	GHashTable **b = (GHashTable **)_b;
-	gpointer p; 
+	gpointer p;
 	const char *name_a, *name_b;
 
 	p = g_hash_table_lookup(*a, "Name");
@@ -95,32 +117,15 @@ static void
 _process_entry(gpointer _entry, gpointer _data)
 {
 	Elm_Genlist_Item *it;
+	char idx;
 
 	GHashTable *entry = (GHashTable *)_entry;
 	struct ContactListViewData *data = (struct ContactListViewData *)_data;
-	const char *number;
-	GValue *tmp = g_hash_table_lookup(entry, "Phone");
-	if (tmp) {
-	        number = g_value_get_string(tmp);
-	}
-	else {
-	        number = "No Number";
-	}
+
+	it = elm_genlist_item_append(data->list, &itc, g_hash_table_ref(entry)/*item data*/, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 
 	const char *name = g_value_get_string(g_hash_table_lookup(entry, "Name"));
-
-	if (number[0] == 't' && number[1] == 'e' && number[2] == 'l' && number[3] == ':')
-		number += 4;
-
-	GHashTable *parameters = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-	g_hash_table_insert(parameters, "path", strdup(g_value_get_string(g_hash_table_lookup(entry, "Path"))));
-	g_hash_table_insert(parameters, "name", strdup(name));
-	g_hash_table_insert(parameters, "number", strdup(number));
-
-	it = elm_genlist_item_append(data->list, &itc, parameters/*item data*/, NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-
-	int idx = toupper(*name);
-	if (idx && idx != data->current_index) {
+	if (name && *name && (idx = toupper(*name)) && idx != data->current_index) {
 		data->current_index = idx;
 		elm_index_item_append(data->index, g_strdup_printf("%c", data->current_index), it);
 	}
@@ -136,6 +141,8 @@ _retrieve_callback2(void *_data)
 
 	g_ptr_array_sort(data->contacts, _compare_entries);
 	g_ptr_array_foreach(data->contacts, _process_entry, data);
+
+	elm_index_item_go(data->index, 0);
 }
 
 
@@ -206,6 +213,8 @@ Evas_Object *
 contact_list_add(struct ContactListViewData *data)
 {
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
+	elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
+	evas_object_size_hint_align_set(data->list, 0.0, 0.0);
 	elm_widget_scale_set(data->list, 1.0);
 	window_swallow(data->win, "list", data->list);
 	itc.item_style = "contact";
@@ -216,14 +225,13 @@ contact_list_add(struct ContactListViewData *data)
 	evas_object_show(data->list);
 
 	data->index = elm_index_add(window_evas_object_get(data->win));
-	evas_object_size_hint_weight_set(data->index, 1.0, 1.0);
-	elm_win_resize_object_add(window_evas_object_get(data->win), data->index);
-	//window_swallow(data->win, "index", data->index);
+	//evas_object_size_hint_weight_set(data->index, 1.0, 1.0);
+	//elm_win_resize_object_add(window_evas_object_get(data->win), data->index);
+	window_swallow(data->win, "index", data->index);
 	evas_object_show(data->index);
 	evas_object_smart_callback_add(data->index, "delay,changed", gl_index_changed2, NULL);
 	evas_object_smart_callback_add(data->index, "changed", gl_index_changed, NULL);
 	evas_object_smart_callback_add(data->index, "selected", gl_index_selected, NULL);
-	elm_index_item_go(data->index, 0);
 }
 
 

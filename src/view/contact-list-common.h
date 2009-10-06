@@ -15,6 +15,7 @@
 #include "window.h"
 
 
+
 struct ContactListViewData {
 	struct Window *win;
 	Evas_Object *list;

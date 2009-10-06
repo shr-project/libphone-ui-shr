@@ -35,7 +35,7 @@ struct _tmp_pack {
 } tmp_pack;
 static void _show_new(tmp_pack *pack) {
 	window_init(pack->win);
-        window_view_show(pack->win, pack->options, contact_edit_view_show, contact_edit_view_hide);
+        window_view_show(pack->win, pack->options, contact_show_view_show, contact_show_view_hide);
 	free(pack);
 }
 

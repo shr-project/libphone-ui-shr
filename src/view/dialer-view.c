@@ -195,7 +195,7 @@ frame_dialer_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 
 	struct Window *win = window_new(D_("Add Contact"));
 	window_init(win);
-	window_view_show(win, options, contact_edit_view_show, contact_edit_view_hide);
+	window_view_show(win, options, contact_show_view_show, contact_show_view_hide);
 
 	window_destroy(data->win, NULL);
 }
