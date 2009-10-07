@@ -510,6 +510,27 @@ frame_edit_data_changed(struct ContactViewData * data)
 
 
 static void
+_load_show(void *_data)
+{
+	struct ContactViewData *data = (struct ContactViewData *)_data;
+	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
+}
+
+
+static void
+_on_new_saved(GError *error, const char *path, void *_data)
+{
+	struct ContactViewData *data = (struct ContactViewData *)_data;
+
+	if (!error) {
+		data->path = g_strdup(path);
+	}
+
+	async_trigger(_load_show, data);
+}
+
+
+static void
 frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct ContactViewData *data = (struct ContactViewData *) _data;
@@ -536,8 +557,13 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 		if (data->path)
 			opimd_contact_update(data->path, data->properties, NULL,
 					     NULL);
-		else
-			opimd_contacts_add(data->properties, NULL, NULL);
+		else {
+			opimd_contacts_add(data->properties, _on_new_saved, data);
+			/* for new contacts we have to get the path for the
+			 * contact via the dbus callback... return here and
+			 * load the show frame via the callback */
+			return;
+		}
 	}
 
 	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
