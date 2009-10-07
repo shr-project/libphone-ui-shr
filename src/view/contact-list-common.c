@@ -13,19 +13,20 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	char *label = NULL;
 
 	if (!strcmp(part, "elm.text")) {
-		label = g_value_get_string(g_hash_table_lookup
-					   (parameters, "Name"));
+		GValue *tmp = g_hash_table_lookup(parameters, "Name");
+		if (tmp)
+			label = g_value_get_string(tmp);
+		if (!label || !*label)
+			label = CONTACT_NAME_UNDEFINED_STRING;
 	}
 	else if (!strcmp(part, "elm.text.sub")) {
 		GValue *tmp = g_hash_table_lookup(parameters, "Phone");
 		if (tmp) {
-			label = g_value_get_string(tmp);
-			if (label[0] == 't' && label[1] == 'e'
-			    && label[2] == 'l' && label[3] == ':')
-				label += 4;
+			label = string_skip_tel_prefix(
+					g_value_get_string(tmp));
 		}
-		else
-			label = "No Number";
+		if (!label || !*label)
+			label = CONTACT_PHONE_UNDEFINED_STRING;
 	}
 
 	return (strdup(label));
