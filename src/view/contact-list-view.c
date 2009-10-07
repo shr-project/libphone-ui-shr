@@ -226,13 +226,6 @@ frame_list_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {
-		//GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		//g_hash_table_insert(options, "path", g_hash_table_lookup(properties, "path"));
-		//g_hash_table_insert(options, "name", g_hash_table_lookup(properties, "name"));
-		//g_hash_table_insert(options, "number", g_hash_table_lookup(properties, "number"));
-		//g_hash_table_insert(options, "change_callback", frame_list_refresh);
-		//g_hash_table_insert(options, "change_callback_data", data);
-
 		struct Window *win = window_new(D_("Show Contact"));
 		window_init(win);
 		window_view_show(win, properties, contact_show_view_show,
