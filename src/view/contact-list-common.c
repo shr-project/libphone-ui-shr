@@ -182,7 +182,7 @@ utf8_get_next(const unsigned char *buf, int *iindex)
 }
 
 
-
+/* allocates space and returns the index part of a string */
 static char *
 _new_get_index(const char *_string)
 {
