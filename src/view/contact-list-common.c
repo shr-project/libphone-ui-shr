@@ -316,7 +316,7 @@ contact_list_fill(struct ContactListViewData *data)
 {
 	GHashTable *qry =
 		g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-	data->current_index = 0;
+	data->current_index = NULL;
 	if (data->query) {
 		opimd_contacts_query_dispose(data->query);
 		data->query = NULL;
