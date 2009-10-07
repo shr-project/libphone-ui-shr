@@ -718,9 +718,11 @@ contact_show_view_show(struct Window *win, void *_data)
 	else {
 		data->properties =
 			g_hash_table_new_full(g_str_hash, g_str_equal, NULL,
-					      NULL);
-		g_hash_table_insert(data->properties, "Name", NULL);
-		g_hash_table_insert(data->properties, "Phone", NULL);
+					      free);
+		g_hash_table_insert(data->properties, "Name", 
+				_new_gvalue_string(""));
+		g_hash_table_insert(data->properties, "Phone", 
+				_new_gvalue_string(""));
 		data->path = NULL;
 	}
 	data->field = NULL;
