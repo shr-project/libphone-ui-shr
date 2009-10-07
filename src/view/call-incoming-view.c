@@ -80,7 +80,7 @@ call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object * obj,
 			   void *event_info)
 {
 	g_debug("accept_clicked()");
-	ogsmd_call_activate(data->parent.id, NULL, NULL);
+	phonegui_call_activate(data->parent.id, NULL, NULL);
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(data->parent.id));
@@ -94,5 +94,5 @@ call_button_release_clicked(struct CallViewData *data, Evas_Object * obj,
 			    void *event_info)
 {
 	g_debug("release_clicked()");
-	ogsmd_call_release(data->id, NULL, NULL);
+	phonegui_call_release(data->id, NULL, NULL);
 }

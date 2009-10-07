@@ -132,10 +132,10 @@ call_button_state_clicked(struct CallActiveViewData *data, Evas_Object * obj,
 {
 	g_debug("state_clicked(id=%d,state=%d)", data->parent.id, data->state);
 	if (data->state == CALL_STATE_ACTIVE) {
-		ogsmd_call_release(data->parent.id, NULL, NULL);
+		phonegui_call_release(data->parent.id, NULL, NULL);
 	}
 	else if (data->state == CALL_STATE_PENDING) {
-		ogsmd_call_activate(data->parent.id, NULL, NULL);
+		phonegui_call_activate(data->parent.id, NULL, NULL);
 		call_common_window_new_active(data->parent.id);
 	}
 	else {

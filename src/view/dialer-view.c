@@ -1,5 +1,6 @@
 #include "views.h"
 
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 struct DialerViewData {
 	struct Window *win;

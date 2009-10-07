@@ -1,5 +1,7 @@
 #include "views.h"
 
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+
 struct MessageShowViewData {
 	struct Window *win;
 	char *status, *number, *content, *name, *date, *path;
