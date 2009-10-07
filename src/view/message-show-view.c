@@ -185,7 +185,7 @@ message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	g_debug("message_show_view_call_clicked()");
 
-	ogsmd_call_initiate(data->number, "voice", NULL, NULL);
+	phonegui_call_initiate(data->number, NULL, NULL);
 }
 
 static void

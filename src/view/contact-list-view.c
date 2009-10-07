@@ -172,8 +172,8 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL)
-		ogsmd_call_initiate(g_hash_table_lookup(properties, "number"),
-				    "voice", NULL, NULL);
+		phonegui_call_initiate(g_hash_table_lookup(properties, "number"),
+				    NULL, NULL);
 }
 
 static void
