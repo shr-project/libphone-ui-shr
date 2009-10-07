@@ -35,6 +35,7 @@ contact_list_view_show(struct Window *win, void *_options)
 	struct ContactListViewData *data =
 		g_slice_alloc0(sizeof(struct ContactListViewData));
 	data->win = win;
+	data->inwin = NULL;
 	data->query = NULL;
 
 	g_debug("contact_list_view_show()");
@@ -237,6 +238,42 @@ frame_list_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 	}
 }
 
+
+static void
+_delete_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
+{
+	struct ContactListViewData *data = (struct ContactListViewData *)_data;
+
+	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
+	GHashTable *properties = (it) ? elm_genlist_item_data_get(it) : NULL;
+
+	char *path = g_value_get_string(
+			g_hash_table_lookup(properties, "Path"));
+
+	opimd_contact_delete(path, NULL, NULL);
+
+	elm_genlist_item_del(it);
+
+	if (data->inwin) {
+		evas_object_del(data->inwin);
+		data->inwin = NULL;
+	}
+}
+
+
+
+static void
+_delete_no_clicked(void *_data, Evas_Object *obj, void *event_info)
+{
+	struct ContactListViewData *data = (struct ContactListViewData *)_data;
+	if (data->inwin) {
+		evas_object_del(data->inwin);
+		data->inwin = NULL;
+	}
+}
+
+
+
 static void
 frame_list_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
@@ -247,20 +284,25 @@ frame_list_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 	evas_object_hide(data->hv);
 
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
-	GHashTable *properties = (it) ? elm_genlist_item_data_get(it) : NULL;
+	if (it) {
+		struct InwinButton *btn;
+		GList *buttons = NULL;
 
-	if (properties != NULL) {
-		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "path",
-				    g_hash_table_lookup(properties, "path"));
-		g_hash_table_insert(options, "delete_callback",
-				    frame_list_refresh);
-		g_hash_table_insert(options, "delete_callback_data", data);
+		btn = malloc(sizeof(struct InwinButton));
+		btn->label = D_("Yes");
+		btn->callback = _delete_ok_clicked;
+		buttons = g_list_append(buttons, btn);
 
-		struct Window *win = window_new(D_("Delete Contact"));
-		window_init(win);
-		window_view_show(win, options, contact_delete_view_show,
-				 contact_delete_view_hide);
+		btn = malloc(sizeof(struct InwinButton));
+		btn->label = D_("No");
+		btn->callback = _delete_no_clicked;
+		buttons = g_list_append(buttons, btn);
+
+		data->inwin = 
+			window_inwin_dialog(data->win,
+					D_("Really delete this contact?"),
+					buttons, data);
+
 	}
 }
 
@@ -280,3 +322,6 @@ frame_list_refresh_callback(struct ContactListViewData *data)
 
 	contact_list_fill(data);
 }
+
+
+
