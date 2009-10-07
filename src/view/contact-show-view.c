@@ -57,6 +57,17 @@ _new_gvalue_string(const char *value)
 	return val;
 }
 
+
+static char *
+_get_entry(Evas_Object *obj)
+{
+	char *ret = elm_entry_entry_get(obj);
+	string_strip_html(ret);
+	return (ret);
+}
+
+
+
 /* --- smart callbacks --- */
 
 static void
@@ -495,14 +506,11 @@ frame_edit_value_get(Evas_Object * entry)
 gboolean
 frame_edit_data_changed(struct ContactViewData * data)
 {
-	char *s;
+	if (strcmp(data->field->name, _get_entry(data->entry_name)))
+		return (TRUE);
+	if (strcmp(data->field->value, _get_entry(data->entry_number)))
+		return (TRUE);
 
-	s = elm_entry_entry_get(data->entry_name);
-	if (strcmp(data->field->name, s))
-		return (TRUE);
-	s = elm_entry_entry_get(data->entry_number);
-	if (strcmp(data->field->value, s))
-		return (TRUE);
 	return (FALSE);
 }
 
@@ -515,51 +523,32 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 	g_debug("frame_edit_save_clicked()");
 
 	if (frame_edit_data_changed(data)) {
-		g_debug("---> %s needs saving", data->path);
-		GHashTable *field_data =
-			g_hash_table_new_full(g_str_hash, g_str_equal, free,
-					      free);
-		g_hash_table_insert(field_data, g_strdup(data->field->name),
-				    _new_gvalue_string(data->field->value));
+		g_debug("---> %s needs saving (%s=%s)", data->path, data->field->name, data->field->value);
+		const char *name = _get_entry(data->entry_name);
+		const char *value = _get_entry(data->entry_number);
+
+		/* if the name of the field changed we have to delete
+		 * the old field by setting it to an empty string */
+		if (strcmp(name, data->field->name) != 0) {
+			g_debug("field name changed... removing the old one");
+			g_hash_table_insert(data->properties, 
+					g_strdup(data->field->name),
+					_new_gvalue_string(""));
+		}
+
+		g_hash_table_insert(data->properties, g_strdup(name),
+				    _new_gvalue_string(value));
+
 		if (data->path)
-			opimd_contact_update(data->path, field_data, NULL,
+			opimd_contact_update(data->path, data->properties, NULL,
 					     NULL);
 		else
-			opimd_contacts_add(field_data, NULL, NULL);
-		g_debug("delegated save to lfg");
+			opimd_contacts_add(data->properties, NULL, NULL);
 	}
 
 	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
 }
 
-
-//static void 
-//frame_edit_save_new_callback(GError *error, char *path, void *_data)
-//{
-//      struct ContactViewData *data = (struct ContactViewData *)_data;
-//      g_debug("frame_edit_save_new_callback() --> %s", path);
-//      async_trigger(frame_edit_save_callback2, data);
-//}
-
-//static void 
-//frame_edit_save_update_callback(GError *error, void *_data)
-//{
-//      struct ContactViewData *data = (struct ContactViewData *)_data;
-//      g_debug("frame_edit_save_update_callback()");
-//      async_trigger(frame_edit_save_callback2, data);
-//}
-
-//static void 
-//frame_edit_save_callback2(struct ContactViewData *data)
-//{
-//      g_debug("frame_edit_save_callback2()");
-//      if (data->name)
-//              free(data->name);
-//      if (data->number)
-//              free(data->number);
-//      window_destroy(data->win, NULL);
-//
-//}
 
 
 static void
@@ -701,7 +690,7 @@ frame_edit_hide(void *_data)
 	evas_object_del(data->label_name);
 	evas_object_del(data->label_number);
 
-	g_free(data->field);
+	g_slice_free1(sizeof(struct ContactFieldData), data->field);
 	data->field = NULL;
 }
 
