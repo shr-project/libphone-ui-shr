@@ -133,6 +133,8 @@ frame_list_show(void *_data)
 	elm_hover_content_set(data->hv, "top", data->bx);
 
 	contact_list_fill(data);
+	evas_object_smart_callback_add(data->list, "selected", 
+			frame_list_edit_clicked, data);
 }
 
 static void
