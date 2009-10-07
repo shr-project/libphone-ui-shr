@@ -17,6 +17,9 @@
 
 #define D_(String) dgettext(PACKAGE, String)
 
+#define CONTACT_NAME_UNDEFINED_STRING D_("(unknown)")
+#define CONTACT_PHONE_UNDEFINED_STRING D_("(no number)")
+
 #define CALL_FILE "@DATADIR@/libframeworkd-phonegui-efl2/call.edj"
 #define CONTACTS_FILE "@DATADIR@/libframeworkd-phonegui-efl2/contacts.edj"
 #define CONTACTLIST_FILE "@DATADIR@/libframeworkd-phonegui-efl2/contactlist.edj"

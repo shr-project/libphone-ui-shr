@@ -207,7 +207,7 @@ frame_show_show(void *_data)
 		if (tmp)
 			s = g_value_get_string(tmp);
 		else
-			s = D_("Unknown");
+			s = CONTACT_NAME_UNDEFINED_STRING;
 		window_text_set(data->win, "name", s);
 
 		tmp = g_hash_table_lookup(data->properties, "Phone");
@@ -222,7 +222,7 @@ frame_show_show(void *_data)
 		window_text_set(data->win, "number", s);
 	}
 	else {
-		window_text_set(data->win, "name", D_("(New Contact)"));
+		window_text_set(data->win, "name", CONTACT_NAME_UNDEFINED_STRING);
 		window_text_set(data->win, "number", "");
 	}
 
