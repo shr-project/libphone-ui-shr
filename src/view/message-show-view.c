@@ -1,7 +1,4 @@
 #include "views.h"
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
-
 
 struct MessageShowViewData {
 	struct Window *win;
@@ -33,30 +30,12 @@ void
   message_show_view_hide(void *_data);
 
 static void
-
-
-
-
-
-
 message_show_view_close_clicked(void *_data, Evas_Object * obj,
 				void *event_info);
 static void
-
-
-
-
-
-
 message_show_view_answer_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
-
-
-
-
-
-
 message_show_view_delete_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
@@ -64,12 +43,6 @@ static void
 static void
   message_show_view_delete_callback_callback(struct MessageShowViewData *data);
 static void
-
-
-
-
-
-
 message_show_view_call_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
