@@ -16,6 +16,7 @@ struct MessageShowViewData {
 	void *callback_data;
 };
 
+/* FIXME: should be removed? */
 typedef enum {
 	MODE_FOLDERS,
 	MODE_LIST,
