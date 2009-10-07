@@ -79,7 +79,7 @@ frame_show_close_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 
 static void
-frame_show_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
+frame_show_add_field_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct ContactViewData *data = (struct ContactViewData *) _data;
 	if (data->field) {
@@ -88,10 +88,8 @@ frame_show_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 		g_free(data->field);
 	}
 	data->field = g_malloc(sizeof(struct ContactFieldData));
-	data->field->name = g_strdup("Name");
-	data->field->value =
-		g_strdup(g_value_get_string
-			 (g_hash_table_lookup(data->properties, "Name")));
+	data->field->name = g_strdup("");
+	data->field->value = g_strdup("");
 	window_frame_show(data->win, data, frame_edit_show, frame_edit_hide);
 }
 
@@ -308,9 +306,9 @@ frame_show_show(void *_data)
 	evas_object_show(data->bt1);
 
 	data->bt2 = elm_button_add(window_evas_object_get(data->win));
-	elm_button_label_set(data->bt2, D_("Edit"));
+	elm_button_label_set(data->bt2, D_("Add Field"));
 	evas_object_smart_callback_add(data->bt2, "clicked",
-				       frame_show_edit_clicked, data);
+				       frame_show_add_field_clicked, data);
 	window_swallow(data->win, "button_edit", data->bt2);
 	evas_object_show(data->bt2);
 
@@ -645,7 +643,7 @@ frame_edit_show(void *_data)
 	evas_object_size_hint_weight_set(data->entry_name, 1.0, 1.0);
 	evas_object_size_hint_align_set(data->entry_name, -1.0, -1.0);
 	elm_entry_entry_set(data->entry_name, data->field->name);
-	elm_widget_focus_set(data->entry_name, 1);
+	//elm_widget_focus_set(data->entry_name, 1);
 
 	elm_scroller_content_set(data->sc_name, data->entry_name);
 	evas_object_show(data->entry_name);
@@ -670,7 +668,12 @@ frame_edit_show(void *_data)
 	window_swallow(data->win, "entry_number", data->sc_number);
 	evas_object_show(data->sc_number);
 
-	elm_object_focus(data->entry_name);
+	/* set focus to the data if name of the
+	 * field is not empty */
+	if (*data->field->name)
+		elm_object_focus(data->entry_number);
+	else
+		elm_object_focus(data->entry_name);
 }
 
 
