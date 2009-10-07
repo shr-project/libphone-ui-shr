@@ -179,13 +179,9 @@ static void
 frame_show_edit_field(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct ContactViewData *data = (struct ContactViewData *) _data;
-	Elm_Genlist_Item *row = elm_genlist_selected_item_get(data->list);
-	if (!row) {
-		g_debug("no field selected?");
-		return;
-	}
+	Elm_Genlist_Item *it = (Elm_Genlist_Item *)event_info;
 	struct ContactFieldData *fd =
-		(struct ContactFieldData *) elm_genlist_item_data_get(row);
+		(struct ContactFieldData *) elm_genlist_item_data_get(it);
 	g_debug("editing field %s of %s", fd->name,
 		data->path ? data->path : "new contact");
 	data->field = g_slice_alloc0(sizeof(struct ContactFieldData));
@@ -274,7 +270,7 @@ frame_show_show(void *_data)
 
 	window_swallow(data->win, "fields", data->list);
 	evas_object_show(data->list);
-	evas_object_smart_callback_add(data->list, "longpressed",
+	evas_object_smart_callback_add(data->list, "selected",
 				       frame_show_edit_field, data);
 
 	g_hash_table_iter_init(&iter, data->properties);
