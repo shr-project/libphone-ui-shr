@@ -17,9 +17,6 @@ static void
 static void
   frame_dialer_hide(void *_data);
 static void
-
-
-
  frame_dialer_options_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
   frame_dialer_keypad_clicked(void *_data, Evas_Object * obj, void *event_info);
@@ -30,35 +27,14 @@ static void
 static void
   frame_dialer_save_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-
-
-
  frame_dialer_message_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-
-
-
-
-
-
 frame_dialer_delete_mouse_down(void *_data, Evas_Object * o,
 			       const char *emission, const char *source);
 static void
-
-
-
-
-
-
 frame_dialer_delete(void *_data, Evas_Object * o, const char *emission,
 		    const char *source);
 static void
-
-
-
-
-
-
 frame_dialer_number_clicked(void *_data, Evas_Object * o, const char *emission,
 			    const char *source);
 static int
@@ -264,8 +240,8 @@ frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 		}
 		else {
 			g_debug("Initiate Call");
-			ogsmd_call_initiate(data->number, "voice",
-					    frame_dialer_initiate_callback,
+			phonegui_call_initiate(data->number,
+					frame_dialer_initiate_callback,
 					    data);
 		}
 	}
