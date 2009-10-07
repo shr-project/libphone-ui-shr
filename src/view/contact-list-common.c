@@ -1,6 +1,8 @@
 
 #include "views.h"
 
+#include <ctype.h> /* to upper */
+
 static Elm_Genlist_Item_Class itc;
 
 
@@ -116,15 +118,101 @@ _compare_entries(gconstpointer _a, gconstpointer _b)
 
 	return (strcasecmp(name_a, name_b));
 }
+int /* thanks to evas */
+utf8_get_next(const unsigned char *buf, int *iindex)
+{
+   /* Reads UTF8 bytes from @buf, starting at *@index and returns
+    * the decoded code point at iindex offset, and advances iindex
+    * to the next code point after this.
+    *
+    * Returns 0 to indicate there is no next char
+    */
+	int index = *iindex, len, r;
+	unsigned char d, d2, d3, d4;
+
+	/* if this char is the null terminator, exit */
+	if (!buf[index])
+		return 0;
+
+	d = buf[index++];
+
+	while (buf[index] && ((buf[index] & 0xc0) == 0x80))
+		index++;
+
+	len = index - *iindex;
+
+	if (len == 1)
+		r = d;
+	else if (len == 2)
+	{
+		/* 2 bytes */
+		d2 = buf[*iindex + 1];
+		r = d & 0x1f; /* copy lower 5 */
+		r <<= 6;
+		r |= (d2 & 0x3f); /* copy lower 6 */
+	}
+	else if (len == 3)
+	{
+		/* 3 bytes */
+		d2 = buf[*iindex + 1];
+		d3 = buf[*iindex + 2];
+		r = d & 0x0f; /* copy lower 4 */
+		r <<= 6;
+		r |= (d2 & 0x3f);
+		r <<= 6;
+		r |= (d3 & 0x3f);
+	}
+	else
+	{
+		/* 4 bytes */
+		d2 = buf[*iindex + 1];
+		d3 = buf[*iindex + 2];
+		d4 = buf[*iindex + 3];
+		r = d & 0x0f; /* copy lower 4 */
+		r <<= 6;
+		r |= (d2 & 0x3f);
+		r <<= 6;
+		r |= (d3 & 0x3f);
+		r <<= 6;
+		r |= (d4 & 0x3f);
+	}
+
+	*iindex = index;
+	return r;
+}
 
 
 
+static char *
+_new_get_index(const char *_string)
+{
+	/*FIXME: handle the upper in a more sane manner,
+	 * i.e, unicode support */
+	char *string;
+	int i;
+
+	i = 0;
+	utf8_get_next(_string, &i);
+
+	string = malloc(i + 1);
+	if (!string) {
+		return NULL;
+	}
+	strncpy(string, _string, i);
+	string[i] = '\0';
+	
+	if (i == 1) {/* i.e, an ascii char */
+		string[i] = toupper(string[i]);
+	}
+	
+	return string;
+}
 
 static void
 _process_entry(gpointer _entry, gpointer _data)
 {
 	Elm_Genlist_Item *it;
-	char idx;
+	char *idx;
 
 	GHashTable *entry = (GHashTable *) _entry;
 	struct ContactListViewData *data = (struct ContactListViewData *) _data;
@@ -135,12 +223,21 @@ _process_entry(gpointer _entry, gpointer _data)
 
 	const char *name =
 		g_value_get_string(g_hash_table_lookup(entry, "Name"));
-	if (name && *name && (idx = toupper(*name))
-	    && idx != data->current_index) {
+	if (!name || !*name) {
+		return;
+	}
+	
+	idx = _new_get_index(name);
+	if (!data->current_index || strcmp(idx, data->current_index)) {
+		if (data->current_index) {
+			free(data->current_index);
+		}
 		data->current_index = idx;
-		elm_index_item_append(data->index,
-				      g_strdup_printf("%c",
-						      data->current_index), it);
+		g_debug("Adding index %s", idx);
+		elm_index_item_append(data->index, data->current_index, it);
+	}
+	else {
+		free(idx);
 	}
 }
 

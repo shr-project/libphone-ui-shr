@@ -37,6 +37,7 @@ contact_list_view_show(struct Window *win, void *_options)
 	data->win = win;
 	data->inwin = NULL;
 	data->query = NULL;
+	data->current_index = NULL;
 
 	g_debug("contact_list_view_show()");
 

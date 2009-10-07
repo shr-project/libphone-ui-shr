@@ -24,7 +24,7 @@ struct ContactListViewData {
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
 	DBusGProxy *query;
-	int current_index;
+	char *current_index;
 	GPtrArray *contacts;
 };
 

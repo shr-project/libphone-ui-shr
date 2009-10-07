@@ -6,3 +6,6 @@
   * USSD
  * Messages
  * Contacts?
+
+# Move all the utility functions to phonegui
+# make a special source for weird string functions
