@@ -40,8 +40,6 @@ void
 gboolean pin_wrong_callback(void *_data);
 void
   puk_callback(GError * error, gpointer data);
-void
-  puk_callback2(struct SimAuthInputViewData *data);
 int
   pins_different_callback(struct SimAuthInputViewData *data);
 void
@@ -170,7 +168,7 @@ pin_callback(GError * error, gpointer _data)
 		g_debug("error");
 		if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)
 		    || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
-			async_trigger(frame_pin_wrong_show, data);
+			frame_pin_wrong_show(data);
 			ecore_timer_add(2, pin_wrong_callback, data);
 		}
 		else
@@ -197,21 +195,14 @@ puk_callback(GError * error, gpointer _data)
 		if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)
 		    || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
 			data->mode = MODE_PUK;
-			async_trigger(puk_callback2, data);
+			window_frame_show(data->win, data, frame_puk_wrong_show, NULL);
+			ecore_timer_add(2, reset_callback, data);
 		}
 		else
 			g_error("Unhandled error: %d %s %s", error->code,
 				error->message,
 				g_quark_to_string(error->domain));
 	}
-}
-
-void
-puk_callback2(struct SimAuthInputViewData *data)
-{
-	g_debug("puk_callback2()");
-	window_frame_show(data->win, data, frame_puk_wrong_show, NULL);
-	ecore_timer_add(2, reset_callback, data);
 }
 
 int
@@ -241,7 +232,7 @@ sim_auth_callback(GError * error, int status, gpointer _data)
 	else
 		g_error("Unhandled sim auth status: %d", status);
 
-	async_trigger(reset_callback, _data);
+	reset_callback(_data);
 }
 
 void

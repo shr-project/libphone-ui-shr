@@ -27,8 +27,6 @@ void
  message_delete_no_clicked(void *userdata, Evas_Object * obj, void *event_info);
 static void
   delete_callback(GError * error, gpointer _data);
-static void
-  delete_callback2(struct MessageDeleteViewData *data);
 
 static void
   frame_delete_show(void *_data);
@@ -88,15 +86,6 @@ delete_callback(GError * error, gpointer _data)
 {
 	struct MessageDeleteViewData *data =
 		(struct MessageDeleteViewData *) _data;
-
-	async_trigger(delete_callback2, data);
-}
-
-static void
-delete_callback2(struct MessageDeleteViewData *data)
-{
-	if (data->callback != NULL)
-		data->callback(data->callback_data);
 
 	window_destroy(data->win, NULL);
 }

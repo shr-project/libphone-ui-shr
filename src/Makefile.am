@@ -17,13 +17,12 @@ libframeworkd_phonegui_efl2_la_SOURCES = \
 	phonegui-sim-auth.h phonegui-sim-auth.c \
 	phonegui-call.h phonegui-call.c \
 	phonegui-contacts.h phonegui-contacts.c \
+	phonegui-contact.h phonegui-contact.c \
 	phonegui-ussd.h phonegui-ussd.c \
 	widget/etk_tree_model_edje.h widget/etk_tree_model_edje.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
-	util/pipe.h util/pipe.c \
 	util/helper.h util/helper.c \
 	util/instance.h util/instance.c \
-	util/async.h util/async.c \
 	util/window.h util/window.c \
 	util/view.h util/view.c \
 	view/views.h \

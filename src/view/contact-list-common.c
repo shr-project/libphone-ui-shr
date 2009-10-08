@@ -260,19 +260,6 @@ _process_entry(gpointer _entry, gpointer _data)
 
 
 
-static void
-_retrieve_callback2(void *_data)
-{
-	struct ContactListViewData *data = (struct ContactListViewData *) _data;
-
-	g_ptr_array_sort(data->contacts, _compare_entries);
-	g_ptr_array_foreach(data->contacts, _process_entry, data);
-
-	elm_index_item_go(data->index, 0);
-}
-
-
-
 
 static void
 _retrieve_callback(GError * error, GPtrArray * contacts, void *_data)
@@ -285,7 +272,10 @@ _retrieve_callback(GError * error, GPtrArray * contacts, void *_data)
 	struct ContactListViewData *data = (struct ContactListViewData *) _data;
 	data->contacts = contacts;
 
-	async_trigger(_retrieve_callback2, data);
+	g_ptr_array_sort(data->contacts, _compare_entries);
+	g_ptr_array_foreach(data->contacts, _process_entry, data);
+
+	elm_index_item_go(data->index, 0);
 }
 
 

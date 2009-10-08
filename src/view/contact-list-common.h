@@ -11,7 +11,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "helper.h"
-#include "async.h"
 #include "window.h"
 
 

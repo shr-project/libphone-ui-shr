@@ -21,20 +21,9 @@ struct MessageFolderViewData {
 
 
 static void
-
-
-
-
-
-
 message_folder_view_retrieve_messagebook_callback(GError * error,
 						  GPtrArray * messages,
 						  void *data);
-static void
-
-
-  message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData
-						     *data);
 static void
   messages_button_new_clicked(void *data, Evas_Object * obj, void *event_info);
 static void
@@ -80,16 +69,6 @@ message_folder_view_retrieve_messagebook_callback(GError * error,
 	struct MessageFolderViewData *data =
 		(struct MessageFolderViewData *) _data;
 	data->tmp_messages = messages;
-
-	async_trigger(message_folder_view_retrieve_messagebook_callback2, data);
-}
-
-
-static void
-message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData
-						   *data)
-{
-
 	struct Window *win = data->win;
 
 	window_layout_set(win, MESSAGE_FILE, "folders");
@@ -154,6 +133,8 @@ message_folder_view_retrieve_messagebook_callback2(struct MessageFolderViewData
 		       etk_embed_object_get(ETK_EMBED(data->container)));
 
 }
+
+
 
 
 

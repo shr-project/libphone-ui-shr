@@ -510,14 +510,6 @@ frame_edit_data_changed(struct ContactViewData * data)
 
 
 static void
-_load_show(void *_data)
-{
-	struct ContactViewData *data = (struct ContactViewData *)_data;
-	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
-}
-
-
-static void
 _on_new_saved(GError *error, const char *path, void *_data)
 {
 	struct ContactViewData *data = (struct ContactViewData *)_data;
@@ -526,7 +518,7 @@ _on_new_saved(GError *error, const char *path, void *_data)
 		data->path = g_strdup(path);
 	}
 
-	async_trigger(_load_show, data);
+	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
 }
 
 
@@ -743,8 +735,7 @@ contact_show_view_show(struct Window *win, void *_data)
 	}
 	else {
 		data->properties =
-			g_hash_table_new_full(g_str_hash, g_str_equal, NULL,
-					      free);
+			g_hash_table_new(g_str_hash, g_str_equal);
 		g_hash_table_insert(data->properties, "Name", 
 				_new_gvalue_string(""));
 		g_hash_table_insert(data->properties, "Phone", 

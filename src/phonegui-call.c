@@ -4,7 +4,6 @@
 #include <assert.h>
 #include "instance.h"
 #include "window.h"
-#include "async.h"
 #include "views.h"
 
 enum CallTypes {
@@ -18,7 +17,6 @@ struct Call {
 };
 
 static void _show(const int id, const int status, const char *number, int type);
-static void _show_async(GHashTable * options);
 static void _hide(const int id);
 static void _delete(void *data, Evas_Object * win, void *event_info);
 
@@ -33,7 +31,7 @@ phonegui_backend_incoming_call_show(const int id, const int status,
 void
 phonegui_backend_incoming_call_hide(const int id)
 {
-	async_trigger(_hide, id);
+	_hide(id);
 }
 
 void
@@ -46,7 +44,7 @@ phonegui_backend_outgoing_call_show(const int id, const int status,
 void
 phonegui_backend_outgoing_call_hide(const int id)
 {
-	async_trigger(_hide, id);
+	_hide(id);
 }
 
 
@@ -58,24 +56,10 @@ _show(const int id, const int status, const char *number, int type)
 	instance_manager_add(INSTANCE_CALL, id, win);
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "win", win);
-	g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
 	g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
 	g_hash_table_insert(options, "number", (char *) number);	/* we just loose the const for now */
-	g_hash_table_insert(options, "type", GINT_TO_POINTER(type));
 
-	async_trigger(_show_async, options);
-}
-
-static void
-_show_async(GHashTable * options)
-{
-	struct Window *win = g_hash_table_lookup(options, "win");
-	assert(win != NULL);
 	window_init(win);
-
-	int type = g_hash_table_lookup(options, "type");
-	int id = g_hash_table_lookup(options, "id");
 	if (type == CALL_INCOMING) {
 		window_view_show(win, options, call_incoming_view_show,
 				 call_incoming_view_hide);
@@ -88,8 +72,9 @@ _show_async(GHashTable * options)
 		g_error("Unknown call type: %d", type);
 	}
 
-	window_show(win);
+	elm_run();
 }
+
 
 static void
 _hide(const int id)

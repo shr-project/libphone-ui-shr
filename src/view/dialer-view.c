@@ -44,8 +44,6 @@ static void
   frame_dialer_number_update(void *_data);
 static void
   frame_dialer_initiate_callback(GError * error, int call_id, void *userdata);
-static void
-  frame_dialer_initiate_callback2(void *_data);
 
 
 
@@ -402,12 +400,7 @@ frame_dialer_number_clear(void *_data)
 static void
 frame_dialer_initiate_callback(GError * error, int call_id, void *userdata)
 {
-	async_trigger(frame_dialer_initiate_callback2, userdata);
-}
-
-static void
-frame_dialer_initiate_callback2(void *_data)
-{
-	struct DialerViewData *data = (struct DialerViewData *) _data;
+	struct DialerViewData *data = (struct DialerViewData *)userdata;
 	window_destroy(data->win, NULL);
 }
+

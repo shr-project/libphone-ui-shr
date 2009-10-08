@@ -56,18 +56,10 @@ static void
   my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 
 static void
-
-
-
-
-
-
 retrieve_messagebook_callback(GError * error, GPtrArray * messages,
 			      void *_data);
 static void
   retrieve_messagebook_callback2(struct MessageListViewData *data);
-static void
-  process_messages(void *_data);
 static void
   process_message(gpointer _message, gpointer _data);
 
@@ -77,8 +69,6 @@ static
 gint compare_messages(gconstpointer _a, gconstpointer _b);
 static void
   message_list_view_message_deleted(void *_data);
-static void
-  message_list_view_message_deleted_callback(struct MessageListViewData *data);
 
 
 /* --- message list view ---------------------------------------------------- */
@@ -417,7 +407,7 @@ retrieve_messagebook_callback(GError * error, GPtrArray * messages, void *_data)
 	//g_ptr_array_foreach(data->messages, add_integer_timestamp_to_message, NULL);
 	//g_ptr_array_sort(data->messages, compare_messages);
 
-	async_trigger(process_messages, data);
+	g_ptr_array_foreach(data->messages, process_message, data);
 }
 
 void
@@ -430,12 +420,6 @@ _remove_tel(char *number)
 	}
 }
 
-static void
-process_messages(void *_data)
-{
-	struct MessageListViewData *data = (struct MessageListViewData *) _data;
-	g_ptr_array_foreach(data->messages, process_message, data);
-}
 
 static void
 process_message(gpointer _entry, gpointer _data)
@@ -561,16 +545,9 @@ compare_messages(gconstpointer _a, gconstpointer _b)
 }
 
 static void
-message_list_view_message_deleted(void *data)
+message_list_view_message_deleted(void *_data)
 {
-	async_trigger(message_list_view_message_deleted_callback,
-		      (struct MessageListViewData *) data);
-}
-
-static void
-message_list_view_message_deleted_callback(struct MessageListViewData *data)
-{
-	// TODO: Reload list instead of deleting the selected message
+	struct MessageListViewData *data = (struct MessageListViewData *)_data;
 	data->selected_row = elm_genlist_selected_item_get(data->list);
 	if (data->selected_row != NULL) {
 		elm_genlist_item_del(data->selected_row);

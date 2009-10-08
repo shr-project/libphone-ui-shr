@@ -23,8 +23,6 @@ static void
   frame_list_delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
   frame_list_refresh(void *_data);
-static void
-  frame_list_refresh_callback(struct ContactListViewData *data);
 
 
 /* --- main contact list view ----------------------------------------------- */
@@ -52,6 +50,7 @@ contact_list_view_hide(void *_data)
 {
 	g_debug("contact_list_view_hide()");
 	g_slice_free(struct ContactListViewData, _data);
+	elm_exit();
 }
 
 
@@ -203,13 +202,19 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {
-		assert(g_hash_table_lookup(properties, "number") != NULL);
+		GValue *tmp = g_hash_table_lookup(properties, "Phone");
+		if (!tmp)
+			return;
+
+		const char *number = g_value_get_string(tmp);
+		tmp = g_hash_table_lookup(properties, "Name");
+		const char *name = NULL;
+		if (tmp)
+			name = g_value_get_string(tmp);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "name",
-				    g_hash_table_lookup(properties, "name"));
-		g_hash_table_insert(options, "number",
-				    g_hash_table_lookup(properties, "number"));
+		g_hash_table_insert(options, "name", name ? name : number);
+		g_hash_table_insert(options, "number", number);
 
 		struct Window *win = window_new(D_("Compose SMS"));
 		window_init(win);
@@ -311,17 +316,10 @@ frame_list_refresh(void *_data)
 {
 	g_debug("frame_list_refresh");
 	struct ContactListViewData *data = (struct ContactListViewData *) _data;
-	async_trigger(frame_list_refresh_callback, data);
-}
-
-static void
-frame_list_refresh_callback(struct ContactListViewData *data)
-{
-	g_debug("frame_list_refresh_callback");
 	elm_genlist_clear(data->list);
-
 	contact_list_fill(data);
 }
+
 
 
 

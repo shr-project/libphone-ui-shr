@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "helper.h"
-#include "async.h"
 #include "window.h"
 #include "call-common.h"
 #include "contact-list-common.h"

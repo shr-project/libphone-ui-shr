@@ -165,14 +165,9 @@ delete_callback(GError * error, gpointer _data)
 {
 	struct ContactDeleteViewData *data =
 		(struct ContactDeleteViewData *) _data;
-	async_trigger(delete_callback2, data);
-}
-
-static void
-delete_callback2(struct ContactDeleteViewData *data)
-{
 	if (data->callback != NULL)
 		data->callback(data->callback_data);
 
 	window_destroy(data->win, NULL);
 }
+

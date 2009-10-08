@@ -44,21 +44,18 @@ message_show_view_delete_clicked(void *_data, Evas_Object * obj,
 static void
   message_show_view_delete_callback(void *_data);
 static void
-  message_show_view_delete_callback_callback(struct MessageShowViewData *data);
-static void
 message_show_view_call_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
+static void
+message_show_view_new_contact_clicked(struct MessageShowViewData *data,
+				      Evas_Object * obj, void *event_info);
 static void
   my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 
 static void
   name_callback(GError * error, char *name, gpointer _data);
 static void
-  name_callback2(struct MessageShowViewData *data);
-static void
   retrieve_callback(GHashTable * properties, gpointer _data);
-static void
-  retrieve_callback2(struct MessageShowViewData *data);
 
 
 
@@ -191,12 +188,6 @@ message_show_view_delete_callback(void *_data)
 
 	g_debug("message_show_view_delete_callback()");
 
-	async_trigger(message_show_view_delete_callback_callback, data);
-}
-
-static void
-message_show_view_delete_callback_callback(struct MessageShowViewData *data)
-{
 	window_destroy(data->win, NULL);
 
 	if (data->callback != NULL)
@@ -227,13 +218,6 @@ message_common_name_callback(GError * error, char *name, void *_data)
 	if (error == NULL && *name) {
 		data->name = strdup(name);
 	}
-	async_trigger(name_callback2, data);
-}
-
-
-static void
-name_callback2(struct MessageShowViewData *data)
-{
 	g_debug("name updating...");
 	if (data->name) {
 		window_text_set(data->win, "text_number", data->name);
@@ -242,6 +226,7 @@ name_callback2(struct MessageShowViewData *data)
 		window_text_set(data->win, "text_number", data->number);
 	}
 }
+
 
 static void
 retrieve_callback(GHashTable * properties, gpointer _data)
@@ -258,19 +243,6 @@ retrieve_callback(GHashTable * properties, gpointer _data)
 
 	g_debug("loading message data...");
 
-	async_trigger(retrieve_callback2, data);
-}
-
-static void
-message_show_view_new_contact_clicked(struct MessageShowViewData *data,
-				      Evas_Object * obj, void *event_info)
-{
-	phonegui_contacts_new_show(NULL, data->number);
-}
-
-static void
-retrieve_callback2(struct MessageShowViewData *data)
-{
 	struct Window *win = data->win;
 
 	window_layout_set(win, MESSAGE_FILE, "message_show");
@@ -350,3 +322,11 @@ retrieve_callback2(struct MessageShowViewData *data)
 
 	window_show(win);
 }
+
+static void
+message_show_view_new_contact_clicked(struct MessageShowViewData *data,
+				      Evas_Object * obj, void *event_info)
+{
+	phonegui_contacts_new_show(NULL, data->number);
+}
+
