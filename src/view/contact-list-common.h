@@ -25,7 +25,11 @@ struct ContactListViewData {
 	Evas_Object *inwin;
 	DBusGProxy *query;
 	char *current_index;
+	Elm_Genlist_Item *current_index_item;
 	GPtrArray *contacts;
+	int contact_count;
+	int index_count;
+	int new_index;
 };
 
 

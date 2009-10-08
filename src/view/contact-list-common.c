@@ -211,20 +211,28 @@ _new_get_index(const char *_string)
 static void
 _process_entry(gpointer _entry, gpointer _data)
 {
+	/* FIXME: limit to 13 indexes - BAD, gotta find a way to calculate
+	 * this, furthermore, should probably choose the best indexes better */
+	static int limit = 13;
 	Elm_Genlist_Item *it;
 	char *idx;
-
 	GHashTable *entry = (GHashTable *) _entry;
 	struct ContactListViewData *data = (struct ContactListViewData *) _data;
 
 	it = elm_genlist_item_append(data->list, &itc,
 				     g_hash_table_ref(entry) /*item data */ ,
 				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-
 	const char *name =
 		g_value_get_string(g_hash_table_lookup(entry, "Name"));
 	if (!name || !*name) {
 		return;
+	}
+
+	/* if we only started, count how many indexes we should pass
+	 * before entering a new one */
+	if (!data->current_index) {
+		data->index_count = data->contact_count / limit;
+		data->new_index = 0;
 	}
 	
 	idx = _new_get_index(name);
@@ -233,12 +241,20 @@ _process_entry(gpointer _entry, gpointer _data)
 			free(data->current_index);
 		}
 		data->current_index = idx;
-		g_debug("Adding index %s", idx);
-		elm_index_item_append(data->index, data->current_index, it);
+		data->current_index_item = it;
+		data->new_index = 1;
 	}
 	else {
 		free(idx);
 	}
+	if (data->index_count < 1 && data->new_index) {
+		g_debug("Adding index %s", data->current_index);
+		elm_index_item_append(data->index, data->current_index,
+					data->current_index_item);
+		data->index_count = data->contact_count / limit;
+		data->new_index = 0;
+	}
+	data->index_count--;
 }
 
 
@@ -285,6 +301,7 @@ _result_callback(GError * error, int count, void *_data)
 			g_debug("oops... query vanished!");
 			return;
 		}
+		data->contact_count = count;
 		opimd_contact_query_get_multiple_results(data->query, count,
 							 _retrieve_callback,
 							 data);
@@ -317,10 +334,13 @@ contact_list_fill(struct ContactListViewData *data)
 	GHashTable *qry =
 		g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 	data->current_index = NULL;
+	data->current_index_item = NULL;
 	if (data->query) {
 		opimd_contacts_query_dispose(data->query);
 		data->query = NULL;
 	}
+	data->contact_count = 0;
+	data->index_count = 0;
 	opimd_contacts_query(qry, _query_callback, data);
 	g_hash_table_destroy(qry);
 }
