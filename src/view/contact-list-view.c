@@ -171,9 +171,13 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
-	if (properties != NULL)
-		phonegui_call_initiate(g_hash_table_lookup(properties, "number"),
-				    NULL, NULL);
+	if (properties != NULL) {
+		GValue *tmp = g_hash_table_lookup(properties, "Phone");
+		if (tmp) {
+			phonegui_call_initiate(g_value_get_string(tmp),
+					    NULL, NULL);
+		}
+	}
 }
 
 static void
