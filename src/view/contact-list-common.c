@@ -222,8 +222,14 @@ _process_entry(gpointer _entry, gpointer _data)
 	it = elm_genlist_item_append(data->list, &itc,
 				     g_hash_table_ref(entry) /*item data */ ,
 				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-	const char *name =
-		g_value_get_string(g_hash_table_lookup(entry, "Name"));
+	GValue *tmp = g_hash_table_lookup(entry, "Name");
+	const char *name;
+	if (tmp) {
+		name = g_value_get_string(tmp);
+	}
+	else {
+		name = "";
+	}
 	if (!name || !*name) {
 		return;
 	}
