@@ -1,193 +1,184 @@
 collections {
 
-   group {
-      name, "incoming_call";
-      parts {
+	group {
+		name: "incoming_call";
 
-	    part {
-	           name,   "information";
-	           type,   SWALLOW;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-                   max, 0 0;
-		           rel1 {
-		                       relative, 0.0 0.0;
-		                       offset, 0 0;
-		           }
-                   rel2 {
-                              relative, 1.0 0.2;
-                              offset, 0 0;
-                   }
-	            }
-	    }
-	    part {
-	           name,   "number";
-	           type,   SWALLOW;
-	           mouse_events, 0;
-	           description {
-		           state, "default" 0.0;
-                   max: 0 0;
-		           rel1 {
-		                       relative, 0.0 0.2;
-		                       offset, 0 0;
-		           }
-	                     rel2 {
-	                                 relative, 1.0 0.4;
-	                                 offset, 0 0;
-	                     }
-	            }
-	    }
+		parts {
 
+			part {
+				name: "information";
+				type: SWALLOW;
+				mouse_events, 0;
+				description {
+					state: "default" 0.0;
+					max: 0 0;
+					rel1 {
+						relative: 0.0 0.0;
+						offset: 0 0;
+					}
+					rel2 {
+						relative: 1.0 0.2;
+						offset: 0 0;
+					}
+				}
+			}
 
-	    part {
-	           name,   "button_accept";
-	           type,   SWALLOW;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.85;
-    	           }
-		           rel2 {
-		                       relative, 0.5 1.0;
-		           }
-            }
-	    }
-
-	    part {
-	           name,   "button_release";
-	           type,   SWALLOW;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.5 0.85;
-    	           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		           }
-            }
-	    }
+			part {
+				name: "number";
+				type: SWALLOW;
+				mouse_events: 0;
+				description {
+					state: "default" 0.0;
+					max: 0 0;
+					rel1 {
+						relative: 0.0 0.2;
+						offset: 0 0;
+					}
+					rel2 {
+						relative: 1.0 0.4;
+						offset: 0 0;
+					}
+				}
+			}
 
 
-   } /* Close Parts */
- } /* Close Group */
+			part {
+				name: "button_accept";
+				type: SWALLOW;
+				mouse_events: 1;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						relative: 0.0 0.85;
+					}
+					rel2 {
+						relative: 0.5 1.0;
+					}
+				}
+			}
+
+			part {
+				name: "button_release";
+				type: SWALLOW;
+				mouse_events: 1;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						relative: 0.5 0.85;
+					}
+					rel2 {
+						relative: 1.0 1.0;
+					}
+				}
+			}
+
+		} /* Close Parts */
+
+	} /* Close Group "incoming_call" */
 
 
+	group {
+		name, "call";
 
+		parts {
 
+			part {
+				name: "text";
+				type: SWALLOW;
+				mouse_events: 0;
+				description {
+					state: "default" 0.0;
+					max: 0 0;
+					rel1 {
+						relative: 0.0 0.0;
+						offset: 0 0;
+					}
+					rel2 {
+						relative: 1.0 0.1;
+						offset: 0 0;
+					}
+				}
+			}
 
+			part {
+				name: "number";
+				type: SWALLOW;
+				mouse_events: 0;
+				description {
+					state: "default" 0.0;
+					max: 0 0;
+					rel1 {
+						relative: 0.0 0.1;
+						offset: 0 0;
+					}
+					rel2 {
+						relative: 1.0 0.2;
+						offset: 0 0;
+					}
+				}
+			}
 
-    group {
-        name, "call";
-        parts {
+			part {
+				name: "keypad";
+				type: SWALLOW;
+				mouse_events: 1;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						relative: 0.0 0.2;
+					}
+					rel2 {
+						relative: 1.0 0.84;
+					}
+				}
+			}
 
+			part {
+				name: "button_release";
+				type: SWALLOW;
+				mouse_events: 1;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						relative: 0.0 0.85;
+					}
+					rel2 {
+						relative: 0.33 1.0;
+					}
+				}
+			}
 
-	        part {
-                name,   "text";
-                type,   SWALLOW;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    max, 0 0;
-                    rel1 {
-                           relative, 0.0 0.0;
-                           offset, 0 0;
-                    }
-                    rel2 {
-                           relative, 1.0 0.1;
-                           offset, 0 0;
-                    }
-                }
-	        }
+			part {
+				name: "button_speaker";
+				type: SWALLOW;
+				mouse_events: 1;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						relative: 0.33 0.85;
+					}
+					rel2 {
+						relative: 0.66 1.0;
+					}
+				}
+			}
 
-	        part {
-                name,   "number";
-                type,   SWALLOW;
-                mouse_events, 0;
-                description {
-                    state, "default" 0.0;
-                    max, 0 0;
-                    rel1 {
-                           relative, 0.0 0.1;
-                           offset, 0 0;
-                    }
-                    rel2 {
-                           relative, 1.0 0.2;
-                           offset, 0 0;
-                    }
-                }
-	        }
+			part {
+				name: "button_dtmf";
+				type: SWALLOW;
+				mouse_events: 1;
+				description {
+					state: "default" 0.0;
+					rel1 {
+						relative: 0.66 0.85;
+					}
+					rel2 {
+						relative: 1.0 1.0;
+					}
+				}
+			}
+		}
+	} /* Close Group "call" */
 
-
-
-	    part {
-	           name,   "keypad";
-	           type,   SWALLOW;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.2;
-		           }
-                   rel2 {
-                               relative, 1.0 0.84;
-                   }
-            }
-	    }
-
-
-	    part {
-	           name,   "button_release";
-	           type,   SWALLOW;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.0 0.85;
-    	           }
-		           rel2 {
-		                       relative, 0.33 1.0;
-		           }
-            }
-	    }
-
-	    part {
-	           name,   "button_speaker";
-	           type,   SWALLOW;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.33 0.85;
-    	           }
-		           rel2 {
-		                       relative, 0.66 1.0;
-		           }
-            }
-	    }
-
-	    part {
-	           name,   "button_dtmf";
-	           type,   SWALLOW;
-	           mouse_events, 1;
-	           description {
-		           state, "default" 0.0;
-		           rel1 {
-		                       relative, 0.66 0.85;
-    	           }
-		           rel2 {
-		                       relative, 1.0 1.0;
-		           }
-            }
-	    }
-
-
-
-    }
-
-
-  }
 } /* Close Coll */
 
