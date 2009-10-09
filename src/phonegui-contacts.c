@@ -54,7 +54,7 @@ phonegui_backend_contacts_new_show(const char *name, const char *number)
 	if (number) {
 		/* FIXME: BAD STRDUP!!! */
 		number = common_utils_new_with_prefix(number, "tel:");
-		g_hash_table_insert(options, "Number", common_utils_new_gvalue_string(number));
+		g_hash_table_insert(options, "Phone", common_utils_new_gvalue_string(number));
 		free(number);
 	}
 #if 0
