@@ -49,13 +49,13 @@ phonegui_backend_contacts_new_show(const char *name, const char *number)
 	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
 							NULL, free);
 	if (name) {
-		g_hash_table_insert(options, "name", strdup(name));
+		g_hash_table_insert(options, "Name", common_utils_new_gvalue_string(name));
 	}
 	if (number) {
-		/* FIXME: can probably drop the strdup when we'll stop being async
-		 * and add a free to name. */
+		/* FIXME: BAD STRDUP!!! */
 		number = common_utils_new_with_prefix(number, "tel:");
-		g_hash_table_insert(options, "number", number); 
+		g_hash_table_insert(options, "Number", common_utils_new_gvalue_string(number));
+		free(number);
 	}
 #if 0
 	g_hash_table_insert(options, "change_callback", frame_list_refresh);

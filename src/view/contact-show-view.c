@@ -225,9 +225,7 @@ frame_show_show(void *_data)
 		tmp = g_hash_table_lookup(data->properties, "Phone");
 		if (tmp) {
 			s = g_value_get_string(tmp);
-			if (s[0] == 't' && s[1] == 'e' && s[2] == 'l'
-			    && s[3] == ':')
-				s += 4;
+			s = common_utils_skip_prefix(s, tmp);
 		}
 		else
 			s = "";
