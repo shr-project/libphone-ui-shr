@@ -73,6 +73,7 @@ _show(const int id, const int status, const char *number, int type)
 	}
 
 	elm_run();
+	elm_shutdown();
 }
 
 

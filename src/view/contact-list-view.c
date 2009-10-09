@@ -50,7 +50,6 @@ contact_list_view_hide(void *_data)
 {
 	g_debug("contact_list_view_hide()");
 	g_slice_free(struct ContactListViewData, _data);
-	elm_exit();
 }
 
 

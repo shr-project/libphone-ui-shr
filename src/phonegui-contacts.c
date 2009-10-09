@@ -29,7 +29,6 @@ phonegui_backend_contacts_hide()
 		window_destroy(win, NULL);
 		win = NULL;
 	}
-	elm_exit();
 }
 
 

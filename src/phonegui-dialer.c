@@ -18,6 +18,7 @@ phonegui_backend_dialer_show()
 	window_init(win);
 	window_view_show(win, NULL, dialer_view_show, dialer_view_hide);
 	elm_run();
+	elm_shutdown();
 }
 
 void

@@ -6,14 +6,6 @@
 
 static struct Window *win_ussd = NULL;
 
-
-
-static void
-  _show(GHashTable * options);
-
-static void
-  _hide();
-
 static void
   _reset();
 
@@ -37,6 +29,7 @@ phonegui_backend_ussd_show(int mode, const char *message)
 	window_init(win_ussd);
 	window_view_show(win_ussd, options, ussd_view_show, ussd_view_hide);
 	elm_run();
+	elm_shutdown();
 }
 
 void

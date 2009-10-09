@@ -213,10 +213,11 @@ window_destroy(struct Window *win, void *options)
 
 	window_counter--;
 	if (window_counter == 0) {
-		if (phonegui_exit_cb != NULL) {
-			g_debug("calling exit_cb()");
-			phonegui_exit_cb();
-		}
+		elm_exit();
+		//if (phonegui_exit_cb != NULL) {
+		//	g_debug("calling exit_cb()");
+		//	phonegui_exit_cb();
+		//}
 	}
 }
 

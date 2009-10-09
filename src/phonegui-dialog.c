@@ -18,6 +18,8 @@ phonegui_backend_dialog_show(int type)
 
 	window_init(win);
 	window_view_show(win, options, dialog_view_show, dialog_view_hide);
+	elm_run();
+	elm_shutdown();
 }
 
 void
