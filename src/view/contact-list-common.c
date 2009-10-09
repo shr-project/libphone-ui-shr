@@ -200,11 +200,11 @@ _new_get_index(const char *_string)
 	}
 	strncpy(string, _string, i);
 	string[i] = '\0';
-	
+
 	if (i == 1) {/* i.e, an ascii char */
-		string[i] = toupper(string[i]);
+		string[0] = toupper(string[0]);
 	}
-	
+
 	return string;
 }
 
