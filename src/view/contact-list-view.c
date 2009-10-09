@@ -1,4 +1,6 @@
 #include "views.h"
+#include "common-utils.h"
+
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
@@ -174,7 +176,9 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	if (properties != NULL) {
 		GValue *tmp = g_hash_table_lookup(properties, "Phone");
 		if (tmp) {
-			phonegui_call_initiate(g_value_get_string(tmp),
+			char *number =
+				common_utils_skip_tel_prefix(g_value_get_string(tmp));
+			phonegui_call_initiate(number,
 					    NULL, NULL);
 		}
 	}

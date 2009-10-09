@@ -1,5 +1,5 @@
 #include "views.h"
-
+#include "common-utils.h"
 #include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 struct MessageShowViewData {
@@ -158,10 +158,10 @@ static void
 message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
-
+	char *number = common_utils_skip_tel_prefix(data->number);
 	g_debug("message_show_view_call_clicked()");
-
-	phonegui_call_initiate(data->number, NULL, NULL);
+	
+	phonegui_call_initiate(number, NULL, NULL);
 }
 
 static void

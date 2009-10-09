@@ -1,5 +1,5 @@
-
 #include "views.h"
+#include "common-utils.h"
 
 
 struct ContactFieldData {
@@ -107,6 +107,13 @@ static void
 frame_show_action_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct ContactViewData *data = (struct ContactViewData *) _data;
+	GValue *tmp = g_hash_table_lookup(data->properties, "Phone");
+	if (tmp) {
+		char *number =
+			common_utils_skip_tel_prefix(g_value_get_string(tmp));
+		phonegui_call_initiate(number,
+				    NULL, NULL);
+	}
 	evas_object_hide(data->hv1);
 }
 
