@@ -10,3 +10,4 @@
 # Move all the utility functions to phonegui
 # make a special source for weird string functions
 # Make a g_value_safe_get_value and put it in the same file with the other gvalue funcs.
+# Fix the g_value mess, internal design does NOT use g_values and when getting data from dbus function that do, just use a wrapper to modifiy.
