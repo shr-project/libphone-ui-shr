@@ -282,10 +282,6 @@ frame_content_hide(void *_data)
 
 	g_debug("frame_content_hide()");
 
-	// Save content
-	data->content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
-	string_strip_html(data->content);
-
 	// Free objects
 	evas_object_del(data->bt1);
 	evas_object_del(data->bt2);
@@ -312,13 +308,9 @@ frame_content_continue_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	g_debug("frame_content_continue_clicked()");
 
-	char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
-	string_strip_html(content);
-	//TODO: display notify about sending blank message
 	data->mode = MODE_RECIPIENT;
 	window_frame_show(data->win, data, frame_recipient_show,
 			  frame_recipient_hide);
-	free(content);
 }
 
 static void
@@ -362,7 +354,10 @@ frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 	/*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
 	sprintf(text, D_("%d characters left [%d]"), left, (len / limit) + 1);
 	window_text_set(data->win, "characters_left", text);
-	free(content);
+	if (data->content) {
+		free(data->content);
+	}
+	data->content = content;
 }
 
 
