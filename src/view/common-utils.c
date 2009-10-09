@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <glib.h>
+#include <glib-object.h>
 #include <string.h>
 
 #include "common-utils.h"
@@ -54,7 +55,7 @@ common_utils_new_gvalue_boolean(int value)
 }
 
 char *
-common_utils_new_with_prefix(const char *_number, const char *prefix);
+common_utils_new_with_prefix(const char *_number, const char *prefix)
 {
 	char *number = NULL;
 	int prefix_len = strlen(prefix);

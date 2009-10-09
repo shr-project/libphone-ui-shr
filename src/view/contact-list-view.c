@@ -177,7 +177,7 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 		GValue *tmp = g_hash_table_lookup(properties, "Phone");
 		if (tmp) {
 			char *number =
-				common_utils_skip_tel_prefix(g_value_get_string(tmp));
+				common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
 			phonegui_call_initiate(number,
 					    NULL, NULL);
 		}

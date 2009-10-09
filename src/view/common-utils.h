@@ -1,9 +1,11 @@
 #ifndef _COMMON_UTILS_H
 #define _COMMON_UTILS_H
 #include <glib.h>
+#include <glib-object.h>
 
 char *
 common_utils_skip_prefix(char *string, const char *prefix);
+
 char *
 common_utils_new_with_prefix(const char *_number, const char *prefix);
 

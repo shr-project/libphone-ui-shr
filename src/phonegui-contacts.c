@@ -46,9 +46,17 @@ _show_new(tmp_pack * pack)
 void
 phonegui_backend_contacts_new_show(const char *name, const char *number)
 {
-	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "name", name);
-	g_hash_table_insert(options, "number", number);
+	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
+							NULL, free);
+	if (name) {
+		name = common_utils_new_with_prefix(name, "tel:");
+		g_hash_table_insert(options, "name", name);
+	}
+	if (number) {
+		/* FIXME: can probably drop the strdup when we'll stop being async
+		 * and add a free to name. */
+		g_hash_table_insert(options, "number", strdup(number)); 
+	}
 #if 0
 	g_hash_table_insert(options, "change_callback", frame_list_refresh);
 	g_hash_table_insert(options, "change_callback_data", data);
