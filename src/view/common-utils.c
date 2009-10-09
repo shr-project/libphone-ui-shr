@@ -5,7 +5,7 @@
 #include "common-utils.h"
 
 char *
-common_utils_skip_prefix(const char *string, const char *prefix)
+common_utils_skip_prefix(char *string, const char *prefix)
 {
 	int prefix_len = strlen(prefix);
 	if (!strncmp(string, prefix, prefix_len)) {
@@ -54,7 +54,7 @@ common_utils_new_gvalue_boolean(int value)
 }
 
 char *
-common_utils_add_prefix(const char *_number, const char *prefix);
+common_utils_new_with_prefix(const char *_number, const char *prefix);
 {
 	char *number = NULL;
 	int prefix_len = strlen(prefix);

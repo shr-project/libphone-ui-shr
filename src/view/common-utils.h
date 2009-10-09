@@ -3,9 +3,9 @@
 #include <glib.h>
 
 char *
-common_utils_skip_prefix(const char *string, const char *prefix);
+common_utils_skip_prefix(char *string, const char *prefix);
 char *
-common_utils_add_prefix(const char *_number, const char *prefix);
+common_utils_new_with_prefix(const char *_number, const char *prefix);
 
 GValue *
 common_utils_new_gvalue_string(const char *value);
