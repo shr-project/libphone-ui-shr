@@ -757,5 +757,7 @@ contact_show_view_hide(void *_data)
 	//struct ContactViewData *data = (struct ContactViewData *)_data;
 
 	g_debug("contact_view_hide()");
-
+	g_slice_free1(sizeof(struct ContactViewData), _data);
 }
+
+

@@ -181,7 +181,7 @@ void
 message_new_view_hide(void *_data)
 {
 	g_debug("message_new_view_hide()");
-	//g_slice_free(struct MessageNewViewData, data);
+	g_slice_free(struct MessageNewViewData, _data);
 }
 
 //static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data) 
