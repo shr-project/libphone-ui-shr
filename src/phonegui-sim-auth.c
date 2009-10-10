@@ -23,7 +23,6 @@ phonegui_backend_sim_auth_show(const int status)
 	window_init(win);
 	window_view_show(win, options, sim_auth_input_view_show,
 			 sim_auth_input_view_hide);
-	elm_run();
 }
 
 void

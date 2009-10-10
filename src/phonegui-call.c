@@ -71,9 +71,6 @@ _show(const int id, const int status, const char *number, int type)
 	else {
 		g_error("Unknown call type: %d", type);
 	}
-
-	elm_run();
-	elm_shutdown();
 }
 
 

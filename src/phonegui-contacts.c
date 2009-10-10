@@ -19,7 +19,6 @@ phonegui_backend_contacts_show()
 	window_view_show(win, NULL, contact_list_view_show,
 			 contact_list_view_hide);
 	elm_run();
-	elm_shutdown();
 }
 
 void

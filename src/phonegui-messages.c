@@ -19,7 +19,6 @@ phonegui_backend_messages_show(int argc, char **argv)
 	window_init(win);
 	window_view_show(win, NULL, message_list_view_show,
 			 message_list_view_hide);
-	elm_run();
 }
 
 void
