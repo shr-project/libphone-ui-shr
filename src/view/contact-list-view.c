@@ -136,7 +136,7 @@ frame_list_show(void *_data)
 	elm_hover_content_set(data->hv, "top", data->bx);
 
 	contact_list_fill(data);
-	evas_object_smart_callback_add(data->list, "selected", 
+	evas_object_smart_callback_add(data->list, "longpressed", 
 			frame_list_edit_clicked, data);
 }
 
@@ -225,13 +225,18 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_list_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	Elm_Genlist_Item *it;
 	struct ContactListViewData *data = (struct ContactListViewData *) _data;
 
 	g_debug("frame_list_edit_clicked()");
 
 	evas_object_hide(data->hv);
-
-	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
+	if (event_info) {
+		it = (Elm_Genlist_Item *)event_info;
+	}
+	else {
+		it = elm_genlist_selected_item_get(data->list);
+	}
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {
