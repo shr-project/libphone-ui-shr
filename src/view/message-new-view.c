@@ -19,17 +19,55 @@ struct MessageNewViewData {
 	Evas_Object *bb, *entry, *bt1, *bt2, *bt3, *bt4, *bt5, *hv, *bx, *hbt1,
 		*hbt2, *hbt3, *sc;
 	Evas_Object *list_contacts;
+	Evas_Object *list_recipients;
 	Evas_Object *information;
 
 	GPtrArray *recipients;
-	Evas_Object *list_recipients, *container_recipients_eo;
-	Etk_Widget *container_recipients, *tree_recipients;
-	Etk_Tree_Col *col1_recipients;
 
 	struct ContactListViewData *cdata;
 
 	int messages_sent;
 };
+
+static Elm_Genlist_Item_Class itc;
+
+
+static char *
+gl_label_get(const void *data, Evas_Object * obj, const char *part)
+{
+	const char *label = NULL;
+	GHashTable *parameters = (GHashTable *) data;
+	g_debug("looking for %s", part);
+
+	if (!strcmp(part, "elm.text")) {
+		g_debug("---> %s", g_hash_table_lookup(parameters, "name"));
+		label = g_strdup(g_hash_table_lookup(parameters, "name"));
+	}
+	else if (!strcmp(part, "elm.text.sub")) {
+		g_debug("---> %s", g_hash_table_lookup(parameters, "number"));
+		label = g_strdup(g_hash_table_lookup(parameters, "number"));
+	}
+
+	return (label);
+}
+
+static Evas_Object *
+gl_icon_get(const void *data, Evas_Object * obj, const char *part)
+{
+	GHashTable *parameters = (GHashTable *) data;
+	if (!strcmp(part, "elm.swallow.icon")) {
+		const char *photo_file;
+		photo_file = g_hash_table_lookup(parameters, "photo");
+		Evas_Object *photo = elm_icon_add(obj);
+		elm_icon_file_set(photo, photo_file, NULL);
+		evas_object_size_hint_aspect_set(photo,
+						 EVAS_ASPECT_CONTROL_VERTICAL,
+						 1, 1);
+		return (photo);
+	}
+	return (NULL);
+}
+
 
 
 
@@ -42,21 +80,9 @@ static void
 static void
   frame_content_close_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-
-
-
-
-
-
 frame_content_continue_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
-
-
-
-
-
-
 frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info);
 
 static void
@@ -69,50 +95,20 @@ static void
 
  frame_recipient_back_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-
-
-
-
-
-
 frame_recipient_contact_add_clicked(void *_data, Evas_Object * obj,
 				    void *event_info);
 static void
-
-
-
-
-
-
 frame_recipient_number_add_clicked(void *_data, Evas_Object * obj,
 				   void *event_info);
 static void
-
-
-
-
-
-
 frame_recipient_delete_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
-
-
-
-
-
-
 frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
   frame_recipient_process_recipient(gpointer _properties, gpointer _data);
 static void
-
-
-
-
-
-
 frame_recipient_send_callback(GError * error, int transaction_index,
 			      const char *timestamp, void *data);
 static void
@@ -123,21 +119,9 @@ static void
 static void
   frame_contact_add_hide(void *_data);
 static void
-
-
-
-
-
-
 frame_contact_add_back_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
-
-
-
-
-
-
 frame_contact_add_add_clicked(void *_data, Evas_Object * obj, void *event_info);
 
 static void
@@ -145,17 +129,8 @@ static void
 static void
   frame_number_add_hide(void *_data);
 static void
-
-
-
  frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-
-
-
-
-
-
 frame_number_add_back_clicked(void *_data, Evas_Object * obj, void *event_info);
 
 static void
@@ -194,6 +169,7 @@ message_new_view_show(struct Window *win, void *_options)
 	data->cdata = NULL;
 
 	if (options != NULL) {
+		g_debug("got some options...");
 		char *name = g_hash_table_lookup(options, "name");
 		char *number = g_hash_table_lookup(options, "number");
 		if (!name) {
@@ -201,6 +177,7 @@ message_new_view_show(struct Window *win, void *_options)
 		}
 
 		if (number) {
+			g_debug("--> adding %s=%s", name, number);
 			GHashTable *properties =
 				g_hash_table_new(g_str_hash, g_str_equal);
 
@@ -413,40 +390,20 @@ frame_recipient_show(void *_data)
 	window_swallow(win, "button_delete", data->bt5);
 	evas_object_show(data->bt5);
 
-	data->tree_recipients = etk_tree_new();
-	etk_tree_rows_height_set(ETK_TREE(data->tree_recipients), 80);
-	etk_tree_mode_set(ETK_TREE(data->tree_recipients), ETK_TREE_MODE_LIST);
-	etk_tree_headers_visible_set(ETK_TREE(data->tree_recipients),
-				     ETK_FALSE);
-	etk_tree_multiple_select_set(ETK_TREE(data->tree_recipients),
-				     ETK_FALSE);
+	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
+	elm_theme_extension_add(CONTACTLIST_FILE);
+	data->list_recipients = elm_genlist_add(window_evas_object_get(win));
+	elm_genlist_horizontal_mode_set(data->list_recipients, ELM_LIST_LIMIT);
+	evas_object_size_hint_align_set(data->list_recipients, 0.0, 0.0);
+	elm_widget_scale_set(data->list_recipients, 1.0);
+	window_swallow(data->win, "list", data->list_recipients);
+	itc.item_style = "contact";
+	itc.func.label_get = gl_label_get;
+	itc.func.icon_get = gl_icon_get;
+	itc.func.state_get = NULL;
+	itc.func.del = NULL;
+	evas_object_show(data->list_recipients);
 
-	data->col1_recipients =
-		etk_tree_col_new(ETK_TREE(data->tree_recipients), "Title", 300,
-				 0.0);
-	etk_tree_col_model_add(data->col1_recipients,
-			       etk_tree_model_edje_new(CONTACTS_FILE, "row"));
-	etk_tree_build(ETK_TREE(data->tree_recipients));
-
-	Etk_Scrolled_View *scrolled_view =
-		etk_tree_scrolled_view_get(ETK_TREE(data->tree_recipients));
-	etk_scrolled_view_dragable_set(ETK_SCROLLED_VIEW(scrolled_view),
-				       ETK_TRUE);
-	etk_scrolled_view_drag_bouncy_set(ETK_SCROLLED_VIEW(scrolled_view),
-					  ETK_FALSE);
-	etk_scrolled_view_policy_set(ETK_SCROLLED_VIEW(scrolled_view),
-				     ETK_POLICY_HIDE, ETK_POLICY_HIDE);
-
-	data->container_recipients =
-		etk_embed_new(evas_object_evas_get
-			      (window_evas_object_get(win)));
-	etk_container_add(ETK_CONTAINER(data->container_recipients),
-			  data->tree_recipients);
-	etk_widget_show_all(data->container_recipients);
-	data->container_recipients_eo =
-		etk_embed_object_get(ETK_EMBED(data->container_recipients));
-
-	window_swallow(win, "list", data->container_recipients_eo);
 
 	g_ptr_array_foreach(data->recipients, frame_recipient_process_recipient,
 			    data);
@@ -465,7 +422,7 @@ frame_recipient_hide(void *_data)
 	evas_object_del(data->bt3);
 	evas_object_del(data->bt4);
 	evas_object_del(data->bt5);
-	evas_object_del(data->container_recipients_eo);
+	evas_object_del(data->list_recipients);
 }
 
 static void
@@ -513,13 +470,11 @@ frame_recipient_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	g_debug("frame_recipient_delete_clicked()");
 
-	Etk_Tree_Row *row = etk_tree_selected_row_get(data->tree_recipients);
-	if (row != NULL) {
-		GHashTable *parameters = etk_tree_row_data_get(row);
+	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list_recipients);
+	if (it) {
+		GHashTable *parameters = elm_genlist_item_data_get(it);
 		g_ptr_array_remove(data->recipients, parameters);
-		etk_tree_clear(data->tree_recipients);
-		g_ptr_array_foreach(data->recipients,
-				    frame_recipient_process_recipient, data);
+		elm_genlist_item_del(it);
 	}
 }
 
@@ -563,12 +518,12 @@ static void
 frame_recipient_process_recipient(gpointer _properties, gpointer _data)
 {
 	GHashTable *properties = (GHashTable *) _properties;
+	g_debug("adding recipient %s", g_hash_table_lookup(properties, "name"));
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
-	Etk_Tree_Row *row =
-		etk_tree_row_append(ETK_TREE(data->tree_recipients), NULL,
-				    data->col1_recipients, properties, NULL);
-	etk_tree_row_data_set(row, properties);
+	elm_genlist_item_append(data->list_recipients, &itc, properties,
+		NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+
 }
 
 
@@ -643,13 +598,37 @@ frame_contact_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->cdata->list);
-	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *itdata = it ? elm_genlist_item_data_get(it) : NULL;
 
-	if (properties != NULL) {
+	if (itdata) {
+		const char *number = NULL;
+		const char *name = NULL;
+		const char *photo = NULL;
+		GValue *tmp = g_hash_table_lookup(itdata, "Phone");
+		/* as minimum we need a phone number from the contact ... */
+		if (!tmp)
+			return;
+		number = g_value_get_string(tmp);
+		GHashTable *properties =
+			g_hash_table_new(g_str_hash, g_str_equal);
+		g_hash_table_insert(properties, strdup("number"),
+				strdup(number));
+		/* name is optional... if not there take the number instead */
+		tmp = g_hash_table_lookup(itdata, "Name");
+		if (tmp)
+			name = g_value_get_string(tmp);
+		g_hash_table_insert(properties, strdup("name"),
+				strdup(name ? name : number));
+
+		tmp = g_hash_table_lookup(itdata, "Photo");
+		if (tmp)
+			photo = g_value_get_string(tmp);
+		g_hash_table_insert(properties, strdup("photo"),
+				strdup(photo ? photo : CONTACT_DEFAULT_PHOTO));
 		g_ptr_array_add(data->recipients, properties);
 		data->mode = MODE_RECIPIENT;
 		window_frame_show(data->win, data, frame_recipient_show,
-				  frame_recipient_hide);
+				frame_recipient_hide);
 	}
 }
 
@@ -739,6 +718,8 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 				    strdup("Number"));
 		g_hash_table_insert(properties, strdup("number"),
 				    strdup(number));
+		g_hash_table_insert(properties, strdup("photo"),
+				strdup(CONTACT_NUMBER_PHOTO));
 		g_ptr_array_add(data->recipients, properties);
 
 		data->mode = MODE_RECIPIENT;

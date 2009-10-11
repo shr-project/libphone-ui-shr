@@ -34,6 +34,7 @@
 
 #define DELETE_TEXT_ICON "@DATADIR@/libframeworkd-phonegui-efl2/edit-undo.png"
 #define CONTACT_DEFAULT_PHOTO "@DATADIR@/libframeworkd-phonegui-efl2/contact.png"
+#define CONTACT_NUMBER_PHOTO "@DATADIR@/libframeworkd-phonegui-efl2/number-icon.png"
 #define ICON_CALL "@DATADIR@/libframeworkd-phonegui-efl2/icon-call.png"
 #define ICON_SMS "@DATADIR@/libframeworkd-phonegui-efl2/icon-sms.png"
 
