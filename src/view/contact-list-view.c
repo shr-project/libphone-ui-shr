@@ -207,13 +207,26 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {
-		assert(g_hash_table_lookup(properties, "number") != NULL);
-
+		const char *photo;
+		GValue *tmp = g_hash_table_lookup(properties, "Phone");
+		if (!tmp) {
+			g_debug("contact needs a number to send a message ;)");
+			return;
+		}
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "name",
-				    g_hash_table_lookup(properties, "name"));
 		g_hash_table_insert(options, "number",
-				    g_hash_table_lookup(properties, "number"));
+				g_value_get_string(tmp));
+
+		tmp = g_hash_table_lookup(properties, "Name");
+		if (tmp) {
+			g_hash_table_insert(options, "name",
+				g_value_get_string(tmp));
+		}
+		tmp = g_hash_table_lookup(properties, "Photo");
+		if (tmp) {
+			g_hash_table_insert(options, "photo",
+				g_value_get_string(tmp));
+		}
 
 		struct Window *win = window_new(D_("Compose SMS"));
 		window_init(win);

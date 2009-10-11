@@ -172,8 +172,12 @@ message_new_view_show(struct Window *win, void *_options)
 		g_debug("got some options...");
 		char *name = g_hash_table_lookup(options, "name");
 		char *number = g_hash_table_lookup(options, "number");
+		char *photo = g_hash_table_lookup(options, "photo");
 		if (!name) {
 			name = "Number";
+		}
+		if (!photo) {
+			photo = CONTACT_DEFAULT_PHOTO;
 		}
 
 		if (number) {
@@ -185,6 +189,9 @@ message_new_view_show(struct Window *win, void *_options)
 					    strdup(name));
 			g_hash_table_insert(properties, strdup("number"),
 					    strdup(number));
+			g_hash_table_insert(properties, strdup("photo"),
+					    strdup(photo));
+
 			g_ptr_array_add(data->recipients, properties);
 		}
 	}
