@@ -23,19 +23,6 @@ time_stringtotimestamp(const char *str)
 }
 
 
-void
-string_strip_html(char *string)
-{
-	char *in_p = string, *out_p = string;
-	while (*in_p) {
-		if (*in_p == '<')
-			while (*in_p && *in_p++ != '>');
-		else
-			*out_p++ = *in_p++;
-	}
-	*out_p = '\0';
-}
-
 
 void
 string_replace_newline(char *string)
@@ -109,25 +96,6 @@ string_replace_with_tags(char *string)
 	return (newstring);
 }
 
-
-gboolean
-string_is_number(const char *string)
-{
-	if (!strlen(string))
-		return FALSE;
-
-	const char *p = string;
-	while (*p && *p == '+')
-		*p++;
-
-	while (*p) {
-		if (*p < '0' || *p > '9')
-			return FALSE;
-		*p++;
-	}
-
-	return TRUE;
-}
 
 gboolean
 string_is_pin(const char *string)

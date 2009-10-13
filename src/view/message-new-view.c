@@ -308,9 +308,8 @@ frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 	/*FIXME: consider changing to an iterative way by using get_size (emulating what's
 	 * being done in phone_utils) as calculating for all the string on every keystroke is a bit sluggish. */
 	content =
-		g_strstrip(strdup
-			   (elm_entry_markup_to_utf8
-			    (elm_entry_entry_get(data->entry))));
+		g_strstrip(elm_entry_markup_to_utf8
+			    (elm_entry_entry_get(data->entry)));
 
 	len = phone_utils_gsm_sms_strlen(content);
 
@@ -715,10 +714,10 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	g_debug("frame_number_add_add_clicked()");
 
-	char *number = strdup(elm_entry_entry_get(data->entry));
-	string_strip_html(number);
+	char *number;
+	number = elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry));
 
-	if (string_is_number(number)) {
+	if (phone_utils_is_valid_number(number)) {
 		GHashTable *properties =
 			g_hash_table_new(g_str_hash, g_str_equal);
 		g_hash_table_insert(properties, strdup("name"),
@@ -733,8 +732,8 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 		window_frame_show(data->win, data, frame_recipient_show,
 				  frame_recipient_hide);
 	}
-
-	free(number);
+	if (number)
+		free(number);
 }
 
 
