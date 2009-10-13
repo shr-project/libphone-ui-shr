@@ -18,50 +18,20 @@ static DBusGProxy *GQuery = NULL;
 static Elm_Genlist_Item_Class itc;
 
 static void
-
-
-
-
-
-
 message_list_view_new_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-
-
-
-
-
-
 message_list_view_show_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
-
-
-
-
-
-
 message_list_view_answer_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
-
-
-
-
-
-
 message_list_view_delete_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
   my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 
 static void
-
-
-
-
-
-
 retrieve_messagebook_callback(GError * error, GPtrArray * messages,
 			      void *_data);
 static void
