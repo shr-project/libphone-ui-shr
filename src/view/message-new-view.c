@@ -1,6 +1,7 @@
 #include "views.h"
 
 #include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+
 #include <phone-utils.h>
 
 
@@ -715,7 +716,7 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 	g_debug("frame_number_add_add_clicked()");
 
 	char *number;
-	number = elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry));
+	number = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
 
 	if (phone_utils_is_valid_number(number)) {
 		GHashTable *properties =
