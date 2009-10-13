@@ -24,26 +24,6 @@ time_stringtotimestamp(const char *str)
 
 
 
-void
-string_replace_newline(char *string)
-{
-	char *in_p = string, *out_p = string;
-	for (; *in_p; in_p++, out_p++) {
-		switch (*in_p) {
-		case '\n':
-		case '\t':
-			*out_p = ' ';
-			break;
-		default:
-			*out_p = *in_p;
-			break;
-		}
-	}
-	*out_p = '\0';
-}
-
-
-
 char
  *
 string_replace_with_tags(char *string)
