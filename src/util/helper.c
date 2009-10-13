@@ -1,27 +1,9 @@
-#define _XOPEN_SOURCE		/* glibc2 needs this for strptime */
 #include "time.h"
 #include <time.h>
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
-
-time_t
-time_stringtotimestamp(const char *str)
-{
-	time_t ts = 0;
-	struct tm date;
-	// Set locale
-	setlocale(LC_TIME, "C");
-
-	// Parse date string, for example: Sun Sep 28 23:20:24 2008 +0200
-	if (strptime(str, "%a %h %e %T %Y %z", &date) != NULL) {
-		// Generate long from struct tm
-		ts = mktime(&date);
-	}
-	return ts;
-}
-
 
 
 char

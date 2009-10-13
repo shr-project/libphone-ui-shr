@@ -41,8 +41,6 @@ static void
 static void
   process_message(gpointer _message, gpointer _data);
 
-static void
-  add_integer_timestamp_to_message(gpointer _message, gpointer _data);
 static
 gint compare_messages(gconstpointer _a, gconstpointer _b);
 static void
@@ -492,24 +490,6 @@ process_message(gpointer _entry, gpointer _data)
 
 
 /* --- helper functions ----------------------------------------------------- */
-
-static void
-add_integer_timestamp_to_message(gpointer _message, gpointer _data)
-{
-	GValueArray *message = (GValueArray *) _message;
-
-	GHashTable *details =
-		g_value_get_boxed(g_value_array_get_nth(message, 4));
-	const char *timestr =
-		g_value_get_string(g_hash_table_lookup(details, "timestamp"));
-	time_t timestamp = time_stringtotimestamp(timestr);
-
-	// Insert integer timestamp into array
-	GValue *value = g_slice_alloc0(sizeof(GValue));
-	g_value_init(value, G_TYPE_LONG);
-	g_value_set_long(value, timestamp);
-	g_hash_table_insert(details, strdup("timestamp_int"), value);
-}
 
 static gint
 compare_messages(gconstpointer _a, gconstpointer _b)
