@@ -60,7 +60,6 @@ dialog_view_hide(void *_data)
 {
 	struct DialogViewData *data = (struct DialogViewData *) _data;
 	evas_object_del(data->bt_close);
-	elm_exit();
 }
 
 static void
