@@ -138,7 +138,7 @@ frame_delete_yes_clicked(void *userdata, Evas_Object * obj, void *event_info)
 
 	window_frame_show(data->win, data, frame_deleting_show, NULL);
 
-	opimd_contact_delete(data->path, delete_callback, data);
+	phonegui_contact_delete(data->path, delete_callback, data);
 }
 
 

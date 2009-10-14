@@ -272,7 +272,7 @@ _delete_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
 	char *path = g_value_get_string(
 			g_hash_table_lookup(properties, "Path"));
 
-	opimd_contact_delete(path, NULL, NULL);
+	phonegui_contact_delete(path, NULL, NULL);
 
 	elm_genlist_item_del(it);
 
