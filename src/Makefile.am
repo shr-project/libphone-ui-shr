@@ -42,5 +42,6 @@ libframeworkd_phonegui_efl2_la_SOURCES = \
 	view/call-incoming-view.c \
 	view/call-active-view.c \
 	view/sim-auth-input-view.c \
+	view/common-utils.c \
 	view/ussd-view.c
 

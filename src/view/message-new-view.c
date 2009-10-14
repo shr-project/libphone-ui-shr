@@ -1,6 +1,7 @@
 #include "views.h"
 
 #include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+
 #include <phone-utils.h>
 
 
@@ -51,6 +52,46 @@ struct MessageNewViewData {
 	int messages_sent;
 };
 
+static Elm_Genlist_Item_Class itc;
+
+
+static char *
+gl_label_get(const void *data, Evas_Object * obj, const char *part)
+{
+	const char *label = NULL;
+	GHashTable *parameters = (GHashTable *) data;
+	g_debug("looking for %s", part);
+
+	if (!strcmp(part, "elm.text")) {
+		g_debug("---> %s", g_hash_table_lookup(parameters, "name"));
+		label = g_strdup(g_hash_table_lookup(parameters, "name"));
+	}
+	else if (!strcmp(part, "elm.text.sub")) {
+		g_debug("---> %s", g_hash_table_lookup(parameters, "number"));
+		label = g_strdup(g_hash_table_lookup(parameters, "number"));
+	}
+
+	return (label);
+}
+
+static Evas_Object *
+gl_icon_get(const void *data, Evas_Object * obj, const char *part)
+{
+	GHashTable *parameters = (GHashTable *) data;
+	if (!strcmp(part, "elm.swallow.icon")) {
+		const char *photo_file;
+		photo_file = g_hash_table_lookup(parameters, "photo");
+		Evas_Object *photo = elm_icon_add(obj);
+		elm_icon_file_set(photo, photo_file, NULL);
+		evas_object_size_hint_aspect_set(photo,
+						 EVAS_ASPECT_CONTROL_VERTICAL,
+						 1, 1);
+		return (photo);
+	}
+	return (NULL);
+}
+
+
 
 
 //static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data);
@@ -62,12 +103,6 @@ static void
 static void
   frame_content_close_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-
-
-
-
-
-
 frame_content_continue_clicked(void *_data, Evas_Object * obj,
 			       void *event_info);
 static void
@@ -152,13 +187,19 @@ message_new_view_show(struct Window *win, void *_options)
 	data->cdata = NULL;
 
 	if (options != NULL) {
+		g_debug("got some options...");
 		char *name = g_hash_table_lookup(options, "name");
 		char *number = g_hash_table_lookup(options, "number");
+		char *photo = g_hash_table_lookup(options, "photo");
 		if (!name) {
 			name = "Number";
 		}
+		if (!photo) {
+			photo = CONTACT_DEFAULT_PHOTO;
+		}
 
 		if (number) {
+			g_debug("--> adding %s=%s", name, number);
 			GHashTable *properties =
 				g_hash_table_new(g_str_hash, g_str_equal);
 
@@ -166,6 +207,9 @@ message_new_view_show(struct Window *win, void *_options)
 					    strdup(name));
 			g_hash_table_insert(properties, strdup("number"),
 					    strdup(number));
+			g_hash_table_insert(properties, strdup("photo"),
+					    strdup(photo));
+
 			g_ptr_array_add(data->recipients, properties);
 		}
 	}
@@ -240,10 +284,6 @@ frame_content_hide(void *_data)
 
 	g_debug("frame_content_hide()");
 
-	// Save content
-	data->content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
-	string_strip_html(data->content);
-
 	// Free objects
 	evas_object_del(data->bt1);
 	evas_object_del(data->bt2);
@@ -270,13 +310,9 @@ frame_content_continue_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	g_debug("frame_content_continue_clicked()");
 
-	char *content = g_strstrip(strdup(elm_entry_entry_get(data->entry)));
-	string_strip_html(content);
-	//TODO: display notify about sending blank message
 	data->mode = MODE_RECIPIENT;
 	window_frame_show(data->win, data, frame_recipient_show,
 			  frame_recipient_hide);
-	free(content);
 }
 
 static void
@@ -290,9 +326,8 @@ frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 	/*FIXME: consider changing to an iterative way by using get_size (emulating what's
 	 * being done in phone_utils) as calculating for all the string on every keystroke is a bit sluggish. */
 	content =
-		g_strstrip(strdup
-			   (elm_entry_markup_to_utf8
-			    (elm_entry_entry_get(data->entry))));
+		g_strstrip(elm_entry_markup_to_utf8
+			    (elm_entry_entry_get(data->entry)));
 
 	len = phone_utils_gsm_sms_strlen(content);
 
@@ -320,7 +355,10 @@ frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 	/*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
 	sprintf(text, D_("%d characters left [%d]"), left, (len / limit) + 1);
 	window_text_set(data->win, "characters_left", text);
-	free(content);
+	if (data->content) {
+		free(data->content);
+	}
+	data->content = content;
 }
 
 
@@ -376,14 +414,16 @@ frame_recipient_show(void *_data)
 	window_swallow(win, "button_delete", data->bt5);
 	evas_object_show(data->bt5);
 
+	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
+	elm_theme_extension_add(CONTACTLIST_FILE);
 	data->list_recipients = elm_genlist_add(window_evas_object_get(win));
 	elm_genlist_horizontal_mode_set(data->list_recipients, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(data->list_recipients, 0.0, 0.0);
 	elm_widget_scale_set(data->list_recipients, 1.0);
 	window_swallow(data->win, "list", data->list_recipients);
-	itc.item_style = "default";
+	itc.item_style = "contact";
 	itc.func.label_get = gl_label_get;
-	itc.func.icon_get = NULL;
+	itc.func.icon_get = gl_icon_get;
 	itc.func.state_get = NULL;
 	itc.func.del = NULL;
 	evas_object_show(data->list_recipients);
@@ -496,10 +536,11 @@ static void
 frame_recipient_process_recipient(gpointer _properties, gpointer _data)
 {
 	GHashTable *properties = (GHashTable *) _properties;
+	g_debug("adding recipient %s", g_hash_table_lookup(properties, "name"));
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
-	elm_genlist_item_append(data->list_recipients, &itc, properties, 
-			NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	elm_genlist_item_append(data->list_recipients, &itc, properties,
+		NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
 
 
@@ -574,30 +615,37 @@ frame_contact_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->cdata->list);
-	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *itdata = it ? elm_genlist_item_data_get(it) : NULL;
 
-	if (properties != NULL) {
+	if (itdata) {
 		const char *number = NULL;
 		const char *name = NULL;
-		GValue *tmp = g_hash_table_lookup(properties, "Phone");
+		const char *photo = NULL;
+		GValue *tmp = g_hash_table_lookup(itdata, "Phone");
 		/* as minimum we need a phone number from the contact ... */
 		if (!tmp)
 			return;
 		number = g_value_get_string(tmp);
 		GHashTable *properties =
-			g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
+			g_hash_table_new(g_str_hash, g_str_equal);
 		g_hash_table_insert(properties, strdup("number"),
 				strdup(number));
 		/* name is optional... if not there take the number instead */
-		tmp = g_hash_table_lookup(properties, "Name");
+		tmp = g_hash_table_lookup(itdata, "Name");
 		if (tmp)
 			name = g_value_get_string(tmp);
 		g_hash_table_insert(properties, strdup("name"),
-				    strdup(name ? name : number));
+				strdup(name ? name : number));
+
+		tmp = g_hash_table_lookup(itdata, "Photo");
+		if (tmp)
+			photo = g_value_get_string(tmp);
+		g_hash_table_insert(properties, strdup("photo"),
+				strdup(photo ? photo : CONTACT_DEFAULT_PHOTO));
 		g_ptr_array_add(data->recipients, properties);
 		data->mode = MODE_RECIPIENT;
 		window_frame_show(data->win, data, frame_recipient_show,
-				  frame_recipient_hide);
+				frame_recipient_hide);
 	}
 }
 
@@ -677,24 +725,26 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	g_debug("frame_number_add_add_clicked()");
 
-	char *number = strdup(elm_entry_entry_get(data->entry));
-	string_strip_html(number);
+	char *number;
+	number = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
 
-	if (string_is_number(number)) {
+	if (phone_utils_is_valid_number(number)) {
 		GHashTable *properties =
 			g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 		g_hash_table_insert(properties, strdup("name"),
 				    strdup("Number"));
 		g_hash_table_insert(properties, strdup("number"),
 				    strdup(number));
+		g_hash_table_insert(properties, strdup("photo"),
+				strdup(CONTACT_NUMBER_PHOTO));
 		g_ptr_array_add(data->recipients, properties);
 
 		data->mode = MODE_RECIPIENT;
 		window_frame_show(data->win, data, frame_recipient_show,
 				  frame_recipient_hide);
 	}
-
-	free(number);
+	if (number)
+		free(number);
 }
 
 

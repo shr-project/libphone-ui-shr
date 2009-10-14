@@ -1,4 +1,6 @@
 #include "views.h"
+#include "common-utils.h"
+
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
@@ -132,7 +134,7 @@ frame_list_show(void *_data)
 	elm_hover_content_set(data->hv, "top", data->bx);
 
 	contact_list_fill(data);
-	evas_object_smart_callback_add(data->list, "selected", 
+	evas_object_smart_callback_add(data->list, "longpressed", 
 			frame_list_edit_clicked, data);
 }
 
@@ -172,7 +174,9 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	if (properties != NULL) {
 		GValue *tmp = g_hash_table_lookup(properties, "Phone");
 		if (tmp) {
-			phonegui_call_initiate(g_value_get_string(tmp),
+			char *number =
+				common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
+			phonegui_call_initiate(number,
 					    NULL, NULL);
 		}
 	}
@@ -201,19 +205,26 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {
+		const char *photo;
 		GValue *tmp = g_hash_table_lookup(properties, "Phone");
-		if (!tmp)
+		if (!tmp) {
+			g_debug("contact needs a number to send a message ;)");
 			return;
-
-		const char *number = g_value_get_string(tmp);
-		tmp = g_hash_table_lookup(properties, "Name");
-		const char *name = NULL;
-		if (tmp)
-			name = g_value_get_string(tmp);
-
+		}
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "name", name ? name : number);
-		g_hash_table_insert(options, "number", number);
+		g_hash_table_insert(options, "number",
+				g_value_get_string(tmp));
+
+		tmp = g_hash_table_lookup(properties, "Name");
+		if (tmp) {
+			g_hash_table_insert(options, "name",
+				g_value_get_string(tmp));
+		}
+		tmp = g_hash_table_lookup(properties, "Photo");
+		if (tmp) {
+			g_hash_table_insert(options, "photo",
+				g_value_get_string(tmp));
+		}
 
 		struct Window *win = window_new(D_("Compose SMS"));
 		window_init(win);
@@ -225,13 +236,18 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_list_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	Elm_Genlist_Item *it;
 	struct ContactListViewData *data = (struct ContactListViewData *) _data;
 
 	g_debug("frame_list_edit_clicked()");
 
 	evas_object_hide(data->hv);
-
-	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
+	if (event_info) {
+		it = (Elm_Genlist_Item *)event_info;
+	}
+	else {
+		it = elm_genlist_selected_item_get(data->list);
+	}
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {

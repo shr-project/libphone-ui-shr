@@ -1,5 +1,5 @@
-
 #include "views.h"
+#include "common-utils.h"
 
 
 struct ContactFieldData {
@@ -62,7 +62,7 @@ static char *
 _get_entry(Evas_Object *obj)
 {
 	char *ret = elm_entry_entry_get(obj);
-	string_strip_html(ret);
+	ret = elm_entry_markup_to_utf8(ret); /* allocates! */
 	return (ret);
 }
 
@@ -107,6 +107,13 @@ static void
 frame_show_action_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct ContactViewData *data = (struct ContactViewData *) _data;
+	GValue *tmp = g_hash_table_lookup(data->properties, "Phone");
+	if (tmp) {
+		char *number =
+			common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
+		phonegui_call_initiate(number,
+				    NULL, NULL);
+	}
 	evas_object_hide(data->hv1);
 }
 
@@ -218,9 +225,7 @@ frame_show_show(void *_data)
 		tmp = g_hash_table_lookup(data->properties, "Phone");
 		if (tmp) {
 			s = g_value_get_string(tmp);
-			if (s[0] == 't' && s[1] == 'e' && s[2] == 'l'
-			    && s[3] == ':')
-				s += 4;
+			s = common_utils_skip_prefix(s, tmp);
 		}
 		else
 			s = "";
@@ -490,8 +495,8 @@ frame_edit_value_get(Evas_Object * entry)
 {
 	g_debug("frame_edit_value_get()");
 
-	char *value = g_strstrip(strdup(elm_entry_entry_get(entry)));
-	string_strip_html(value);
+	char *value;
+	value = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(entry)));
 
 	return (value);
 }
