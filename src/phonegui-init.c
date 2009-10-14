@@ -8,7 +8,7 @@
 
 
 static gboolean
-_idle_foo(void *)
+_idle_foo(void *foo)
 {
 	return (TRUE);
 }
@@ -22,22 +22,10 @@ phonegui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
 
-	/* Initialize glib main loop */
-	GMainContext *context = NULL;
-	GMainLoop *mainloop = NULL;
 	g_type_init();
-	context = g_main_context_new();
-	mainloop = g_main_loop_new(context, FALSE);
 
-	if (idle_cb) {
-		GSourceFuncs *idle_funcs = g_malloc(sizeof(GSourceFuncs));
-		idle_funcs->prepare = _idle_foo;
-		idle_funcs->check = _idle_foo;
-		idle_funcs->dispatch = idle_cb;
-		idle_funcs->finalize = NULL;
-		GSource *src = g_source_new(idle_funcs, sizeof(GSource));
-		g_source_attach(src, context);
-	}
+	/* Initialize glib main loop */
+	GMainLoop *mainloop = g_main_loop_new(NULL, FALSE);
 
 	// Initializations
 	elm_init(argc, argv);
@@ -51,7 +39,6 @@ phonegui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 
 void phonegui_backend_loop()
 {
-
 	elm_run();
 	elm_shutdown();
 }
