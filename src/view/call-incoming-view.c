@@ -53,6 +53,8 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	window_swallow(win, "button_release", data->bt_reject);
 	evas_object_show(data->bt_reject);
 
+	window_show(win);
+
 	return data;
 }
 

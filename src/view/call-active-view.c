@@ -66,6 +66,8 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	window_swallow(win, "button_dtmf", data->bt_keypad);
 	evas_object_show(data->bt_keypad);
 
+	window_show(win);
+
 	call_common_active_call_add(data);
 	return data;
 }
