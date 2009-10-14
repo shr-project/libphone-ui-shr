@@ -13,28 +13,6 @@ enum MessageNewModes {
 	MODE_CLOSE
 };
 
-static Elm_Genlist_Item_Class itc;
-
-
-static char *
-gl_label_get(const void *data, Evas_Object * obj, const char *part)
-{
-	GHashTable *parameters = (GHashTable *) data;
-
-	if (!strcmp(part, "elm.text")) {
-		return (g_hash_table_lookup(parameters, "name"));
-	}
-	else if (!strcmp(part, "elm.text.sub")) {
-		return (g_hash_table_lookup(parameters, "number"));
-	}
-
-	return (NULL);
-}
-
-
-
-
-
 struct MessageNewViewData {
 	struct Window *win;
 	int mode;
