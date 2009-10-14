@@ -146,7 +146,7 @@ messages_button_new_clicked(void *data, Evas_Object * obj, void *event_info)
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
 	window_view_show(win, NULL, message_new_view_show,
-			 message_new_view_hide);
+			 message_new_view_hide, NULL);
 }
 
 

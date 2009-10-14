@@ -5,6 +5,11 @@
 
 static struct Window *win = NULL;
 
+static void
+_exit_cb()
+{
+	win = NULL;
+}
 
 void
 phonegui_backend_dialer_show()
@@ -16,7 +21,7 @@ phonegui_backend_dialer_show()
 	}
 	win = window_new(D_("Dialer"));
 	window_init(win);
-	window_view_show(win, NULL, dialer_view_show, dialer_view_hide);
+	window_view_show(win, NULL, dialer_view_show, dialer_view_hide, _exit_cb);
 }
 
 void

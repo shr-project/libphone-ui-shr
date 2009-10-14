@@ -22,7 +22,7 @@ phonegui_backend_sim_auth_show(const int status)
 	g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
 	window_init(win);
 	window_view_show(win, options, sim_auth_input_view_show,
-			 sim_auth_input_view_hide);
+			 sim_auth_input_view_hide, NULL);
 }
 
 void

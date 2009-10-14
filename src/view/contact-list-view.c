@@ -156,7 +156,7 @@ frame_list_new_clicked(void *_data, Evas_Object * obj, void *event_info)
 	struct Window *win = window_new(D_("New Contact"));
 	window_init(win);
 	window_view_show(win, NULL, contact_show_view_show,
-			 contact_show_view_hide);
+			 contact_show_view_hide, NULL);
 }
 
 static void
@@ -218,7 +218,7 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 		struct Window *win = window_new(D_("Compose SMS"));
 		window_init(win);
 		window_view_show(win, options, message_new_view_show,
-				 message_new_view_hide);
+				 message_new_view_hide, NULL);
 	}
 }
 
@@ -238,7 +238,7 @@ frame_list_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 		struct Window *win = window_new(D_("Show Contact"));
 		window_init(win);
 		window_view_show(win, properties, contact_show_view_show,
-				 contact_show_view_hide);
+				 contact_show_view_hide, NULL);
 	}
 }
 

@@ -56,17 +56,18 @@ _show(const int id, const int status, const char *number, int type)
 	instance_manager_add(INSTANCE_CALL, id, win);
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+	g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
 	g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
 	g_hash_table_insert(options, "number", (char *) number);	/* we just loose the const for now */
 
 	window_init(win);
 	if (type == CALL_INCOMING) {
 		window_view_show(win, options, call_incoming_view_show,
-				 call_incoming_view_hide);
+				 call_incoming_view_hide, NULL);
 	}
 	else if (type == CALL_ACTIVE) {
 		window_view_show(win, options, call_active_view_show,
-				 call_active_view_hide);
+				 call_active_view_hide, NULL);
 	}
 	else {
 		g_error("Unknown call type: %d", type);

@@ -17,7 +17,7 @@ phonegui_backend_dialog_show(int type)
 	g_hash_table_insert(options, "type", (gpointer) type);
 
 	window_init(win);
-	window_view_show(win, options, dialog_view_show, dialog_view_hide);
+	window_view_show(win, options, dialog_view_show, dialog_view_hide, NULL);
 }
 
 void

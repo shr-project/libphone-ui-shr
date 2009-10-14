@@ -25,9 +25,8 @@ phonegui_backend_ussd_show(int mode, const char *message)
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "mode", GINT_TO_POINTER(mode));
 	g_hash_table_insert(options, "message", g_strdup((char *) message));	/* we lose the const here */
-	g_hash_table_insert(options, "callback_close", _reset);
 	window_init(win_ussd);
-	window_view_show(win_ussd, options, ussd_view_show, ussd_view_hide);
+	window_view_show(win_ussd, options, ussd_view_show, ussd_view_hide, _reset);
 }
 
 void

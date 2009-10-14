@@ -16,6 +16,8 @@ struct Window {
 	void (*view_hide_cb) (void *data);
 
 	void (*frame_hide_cb) ();
+
+	void (*exit_cb)();
 };
 
 struct InwinButton {
@@ -45,7 +47,8 @@ void window_swallow(struct Window *win, const char *key, Evas_Object * object);
 void window_unswallow(struct Window *win, Evas_Object * object);
 void window_view_show(struct Window *win, void *options,
 		      void *(*show_cb) (struct Window * win, void *options),
-		      void (*hide_cb) (void *data));
+		      void (*hide_cb) (void *data),
+		      void (*exit_cb) ());
 void window_view_hide(struct Window *win, void *options);
 void window_frame_show(struct Window *win, void *data,
 		       void (*show_cb) (void *data),

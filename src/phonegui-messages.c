@@ -18,7 +18,7 @@ phonegui_backend_messages_show(int argc, char **argv)
 	win = window_new(D_("Messages"));
 	window_init(win);
 	window_view_show(win, NULL, message_list_view_show,
-			 message_list_view_hide);
+			 message_list_view_hide, NULL);
 }
 
 void

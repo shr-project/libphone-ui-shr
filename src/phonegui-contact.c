@@ -21,7 +21,7 @@ phonegui_backend_contact_new_show(const char *name, const char *number)
 	struct Window *win = window_new(D_("New Contact"));
 	window_init(win);
 	window_view_show(win, options, contact_show_view_show,
-			 contact_show_view_hide);
+			 contact_show_view_hide, NULL);
 }
 
 void

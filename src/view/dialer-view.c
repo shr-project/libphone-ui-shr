@@ -216,7 +216,7 @@ frame_dialer_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 	struct Window *win = window_new(D_("Add Contact"));
 	window_init(win);
 	window_view_show(win, options, contact_show_view_show,
-			 contact_show_view_hide);
+			 contact_show_view_hide, NULL);
 
 	window_destroy(data->win, NULL);
 }
@@ -256,7 +256,7 @@ frame_dialer_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
 	window_view_show(win, options, message_new_view_show,
-			 message_new_view_hide);
+			 message_new_view_hide, NULL);
 
 	window_destroy(data->win, NULL);
 }
@@ -328,7 +328,7 @@ frame_dialer_number_clicked(void *_data, Evas_Object * o, const char *emission,
 		struct Window *win = window_new(D_("Contacts"));
 		window_init(win);
 		window_view_show(win, NULL, contact_list_view_show,
-				 contact_list_view_hide);
+				 contact_list_view_hide, NULL);
 
 		window_destroy(data->win, NULL);
 	}

@@ -148,7 +148,7 @@ message_show_view_answer_clicked(void *_data, Evas_Object * obj,
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
 	window_view_show(win, options, message_new_view_show,
-			 message_new_view_hide);
+			 message_new_view_hide, NULL);
 }
 
 static void
@@ -178,7 +178,7 @@ message_show_view_delete_clicked(void *_data, Evas_Object * obj,
 	struct Window *win = window_new(D_("Delete Message"));
 	window_init(win);
 	window_view_show(win, options, message_delete_view_show,
-			 message_delete_view_hide);
+			 message_delete_view_hide, NULL);
 }
 
 static void

@@ -21,6 +21,7 @@ static void
 struct Window *
 window_new(char *title)
 {
+	g_debug("window_new");
 	struct Window *win;
 	win = g_slice_alloc0(sizeof(struct Window));
 	win->title = strdup(title);
@@ -60,7 +61,9 @@ void
 window_show(struct Window *win)
 {
 	assert(win != NULL);
+	g_debug("window_show(win=%d)", win);
 	evas_object_show(win->win);
+	elm_win_activate(win->win);
 }
 
 void
@@ -119,7 +122,7 @@ window_unswallow(struct Window *win, Evas_Object * object)
 void
 window_view_show(struct Window *win, void *options,
 		 void *(*show_cb) (struct Window * win, void *options),
-		 void (*hide_cb) (void *data))
+		 void (*hide_cb) (void *data), void (*exit_cb)())
 {
 	g_debug("window_view_show()");
 	assert(win != NULL);
@@ -132,6 +135,7 @@ window_view_show(struct Window *win, void *options,
 		win->view_data = show_cb(win, options);
 
 	win->view_hide_cb = hide_cb;
+	win->exit_cb = exit_cb;
 }
 
 void
@@ -202,6 +206,7 @@ window_kbd_hide(struct Window *win)
 void
 window_destroy(struct Window *win, void *options)
 {
+	g_debug("destroying window (win=%d)", win);
 	assert(win != NULL);
 	window_view_hide(win, options);
 
@@ -209,16 +214,10 @@ window_destroy(struct Window *win, void *options)
 	evas_object_del(win->layout);
 	evas_object_del(win->bg);
 	evas_object_del(win->win);
-	g_slice_free1(sizeof(struct Window), win);
 
-	window_counter--;
-	if (window_counter == 0) {
-		elm_exit();
-		//if (phonegui_exit_cb != NULL) {
-		//	g_debug("calling exit_cb()");
-		//	phonegui_exit_cb();
-		//}
-	}
+	if (win->exit_cb)
+		win->exit_cb();
+	g_slice_free1(sizeof(struct Window), win);
 }
 
 
@@ -272,5 +271,6 @@ window_inwin_dialog(struct Window *win, const char *label, GList * buttons,
 static void
 _window_delete_callback(void *data, Evas_Object * win, void *event_info)
 {
+	g_debug("_window_delete_callback");
 	window_destroy(data, NULL);
 }

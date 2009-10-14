@@ -18,7 +18,7 @@ phonegui_backend_message_show(const int id)
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
 	window_init(win);
 	window_view_show(win, options, message_show_view_show,
-			 message_show_view_hide);
+			 message_show_view_hide, NULL);
 }
 
 void
