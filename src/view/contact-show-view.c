@@ -561,10 +561,10 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 				    _new_gvalue_string(value));
 
 		if (data->path)
-			opimd_contact_update(data->path, data->properties, NULL,
+			phonegui_contact_update(data->path, data->properties, NULL,
 					     NULL);
 		else {
-			opimd_contacts_add(data->properties, _on_new_saved, data);
+			phonegui_contact_add(data->properties, _on_new_saved, data);
 			/* for new contacts we have to get the path for the
 			 * contact via the dbus callback... return here and
 			 * load the show frame via the callback */
