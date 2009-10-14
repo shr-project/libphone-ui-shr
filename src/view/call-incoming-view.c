@@ -6,7 +6,7 @@
 
 static void call_button_accept_clicked(struct CallIncomingViewData *data,
 				       Evas_Object * obj, void *event_info);
-static void call_button_release_clicked(struct CallViewData *data,
+static void call_button_release_clicked(struct CallIncomingViewData *data,
 					Evas_Object * obj, void *event_info);
 
 
@@ -81,20 +81,20 @@ static void
 call_button_accept_clicked(struct CallIncomingViewData *data, Evas_Object * obj,
 			   void *event_info)
 {
-	g_debug("accept_clicked()");
+	g_debug("accept_clicked(call_id=%d)", data->parent.id);
 	phonegui_call_activate(data->parent.id, NULL, NULL);
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(data->parent.id));
 	g_hash_table_insert(options, "number", strdup(data->parent.number));
 	window_view_show(data->parent.win, options, call_active_view_show,
-			 call_active_view_hide);
+			 call_active_view_hide, NULL);
 }
 
 static void
-call_button_release_clicked(struct CallViewData *data, Evas_Object * obj,
+call_button_release_clicked(struct CallIncomingViewData *data, Evas_Object * obj,
 			    void *event_info)
 {
-	g_debug("release_clicked()");
-	phonegui_call_release(data->id, NULL, NULL);
+	g_debug("release_clicked(call_id=%d)", data->parent.id);
+	phonegui_call_release(data->parent.id, NULL, NULL);
 }
