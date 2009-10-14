@@ -1,11 +1,7 @@
 #include "views.h"
 #include "common-utils.h"
 
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
-
-
-
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 static void
   frame_list_show(void *_data);

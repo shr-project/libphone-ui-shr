@@ -1,6 +1,10 @@
 #include "views.h"
 #include "call-common.h"
 
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+
+#include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
+
 
 /* speaker state */
 static CallSoundState sound_state = CALL_SOUND_STATE_CLEAR;
@@ -32,9 +36,9 @@ call_common_activate_call(struct CallActiveViewData *win)
 	g_debug("%s:%d attempting to set last call as active (id=%d)", __FILE__,
 		__LINE__, win->parent.id);
 #if 0
-	ogsmd_call_activate(win->parent.id, _call_activate_callback, win);
+	phongeui_call_activate(win->parent.id, _call_activate_callback, win);
 #else
-	ogsmd_call_activate(win->parent.id, NULL, NULL);
+	phongeui_call_activate(win->parent.id, NULL, NULL);
 	call_common_window_to_active(win);
 #endif
 }
@@ -297,7 +301,7 @@ call_button_keypad_clicked(struct CallViewData *data, Evas_Object * obj,
 	string[0] = (char) event_info;
 	string[1] = '\0';
 	g_debug("call_button_keypad_clicked(): %s", string);
-	ogsmd_call_send_dtmf(strdup(string), NULL, NULL);
+	phonegui_call_send_dtmf(string, NULL, NULL);
 }
 
 void

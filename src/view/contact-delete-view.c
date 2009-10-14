@@ -1,7 +1,6 @@
 #include "views.h"
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 struct ContactDeleteViewData {
 	struct Window *win;

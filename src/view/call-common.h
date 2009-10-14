@@ -1,9 +1,6 @@
 #ifndef _CALL_COMMON_H
 #define _CALL_COMMON_H
 
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-call.h>
-#include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 #include "views.h"
 
 enum ActiveCallState {

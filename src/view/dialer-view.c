@@ -231,7 +231,7 @@ frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 		if ((data->number[strlen(data->number) - 1] == '#')
 		    || (strlen(data->number) <= 2)) {
 			g_debug("USSD Request");
-			ogsmd_network_send_ussd_request(data->number, NULL,
+			phonegui_network_send_ussd_request(data->number, NULL,
 							NULL);
 			//Clean number in dialer
 			data->number[0] = '\0';
