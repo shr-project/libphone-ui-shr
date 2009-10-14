@@ -62,7 +62,7 @@ static char *
 _get_entry(Evas_Object *obj)
 {
 	char *ret = elm_entry_entry_get(obj);
-	ret = elm_entry_markup_to_utf8(ret); /* allocates! */
+	ret = g_strstrip(elm_entry_markup_to_utf8(ret)); /* allocates! */
 	return (ret);
 }
 
