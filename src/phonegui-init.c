@@ -23,7 +23,10 @@ phonegui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
 
 	g_type_init();
+}
 
+void phonegui_backend_loop()
+{
 	/* Initialize glib main loop */
 	GMainLoop *mainloop = g_main_loop_new(NULL, FALSE);
 
@@ -35,10 +38,6 @@ phonegui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 		g_fatal("failed integrating the glib mainloop");
 	}
 
-}
-
-void phonegui_backend_loop()
-{
 	elm_run();
 	elm_shutdown();
 }
