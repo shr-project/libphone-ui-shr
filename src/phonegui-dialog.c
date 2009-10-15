@@ -20,12 +20,3 @@ phonegui_backend_dialog_show(int type)
 	window_view_show(win, options, dialog_view_show, dialog_view_hide, NULL);
 }
 
-void
-phonegui_backend_dialog_hide(int type)
-{
-	struct Window *win = instance_manager_remove(INSTANCE_DIALOG, type);
-	assert(win != NULL);
-
-	window_destroy(win, NULL);
-}
-

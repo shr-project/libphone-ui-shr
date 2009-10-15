@@ -14,10 +14,6 @@ phonegui_backend_contacts_show()
 			 contact_list_view_hide, NULL);
 }
 
-void
-phonegui_backend_contacts_hide()
-{
-}
 
 void
 phonegui_backend_contacts_new_show(const char *name, const char *number)

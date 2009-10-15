@@ -24,14 +24,3 @@ phonegui_backend_dialer_show()
 	window_view_show(win, NULL, dialer_view_show, dialer_view_hide, _exit_cb);
 }
 
-void
-phonegui_backend_dialer_hide()
-{
-	g_debug("phonegui_backend_dialer_hide()");
-	if (win) {
-		window_destroy(win, NULL);
-		win = NULL;
-	}
-}
-
-

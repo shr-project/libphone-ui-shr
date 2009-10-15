@@ -21,13 +21,3 @@ phonegui_backend_message_show(const int id)
 			 message_show_view_hide, NULL);
 }
 
-void
-phonegui_backend_message_hide(int id)
-{
-	g_debug("phonegui_backend_message_hide()");
-	struct Window *win =
-		instance_manager_remove(INSTANCE_INCOMING_MESSAGE, id);
-	window_destroy(win, NULL);
-}
-
-
