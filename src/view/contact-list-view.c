@@ -1,11 +1,7 @@
 #include "views.h"
 #include "common-utils.h"
 
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
-
-
-
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 static void
   frame_list_show(void *_data);
@@ -270,7 +266,7 @@ _delete_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
 	char *path = g_value_get_string(
 			g_hash_table_lookup(properties, "Path"));
 
-	opimd_contact_delete(path, NULL, NULL);
+	phonegui_contact_delete(path, NULL, NULL);
 
 	elm_genlist_item_del(it);
 

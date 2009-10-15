@@ -1,6 +1,5 @@
 #include "views.h"
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-dbus.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
+#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
 
 
 struct MessageDeleteViewData {
@@ -13,32 +12,23 @@ struct MessageDeleteViewData {
 
 
 void
-
-
-
-
-
-
 message_delete_yes_clicked(void *userdata, Evas_Object * obj, void *event_info);
 void
-
-
-
- message_delete_no_clicked(void *userdata, Evas_Object * obj, void *event_info);
+message_delete_no_clicked(void *userdata, Evas_Object * obj, void *event_info);
 static void
-  delete_callback(GError * error, gpointer _data);
+delete_callback(GError * error, gpointer _data);
 
 static void
-  frame_delete_show(void *_data);
+frame_delete_show(void *_data);
 static void
-  frame_delete_hide(void *_data);
+frame_delete_hide(void *_data);
 static void
-  frame_delete_no_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_delete_no_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-  frame_delete_yes_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_delete_yes_clicked(void *_data, Evas_Object * obj, void *event_info);
 
 static void
-  frame_deleting_show(void *data);
+frame_deleting_show(void *data);
 
 
 
@@ -155,7 +145,7 @@ frame_delete_yes_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	window_frame_show(data->win, data, frame_deleting_show, NULL);
 
-	opimd_message_delete(data->path, delete_callback, data);
+	phonegui_message_delete(data->path, delete_callback, data);
 }
 
 

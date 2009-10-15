@@ -62,7 +62,9 @@ static char *
 _get_entry(Evas_Object *obj)
 {
 	char *ret = elm_entry_entry_get(obj);
+	/* we don't allow trailing whitespace */
 	ret = g_strstrip(elm_entry_markup_to_utf8(ret)); /* allocates! */
+	g_debug("got entry: %s", ret);
 	return (ret);
 }
 
@@ -552,10 +554,10 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 				    _new_gvalue_string(value));
 
 		if (data->path)
-			opimd_contact_update(data->path, data->properties, NULL,
+			phonegui_contact_update(data->path, data->properties, NULL,
 					     NULL);
 		else {
-			opimd_contacts_add(data->properties, _on_new_saved, data);
+			phonegui_contact_add(data->properties, _on_new_saved, data);
 			/* for new contacts we have to get the path for the
 			 * contact via the dbus callback... return here and
 			 * load the show frame via the callback */

@@ -6,8 +6,7 @@
 #include <glib.h>
 
 
-char
- *
+char *
 string_replace_with_tags(char *string)
 {
 	int newlen = 0;
