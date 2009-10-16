@@ -27,7 +27,7 @@ phonegui_backend_messages_show(int argc, char **argv)
 }
 
 void
-phonegui_backend_message_show(const char *path)
+phonegui_backend_messages_message_show(const char *path)
 {
 	struct Window *win = window_new(D_("Message"));
 	window_init(win);
