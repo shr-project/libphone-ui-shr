@@ -276,7 +276,7 @@ retrieve_callback2(struct MessageShowViewData *data)
 	window_layout_set(win, MESSAGE_FILE, "message_show");
 
 
-	char *content = string_replace_with_tags(data->content);
+	char *content = elm_entry_utf8_to_markup(data->content);
 
 	window_text_set(win, "text_status", data->status);
 	window_text_set(win, "text_number", data->number);
