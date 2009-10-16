@@ -15,6 +15,6 @@ phonegui_backend_ussd_show(int mode, const char *message)
 	g_hash_table_insert(options, "mode", GINT_TO_POINTER(mode));
 	g_hash_table_insert(options, "message", g_strdup((char *) message));	/* we lose the const here */
 	window_init(win);
-	window_view_show(win, options, ussd_view_show, ussd_view_hide, _reset);
+	window_view_show(win, options, ussd_view_show, ussd_view_hide, NULL);
 }
 
