@@ -28,9 +28,10 @@ typedef enum {
 
 
 
-void *message_show_view_show(struct Window *win, void *_options);
 void
-  message_show_view_hide(void *_data);
+*message_show_view_show(struct Window *win, void *_options);
+void
+message_show_view_hide(void *_data);
 
 static void
 message_show_view_close_clicked(void *_data, Evas_Object * obj,
