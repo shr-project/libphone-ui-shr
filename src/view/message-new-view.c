@@ -718,7 +718,7 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 	char *number;
 	number = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
 
-	if (phone_utils_is_valid_number(number)) {
+	if (phone_utils_sms_is_valid_number(number)) {
 		GHashTable *properties =
 			g_hash_table_new(g_str_hash, g_str_equal);
 		g_hash_table_insert(properties, strdup("name"),
