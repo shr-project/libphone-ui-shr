@@ -35,7 +35,7 @@ ussd_view_show(struct Window *win, void *_options)
 
 	data->mode = (int) g_hash_table_lookup(options, "mode");
 	data->message =
-		string_replace_with_tags(g_hash_table_lookup
+		elm_entry_utf8_to_markup(g_hash_table_lookup
 					 (options, "message"));
 	window_frame_show(win, data, frame_ussd_show, frame_ussd_hide);
 	window_show(win);
