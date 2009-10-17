@@ -5,7 +5,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir
 pkgdir		= $(libdir)/phoneui/modules
 pkg_LTLIBRARIES	= shr.la
 shr_la_LIBADD = @LIBFRAMEWORKD_GLIB_LIBS@ @LIBPHONEUI_LIBS@ @LIBPHONE_UTILS_LIBS@ @GLIB_LIBS@ @E_LIBS@ @LTLIBINTL@ -lpthread
-shr_la_LDFLAGS = -version-info 0:0:0 -no-undefined
+shr_la_LDFLAGS = -module -avoid-version
 
 shr_la_SOURCES = \
 	phoneui-init.h phoneui-init.c \
