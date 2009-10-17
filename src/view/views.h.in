@@ -19,23 +19,23 @@
 #define CONTACT_NAME_UNDEFINED_STRING D_("(unknown)")
 #define CONTACT_PHONE_UNDEFINED_STRING D_("(no number)")
 
-#define CALL_FILE "@DATADIR@/libphoneui-efl2/call.edj"
-#define CONTACTS_FILE "@DATADIR@/libphoneui-efl2/contacts.edj"
-#define CONTACTLIST_FILE "@DATADIR@/libphoneui-efl2/contactlist.edj"
-#define DIALER_FILE "@DATADIR@/libphoneui-efl2/dialer.edj"
-#define DIALOG_FILE "@DATADIR@/libphoneui-efl2/dialog.edj"
-//#define INCOMING_MESSAGE_FILE "@DATADIR@/libphoneui-efl2/incoming-message.edj"
-#define KEYPAD_FILE "@DATADIR@/libphoneui-efl2/keypad.edj"
-#define MESSAGE_FILE "@DATADIR@/libphoneui-efl2/messages.edj"
-#define MESSAGELIST_FILE "@DATADIR@/libphoneui-efl2/messagelist.edj"
-#define SIM_AUTH_FILE "@DATADIR@/libphoneui-efl2/sim-auth.edj"
-#define USSD_FILE "@DATADIR@/libphoneui-efl2/ussd.edj"
+#define CALL_FILE "@DATADIR@/libphone-ui-shr/call.edj"
+#define CONTACTS_FILE "@DATADIR@/libphone-ui-shr/contacts.edj"
+#define CONTACTLIST_FILE "@DATADIR@/libphone-ui-shr/contactlist.edj"
+#define DIALER_FILE "@DATADIR@/libphone-ui-shr/dialer.edj"
+#define DIALOG_FILE "@DATADIR@/libphone-ui-shr/dialog.edj"
+//#define INCOMING_MESSAGE_FILE "@DATADIR@/libphone-ui-shr/incoming-message.edj"
+#define KEYPAD_FILE "@DATADIR@/libphone-ui-shr/keypad.edj"
+#define MESSAGE_FILE "@DATADIR@/libphone-ui-shr/messages.edj"
+#define MESSAGELIST_FILE "@DATADIR@/libphone-ui-shr/messagelist.edj"
+#define SIM_AUTH_FILE "@DATADIR@/libphone-ui-shr/sim-auth.edj"
+#define USSD_FILE "@DATADIR@/libphone-ui-shr/ussd.edj"
 
-#define DELETE_TEXT_ICON "@DATADIR@/libphoneui-efl2/edit-undo.png"
-#define CONTACT_DEFAULT_PHOTO "@DATADIR@/libphoneui-efl2/contact.png"
-#define CONTACT_NUMBER_PHOTO "@DATADIR@/libphoneui-efl2/number-icon.png"
-#define ICON_CALL "@DATADIR@/libphoneui-efl2/icon-call.png"
-#define ICON_SMS "@DATADIR@/libphoneui-efl2/icon-sms.png"
+#define DELETE_TEXT_ICON "@DATADIR@/libphone-ui-shr/edit-undo.png"
+#define CONTACT_DEFAULT_PHOTO "@DATADIR@/libphone-ui-shr/contact.png"
+#define CONTACT_NUMBER_PHOTO "@DATADIR@/libphone-ui-shr/number-icon.png"
+#define ICON_CALL "@DATADIR@/libphone-ui-shr/icon-call.png"
+#define ICON_SMS "@DATADIR@/libphone-ui-shr/icon-sms.png"
 
 void *dialer_view_show(struct Window *win, void *_options);
 void dialer_view_hide(void *_data);
