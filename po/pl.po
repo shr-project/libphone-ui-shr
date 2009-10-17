@@ -1,10 +1,10 @@
-# Polish translations for libframeworkd-phonegui-efl
-# This file is put in the same licence, as libframeworkd-phonegui-efl package.
+# Polish translations for libframeworkd-phoneui-efl
+# This file is put in the same licence, as libframeworkd-phoneui-efl package.
 # Sebastian Krzyszkowiak <seba.dos1@gmail.com>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libframeworkd-phonegui-efl\n"
+"Project-Id-Version: libframeworkd-phoneui-efl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-06-13 16:55+0200\n"
 "PO-Revision-Date: 2009-06-13 16:55+0100\n"
@@ -26,7 +26,7 @@ msgstr "Nowy"
 #: src/view/message-show-view.c:299
 #: src/view/contact-show-view.c:120
 #: src/view/contact-show-view.c:194
-#: src/phonegui-call.c:65
+#: src/phoneui-call.c:65
 msgid "Call"
 msgstr "Zadzwoń"
 
@@ -161,7 +161,7 @@ msgid "Add Contact"
 msgstr "Dodaj kontakt"
 
 #: src/view/dialer-view.c:295
-#: src/phonegui-contacts.c:18
+#: src/phoneui-contacts.c:18
 msgid "Contacts"
 msgstr "Kontakty"
 
@@ -372,11 +372,11 @@ msgstr "Dodaj numer"
 msgid "Sending.."
 msgstr "Wysyłanie..."
 
-#: src/phonegui-ussd.c:28
+#: src/phoneui-ussd.c:28
 msgid "Service Data"
 msgstr "Wiadomość sieciowa"
 
-#: src/phonegui-sim-auth.c:20
+#: src/phoneui-sim-auth.c:20
 msgid "SIM Auth"
 msgstr "Autoryzacja SIM"
 
@@ -412,19 +412,19 @@ msgstr "TUV"
 msgid "XYZ"
 msgstr "XYZ"
 
-#: src/phonegui-messages.c:18
+#: src/phoneui-messages.c:18
 msgid "Messages"
 msgstr "Wiadomości"
 
-#: src/phonegui-incoming-message.c:18
+#: src/phoneui-incoming-message.c:18
 msgid "New Message"
 msgstr "Nowa wiadomość"
 
-#: src/phonegui-dialog.c:17
+#: src/phoneui-dialog.c:17
 msgid "Information"
 msgstr "Informacje"
 
-#: src/phonegui-dialer.c:18
+#: src/phoneui-dialer.c:18
 msgid "Dialer"
 msgstr "Zadzwoń"
 

@@ -1,14 +1,14 @@
 # List of source files containing translatable strings.
 
 # Package source files
-src/phonegui-call.c
-src/phonegui-contacts.c
-src/phonegui-dialer.c
-src/phonegui-dialog.c
-src/phonegui-incoming-message.c
-src/phonegui-messages.c
-src/phonegui-sim-auth.c
-src/phonegui-ussd.c
+src/phoneui-call.c
+src/phoneui-contacts.c
+src/phoneui-dialer.c
+src/phoneui-dialog.c
+src/phoneui-incoming-message.c
+src/phoneui-messages.c
+src/phoneui-sim-auth.c
+src/phoneui-ussd.c
 src/view/call-active-view.c
 src/view/call-common.c
 src/view/call-incoming-view.c

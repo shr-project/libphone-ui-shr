@@ -1,11 +1,11 @@
-# Finnish translations for libframeworkd-phonegui-efl
+# Finnish translations for libframeworkd-phoneui-efl
 # This file is put in the public domain.
 # Jussi Timperi <jussi.timperi@gmail.com>, 2009.
 # Timo Jyrinki <timo.jyrinki@iki.fi>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libframeworkd-phonegui-efl\n"
+"Project-Id-Version: libframeworkd-phoneui-efl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-02-26 18:51+0200\n"
 "PO-Revision-Date: 2009-03-10 15:49+0200\n"
@@ -47,7 +47,7 @@ msgstr "Poista"
 
 #: src/view/message-show-view.c:138 src/view/contact-list-view.c:61
 #: src/view/contact-show-view.c:100 src/view/contact-show-view.c:177
-#: src/view/dialer-view.c:98 src/phonegui-call.c:44
+#: src/view/dialer-view.c:98 src/phoneui-call.c:44
 msgid "Call"
 msgstr "Soita"
 
@@ -314,7 +314,7 @@ msgstr "Lisää"
 msgid "Send SMS"
 msgstr "Lähetä tekstiviesti"
 
-#: src/view/dialer-view.c:256 src/phonegui-contacts.c:16
+#: src/view/dialer-view.c:256 src/phoneui-contacts.c:16
 msgid "Contacts"
 msgstr "Yhteystiedot"
 
@@ -345,23 +345,23 @@ msgstr "Numero: "
 msgid "Loading... "
 msgstr "Ladataan... "
 
-#: src/phonegui-sim-auth.c:18
+#: src/phoneui-sim-auth.c:18
 msgid "SIM Auth"
 msgstr "SIM-todentaminen"
 
-#: src/phonegui-dialer.c:16
+#: src/phoneui-dialer.c:16
 msgid "Dialer"
 msgstr "Soitto"
 
-#: src/phonegui-dialog.c:14
+#: src/phoneui-dialog.c:14
 msgid "Information"
 msgstr "Tietoja"
 
-#: src/phonegui-messages.c:16
+#: src/phoneui-messages.c:16
 msgid "Messages"
 msgstr "Viestit"
 
-#: src/phonegui-incoming-message.c:16
+#: src/phoneui-incoming-message.c:16
 msgid "New Message"
 msgstr "Uusi viesti"
 
@@ -397,6 +397,6 @@ msgstr "TUV"
 msgid "XYZ"
 msgstr "XYZ"
 
-#: src/phonegui-ussd.c:17
+#: src/phoneui-ussd.c:17
 msgid "Service Data"
 msgstr "Palveludata"

@@ -14,11 +14,11 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/phonegui-incoming-message.c:16
+#: src/phoneui-incoming-message.c:16
 msgid "New Message"
 msgstr "رسالة جديدية"
 
-#: src/phonegui-contacts.c:16
+#: src/phoneui-contacts.c:16
 #: src/view/dialer-view.c:254
 msgid "Contacts"
 msgstr "الاسماء"
@@ -55,7 +55,7 @@ msgstr "ف‎ﻕﻙ‎ﻝﻡ"
 msgid "XYZ"
 msgstr "ﻁ‎ﻅ‎ﻉﻍ‎"
 
-#: src/phonegui-sim-auth.c:18
+#: src/phoneui-sim-auth.c:18
 msgid "SIM Auth"
 msgstr "تفعل الشريحة"
 
@@ -224,7 +224,7 @@ msgstr "لوخة المفاتيح"
 #: src/view/contact-show-view.c:100
 #: src/view/contact-show-view.c:177
 #: src/view/message-show-view.c:138
-#: src/phonegui-call.c:44
+#: src/phoneui-call.c:44
 msgid "Call"
 msgstr "مكالمة"
 
@@ -412,19 +412,19 @@ msgstr "مكالمة واردة"
 msgid "Accept"
 msgstr "موافق"
 
-#: src/phonegui-messages.c:16
+#: src/phoneui-messages.c:16
 msgid "Messages"
 msgstr "رسائل"
 
-#: src/phonegui-dialer.c:16
+#: src/phoneui-dialer.c:16
 msgid "Dialer"
 msgstr "الهاتف"
 
-#: src/phonegui-dialog.c:14
+#: src/phoneui-dialog.c:14
 msgid "Information"
 msgstr "معلومات"
 
-#: src/phonegui-ussd.c:17
+#: src/phoneui-ussd.c:17
 msgid "Service Data"
 msgstr "بيانات الخدمة"
 

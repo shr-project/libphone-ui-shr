@@ -1,10 +1,10 @@
-# German translations for libframeworkd-phonegui-efl
+# German translations for libframeworkd-phoneui-efl
 # This file is put in the public domain.
 # Jakob Simeth <jakob_simeth@gmx.net>, 2009.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libframeworkd-phonegui-efl\n"
+"Project-Id-Version: libframeworkd-phoneui-efl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-30 12:00+0200\n"
 "PO-Revision-Date: \n"
@@ -62,7 +62,7 @@ msgstr "Nachricht löschen"
 
 #: src/view/contact-show-view.c:100 src/view/contact-show-view.c:177
 #: src/view/message-show-view.c:138 src/view/contact-list-view.c:61
-#: src/view/dialer-view.c:96 src/phonegui-call.c:44
+#: src/view/dialer-view.c:96 src/phoneui-call.c:44
 msgid "Call"
 msgstr "Anrufen"
 
@@ -334,18 +334,18 @@ msgstr "Mehr"
 msgid "Send SMS"
 msgstr "Nachricht senden"
 
-#: src/view/dialer-view.c:254 src/phonegui-contacts.c:16
+#: src/view/dialer-view.c:254 src/phoneui-contacts.c:16
 msgid "Contacts"
 msgstr "Kontakte"
 
-#: src/phonegui-incoming-message.c:16
+#: src/phoneui-incoming-message.c:16
 msgid "New Message"
 msgstr "Nachricht"
 
-#: src/phonegui-dialog.c:14
+#: src/phoneui-dialog.c:14
 msgid "Information"
 msgstr "Informationen"
 
-#: src/phonegui-messages.c:16
+#: src/phoneui-messages.c:16
 msgid "Messages"
 msgstr "Nachrichten"
