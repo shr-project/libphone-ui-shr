@@ -9,7 +9,7 @@
 #include <glib.h>
 
 // TODO: Remove this:
-#include "phonegui-init.h"
+#include "phoneui-init.h"
 
 
 static int window_counter = 0;

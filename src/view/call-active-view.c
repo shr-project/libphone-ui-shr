@@ -1,7 +1,7 @@
 #include "views.h"
 #include "call-common.h"
 
-#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+#include <phoneui/phoneui-utility.h>
 
 static void call_button_sound_state_clicked(struct CallActiveViewData *data,
 					    Evas_Object * obj,
@@ -36,7 +36,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	evas_object_show(data->number);
 
 	if (data->parent.number_state == CALL_NUMBER_NUMBER) {
-		phonegui_contact_lookup(data->parent.number,
+		phoneui_contact_lookup(data->parent.number,
 					call_common_contact_callback, data);
 	}
 
@@ -134,10 +134,10 @@ call_button_state_clicked(struct CallActiveViewData *data, Evas_Object * obj,
 {
 	g_debug("state_clicked(id=%d,state=%d)", data->parent.id, data->state);
 	if (data->state == CALL_STATE_ACTIVE) {
-		phonegui_call_release(data->parent.id, NULL, NULL);
+		phoneui_call_release(data->parent.id, NULL, NULL);
 	}
 	else if (data->state == CALL_STATE_PENDING) {
-		phonegui_call_activate(data->parent.id, NULL, NULL);
+		phoneui_call_activate(data->parent.id, NULL, NULL);
 		call_common_window_new_active(data->parent.id);
 	}
 	else {

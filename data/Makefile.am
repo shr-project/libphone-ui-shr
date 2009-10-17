@@ -1,6 +1,6 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-filesdir = $(datadir)/libframeworkd-phonegui-efl2/
+filesdir = $(datadir)/libphone-ui-shr/
 files_DATA = sim-auth.edj dialer.edj messages.edj messagelist.edj contacts.edj contactlist.edj incoming-message.edj keypad.edj call.edj dialog.edj ussd.edj \
              edit-undo.png contact.png number-icon.png
 

@@ -1,5 +1,5 @@
 AC_PREREQ(2.53)
-AC_INIT(libframeworkd-phonegui-efl2, 0.1, http://www.shr-project.org/)
+AC_INIT(libphone-ui-shr, 0.1, http://www.shr-project.org/)
 AM_INIT_AUTOMAKE()
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
@@ -12,7 +12,7 @@ AC_PROG_LIBTOOL
 
 # base deps
 PKG_CHECK_MODULES(LIBFRAMEWORKD_GLIB, libframeworkd-glib)
-PKG_CHECK_MODULES(LIBFRAMEWORKD_PHONEGUI, libframeworkd-phonegui)
+PKG_CHECK_MODULES(LIBPHONEUI, libphone-ui)
 PKG_CHECK_MODULES(LIBPHONE_UTILS, libphone-utils)
 PKG_CHECK_MODULES(GLIB, glib-2.0)
 
@@ -27,8 +27,8 @@ PKG_CHECK_MODULES(E, [
 
 AC_SUBST(LIBFRAMEWORKD_GLIB_CFLAGS)
 AC_SUBST(LIBFRAMEWORKD_GLIB_LIBS)
-AC_SUBST(LIBFRAMEWORKD_PHONEGUI_CFLAGS)
-AC_SUBST(LIBFRAMEWORKD_PHONEGUI_LIBS)
+AC_SUBST(LIBPHONEUI_CFLAGS)
+AC_SUBST(LIBPHONEUI_LIBS)
 AC_SUBST(GLIB_CFLAGS)
 AC_SUBST(GLIC_LIBS)
 AC_SUBST(E_CFLAGS)
@@ -59,7 +59,6 @@ data/Makefile
 src/Makefile
 src/view/views.h
 src/widget/elm_config.h
-libframeworkd-phonegui-efl2.pc
 po/Makefile.in
 ])
 

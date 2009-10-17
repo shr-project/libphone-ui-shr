@@ -1,4 +1,4 @@
-#include "phonegui-call.h"
+#include "phoneui-call.h"
 #include "call-common.h"
 #include <glib.h>
 #include <assert.h>
@@ -22,27 +22,27 @@ static void _delete(void *data, Evas_Object * win, void *event_info);
 
 
 void
-phonegui_backend_incoming_call_show(const int id, const int status,
+phoneui_backend_incoming_call_show(const int id, const int status,
 				    const char *number)
 {
 	_show(id, status, number, CALL_INCOMING);
 }
 
 void
-phonegui_backend_incoming_call_hide(const int id)
+phoneui_backend_incoming_call_hide(const int id)
 {
 	_hide(id);
 }
 
 void
-phonegui_backend_outgoing_call_show(const int id, const int status,
+phoneui_backend_outgoing_call_show(const int id, const int status,
 				    const char *number)
 {
 	_show(id, status, number, CALL_ACTIVE);
 }
 
 void
-phonegui_backend_outgoing_call_hide(const int id)
+phoneui_backend_outgoing_call_hide(const int id)
 {
 	_hide(id);
 }

@@ -1,24 +1,22 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/src/view -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" -DLOCALEDIR=\"$(localedir)\" @E_CFLAGS@ @LIBFRAMEWORKD_GLIB_CFLAGS@ @LIBFRAMEWORKD_PHONEGUI_CFLAGS@ @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3
+AM_CPPFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/src/view -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" -DLOCALEDIR=\"$(localedir)\" @E_CFLAGS@ @LIBFRAMEWORKD_GLIB_CFLAGS@ @LIBPHONEUI_CFLAGS@ @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3
 
 pkgdir		= $(libdir)/phoneui/modules
-pkg_LTLIBRARIES	= libframeworkd-phonegui-efl2.la
-libframeworkd_phonegui_efl2_la_LIBADD = @LIBFRAMEWORKD_GLIB_LIBS@ @LIBFRAMEWORKD_PHONEGUI_LIBS@ @LIBPHONE_UTILS_LIBS@ @GLIB_LIBS@ @E_LIBS@ @LTLIBINTL@ -lpthread
-libframeworkd_phonegui_efl2_la_LDFLAGS = -version-info 0:0:0 -no-undefined
-libframeworkd_phonegui_efl2dir = $(includedir)/frameworkd-phonegui-efl2
-libframeworkd_phonegui_efl2_HEADERS = 
+pkg_LTLIBRARIES	= shr.la
+shr_la_LIBADD = @LIBFRAMEWORKD_GLIB_LIBS@ @LIBPHONEUI_LIBS@ @LIBPHONE_UTILS_LIBS@ @GLIB_LIBS@ @E_LIBS@ @LTLIBINTL@ -lpthread
+shr_la_LDFLAGS = -version-info 0:0:0 -no-undefined
 
-libframeworkd_phonegui_efl2_la_SOURCES = \
-	phonegui-init.h phonegui-init.c \
-	phonegui-dialer.h phonegui-dialer.c \
-	phonegui-dialog.h phonegui-dialog.c \
-	phonegui-messages.h phonegui-messages.c \
-	phonegui-incoming-message.h phonegui-incoming-message.c \
-	phonegui-sim-auth.h phonegui-sim-auth.c \
-	phonegui-call.h phonegui-call.c \
-	phonegui-contacts.h phonegui-contacts.c \
-	phonegui-ussd.h phonegui-ussd.c \
+shr_la_SOURCES = \
+	phoneui-init.h phoneui-init.c \
+	phoneui-dialer.h phoneui-dialer.c \
+	phoneui-dialog.h phoneui-dialog.c \
+	phoneui-messages.h phoneui-messages.c \
+	phoneui-incoming-message.h phoneui-incoming-message.c \
+	phoneui-sim-auth.h phoneui-sim-auth.c \
+	phoneui-call.h phoneui-call.c \
+	phoneui-contacts.h phoneui-contacts.c \
+	phoneui-ussd.h phoneui-ussd.c \
 	widget/etk_tree_model_edje.h widget/etk_tree_model_edje.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	util/helper.h util/helper.c \

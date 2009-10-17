@@ -1,4 +1,4 @@
-#include "phonegui-init.h"
+#include "phoneui-init.h"
 #include <Ecore_Evas.h>
 #include <Ecore.h>
 #include <Edje.h>
@@ -6,8 +6,8 @@
 #include <Elementary.h>
 #include <glib.h>
 
-int phonegui_argc;
-char **phonegui_argv;
+int phoneui_argc;
+char **phoneui_argv;
 
 static gboolean
 _idle_foo(void *foo)
@@ -17,26 +17,26 @@ _idle_foo(void *foo)
 
 
 void
-phonegui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
+phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 {
 	// Initialize gettext
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset(PACKAGE, "UTF-8");
-	phonegui_argc = argc;
-	phonegui_argv = argv;
+	phoneui_argc = argc;
+	phoneui_argv = argv;
 
 	g_type_init();
 
 }
 
-void phonegui_backend_loop()
+void phoneui_backend_loop()
 {
 	/* Initialize glib main loop */
 	GMainLoop *mainloop = g_main_loop_new(NULL, FALSE);
 
 	// Initializations
-	elm_init(phonegui_argc, phonegui_argv);
+	elm_init(phoneui_argc, phoneui_argv);
 	g_debug("Initiated elementary");
 
 	if (!ecore_main_loop_glib_integrate()) {

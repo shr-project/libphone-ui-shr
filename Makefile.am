@@ -1,6 +1,4 @@
 SUBDIRS = src data po
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = libframeworkd-phonegui-efl2.pc
 
 ACLOCAL_AMFLAGS = -I m4
 

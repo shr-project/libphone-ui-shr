@@ -1,7 +1,7 @@
 #include "views.h"
 #include "call-common.h"
 
-#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+#include <phoneui/phoneui-utility.h>
 
 #include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 
@@ -292,7 +292,7 @@ call_button_keypad_clicked(struct CallViewData *data, Evas_Object * obj,
 	string[0] = (char) event_info;
 	string[1] = '\0';
 	g_debug("call_button_keypad_clicked(): %s", string);
-	phonegui_call_send_dtmf(string, NULL, NULL);
+	phoneui_call_send_dtmf(string, NULL, NULL);
 }
 
 void

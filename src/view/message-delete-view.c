@@ -1,5 +1,5 @@
 #include "views.h"
-#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+#include <phoneui/phoneui-utility.h>
 
 
 struct MessageDeleteViewData {
@@ -145,7 +145,7 @@ frame_delete_yes_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	window_frame_show(data->win, data, frame_deleting_show, NULL);
 
-	phonegui_message_delete(data->path, delete_callback, data);
+	phoneui_message_delete(data->path, delete_callback, data);
 }
 
 

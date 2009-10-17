@@ -1,4 +1,4 @@
-#include "phonegui-incoming-message.h"
+#include "phoneui-incoming-message.h"
 #include <glib.h>
 #include <assert.h>
 #include "instance.h"
@@ -7,9 +7,9 @@
 
 
 void
-phonegui_backend_message_show(const int id)
+phoneui_backend_message_show(const int id)
 {
-	g_debug("phonegui_backend_message_show(id=%d)", id);
+	g_debug("phoneui_backend_message_show(id=%d)", id);
 
 	struct Window *win = window_new(D_("New Message"));
 	instance_manager_add(INSTANCE_INCOMING_MESSAGE, id, win);

@@ -1,4 +1,4 @@
-#include "phonegui-contacts.h"
+#include "phoneui-contacts.h"
 #include <glib.h>
 #include "window.h"
 #include "views.h"
@@ -6,7 +6,7 @@
 
 
 void
-phonegui_backend_contacts_show()
+phoneui_backend_contacts_show()
 {
 	struct Window *win = window_new(D_("Contacts"));
 	window_init(win);
@@ -16,7 +16,7 @@ phonegui_backend_contacts_show()
 
 
 void
-phonegui_backend_contacts_new_show(const char *name, const char *number)
+phoneui_backend_contacts_new_show(const char *name, const char *number)
 {
 	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
 							NULL, free);

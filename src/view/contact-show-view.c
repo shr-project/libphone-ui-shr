@@ -113,7 +113,7 @@ frame_show_action_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	if (tmp) {
 		char *number =
 			common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
-		phonegui_call_initiate(number,
+		phoneui_call_initiate(number,
 				    NULL, NULL);
 	}
 	evas_object_hide(data->hv1);
@@ -554,10 +554,10 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 				    _new_gvalue_string(value));
 
 		if (data->path)
-			phonegui_contact_update(data->path, data->properties, NULL,
+			phoneui_contact_update(data->path, data->properties, NULL,
 					     NULL);
 		else {
-			phonegui_contact_add(data->properties, _on_new_saved, data);
+			phoneui_contact_add(data->properties, _on_new_saved, data);
 			/* for new contacts we have to get the path for the
 			 * contact via the dbus callback... return here and
 			 * load the show frame via the callback */

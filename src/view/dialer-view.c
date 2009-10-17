@@ -1,6 +1,6 @@
 #include "views.h"
 
-#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+#include <phoneui/phoneui-utility.h>
 
 struct DialerViewData {
 	struct Window *win;
@@ -229,7 +229,7 @@ frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 		if ((data->number[strlen(data->number) - 1] == '#')
 		    || (strlen(data->number) <= 2)) {
 			g_debug("USSD Request");
-			phonegui_network_send_ussd_request(data->number, NULL,
+			phoneui_network_send_ussd_request(data->number, NULL,
 							NULL);
 			//Clean number in dialer
 			data->number[0] = '\0';
@@ -239,7 +239,7 @@ frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 		}
 		else {
 			g_debug("Initiate Call");
-			phonegui_call_initiate(data->number,
+			phoneui_call_initiate(data->number,
 					frame_dialer_initiate_callback,
 					    data);
 		}

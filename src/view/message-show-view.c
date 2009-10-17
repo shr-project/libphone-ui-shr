@@ -1,6 +1,6 @@
 #include "views.h"
 #include "common-utils.h"
-#include <frameworkd-phonegui/frameworkd-phonegui-utility.h>
+#include <phoneui/phoneui-utility.h>
 
 struct MessageShowViewData {
 	struct Window *win;
@@ -159,7 +159,7 @@ message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	char *number = common_utils_skip_prefix(data->number, "tel:");
 	g_debug("message_show_view_call_clicked()");
 	
-	phonegui_call_initiate(number, NULL, NULL);
+	phoneui_call_initiate(number, NULL, NULL);
 }
 
 static void
@@ -239,7 +239,7 @@ retrieve_callback(GHashTable * properties, gpointer _data)
 	data->properties = properties;	// TODO: copy
 	//data->query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 
-	phonegui_contact_lookup(data->number, message_common_name_callback,
+	phoneui_contact_lookup(data->number, message_common_name_callback,
 				data);
 
 	g_debug("loading message data...");
@@ -328,6 +328,6 @@ static void
 message_show_view_new_contact_clicked(struct MessageShowViewData *data,
 				      Evas_Object * obj, void *event_info)
 {
-	phonegui_contacts_new_show(NULL, data->number);
+	phoneui_contacts_new_show(NULL, data->number);
 }
 

@@ -1,13 +1,13 @@
-#include "phonegui-ussd.h"
+#include "phoneui-ussd.h"
 #include <glib.h>
 #include "window.h"
 #include "views.h"
 
 
 void
-phonegui_backend_ussd_show(int mode, const char *message)
+phoneui_backend_ussd_show(int mode, const char *message)
 {
-	g_debug("phonegui_backend_ussd_show(mode=%d, message=%s)", mode,
+	g_debug("phoneui_backend_ussd_show(mode=%d, message=%s)", mode,
 		message);
 	struct Window *win = window_new(D_("Service Data"));
 

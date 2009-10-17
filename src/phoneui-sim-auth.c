@@ -1,4 +1,4 @@
-#include "phonegui-sim-auth.h"
+#include "phoneui-sim-auth.h"
 #include <glib.h>
 #include <assert.h>
 #include "window.h"
@@ -8,9 +8,9 @@ static struct Window *win = NULL;
 
 
 void
-phonegui_backend_sim_auth_show(const int status)
+phoneui_backend_sim_auth_show(const int status)
 {
-	g_debug("phonegui_backend_sim_auth_show()");
+	g_debug("phoneui_backend_sim_auth_show()");
 
 	if (win) {
 		window_show(win);
@@ -26,9 +26,9 @@ phonegui_backend_sim_auth_show(const int status)
 }
 
 void
-phonegui_backend_sim_auth_hide(const int status)
+phoneui_backend_sim_auth_hide(const int status)
 {
-	g_debug("phonegui_backend_sim_auth_hide()");
+	g_debug("phoneui_backend_sim_auth_hide()");
 
 	/*
 	 * The status variable is not needed here, because the view

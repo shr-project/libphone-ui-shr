@@ -1,4 +1,4 @@
-#include "phonegui-dialer.h"
+#include "phoneui-dialer.h"
 #include <glib.h>
 #include "window.h"
 #include "views.h"
@@ -12,9 +12,9 @@ _exit_cb()
 }
 
 void
-phonegui_backend_dialer_show()
+phoneui_backend_dialer_show()
 {
-	g_debug("phonegui_backend_dialer_show()");
+	g_debug("phoneui_backend_dialer_show()");
 	if (win) {
 		window_show(win);
 		return;

@@ -1,5 +1,5 @@
 
-#include "phonegui-dialog.h"
+#include "phoneui-dialog.h"
 #include <glib.h>
 #include <assert.h>
 #include "instance.h"
@@ -8,7 +8,7 @@
 
 
 void
-phonegui_backend_dialog_show(int type)
+phoneui_backend_dialog_show(int type)
 {
 	struct Window *win = window_new(D_("Information"));
 	instance_manager_add(INSTANCE_DIALOG, type, win);

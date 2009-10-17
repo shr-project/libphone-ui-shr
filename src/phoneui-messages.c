@@ -1,4 +1,4 @@
-#include "phonegui-messages.h"
+#include "phoneui-messages.h"
 #include <glib.h>
 #include "window.h"
 #include "views.h"
@@ -12,9 +12,9 @@ _exit_cb()
 }
 
 void
-phonegui_backend_messages_show(int argc, char **argv)
+phoneui_backend_messages_show(int argc, char **argv)
 {
-	g_debug("phonegui_backend_messages_show()");
+	g_debug("phoneui_backend_messages_show()");
 	if (message_list) {
 		window_show(message_list);
 		return;
@@ -27,7 +27,7 @@ phonegui_backend_messages_show(int argc, char **argv)
 }
 
 void
-phonegui_backend_messages_message_show(const char *path)
+phoneui_backend_messages_message_show(const char *path)
 {
 	struct Window *win = window_new(D_("Message"));
 	window_init(win);
