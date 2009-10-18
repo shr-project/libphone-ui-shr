@@ -25,7 +25,6 @@
 #define DIALER_FILE "@DATADIR@/libphone-ui-shr/dialer.edj"
 #define DIALOG_FILE "@DATADIR@/libphone-ui-shr/dialog.edj"
 //#define INCOMING_MESSAGE_FILE "@DATADIR@/libphone-ui-shr/incoming-message.edj"
-#define KEYPAD_FILE "@DATADIR@/libphone-ui-shr/keypad.edj"
 #define MESSAGE_FILE "@DATADIR@/libphone-ui-shr/messages.edj"
 #define MESSAGELIST_FILE "@DATADIR@/libphone-ui-shr/messagelist.edj"
 #define SIM_AUTH_FILE "@DATADIR@/libphone-ui-shr/sim-auth.edj"
