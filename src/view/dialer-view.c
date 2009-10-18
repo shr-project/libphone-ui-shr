@@ -210,14 +210,7 @@ static void
 frame_dialer_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct DialerViewData *data = (struct DialerViewData *) _data;
-	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "number", data->number);
-
-	struct Window *win = window_new(D_("Add Contact"));
-	window_init(win);
-	window_view_show(win, options, contact_show_view_show,
-			 contact_show_view_hide, NULL);
-
+	phoneui_contacts_new_show("", data->number);
 	window_destroy(data->win, NULL);
 }
 
