@@ -525,6 +525,8 @@ _on_new_saved(GError *error, const char *path, void *_data)
 		data->path = g_strdup(path);
 	}
 
+	phoneui_contacts_refresh();
+
 	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
 }
 
@@ -553,9 +555,11 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 		g_hash_table_insert(data->properties, g_strdup(name),
 				    _new_gvalue_string(value));
 
-		if (data->path)
+		if (data->path) {
 			phoneui_contact_update(data->path, data->properties, NULL,
 					     NULL);
+			phoneui_contacts_refresh();
+	}
 		else {
 			phoneui_contact_add(data->properties, _on_new_saved, data);
 			/* for new contacts we have to get the path for the

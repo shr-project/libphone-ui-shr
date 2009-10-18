@@ -51,6 +51,13 @@ contact_list_view_hide(void *_data)
 }
 
 
+void
+contact_list_view_refresh(struct Window *win)
+{
+	g_debug("contact_list_view_refresh(win=%d)", win);
+	frame_list_refresh(win->view_data);
+}
+
 
 /* --- frame "list" --------------------------------------------------------- */
 
