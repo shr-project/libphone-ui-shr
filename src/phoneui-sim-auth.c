@@ -12,17 +12,16 @@ phoneui_backend_sim_auth_show(const int status)
 {
 	g_debug("phoneui_backend_sim_auth_show()");
 
-	if (win) {
-		window_show(win);
-		return;
+	if (!win) {
+		win = window_new(D_("SIM Auth"));
+		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+		g_hash_table_insert(options, "win", win);
+		g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
+		window_init(win);
+		window_view_show(win, options, sim_auth_input_view_show,
+				 sim_auth_input_view_hide, NULL);
 	}
-	win = window_new(D_("SIM Auth"));
-	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "win", win);
-	g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
-	window_init(win);
-	window_view_show(win, options, sim_auth_input_view_show,
-			 sim_auth_input_view_hide, NULL);
+	window_show(win);
 }
 
 void
