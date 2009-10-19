@@ -1,6 +1,10 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/src/view -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" -DLOCALEDIR=\"$(localedir)\" @E_CFLAGS@ @LIBFRAMEWORKD_GLIB_CFLAGS@ @LIBPHONEUI_CFLAGS@ @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3
+AM_CPPFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/src/view \
+	      -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" \
+	      -DLOCALEDIR=\"$(localedir)\" -DG_LOG_DOMAIN=\"libphone-ui-shr\" \
+	      @E_CFLAGS@ @LIBFRAMEWORKD_GLIB_CFLAGS@ @LIBPHONEUI_CFLAGS@ \
+	      @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3
 
 pkgdir		= $(libdir)/phoneui/modules
 pkg_LTLIBRARIES	= shr.la
