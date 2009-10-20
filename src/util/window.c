@@ -12,8 +12,6 @@
 #include "phoneui-init.h"
 
 
-static int window_counter = 0;
-
 static void
   _window_delete_callback(void *data, Evas_Object * win, void *event_info);
 
@@ -26,8 +24,7 @@ window_new(char *title)
 	win = g_slice_alloc0(sizeof(struct Window));
 	win->title = strdup(title);
 
-	window_counter++;
-	return win;
+	return (win);
 }
 
 void
