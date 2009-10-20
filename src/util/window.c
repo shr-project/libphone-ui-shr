@@ -67,6 +67,7 @@ void
 window_layout_set(struct Window *win, const char *file, const char *part)
 {
 	assert(win != NULL);
+	g_debug("setting layout from file '%s' (%s)", file, part);
 	elm_layout_file_set(win->layout, file, part);
 }
 
@@ -149,6 +150,8 @@ window_view_hide(struct Window *win, void *options)
 		win->view_hide_cb = NULL;
 	}
 
+	evas_object_hide(win->win);
+
 	win->view_data = NULL;
 }
 
@@ -207,7 +210,6 @@ window_destroy(struct Window *win, void *options)
 	assert(win != NULL);
 	window_view_hide(win, options);
 
-	evas_object_hide(win->win);
 	evas_object_del(win->layout);
 	evas_object_del(win->bg);
 	evas_object_del(win->win);
