@@ -6,6 +6,11 @@
 
 static struct Window *win = NULL;
 
+static void
+_exit_cb()
+{
+	win = NULL;
+}
 
 void
 phoneui_backend_sim_auth_show(const int status)
@@ -19,7 +24,7 @@ phoneui_backend_sim_auth_show(const int status)
 		g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
 		window_init(win);
 		window_view_show(win, options, sim_auth_input_view_show,
-				 sim_auth_input_view_hide, NULL);
+				 sim_auth_input_view_hide, _exit_cb);
 	}
 	window_show(win);
 }

@@ -4,19 +4,20 @@
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 #include <unistd.h>		/* for sleep */
 
+#define _MAX_PIN_LENGTH 9
 
 struct SimAuthInputViewData {
 	struct Window *win;
 
 	int mode;
 
-	char stars[9];
-	char pin[9];
+	char stars[_MAX_PIN_LENGTH];
+	char pin[_MAX_PIN_LENGTH];
 	int pin_length;
 
-	char puk[9];
+	char puk[_MAX_PIN_LENGTH];
 	int puk_length;
-	char pin_confirm[9];
+	char pin_confirm[_MAX_PIN_LENGTH];
 	int pin_confirm_length;
 
 	Evas_Object *bt1, *bt2, *keypad;
@@ -35,11 +36,6 @@ void
 void
   sim_auth_clear(struct SimAuthInputViewData *data);
 
-void
-  pin_callback(GError * error, gpointer data);
-gboolean pin_wrong_callback(void *_data);
-void
-  puk_callback(GError * error, gpointer data);
 int
   pins_different_callback(struct SimAuthInputViewData *data);
 void
@@ -78,13 +74,20 @@ static void
 void *
 sim_auth_input_view_show(struct Window *win, void *_options)
 {
+	struct SimAuthInputViewData *data;
 	GHashTable *options = (GHashTable *) _options;
 
 	g_debug("sim_auth_input_view_show(win=%d)", win);
 
-	struct SimAuthInputViewData *data =
-		g_slice_alloc0(sizeof(struct SimAuthInputViewData));
-	data->win = win;
+	/* see if we are called for the first time and create
+	 * the data if so... otherwise update */
+	if (!win->view_data) {
+		data = g_slice_alloc0(sizeof(struct SimAuthInputViewData));
+		data->win = win;
+	}
+	else {
+		data = (struct SimAuthInputViewData *)win->view_data;
+	}
 
 	int status = GPOINTER_TO_INT(g_hash_table_lookup(options, "status"));
 	switch (status) {
@@ -112,16 +115,6 @@ sim_auth_input_view_hide(void *_data)
 		(struct SimAuthInputViewData *) _data;
 
 	g_debug("sim_auth_input_view_hide()");
-
-	if (data->mode == MODE_PIN)
-		window_frame_show(data->win, data, frame_pin_correct_show,
-				  NULL);
-	else
-		window_frame_show(data->win, data, frame_puk_correct_show,
-				  NULL);
-
-	ecore_main_loop_iterate();
-	sleep(1);
 }
 
 void
@@ -138,10 +131,10 @@ sim_auth_update(struct SimAuthInputViewData *data)
 	else			// matches MODE_PUK_NEW_PIN_CONFIRM
 		length = data->pin_confirm_length;
 
-	data->stars[0] = 0;
 	int i;
-	for (i = 0; i < length; i++)
-		strncat(data->stars, "*", 1);
+	for (i = 0; i < length && i < _MAX_PIN_LENGTH; i++)
+		data->stars[i] = '*';
+	data->stars[i] = 0;
 	window_text_set(data->win, "input_text", data->stars);
 }
 
@@ -156,54 +149,6 @@ sim_auth_clear(struct SimAuthInputViewData *data)
 	data->pin_confirm_length = 0;
 }
 
-void
-pin_callback(GError * error, gpointer _data)
-{
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
-
-	g_debug("pin_callback()");
-
-	if (error != NULL) {
-		g_debug("error");
-		if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)
-		    || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
-			frame_pin_wrong_show(data);
-			ecore_timer_add(2, pin_wrong_callback, data);
-		}
-		else
-			g_error("Unknown error");
-	}
-}
-
-gboolean
-pin_wrong_callback(void *_data)
-{
-	ogsmd_sim_get_auth_status(sim_auth_callback, _data);
-	return FALSE;
-}
-
-void
-puk_callback(GError * error, gpointer _data)
-{
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
-
-	g_debug("puk_callback()");
-
-	if (error != NULL) {
-		if (IS_SIM_ERROR(error, SIM_ERROR_AUTH_FAILED)
-		    || IS_SIM_ERROR(error, SIM_ERROR_INVALID_INDEX)) {
-			data->mode = MODE_PUK;
-			window_frame_show(data->win, data, frame_puk_wrong_show, NULL);
-			ecore_timer_add(2, reset_callback, data);
-		}
-		else
-			g_error("Unhandled error: %d %s %s", error->code,
-				error->message,
-				g_quark_to_string(error->domain));
-	}
-}
 
 int
 reset_callback(void *_data)
@@ -246,15 +191,17 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 	if (data->mode == MODE_PIN && strcmp(data->pin, "")) {
 		if (string_is_pin(data->pin)) {
 			// PIN length is correct, try it
+			g_debug("PIN looks correct... sending");
 			window_frame_show(data->win, data, frame_checking_show,
 					  NULL);
-			ogsmd_sim_send_auth_code(data->pin, pin_callback, data);
+			phoneui_sim_pin_send(data->pin);
 		}
 		else {
+			g_debug("no valid PIN...");
 			// PIN length is wrong, thus PIN is wrong
 			window_frame_show(data->win, data, frame_pin_wrong_show,
 					  NULL);
-			ecore_timer_add(2, pin_wrong_callback, data);
+			ecore_timer_add(2, reset_callback, data);
 		}
 	}
 	else if (data->mode == MODE_PUK && strcmp(data->puk, "")) {
@@ -299,8 +246,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 			g_debug("NEW PINs identical, send PUK and NEW PIN");
 			window_frame_show(data->win, data, frame_checking_show,
 					  NULL);
-			ogsmd_sim_unlock(data->puk, data->pin, puk_callback,
-					 data);
+			phoneui_sim_puk_send(data->puk, data->pin);
 		}
 	}
 }
@@ -330,9 +276,10 @@ sim_auth_keypad_clicked(void *_data, Evas_Object * obj, void *event_info)
 		length = &(data->pin_confirm_length);
 	}
 
-	if (*length < 8) {
-		strncat(string, &input, 1);
+	if (*length < _MAX_PIN_LENGTH) {
+		string[*length] = input;
 		(*length)++;
+		string[*length] = 0;
 		sim_auth_update(data);
 	}
 }
@@ -364,6 +311,11 @@ sim_auth_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 		sim_auth_update(data);
 	}
 }
+
+
+
+
+/* --- main input frame --- */
 
 static void
 frame_input_show(void *_data)
