@@ -23,27 +23,31 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	data->parent.win = win;
 	data->parent.id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
 	data->parent.number = g_hash_table_lookup(options, "number");
+	data->parent.name = g_hash_table_lookup(options, "name");
+	data->parent.photo = g_hash_table_lookup(options, "photo");
 	data->parent.dtmf_active = FALSE;
 	data->state = CALL_STATE_ACTIVE;
-	/* FIXME: next line should actually be passed as an option */
-	data->parent.number_state = CALL_NUMBER_NUMBER;
+	data->parent.number_state =
+		GPOINTER_TO_INT(g_hash_table_lookup(options, "number_state"));
+
+	g_debug("active call: id=%d, number_state=%d, number='%s'", data->parent.id,
+			data->parent.number_state, data->parent.number);
 
 	window_layout_set(win, CALL_FILE, "call");
 
-	data->number = elm_label_add(window_evas_object_get(win));
-	elm_label_label_set(data->number, data->parent.number);
-	window_swallow(win, "number", data->number);
-	evas_object_show(data->number);
+	data->parent.elmphoto = elm_icon_add(window_evas_object_get(win));
+	window_swallow(win, "photo", data->parent.elmphoto);
+	evas_object_show(data->parent.elmphoto);
 
+	window_text_set(win, "number", data->parent.number);
 	if (data->parent.number_state == CALL_NUMBER_NUMBER) {
 		phoneui_contact_lookup(data->parent.number,
-					call_common_contact_callback, data);
+					call_common_contact_callback, &data->parent);
 	}
-
-	data->information = elm_label_add(window_evas_object_get(win));
-	elm_label_label_set(data->information, D_("Active call"));
-	window_swallow(win, "text", data->information);
-	evas_object_show(data->information);
+	else {
+		window_text_set(win, "name", data->parent.name);
+		elm_icon_file_set(data->parent.elmphoto, data->parent.photo, NULL);
+	}
 
 	data->bt_call_state = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt_call_state, D_("Release"));
