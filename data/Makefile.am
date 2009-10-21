@@ -2,7 +2,7 @@ MAINTAINERCLEANFILES = Makefile.in
 
 filesdir = $(datadir)/libphone-ui-shr/
 files_DATA = sim-auth.edj dialer.edj messages.edj messagelist.edj contacts.edj contactlist.edj incoming-message.edj keypad.edj call.edj dialog.edj ussd.edj \
-             edit-undo.png contact.png number-icon.png
+             edit-undo.png contact.png number-icon.png call-start.png call-stop.png
 
 EXTRA_DIST = sim-auth.edc dialer.edc messages.edc messagelist.edc contacts.edc contactlist.edc incoming-message.edc keypad.edc call.edc dialog.edc ussd.edc
 
