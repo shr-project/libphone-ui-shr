@@ -217,14 +217,14 @@ frame_show_show(void *_data)
 	g_debug("loading name and number");
 	/* --- name and number --- */
 	if (data->path) {
-		tmp = g_hash_table_lookup(data->properties, "Name");
+		tmp = g_hash_table_lookup(data->properties, "_Name");
 		if (tmp)
 			s = g_value_get_string(tmp);
 		else
 			s = CONTACT_NAME_UNDEFINED_STRING;
 		window_text_set(data->win, "name", s);
 
-		tmp = g_hash_table_lookup(data->properties, "Phone");
+		tmp = g_hash_table_lookup(data->properties, "_Phone");
 		if (tmp) {
 			s = g_value_get_string(tmp);
 			s = common_utils_skip_prefix(s, tmp);
@@ -283,7 +283,9 @@ frame_show_show(void *_data)
 	g_hash_table_iter_init(&iter, data->properties);
 	while (g_hash_table_iter_next(&iter, &key, &value)) {
 
-		if (!strcmp(key, "Path"))
+		if (!strcmp(key, "Path")
+				|| !strcmp(key, "_Name")
+				|| !strcmp(key, "_Phone"))
 			continue;
 
 		g_debug("adding field %s='%s' to list", key,
@@ -747,9 +749,9 @@ contact_show_view_show(struct Window *win, void *_data)
 	else {
 		data->properties =
 			g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(data->properties, "Name", 
+		g_hash_table_insert(data->properties, "_Name",
 				_new_gvalue_string(""));
-		g_hash_table_insert(data->properties, "Phone", 
+		g_hash_table_insert(data->properties, "_Phone",
 				_new_gvalue_string(""));
 		data->path = NULL;
 	}

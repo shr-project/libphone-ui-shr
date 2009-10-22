@@ -211,14 +211,18 @@ my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 
 
 static void
-message_common_name_callback(GError * error, char *name, void *_data)
+message_common_name_callback(GHashTable *contact, void *_data)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
-	g_debug("got contact: \"%s\" error? (%d)", name, error);
-	if (error == NULL && *name) {
-		data->name = strdup(name);
+	if (contact) {
+		GValue *tmp = g_hash_table_lookup(contact, "_Name");
+		if (tmp) {
+			data->name = g_strdup(g_value_get_string(tmp));
+			g_debug("got contact: \"%s\"", data->name);
+		}
 	}
+
 	g_debug("name updating...");
 	if (data->name) {
 		window_text_set(data->win, "text_number", data->name);

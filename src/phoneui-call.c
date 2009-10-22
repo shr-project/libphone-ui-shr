@@ -58,7 +58,9 @@ _show(const int id, const int status, const char *number, int type)
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
 	g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
-	g_hash_table_insert(options, "number", (char *) number);	/* we just loose the const for now */
+	g_hash_table_insert(options, "number", g_strdup(number));
+	g_hash_table_insert(options, "number_state",
+			GINT_TO_POINTER(CALL_NUMBER_NUMBER));
 
 	window_init(win);
 	if (type == CALL_INCOMING) {

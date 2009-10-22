@@ -35,6 +35,8 @@
 #define CONTACT_NUMBER_PHOTO "@DATADIR@/libphone-ui-shr/number-icon.png"
 #define ICON_CALL "@DATADIR@/libphone-ui-shr/icon-call.png"
 #define ICON_SMS "@DATADIR@/libphone-ui-shr/icon-sms.png"
+#define ICON_CALL_ACCEPT "@DATADIR@/libphone-ui-shr/call-start.png"
+#define ICON_CALL_REJECT "@DATADIR@/libphone-ui-shr/call-stop.png"
 
 void *dialer_view_show(struct Window *win, void *_options);
 void dialer_view_hide(void *_data);

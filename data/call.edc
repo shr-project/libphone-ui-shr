@@ -6,41 +6,66 @@ collections {
 		parts {
 
 			part {
-				name: "information";
+				name: "photo";
 				type: SWALLOW;
-				mouse_events, 0;
+				mouse_events: 0;
 				description {
 					state: "default" 0.0;
-					max: 0 0;
 					rel1 {
-						relative: 0.0 0.0;
-						offset: 0 0;
+						relative: 0.2 0.0;
+						offset: 0 5;
 					}
 					rel2 {
-						relative: 1.0 0.2;
+						relative: 0.8 0.35;
 						offset: 0 0;
 					}
 				}
 			}
 
 			part {
-				name: "number";
-				type: SWALLOW;
+				name: "name";
+				type: TEXT;
 				mouse_events: 0;
 				description {
 					state: "default" 0.0;
-					max: 0 0;
+					color: 0 0 0 255;
 					rel1 {
-						relative: 0.0 0.2;
-						offset: 0 0;
+						relative: 0.0 0.35;
+						offset: 0 5;
 					}
 					rel2 {
-						relative: 1.0 0.4;
-						offset: 0 0;
+						relative: 1.0 0.5;
+					}
+					text {
+						font: "redensek:style=bold";
+						size: 24;
+						align: 0.5 0.5;
 					}
 				}
 			}
 
+			part {
+				name: "number";
+				type: TEXT;
+				mouse_events: 0;
+				description {
+					state: "default" 0.0;
+					color: 0 0 0 255;
+					rel1 {
+						relative: 0.0 0.5;
+						offset: 0 5;
+					}
+					rel2 {
+						relative: 1.0 0.65;
+						offset: 0 0;
+					}
+					text {
+						font: "redensek:style=bold";
+						size: 20;
+						align: 0.5 0.0;
+					}
+				}
+			}
 
 			part {
 				name: "button_accept";
@@ -83,37 +108,59 @@ collections {
 		parts {
 
 			part {
-				name: "text";
+				name: "photo";
 				type: SWALLOW;
 				mouse_events: 0;
 				description {
 					state: "default" 0.0;
-					max: 0 0;
 					rel1 {
 						relative: 0.0 0.0;
-						offset: 0 0;
+						offset: 5 5;
 					}
 					rel2 {
-						relative: 1.0 0.1;
-						offset: 0 0;
+						relative: 0.2 0.2;
+					}
+				}
+			}
+
+			part {
+				name: "name";
+				type: TEXT;
+				mouse_events: 0;
+				description {
+					state: "default" 0.0;
+					color: 0 0 0 255;
+					rel1 {
+						relative: 0.2 0.0;
+					}
+					rel2 {
+						relative: 1.0 0.12;
+					}
+					text {
+						font: "redensek:style=bold";
+						size: 24;
+						align: 0.5 0.5;
 					}
 				}
 			}
 
 			part {
 				name: "number";
-				type: SWALLOW;
+				type: TEXT;
 				mouse_events: 0;
 				description {
 					state: "default" 0.0;
-					max: 0 0;
+					color: 0 0 0 255;
 					rel1 {
-						relative: 0.0 0.1;
-						offset: 0 0;
+						relative: 0.2 0.12;
 					}
 					rel2 {
 						relative: 1.0 0.2;
-						offset: 0 0;
+					}
+					text {
+						font: "redensek:style=bold";
+						size: 20;
+						align: 0.5 0.5;
 					}
 				}
 			}

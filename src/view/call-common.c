@@ -44,20 +44,44 @@ call_common_activate_call(struct CallActiveViewData *win)
 }
 
 void
-call_common_contact_callback(GError * error, char *name, void *_data)
+call_common_contact_callback(GHashTable *contact, void *_data)
 {
-	struct CallIncomingViewData *data =
-		(struct CallIncomingViewData *) _data;
-	/* data->number is used to make sure this still exists
-	 * FIXME: locking needed! I'm not doing it here since
-	 * it's needed everywhere, will happen in the rewrite*/
-	g_debug("got contact: \"%s\" error? (%d)", name, error);
-	if (error == NULL && *name && data->parent.number_state) {
-		data->parent.number_state = CALL_NUMBER_CONTACT;
-		data->parent.number = strdup(name);
-		elm_label_label_set(data->number, data->parent.number);
+	struct CallViewData *data =
+		(struct CallViewData *) _data;
+	if (contact) {
+		g_debug("call_common_contact_callback... got a contact");
+		GValue *tmp;
+		char *s;
+
+		tmp = g_hash_table_lookup(contact, "Photo");
+		if (tmp) {
+			s = g_value_get_string(tmp);
+			if (!strncmp(s, "file://", 7))
+				s += 7;
+		}
+		else {
+			s = CONTACT_DEFAULT_PHOTO;
+		}
+		data->photo = g_strdup(s);
+
+		tmp = g_hash_table_lookup(contact, "_Name");
+		if (tmp) {
+			s = g_value_get_string(tmp);
+		}
+		else {
+			s = CONTACT_NAME_UNDEFINED_STRING;
+		}
+		data->name = g_strdup(s);
+	}
+	else {
+		g_debug("call_common_contact_callback... got NO contact");
+		data->photo = g_strdup(CONTACT_DEFAULT_PHOTO);
+		data->name = g_strdup(CONTACT_NAME_UNDEFINED_STRING);
 	}
 
+	elm_icon_file_set(data->elmphoto, data->photo, NULL);
+	window_text_set(data->win, "name", data->name);
+	data->number_state = CALL_NUMBER_CONTACT;
 }
 
 
@@ -283,13 +307,12 @@ call_common_active_call_remove(int id)
 	return 0;
 }
 
-/*FIXME: why does button_keypad_clicked get the data parametr? */
 void
-call_button_keypad_clicked(struct CallViewData *data, Evas_Object * obj,
+call_button_keypad_clicked(void *data, Evas_Object * obj,
 			   void *event_info)
 {
 	char string[2];
-	string[0] = (char) event_info;
+	string[0] = ((char *) event_info)[0];
 	string[1] = '\0';
 	g_debug("call_button_keypad_clicked(): %s", string);
 	phoneui_call_send_dtmf(string, NULL, NULL);

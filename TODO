@@ -14,3 +14,16 @@
 # Write sfree (i.e- safe free) that checks that the value is not null before freing maybe even a macro that also sets to null afterwards.
 # Fix the mess with hash tables in call-* and probably everywhere else as well, atm we don't free just allocate, a lot, even when there's no real need.
 # When calling cross frame functions (i.e contacts from dialer and etc, use phoneui_* functions and *not* frame show functions)
+
+KNOWN BUGS
+
+Messages:
+- list does not reload after deleting a message
+- text wraps badly when writing a message
+- message display does not scroll when message is too long
+- no index when adding a contact
+
+Contacts:
+- new contacts don't get into the list (have to restart)
+- strip tel: prefix for the list
+
