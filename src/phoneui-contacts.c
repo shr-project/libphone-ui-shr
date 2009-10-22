@@ -58,20 +58,20 @@ phoneuid_backend_contacts_contact_show(const char *contact_path)
 
 
 void
-phoneui_backend_contacts_new_show(const char *name, const char *number)
+phoneui_backend_contacts_contact_new(GHashTable *values)
 {
-	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
-							NULL, free);
-	if (name) {
-		g_hash_table_insert(options, "Name", common_utils_new_gvalue_string(name));
-	}
-	if (number) {
-		/* FIXME: BAD STRDUP!!! */
-		number = common_utils_new_with_prefix(number, "tel:");
-		g_hash_table_insert(options, "Phone",
-				common_utils_new_gvalue_string(number));
-		free(number);
-	}
+	//GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
+	//						NULL, free);
+	//if (name) {
+	//	g_hash_table_insert(options, "Name", common_utils_new_gvalue_string(name));
+	//}
+	//if (number) {
+	//	/* FIXME: BAD STRDUP!!! */
+	//	number = common_utils_new_with_prefix(number, "tel:");
+	//	g_hash_table_insert(options, "Phone",
+	//			common_utils_new_gvalue_string(number));
+	//	free(number);
+	//}
 #if 0
 	g_hash_table_insert(options, "change_callback", frame_list_refresh);
 	g_hash_table_insert(options, "change_callback_data", data);
@@ -79,9 +79,14 @@ phoneui_backend_contacts_new_show(const char *name, const char *number)
 
 	struct Window *win = window_new(D_("New Contact"));
 	window_init(win);
-	window_view_show(win, options, contact_show_view_show,
+	window_view_show(win, values, contact_show_view_show,
 			 contact_show_view_hide, NULL);
 }
 
 
+void
+phoneui_backend_contacts_contact_edit(const char *path)
+{
+	phoneui_backend_contacts_contact_show(path);
+}
 
