@@ -94,6 +94,7 @@ message_show_view_show(struct Window *win, void *_options)
 		data->callback_data =
 			g_hash_table_lookup(options, "delete_callback_data");
 	}
+	phoneui_message_set_read_status(data->path, 1, NULL, NULL);
 
 	retrieve_callback(options, data);
 
