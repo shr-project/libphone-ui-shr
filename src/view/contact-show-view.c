@@ -44,20 +44,6 @@ static Elm_Genlist_Item_Class itc;
 /* === frame "show" ============================================ */
 
 
-static GValue *
-_new_gvalue_string(const char *value)
-{
-	GValue *val = calloc(1, sizeof(GValue));
-	if (!val) {
-		return NULL;
-	}
-	g_value_init(val, G_TYPE_STRING);
-	g_value_set_string(val, value);
-
-	return val;
-}
-
-
 static char *
 _get_entry(Evas_Object *obj)
 {
@@ -492,6 +478,14 @@ frame_photo_hide(void *_data)
 
 /* === frame "edit" ====================================== */
 
+static void
+_update_contact_data(struct ContactViewData *data)
+{
+	phoneui_contacts_refresh();
+	GHashTable *tmp = phoneui_contact_sanitize_content(data->properties);
+	g_hash_table_destroy(data->properties);
+	data->properties = tmp;
+}
 
 
 static char *
@@ -523,11 +517,15 @@ _on_new_saved(GError *error, const char *path, void *_data)
 {
 	struct ContactViewData *data = (struct ContactViewData *)_data;
 
-	if (!error) {
-		data->path = g_strdup(path);
+	if (error) {
+		g_debug("error saving contact: %s", error->message);
+		g_error_free(error);
 	}
-
-	phoneui_contacts_refresh();
+	else {
+		g_debug("saved new contact with path %s", path);
+		data->path = g_strdup(path);
+		_update_contact_data(data);
+	}
 
 	window_frame_show(data->win, data, frame_show_show, frame_show_hide);
 }
@@ -547,22 +545,25 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 		/* if the name of the field changed we have to delete
 		 * the old field by setting it to an empty string */
-		if (strcmp(name, data->field->name) != 0) {
+		if (*data->field->name &&
+				strcmp(name, data->field->name) != 0) {
 			g_debug("field name changed... removing the old one");
-			g_hash_table_insert(data->properties, 
+			g_hash_table_insert(data->properties,
 					g_strdup(data->field->name),
-					_new_gvalue_string(""));
+					common_utils_new_gvalue_string(""));
 		}
 
 		g_hash_table_insert(data->properties, g_strdup(name),
-				    _new_gvalue_string(value));
+				    common_utils_new_gvalue_string(value));
 
 		if (data->path) {
+			g_debug("updating contact %s", data->path);
 			phoneui_contact_update(data->path, data->properties, NULL,
 					     NULL);
-			phoneui_contacts_refresh();
-	}
+			_update_contact_data(data);
+		}
 		else {
+			g_debug("adding new contact");
 			phoneui_contact_add(data->properties, _on_new_saved, data);
 			/* for new contacts we have to get the path for the
 			 * contact via the dbus callback... return here and
@@ -736,7 +737,7 @@ contact_show_view_show(struct Window *win, void *_data)
 	g_debug("contact_view_show()");
 
 	struct ContactViewData *data =
-		g_slice_alloc0(sizeof(struct ContactViewData));
+		malloc(sizeof(struct ContactViewData));
 	data->win = win;
 	if (_data) {
 		data->properties = (GHashTable *) _data;
@@ -750,9 +751,9 @@ contact_show_view_show(struct Window *win, void *_data)
 		data->properties =
 			g_hash_table_new(g_str_hash, g_str_equal);
 		g_hash_table_insert(data->properties, "_Name",
-				_new_gvalue_string(""));
+				common_utils_new_gvalue_string(""));
 		g_hash_table_insert(data->properties, "_Phone",
-				_new_gvalue_string(""));
+				common_utils_new_gvalue_string(""));
 		data->path = NULL;
 	}
 	data->field = NULL;
