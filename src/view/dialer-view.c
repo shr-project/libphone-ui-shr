@@ -14,21 +14,21 @@ struct DialerViewData {
 
 
 static void
-  frame_dialer_show(void *_data);
+frame_dialer_show(void *_data);
 static void
-  frame_dialer_hide(void *_data);
+frame_dialer_hide(void *_data);
 static void
- frame_dialer_options_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_dialer_options_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-  frame_dialer_keypad_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_dialer_keypad_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-  frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-  frame_dialer_exit_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_dialer_exit_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
-  frame_dialer_save_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_dialer_save_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
- frame_dialer_message_clicked(void *_data, Evas_Object * obj, void *event_info);
+frame_dialer_message_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void
 frame_dialer_delete_mouse_down(void *_data, Evas_Object * o,
 			       const char *emission, const char *source);
@@ -210,7 +210,11 @@ static void
 frame_dialer_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct DialerViewData *data = (struct DialerViewData *) _data;
-	phoneui_contacts_new_show("", data->number);
+	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
+	g_hash_table_insert(contact, "Phone",
+			common_utils_new_gvalue_string(strdup(data->number)));
+	phoneui_contacts_contact_new(contact);
+	g_hash_table_destroy(contact);
 	window_destroy(data->win, NULL);
 }
 
