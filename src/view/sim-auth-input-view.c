@@ -91,7 +91,7 @@ _evaluate_status(struct SimAuthInputViewData *data, int status)
 		ecore_timer_add(2, exit_callback, data);
 		return;
 	default:
-		g_error("Unknown status %d", status);
+		g_debug("Unknown status %d", status);
 		data->mode = MODE_ERROR;
 		data->msg = D_("Unknown error");
 		window_frame_show(data->win, data, frame_message_show, NULL);
@@ -366,7 +366,7 @@ frame_input_show(void *_data)
 
 	g_debug("frame_input_show()");
 
-	window_layout_set(win, SIM_AUTH_FILE, "sim_auth_input");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/sim_auth_input");
 
 	window_text_set(win, "instruction", data->msg);
 
@@ -413,7 +413,7 @@ frame_message_show(void *_data)
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
 
-	window_layout_set(data->win, SIM_AUTH_FILE, "sim_auth_message");
+	window_layout_set(data->win, DEFAULT_THEME, "phoneui/notification/sim_auth_message");
 	window_text_set(data->win, "text", D_("Checking"));
 }
 

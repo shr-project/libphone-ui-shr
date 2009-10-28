@@ -27,7 +27,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	data->parent.number_state =
 		GPOINTER_TO_INT(g_hash_table_lookup(options, "number_state"));
 
-	window_layout_set(win, CALL_FILE, "incoming_call");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/call_management/incoming_call");
 
 	data->parent.elmphoto = elm_icon_add(window_evas_object_get(win));
 	window_swallow(win, "photo", data->parent.elmphoto);

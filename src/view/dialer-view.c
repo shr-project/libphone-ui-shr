@@ -78,7 +78,7 @@ frame_dialer_show(void *_data)
 {
 	struct DialerViewData *data = (struct DialerViewData *) _data;
 	struct Window *win = data->win;
-	window_layout_set(win, DIALER_FILE, "main");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/dialer/dialer");
 
 	data->text_number = elm_label_add(window_evas_object_get(win));
 	elm_label_label_set(data->text_number, "");

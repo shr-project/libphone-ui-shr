@@ -147,7 +147,7 @@ message_list_view_show(struct Window *win, void *_options)
 		g_slice_alloc0(sizeof(struct MessageListViewData));
 	data->win = win;
 
-	window_layout_set(win, MESSAGE_FILE, "list");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/list");
 	window_text_set(win, "title", D_("Inbox"));
 
 	data->bt1 = elm_button_add(window_evas_object_get(win));
@@ -201,8 +201,7 @@ message_list_view_show(struct Window *win, void *_options)
 	window_swallow(win, "button_show", data->bt3);
 	evas_object_show(data->bt3);
 
-	g_debug("adding extension theme '%s'", MESSAGELIST_FILE);
-	elm_theme_extension_add(MESSAGELIST_FILE);
+	elm_theme_extension_add(DEFAULT_THEME);
 
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
 	//elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);

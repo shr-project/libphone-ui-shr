@@ -19,16 +19,7 @@
 #define CONTACT_NAME_UNDEFINED_STRING D_("(unknown)")
 #define CONTACT_PHONE_UNDEFINED_STRING D_("(no number)")
 
-#define CALL_FILE "@DATADIR@/libphone-ui-shr/call.edj"
-#define CONTACTS_FILE "@DATADIR@/libphone-ui-shr/contacts.edj"
-#define CONTACTLIST_FILE "@DATADIR@/libphone-ui-shr/contactlist.edj"
-#define DIALER_FILE "@DATADIR@/libphone-ui-shr/dialer.edj"
-#define DIALOG_FILE "@DATADIR@/libphone-ui-shr/dialog.edj"
-//#define INCOMING_MESSAGE_FILE "@DATADIR@/libphone-ui-shr/incoming-message.edj"
-#define MESSAGE_FILE "@DATADIR@/libphone-ui-shr/messages.edj"
-#define MESSAGELIST_FILE "@DATADIR@/libphone-ui-shr/messagelist.edj"
-#define SIM_AUTH_FILE "@DATADIR@/libphone-ui-shr/sim-auth.edj"
-#define USSD_FILE "@DATADIR@/libphone-ui-shr/ussd.edj"
+#define DEFAULT_THEME "@DATADIR@/libphone-ui-shr/default.edj"
 
 #define DELETE_TEXT_ICON "@DATADIR@/libphone-ui-shr/edit-undo.png"
 #define CONTACT_DEFAULT_PHOTO "@DATADIR@/libphone-ui-shr/contact.png"

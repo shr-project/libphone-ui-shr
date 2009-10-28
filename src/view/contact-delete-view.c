@@ -79,7 +79,7 @@ frame_delete_show(void *userdata)
 
 	g_debug("frame_delete_show()");
 
-	window_layout_set(win, CONTACTS_FILE, "delete");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/contacts/delete");
 
 	data->info_label = elm_label_add(window_evas_object_get(win));
 	elm_label_label_set(data->info_label,
@@ -152,7 +152,7 @@ frame_deleting_show(void *_data)
 
 	g_debug("frame_deleting_show()");
 
-	window_layout_set(data->win, CONTACTS_FILE, "deleting");
+	window_layout_set(data->win, DEFAULT_THEME, "phoneui/contacts/deleting");
 }
 
 

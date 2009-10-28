@@ -253,7 +253,7 @@ retrieve_callback(GHashTable * properties, gpointer _data)
 
 	struct Window *win = data->win;
 
-	window_layout_set(win, MESSAGE_FILE, "message_show");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/show");
 
 
 	char *content = elm_entry_utf8_to_markup(data->content);

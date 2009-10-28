@@ -71,10 +71,8 @@ frame_list_show(void *_data)
 
 	g_debug("frame_list_show()");
 
-	window_layout_set(win, CONTACTS_FILE, "list");
-
-	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
-	elm_theme_extension_add(CONTACTLIST_FILE);
+	window_layout_set(win, DEFAULT_THEME, "phoneui/contacts/list");
+	elm_theme_extension_add(DEFAULT_THEME);
 
 	contact_list_add(data);
 

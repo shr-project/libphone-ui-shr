@@ -198,7 +198,7 @@ frame_show_show(void *_data)
 
 	g_debug("frame_show_show()");
 
-	window_layout_set(data->win, CONTACTS_FILE, "show");
+	window_layout_set(data->win, DEFAULT_THEME, "phoneui/contacts/show");
 
 	g_debug("loading name and number");
 	/* --- name and number --- */
@@ -245,8 +245,7 @@ frame_show_show(void *_data)
 	g_debug("loading field list");
 	/* --- list of fields --- */
 
-	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
-	elm_theme_extension_add(CONTACTLIST_FILE);
+	elm_theme_extension_add(DEFAULT_THEME);
 
 	data->list = elm_genlist_add(window_evas_object_get(data->win));
 	elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_OFF,
@@ -416,7 +415,7 @@ frame_photo_show(void *_data)
 	g_debug("frame_photo_show");
 	struct ContactViewData *data = (struct ContactViewData *) _data;
 
-	window_layout_set(data->win, CONTACTS_FILE, "edit_photo");
+	window_layout_set(data->win, DEFAULT_THEME, "phoneui/contacts/edit_photo");
 
 	tmp = g_hash_table_lookup(data->properties, "Photo");
 	if (tmp) {
@@ -643,7 +642,7 @@ frame_edit_show(void *_data)
 
 	g_debug("frame_edit_show()");
 
-	window_layout_set(data->win, CONTACTS_FILE, "edit");
+	window_layout_set(data->win, DEFAULT_THEME, "phoneui/contacts/edit");
 
 	window_text_set(data->win, "title", D_("Edit Field"));
 

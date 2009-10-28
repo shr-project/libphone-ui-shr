@@ -31,7 +31,7 @@ dialog_view_show(struct Window *win, void *_options)
 		g_hash_table_lookup_extended(options, "type", NULL, NULL);
 	assert(type_exists == TRUE);
 
-	window_layout_set(win, DIALOG_FILE, "dialog");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/dialog");
 	if (data->type == PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL)
 		window_text_set(win, "content",
 				D_

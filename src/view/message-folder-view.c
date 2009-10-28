@@ -37,7 +37,7 @@ message_folder_view_show(struct Window *win, void *_options)
 		g_slice_alloc0(sizeof(struct MessageFolderViewData));
 	data->win = win;
 
-	window_layout_set(win, MESSAGE_FILE, "loading");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/loading");
 	window_text_set(win, "text", D_("Loading.."));
 	window_show(win);
 
@@ -71,7 +71,7 @@ message_folder_view_retrieve_messagebook_callback(GError * error,
 	data->tmp_messages = messages;
 	struct Window *win = data->win;
 
-	window_layout_set(win, MESSAGE_FILE, "folders");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/folders");
 
 	window_text_set(win, "title", D_("Folders"));
 
@@ -99,7 +99,7 @@ message_folder_view_retrieve_messagebook_callback(GError * error,
 		etk_tree_col_new(ETK_TREE(data->tree_folders), "Title", 300,
 				 0.0);
 	etk_tree_col_model_add(data->col1,
-			       etk_tree_model_edje_new(MESSAGE_FILE,
+			       etk_tree_model_edje_new(DEFAULT_THEME,
 						       "folder_row"));
 	etk_tree_build(ETK_TREE(data->tree_folders));
 

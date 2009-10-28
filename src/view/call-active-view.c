@@ -33,7 +33,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	g_debug("active call: id=%d, number_state=%d, number='%s'", data->parent.id,
 			data->parent.number_state, data->parent.number);
 
-	window_layout_set(win, CALL_FILE, "call");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/call_management/active_call");
 
 	data->parent.elmphoto = elm_icon_add(window_evas_object_get(win));
 	window_swallow(win, "photo", data->parent.elmphoto);
@@ -48,6 +48,27 @@ call_active_view_show(struct Window *win, GHashTable * options)
 		window_text_set(win, "name", data->parent.name);
 		elm_icon_file_set(data->parent.elmphoto, data->parent.photo, NULL);
 	}
+
+	g_debug("adding the speaker toggle...");
+	data->speaker_toggle = elm_toggle_add(window_evas_object_get(win));
+	elm_toggle_label_set(data->speaker_toggle, D_("Speaker"));
+	elm_toggle_state_set(data->speaker_toggle, EINA_FALSE);
+	window_swallow(win, "speaker_toggle", data->speaker_toggle);
+	evas_object_show(data->speaker_toggle);
+
+	g_debug("adding the mute toggle...");
+	data->mute_toggle = elm_toggle_add(window_evas_object_get(win));
+	elm_toggle_label_set(data->mute_toggle, D_("Silent"));
+	elm_toggle_state_set(data->mute_toggle, EINA_FALSE);
+	window_swallow(win, "mute_toggle", data->mute_toggle);
+	evas_object_show(data->mute_toggle);
+
+	g_debug("adding the volume slider...");
+	data->volume_slider = elm_slider_add(window_evas_object_get(win));
+	elm_slider_label_set(data->volume_slider, D_("Volume"));
+	elm_slider_min_max_set(data->volume_slider, 0.0, 100.0);
+	window_swallow(win, "volume_slider", data->volume_slider);
+	evas_object_show(data->volume_slider);
 
 	data->bt_call_state = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt_call_state, D_("Release"));
@@ -88,8 +109,9 @@ call_active_view_hide(struct CallActiveViewData *data)
 	}
 
 	data->parent.number_state = CALL_NUMBER_NULL;
-	evas_object_del(data->information);
-	evas_object_del(data->number);
+	evas_object_del(data->mute_toggle);
+	evas_object_del(data->speaker_toggle);
+	evas_object_del(data->volume_slider);
 	evas_object_del(data->bt_call_state);
 	evas_object_del(data->bt_sound_state);
 	evas_object_del(data->bt_keypad);

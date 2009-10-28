@@ -30,7 +30,8 @@ struct CallViewData {
 struct CallActiveViewData {
 	struct CallViewData parent;
 	Evas_Object *bt_call_state, *bt_sound_state, *bt_keypad;
-	Evas_Object *information, *number;
+	Evas_Object *mute_toggle, *volume_slider, *speaker_toggle;
+	Evas_Object *hangup_toggle;
 	enum ActiveCallState state;
 };
 

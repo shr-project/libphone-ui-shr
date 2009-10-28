@@ -158,7 +158,7 @@ elm_keypad_add(Evas_Object * parent)
 
 	wd->keypad = edje_object_add(e);
 	g_debug("keypad evas object: %d", wd->keypad);
-	edje_object_file_set(wd->keypad, KEYPAD_FILE, "keypad");
+	edje_object_file_set(wd->keypad, DEFAULT_THEME, "phoneui/keypad");
 	edje_object_signal_callback_add(wd->keypad, "*", "input",
 					_signal_clicked, wd->widget);
 	edje_object_signal_callback_add(wd->keypad, "0", "mouse_up",

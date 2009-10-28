@@ -93,7 +93,7 @@ frame_delete_show(void *_data)
 
 	g_debug("frame_delete_show()");
 
-	window_layout_set(win, MESSAGE_FILE, "delete");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/delete");
 
 	window_text_set(win, "info", D_("Do you really want to delete it?"));
 
@@ -161,6 +161,6 @@ frame_deleting_show(void *_data)
 
 	g_debug("frame_deleting_show()");
 
-	window_layout_set(win, MESSAGE_FILE, "deleting");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/deleting");
 	window_text_set(win, "text", D_("Deleting.."));
 }

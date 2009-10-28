@@ -1,44 +1,13 @@
 MAINTAINERCLEANFILES = Makefile.in
 
 filesdir = $(datadir)/libphone-ui-shr/
-files_DATA = sim-auth.edj dialer.edj messages.edj messagelist.edj contacts.edj contactlist.edj incoming-message.edj keypad.edj call.edj dialog.edj ussd.edj \
-             edit-undo.png contact.png number-icon.png call-start.png call-stop.png
+files_DATA = default.edj edit-undo.png contact.png number-icon.png call-start.png call-stop.png
 
-EXTRA_DIST = sim-auth.edc dialer.edc messages.edc messagelist.edc contacts.edc contactlist.edc incoming-message.edc keypad.edc call.edc dialog.edc ussd.edc
+EXTRA_DIST = default.edc
 
 clean-local:
-	rm -f *.edj
+	rm -f *.edj default.edc
 
-sim-auth.edj:
-	@edje_cc@ sim-auth.edc
-
-dialer.edj:
-	@edje_cc@ dialer.edc
-
-messages.edj:
-	@edje_cc@ messages.edc
-
-messagelist.edj:
-	@edje_cc@ messagelist.edc
-
-contacts.edj:
-	@edje_cc@ contacts.edc
-
-contactlist.edj:
-	@edje_cc@ contactlist.edc
-
-incoming-message.edj:
-	@edje_cc@ incoming-message.edc
-
-keypad.edj:
-	@edje_cc@ keypad.edc
-
-call.edj:
-	@edje_cc@ call.edc
-
-dialog.edj:
-	@edje_cc@ dialog.edc
-
-ussd.edj:
-	@edje_cc@ ussd.edc
+default.edj: default.edc
+	@edje_cc@ default.edc
 

@@ -223,7 +223,7 @@ frame_content_show(void *_data)
 
 	g_debug("frame_content_show()");
 
-	window_layout_set(win, MESSAGE_FILE, "content_edit");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/content_edit");
 
 	data->bt1 = elm_button_add(win->win);
 	elm_button_label_set(data->bt1, D_("Close"));
@@ -351,7 +351,7 @@ frame_recipient_show(void *_data)
 
 	g_debug("frame_recipient_show()");
 
-	window_layout_set(win, MESSAGE_FILE, "recipient_edit");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/recipient_edit");
 
 	window_text_set(win, "title", D_("Define Recipients"));
 
@@ -392,8 +392,7 @@ frame_recipient_show(void *_data)
 	window_swallow(win, "button_delete", data->bt5);
 	evas_object_show(data->bt5);
 
-	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
-	elm_theme_extension_add(CONTACTLIST_FILE);
+	elm_theme_extension_add(DEFAULT_THEME);
 	data->list_recipients = elm_genlist_add(window_evas_object_get(win));
 	elm_genlist_horizontal_mode_set(data->list_recipients, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(data->list_recipients, 0.0, 0.0);
@@ -536,7 +535,7 @@ frame_contact_add_show(void *_data)
 
 	g_debug("frame_contact_add_show()");
 
-	window_layout_set(win, MESSAGE_FILE, "recipient_contact_add");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/recipient_contact_add");
 
 	window_text_set(win, "title", D_("Add a Contact"));
 
@@ -554,8 +553,7 @@ frame_contact_add_show(void *_data)
 	window_swallow(win, "button_add", data->bt2);
 	evas_object_show(data->bt2);
 
-	g_debug("adding extension theme '%s'", CONTACTLIST_FILE);
-	elm_theme_extension_add(CONTACTLIST_FILE);
+	elm_theme_extension_add(DEFAULT_THEME);
 
 	contact_list_add(data->cdata);
 	contact_list_fill(data->cdata);
@@ -639,7 +637,7 @@ frame_number_add_show(void *_data)
 
 	g_debug("frame_number_add_show()");
 
-	window_layout_set(win, MESSAGE_FILE, "recipient_number_add");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/recipient_number_add");
 
 	window_text_set(win, "title", D_("Add a Number"));
 
@@ -736,7 +734,7 @@ frame_close_show(void *_data)
 
 	g_debug("frame_close_show()");
 
-	window_layout_set(win, DIALOG_FILE, "close");
+	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/close");
 
 	data->information = elm_label_add(window_evas_object_get(win));
 	elm_label_label_set(data->information,
@@ -803,7 +801,7 @@ frame_sending_show(void *_data)
 
 	g_debug("frame_sending_show()");
 
-	window_layout_set(data->win, MESSAGE_FILE, "sending");
+	window_layout_set(data->win, DEFAULT_THEME, "phoneui/messages/sending");
 	window_text_set(data->win, "text", D_("Sending.."));
 }
 
