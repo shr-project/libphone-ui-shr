@@ -11,6 +11,33 @@ static void call_button_dtmf_clicked(struct CallActiveViewData *data,
 static void call_button_state_clicked(struct CallActiveViewData *data,
 				      Evas_Object * obj, void *event_info);
 
+static void
+_hangup_toggle_change(void *data, Evas_Object *obj, void *event_info)
+{
+	g_debug("hangup toggle changed to %s",
+			elm_toggle_state_get(obj) ? "ON" : "OFF");
+}
+
+static void
+_speaker_toggle_change(void *data, Evas_Object *obj, void *event_info)
+{
+	g_debug("speaker toggled %s",
+			elm_toggle_state_get(obj) ? "ON" : "OFF");
+}
+
+static void
+_mute_toggle_change(void *data, Evas_Object *obj, void *event_info)
+{
+	g_debug("mute toggled %s",
+			elm_toggle_state_get(obj) ? "ON" : "OFF");
+}
+
+static void
+_volume_slider_change(void *data, Evas_Object *obj, void *event_info)
+{
+	g_debug("volume changed to %f", elm_slider_value_get(obj));
+}
+
 
 struct CallActiveViewData *
 call_active_view_show(struct Window *win, GHashTable * options)
@@ -49,10 +76,20 @@ call_active_view_show(struct Window *win, GHashTable * options)
 		elm_icon_file_set(data->parent.elmphoto, data->parent.photo, NULL);
 	}
 
+	//g_debug("adding the hangup toggle...");
+	//data->hangup_toggle = elm_toggle_add(window_evas_object_get(win));
+	//evas_object_smart_callback_add(data->hangup_toggle, "changed",
+	//		_hangup_toggle_change, data);
+	//elm_object_style_set(data->hangup_toggle, "hangup");
+	//window_swallow(win, "hangup_toggle", data->hangup_toggle);
+	//evas_object_show(data->hangup_toggle);
+
 	g_debug("adding the speaker toggle...");
 	data->speaker_toggle = elm_toggle_add(window_evas_object_get(win));
 	elm_toggle_label_set(data->speaker_toggle, D_("Speaker"));
 	elm_toggle_state_set(data->speaker_toggle, EINA_FALSE);
+	evas_object_smart_callback_add(data->speaker_toggle, "changed",
+			_speaker_toggle_change, data);
 	window_swallow(win, "speaker_toggle", data->speaker_toggle);
 	evas_object_show(data->speaker_toggle);
 
@@ -60,6 +97,8 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	data->mute_toggle = elm_toggle_add(window_evas_object_get(win));
 	elm_toggle_label_set(data->mute_toggle, D_("Silent"));
 	elm_toggle_state_set(data->mute_toggle, EINA_FALSE);
+	evas_object_smart_callback_add(data->mute_toggle, "changed",
+			_mute_toggle_change, data);
 	window_swallow(win, "mute_toggle", data->mute_toggle);
 	evas_object_show(data->mute_toggle);
 
@@ -67,6 +106,9 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	data->volume_slider = elm_slider_add(window_evas_object_get(win));
 	elm_slider_label_set(data->volume_slider, D_("Volume"));
 	elm_slider_min_max_set(data->volume_slider, 0.0, 100.0);
+	//elm_slider_horizontal_set(data->volume_slider, EINA_FALSE);
+	evas_object_smart_callback_add(data->volume_slider, "delay,changed",
+			_volume_slider_change, data);
 	window_swallow(win, "volume_slider", data->volume_slider);
 	evas_object_show(data->volume_slider);
 
@@ -109,6 +151,7 @@ call_active_view_hide(struct CallActiveViewData *data)
 	}
 
 	data->parent.number_state = CALL_NUMBER_NULL;
+	evas_object_del(data->parent.elmphoto);
 	evas_object_del(data->mute_toggle);
 	evas_object_del(data->speaker_toggle);
 	evas_object_del(data->volume_slider);

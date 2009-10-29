@@ -352,13 +352,9 @@ group { name: "phoneui/call_management/active_call";
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.0;
-					offset: 5 5;
-				}
-				rel2 {
-					relative: 0.2 0.2;
-				}
+				rel1.relative: 0.3 0.0;
+				rel1.offset: 0 5;
+				rel2.relative: 0.7 0.3;
 			}
 		}
 		part { name: "name";
@@ -367,12 +363,9 @@ group { name: "phoneui/call_management/active_call";
 			description {
 				state: "default" 0.0;
 				color: 0 0 0 255;
-				rel1 {
-					relative: 0.2 0.0;
-				}
-				rel2 {
-					relative: 1.0 0.12;
-				}
+				rel1.relative: 0.2 0.3;
+				rel1.offset: 0 5;
+				rel2.relative: 0.8 0.35;
 				text {
 					font: "redensek:style=bold";
 					size: 24;
@@ -386,12 +379,9 @@ group { name: "phoneui/call_management/active_call";
 			description {
 				state: "default" 0.0;
 				color: 0 0 0 255;
-				rel1 {
-					relative: 0.2 0.12;
-				}
-				rel2 {
-					relative: 1.0 0.2;
-				}
+				rel1.relative: 0.2 0.35;
+				rel1.offset: 0 5;
+				rel2.relative: 0.8 0.4;
 				text {
 					font: "redensek:style=bold";
 					size: 20;
@@ -399,19 +389,53 @@ group { name: "phoneui/call_management/active_call";
 				}
 			}
 		}
-		part { name: "hangup_toggle";
+		//part { name: "hangup_toggle";
+		//	type: SWALLOW;
+		//	mouse_events: 1;
+		//	description {
+		//		state: "default" 0.0;
+		//		align: 0.0 0.0;
+		//		rel1.relative: 0.1 0.25;
+		//		rel1.offset: 0 0;
+		//		rel2.relative: 0.3 0.70;
+		//		rel2.offset: 0 0;
+		//	}
+		//}
+		//part { name: "hangup_icon1";
+		//	mouse_events: 0;
+		//	description {
+		//		state: "default" 0.0;
+		//		image.normal: "call-start.png";
+		//		aspect: 1.0 1.0;
+		//		align: 0.5 0.0;
+		//		aspect_preference: HORIZONTAL;
+		//		max: 45 45;
+		//		rel1.to: "hangup_toggle";
+		//		rel1.relative: 0.0 0.0;
+		//		rel1.offset: 0 -50;
+		//	}
+		//}
+		//part { name: "hangup_icon2";
+		//	mouse_events: 0;
+		//	description {
+		//		state: "default" 0.0;
+		//		image.normal: "call-stop.png";
+		//		aspect: 1.0 1.0;
+		//		align: 0.5 1.0;
+		//		max: 45 45;
+		//		rel1.to: "hangup_toggle";
+		//		rel1.relative: 0.0 1.0;
+		//		rel1.offset: 0 5;
+		//	}
+		//}
+		part { name: "volume_slider";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.2;
-					offset: 10 10;
-				}
-				rel2 {
-					relative: 0.0 0.85;
-					offset: 10 -10;
-				}
+				align: 0.5 1.0;
+				rel1.relative: 0.2 0.5;
+				rel2.relative: 0.8 0.6;
 			}
 		}
 		part { name: "speaker_toggle";
@@ -419,29 +443,9 @@ group { name: "phoneui/call_management/active_call";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
-				rel1 {
-					relative: 0.5 0.2;
-					offset: 0 10;
-				}
-				rel2 {
-					relative: 1.0 0.25;
-					offset: -10 0;
-				}
-			}
-		}
-		part { name: "volume_slider";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.5 0.25;
-					offset: 0 10;
-				}
-				rel2 {
-					relative: 1.0 0.75;
-					offset: -10 0;
-				}
+				align: 1.0 0.5;
+				rel1.relative: 0.2 0.6;
+				rel2.relative: 0.8 0.7;
 			}
 		}
 		part { name: "mute_toggle";
@@ -449,14 +453,10 @@ group { name: "phoneui/call_management/active_call";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
-				rel1 {
-					relative: 0.5 0.8;
-					offset: 0 -10;
-				}
-				rel2 {
-					relative: 1.0 0.85;
-					offset: -10 -10;
-				}
+				align: 1.0 0.5;
+				rel1.relative: 0.2 0.7;
+				rel2.relative: 0.8 0.8;
+				rel2.offset: 0 10;
 			}
 		}
 		part { name: "keypad";
