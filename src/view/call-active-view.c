@@ -68,6 +68,9 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	data->parent.number_state =
 		GPOINTER_TO_INT(g_hash_table_lookup(options, "number_state"));
 
+	/* INIT a call */
+	call_common_set_sound_state(SOUND_STATE_INIT);
+
 	g_debug("active call: id=%d, number_state=%d, number='%s'", data->parent.id,
 			data->parent.number_state, data->parent.number);
 
