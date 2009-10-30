@@ -3,16 +3,7 @@
 
 #include <phoneui/phoneui-utils.h>
 
-#include <frameworkd-glib/odeviced/frameworkd-glib-odeviced-audio.h>
 
-
-/* speaker state */
-static CallSoundState sound_state = CALL_SOUND_STATE_CLEAR;
-
-
-
-/* FIXME: add locks to all the active calls functions!!!
- */
 static GQueue *active_calls_list = NULL;
 
 static void
@@ -86,77 +77,24 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 
 
 
-CallSoundState
-call_common_get_sound_state()
-{
-	return sound_state;
-}
-
-
-int
-call_common_set_sound_state(CallSoundState state)
-{
-	/* remove last one from stack 
-	 * unless it's an init and then make init.
-	 */
-	/* init only if sound_state was CLEAR */
-	if (state == CALL_SOUND_STATE_INIT) {
-		state = CALL_SOUND_STATE_HANDSET;
-		if (sound_state != CALL_SOUND_STATE_CLEAR) {
-			return 1;
-		}
-	}
-
-	if (sound_state != CALL_SOUND_STATE_CLEAR) {
-		odeviced_audio_pull_scenario(NULL, NULL);
-	}
-
-	g_debug("%s:%d setting sound state (%d)", __FILE__, __LINE__, state);
-	sound_state = state;
-	switch (sound_state) {
-	case CALL_SOUND_STATE_SPEAKER:
-		odeviced_audio_push_scenario("gsmspeakerout", NULL, NULL);
-		break;
-	case CALL_SOUND_STATE_HEADSET:
-		break;
-	case CALL_SOUND_STATE_HANDSET:
-		odeviced_audio_push_scenario("gsmhandset", NULL, NULL);
-		break;
-	case CALL_SOUND_STATE_BT:
-		break;
-	case CALL_SOUND_STATE_CLEAR:
-		break;
-	default:
-		break;
-	}
-
-	if (active_calls_list) {
-		g_queue_foreach(active_calls_list,
-				call_common_window_update_state,
-				(void *) sound_state);
-	}
-	return 0;
-
-}
-
 void
 call_common_window_update_state(struct CallActiveViewData *win,
-				CallSoundState state)
+				enum SoundState state)
 {
 	const char *state_string = "";
 
 	switch (state) {
-	case CALL_SOUND_STATE_SPEAKER:
+	case SOUND_STATE_SPEAKER:
 		state_string = D_("Handset");
 		break;
-	case CALL_SOUND_STATE_HEADSET:
+	case SOUND_STATE_HEADSET:
 		break;
 		/* default to handset */
-	case CALL_SOUND_STATE_CLEAR:
-	case CALL_SOUND_STATE_HANDSET:
+	case SOUND_STATE_CLEAR:
+	case SOUND_STATE_HANDSET:
 		state_string = D_("Speaker");
 		break;
-	case CALL_SOUND_STATE_BT:
+	case SOUND_STATE_BT:
 		break;
 	default:
 		break;
@@ -183,7 +121,7 @@ call_common_window_new_active(int id)
 {
 	g_debug("%s:%d setting new active call (id=%d)", __FILE__, __LINE__,
 		id);
-	struct CallActiveViewData *win;
+
 	if (active_calls_list) {
 		g_queue_foreach(active_calls_list, _foreach_new_active,
 				(void *) id);
@@ -238,6 +176,17 @@ call_common_active_call_get_last_id()
 }
 
 int
+call_common_set_sound_state(enum SoundState state)
+{
+	phoneui_utils_sound_state_set(state);
+	if (active_calls_list) {
+		g_queue_foreach(active_calls_list,
+				call_common_window_update_state,
+				(void *) state);
+	}
+}
+
+int
 call_common_active_call_add(struct CallActiveViewData *win)
 {
 	/* if it's not the first call, update all the windows */
@@ -248,7 +197,7 @@ call_common_active_call_add(struct CallActiveViewData *win)
 	/*init */
 	/* if first, init state */
 	else {
-		call_common_set_sound_state(CALL_SOUND_STATE_INIT);
+		call_common_set_sound_state(SOUND_STATE_INIT);
 		g_debug("Initialized active calls list");
 		active_calls_list = g_queue_new();
 	}
@@ -302,7 +251,7 @@ call_common_active_call_remove(int id)
 		g_debug("Freed active calls list");
 		g_queue_free(active_calls_list);
 		active_calls_list = NULL;
-		call_common_set_sound_state(CALL_SOUND_STATE_CLEAR);
+		call_common_set_sound_state(SOUND_STATE_CLEAR);
 	}
 	return 0;
 }
