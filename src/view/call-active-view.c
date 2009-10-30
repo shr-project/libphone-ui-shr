@@ -35,8 +35,19 @@ _mute_toggle_change(void *data, Evas_Object *obj, void *event_info)
 static void
 _volume_slider_change(void *data, Evas_Object *obj, void *event_info)
 {
-	g_debug("volume changed to %f", elm_slider_value_get(obj));
+	int vol = (int)elm_slider_value_get(obj);
+	g_debug("volume changed to %d", vol);
+	phoneui_utils_sound_volume_set(CONTROL_HANDSET_SPEAKER, vol);
 }
+
+static void
+_mic_slider_change(void *data, Evas_Object *obj, void *event_info)
+{
+	int vol = (int)elm_slider_value_get(obj);
+	g_debug("mic changed to %d", vol);
+	phoneui_utils_sound_volume_set(CONTROL_HANDSET_MICROPHONE, vol);
+}
+
 
 
 struct CallActiveViewData *
@@ -106,11 +117,26 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	data->volume_slider = elm_slider_add(window_evas_object_get(win));
 	elm_slider_label_set(data->volume_slider, D_("Volume"));
 	elm_slider_min_max_set(data->volume_slider, 0.0, 100.0);
+	elm_slider_value_set(data->volume_slider,
+			(double)phoneui_utils_sound_volume_get(
+				CONTROL_HANDSET_SPEAKER));
 	//elm_slider_horizontal_set(data->volume_slider, EINA_FALSE);
 	evas_object_smart_callback_add(data->volume_slider, "delay,changed",
 			_volume_slider_change, data);
 	window_swallow(win, "volume_slider", data->volume_slider);
 	evas_object_show(data->volume_slider);
+
+	g_debug("adding the mic slider...");
+	data->mic_slider = elm_slider_add(window_evas_object_get(win));
+	elm_slider_label_set(data->mic_slider, D_("Mic"));
+	elm_slider_min_max_set(data->mic_slider, 0.0, 100.0);
+	elm_slider_value_set(data->mic_slider,
+			(double)phoneui_utils_sound_volume_get(
+				CONTROL_HANDSET_MICROPHONE));
+	evas_object_smart_callback_add(data->mic_slider, "delay,changed",
+			_mic_slider_change, data);
+	window_swallow(win, "mic_slider", data->mic_slider);
+	evas_object_show(data->mic_slider);
 
 	data->bt_call_state = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt_call_state, D_("Release"));
