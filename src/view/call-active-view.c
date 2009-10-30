@@ -123,7 +123,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	evas_object_smart_callback_add(data->bt_sound_state, "clicked",
 				       call_button_sound_state_clicked, data);
 	window_swallow(win, "button_speaker", data->bt_sound_state);
-	call_common_window_update_state(data, call_common_get_sound_state());
+	call_common_window_update_state(data, phoneui_utils_sound_state_get());
 	evas_object_show(data->bt_sound_state);
 
 	data->bt_keypad = elm_button_add(window_evas_object_get(win));
@@ -165,14 +165,14 @@ static void
 call_button_sound_state_clicked(struct CallActiveViewData *data,
 				Evas_Object * obj, void *event_info)
 {
-	CallSoundState state = call_common_get_sound_state();
+	enum SoundState state = phoneui_utils_sound_state_get();
 	g_debug("sound_state_clicked(id=%d,state=%d)", data->parent.id, state);
 
-	if (state == CALL_SOUND_STATE_SPEAKER) {
-		call_common_set_sound_state(CALL_SOUND_STATE_HANDSET);
+	if (state == SOUND_STATE_SPEAKER) {
+		call_common_set_sound_state(SOUND_STATE_HANDSET);
 	}
-	else if (state == CALL_SOUND_STATE_HANDSET) {
-		call_common_set_sound_state(CALL_SOUND_STATE_SPEAKER);
+	else if (state == SOUND_STATE_HANDSET) {
+		call_common_set_sound_state(SOUND_STATE_SPEAKER);
 	}
 	/* else if moree.... */
 	else {

@@ -3,6 +3,8 @@
 
 #include "views.h"
 
+#include <phoneui/phoneui-utils.h>
+
 enum ActiveCallState {
 	CALL_STATE_ACTIVE,
 	CALL_STATE_PENDING
@@ -41,16 +43,6 @@ struct CallIncomingViewData {
 	Evas_Object *number, *name, *photo;
 };
 
-enum _CallSoundState {
-	CALL_SOUND_STATE_SPEAKER,
-	CALL_SOUND_STATE_HANDSET,
-	CALL_SOUND_STATE_HEADSET,
-	CALL_SOUND_STATE_BT,
-	CALL_SOUND_STATE_CLEAR,
-	CALL_SOUND_STATE_INIT
-};
-typedef enum _CallSoundState CallSoundState;
-
 void call_common_contact_callback(GHashTable *contact, void *_data);
 void call_common_contact_callback2(void *_data);
 
@@ -62,13 +54,7 @@ void call_common_window_to_pending(struct CallActiveViewData *win);
 void call_common_window_to_active(struct CallActiveViewData *win);
 void call_common_window_new_active(int id);
 void call_common_window_update_state(struct CallActiveViewData *win,
-				     CallSoundState state);
-
-void call_common_window_update_state(struct CallActiveViewData *win,
-				     CallSoundState state);
-int call_common_set_sound_state(CallSoundState state);
-CallSoundState call_common_get_sound_state();
-
+				     enum SoundState state);
 
 void call_button_keypad_clicked(void *data, Evas_Object * obj,
 				void *event_info);
