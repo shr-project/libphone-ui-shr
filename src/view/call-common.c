@@ -90,7 +90,7 @@ call_common_window_update_state(struct CallActiveViewData *win,
 	case SOUND_STATE_HEADSET:
 		break;
 		/* default to handset */
-	case SOUND_STATE_CLEAR:
+	case SOUND_STATE_IDLE:
 	case SOUND_STATE_HANDSET:
 		state_string = D_("Speaker");
 		break;
@@ -251,7 +251,7 @@ call_common_active_call_remove(int id)
 		g_debug("Freed active calls list");
 		g_queue_free(active_calls_list);
 		active_calls_list = NULL;
-		call_common_set_sound_state(SOUND_STATE_CLEAR);
+		call_common_set_sound_state(SOUND_STATE_IDLE);
 	}
 	return 0;
 }
