@@ -1,6 +1,6 @@
 #include "views.h"
 #include "common-utils.h"
-#include <phoneui/phoneui-utility.h>
+#include <phoneui/phoneui-utils.h>
 
 struct MessageShowViewData {
 	struct Window *win;
@@ -96,7 +96,7 @@ message_show_view_show(struct Window *win, void *_options)
 	}
 
 	/*FIXME: no need to do it if already read */
-	phoneui_message_set_read_status(data->path, 1, NULL, NULL);
+	phoneui_utils_message_set_read_status(data->path, 1, NULL, NULL);
 
 	retrieve_callback(options, data);
 
@@ -162,7 +162,7 @@ message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	char *number = common_utils_skip_prefix(data->number, "tel:");
 	g_debug("message_show_view_call_clicked()");
 	
-	phoneui_call_initiate(number, NULL, NULL);
+	phoneui_utils_call_initiate(number, NULL, NULL);
 }
 
 static void
@@ -246,7 +246,7 @@ retrieve_callback(GHashTable * properties, gpointer _data)
 	data->properties = properties;	// TODO: copy
 	//data->query = g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
 
-	phoneui_contact_lookup(data->number, message_common_name_callback,
+	phoneui_utils_contact_lookup(data->number, message_common_name_callback,
 				data);
 
 	g_debug("loading message data...");
@@ -335,6 +335,6 @@ static void
 message_show_view_new_contact_clicked(struct MessageShowViewData *data,
 				      Evas_Object * obj, void *event_info)
 {
-	phoneui_contacts_new_show(NULL, data->number);
+	phoneui_utils_contacts_new_show(NULL, data->number);
 }
 

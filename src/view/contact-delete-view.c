@@ -1,6 +1,6 @@
 #include "views.h"
 
-#include <phoneui/phoneui-utility.h>
+#include <phoneui/phoneui-utils.h>
 
 struct ContactDeleteViewData {
 	struct Window *win;
@@ -137,7 +137,7 @@ frame_delete_yes_clicked(void *userdata, Evas_Object * obj, void *event_info)
 
 	window_frame_show(data->win, data, frame_deleting_show, NULL);
 
-	phoneui_contact_delete(data->path, delete_callback, data);
+	phoneui_utils_contact_delete(data->path, delete_callback, data);
 }
 
 

@@ -1,7 +1,7 @@
 
 #include "views.h"
 #include <unistd.h>		/* for sleep */
-#include <phoneui-utility.h>
+#include <phoneui-utils.h>
 #include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
 #define _MAX_PIN_LENGTH 9
@@ -227,7 +227,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 			data->msg = D_("Checking");
 			window_frame_show(data->win, data,
 					frame_message_show, NULL);
-			phoneui_sim_pin_send(data->pin,
+			phoneui_utils_sim_pin_send(data->pin,
 					_sim_auth_result_callback, data);
 		}
 		else {
@@ -285,7 +285,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 			data->msg = D_("Checking");
 			window_frame_show(data->win, data,
 					frame_message_show, NULL);
-			phoneui_sim_puk_send(data->puk, data->pin,
+			phoneui_utils_sim_puk_send(data->puk, data->pin,
 					_sim_auth_result_callback, data);
 		}
 	}

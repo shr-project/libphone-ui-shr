@@ -1,6 +1,6 @@
 
 #include "views.h"
-#include <phoneui/phoneui-utility.h>
+#include <phoneui/phoneui-utils.h>
 
 struct DialogViewData {
 	struct Window *win;

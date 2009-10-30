@@ -99,7 +99,7 @@ frame_show_action_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	if (tmp) {
 		char *number =
 			common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
-		phoneui_call_initiate(number,
+		phoneui_utils_call_initiate(number,
 				    NULL, NULL);
 	}
 	evas_object_hide(data->hv1);
@@ -480,8 +480,8 @@ frame_photo_hide(void *_data)
 static void
 _update_contact_data(struct ContactViewData *data)
 {
-	phoneui_contacts_refresh();
-	GHashTable *tmp = phoneui_contact_sanitize_content(data->properties);
+	phoneui_utils_contacts_refresh();
+	GHashTable *tmp = phoneui_utils_contact_sanitize_content(data->properties);
 	g_hash_table_destroy(data->properties);
 	data->properties = tmp;
 }
@@ -557,13 +557,13 @@ frame_edit_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 		if (data->path) {
 			g_debug("updating contact %s", data->path);
-			phoneui_contact_update(data->path, data->properties, NULL,
+			phoneui_utils_contact_update(data->path, data->properties, NULL,
 					     NULL);
 			_update_contact_data(data);
 		}
 		else {
 			g_debug("adding new contact");
-			phoneui_contact_add(data->properties, _on_new_saved, data);
+			phoneui_utils_contact_add(data->properties, _on_new_saved, data);
 			/* for new contacts we have to get the path for the
 			 * contact via the dbus callback... return here and
 			 * load the show frame via the callback */

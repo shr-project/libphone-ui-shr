@@ -244,7 +244,7 @@ contact_list_fill(struct ContactListViewData *data)
 	data->current_index_item = NULL;
 	data->contact_count = 0;
 	data->index_count = 0;
-	phoneui_contacts_get(&data->contact_count, _process_entry, data);
+	phoneui_utils_contacts_get(&data->contact_count, _process_entry, data);
 }
 
 

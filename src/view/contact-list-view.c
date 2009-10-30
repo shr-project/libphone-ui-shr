@@ -1,7 +1,7 @@
 #include "views.h"
 #include "common-utils.h"
 
-#include <phoneui/phoneui-utility.h>
+#include <phoneui/phoneui-utils.h>
 
 static void
   frame_list_show(void *_data);
@@ -177,7 +177,7 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 		if (tmp) {
 			char *number =
 				common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
-			phoneui_call_initiate(number,
+			phoneui_utils_call_initiate(number,
 					    NULL, NULL);
 		}
 	}
@@ -271,7 +271,7 @@ _delete_ok_clicked(void *_data, Evas_Object *obj, void *event_info)
 	char *path = g_value_get_string(
 			g_hash_table_lookup(properties, "Path"));
 
-	phoneui_contact_delete(path, NULL, NULL);
+	phoneui_utils_contact_delete(path, NULL, NULL);
 
 	elm_genlist_item_del(it);
 

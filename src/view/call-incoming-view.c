@@ -1,7 +1,7 @@
 #include "views.h"
 #include "call-common.h"
 
-#include <phoneui/phoneui-utility.h>
+#include <phoneui/phoneui-utils.h>
 
 
 static void call_button_accept_clicked(void *_data, Evas_Object * obj,
@@ -35,7 +35,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 
 	window_text_set(win, "number", data->parent.number);
 
-	phoneui_contact_lookup(data->parent.number,
+	phoneui_utils_contact_lookup(data->parent.number,
 				call_common_contact_callback, &data->parent);
 
 	Evas_Object *ic = elm_icon_add(win);
@@ -95,7 +95,7 @@ call_button_accept_clicked(void *_data, Evas_Object * obj,
 	struct CallIncomingViewData *data =
 		(struct CallIncomingViewData *)_data;
 	g_debug("accept_clicked(call_id=%d)", data->parent.id);
-	phoneui_call_activate(data->parent.id, NULL, NULL);
+	phoneui_utils_call_activate(data->parent.id, NULL, NULL);
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(data->parent.id));
@@ -114,5 +114,5 @@ call_button_release_clicked(struct CallIncomingViewData *data, Evas_Object * obj
 			    void *event_info)
 {
 	g_debug("release_clicked(call_id=%d)", data->parent.id);
-	phoneui_call_release(data->parent.id, NULL, NULL);
+	phoneui_utils_call_release(data->parent.id, NULL, NULL);
 }

@@ -1,6 +1,6 @@
 #include "views.h"
 
-#include <phoneui/phoneui-utility.h>
+#include <phoneui/phoneui-utils.h>
 
 #include <phone-utils.h>
 
@@ -490,7 +490,7 @@ frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
 		window_frame_show(data->win, data, frame_sending_show,
 				  frame_sending_hide);
 
-		phoneui_sms_send(data->content, data->recipients, NULL, NULL);
+		phoneui_utils_sms_send(data->content, data->recipients, NULL, NULL);
 
 		window_destroy(data->win, NULL);
 	}
