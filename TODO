@@ -27,3 +27,15 @@ Contacts:
 - new contacts don't get into the list (have to restart)
 - strip tel: prefix for the list
 
+
+
+Notes from max_posedon:
+[08:56]   max_posedon | 1. it sometimes haven't enough time to register to GSM at phone start
+[08:57]   max_posedon | 2. it doesn't shows incomming sms, I see "1 new message" at home screen, press it -nothing
+[08:58]   max_posedon | 3. shr-messages/shr-contacts empty at first start
+[09:00]   max_posedon | 4. shr-messages in "list" doesn't show contact names, only phone numbers
+[09:01]   max_posedon | 5. shr-messages on "new sms" line-wrap is very small, near 10 I think
+
+
+
+
