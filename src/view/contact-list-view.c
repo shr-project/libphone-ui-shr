@@ -177,7 +177,7 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 		if (tmp) {
 			char *number =
 				common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
-			phoneui_utils_call_initiate(number,
+			phoneui_utils_dial(number,
 					    NULL, NULL);
 		}
 	}
