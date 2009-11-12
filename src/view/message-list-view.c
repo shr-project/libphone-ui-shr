@@ -367,7 +367,7 @@ my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 
 
 
-/* --- dbus/libframeworkd callbacks ----------------------------------------- */
+/* callbacks */
 
 static void
 retrieve_messagebook_callback(GError * error, GPtrArray * messages, void *_data)

@@ -157,7 +157,7 @@ frame_deleting_show(void *_data)
 
 
 
-/* --- dbus/libframeworkd callbacks ----------------------------------------- */
+/* callbacks */
 
 static void
 delete_callback(GError * error, gpointer _data)
