@@ -223,20 +223,8 @@ frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct DialerViewData *data = (struct DialerViewData *) _data;
 	if (strlen(data->number)) {
-		if (phone_utils_gsm_number_is_ussd(data->number)) { /* should probably remove */
-			phoneui_utils_dial(data->number, NULL,
-							NULL);
-			//Clean number in dialer
-			data->number[0] = '\0';
-			frame_dialer_number_update(data);
-			edje_object_signal_emit(window_layout_get(data->win),
-						"number_empty", "elm");
-		}
-		else {
-			phoneui_utils_dial(data->number,
-					frame_dialer_initiate_callback,
+		phoneui_utils_dial(data->number, frame_dialer_initiate_callback,
 					    data);
-		}
 	}
 }
 
