@@ -1,5 +1,6 @@
 
 #include "views.h"
+#include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
 
 struct DialogViewData {
@@ -32,14 +33,12 @@ dialog_view_show(struct Window *win, void *_options)
 	assert(type_exists == TRUE);
 
 	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/dialog");
-	if (data->type == PHONEGUI_DIALOG_MESSAGE_STORAGE_FULL)
-		window_text_set(win, "content",
-				D_
-				("Your storage is full. Please delete some messages or you are not going to receive messages anymore!"));
-	else if (data->type == PHONEGUI_DIALOG_SIM_NOT_PRESENT)
-		window_text_set(win, "content",
-				D_
-				("GSM is not available, because no SIM card is present."));
+	if (data->type == PHONEUI_DIALOG_MESSAGE_STORAGE_FULL)
+		window_text_set(win, "content", D_
+			("Your storage is full. Please delete some messages or you are not going to receive messages anymore!"));
+	else if (data->type == PHONEUI_DIALOG_SIM_NOT_PRESENT)
+		window_text_set(win, "content", D_
+			("GSM is not available, because no SIM card is present."));
 	else
 		window_text_set(win, "content", D_("Unknown message."));
 
