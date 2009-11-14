@@ -1348,6 +1348,25 @@ group { name: "phoneui/messages/recipient_number_add";
 			}
 		}
 
+		part { name: "index";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				fixed: 1 1;
+				state: "default" 0.0;
+				rel1 {
+					to_y: "list";
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					to_y: "list";
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+
 		part { name: "button_back";
 			type: SWALLOW;
 			mouse_events: 1;
