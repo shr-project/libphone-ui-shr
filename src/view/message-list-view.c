@@ -54,10 +54,15 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	char *label = NULL;
 
 	g_debug("getting label for %s", part);
-	if (!strcmp(part, "elm.text"))
+	if (!strcmp(part, "elm.text")) {
+		label = g_hash_table_lookup(parameters, "name");
+		if (!label) {
+			label = g_hash_table_lookup(parameters, "number");
+		}
 		return (g_strdup_printf
 			("%s %s", g_hash_table_lookup(parameters, "date"),
-			 g_hash_table_lookup(parameters, "number")));
+			 label));
+	}
 	else if (!strcmp(part, "elm.text.sub"))
 		return (g_strdup(g_hash_table_lookup(parameters, "content")));
 
@@ -395,11 +400,29 @@ _remove_tel(char *number)
 
 
 static void
+_contact_lookup(GHashTable *contact, gpointer _data)
+{
+	if (!contact)
+		return;
+
+	GValue *gval_tmp = g_hash_table_lookup(contact, "_Name");
+	if (gval_tmp) {
+		Elm_Genlist_Item *it = (Elm_Genlist_Item *)_data;
+		GHashTable *parameters = elm_genlist_item_data_get(it);
+		g_hash_table_insert(parameters, "name",
+				strdup(g_value_get_string(gval_tmp)));
+		elm_genlist_item_update(it);
+	}
+}
+
+
+static void
 process_message(gpointer _entry, gpointer _data)
 {
 	GHashTable *entry = (GHashTable *) _entry;
 	GValue *gval_tmp;
 	struct MessageListViewData *data = (struct MessageListViewData *) _data;
+	char *number = NULL;
 
 	long timestamp;
 	gval_tmp = g_hash_table_lookup(entry, "Timestamp");
@@ -441,6 +464,7 @@ process_message(gpointer _entry, gpointer _data)
 	}
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
+		number = tmp;
 		_remove_tel(tmp);
 	}
 	else {
@@ -469,8 +493,11 @@ process_message(gpointer _entry, gpointer _data)
 			    strdup(g_value_get_string
 				   (g_hash_table_lookup(entry, "Path"))));
 
-	elm_genlist_item_append(data->list, &itc, parameters, NULL,
+	Elm_Genlist_Item *it = elm_genlist_item_append(data->list, &itc, parameters, NULL,
 				ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	if (number) {
+		phoneui_utils_contact_lookup(number, _contact_lookup, it);
+	}
 }
 
 
