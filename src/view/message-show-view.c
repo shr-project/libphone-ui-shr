@@ -162,7 +162,7 @@ message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	char *number = common_utils_skip_prefix(data->number, "tel:");
 	g_debug("message_show_view_call_clicked()");
 	
-	phoneui_utils_call_initiate(number, NULL, NULL);
+	phoneui_utils_dial(number, NULL, NULL);
 }
 
 static void
@@ -210,7 +210,7 @@ my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 
 
 
-/* --- dbus/libframeworkd callbacks ----------------------------------------- */
+/* callbacks */
 
 
 static void

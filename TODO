@@ -14,6 +14,7 @@
 # Write sfree (i.e- safe free) that checks that the value is not null before freing maybe even a macro that also sets to null afterwards.
 # Fix the mess with hash tables in call-* and probably everywhere else as well, atm we don't free just allocate, a lot, even when there's no real need.
 # When calling cross frame functions (i.e contacts from dialer and etc, use phoneui_* functions and *not* frame show functions)
+#order the mess in the makefile.am's split into dirs
 
 KNOWN BUGS
 

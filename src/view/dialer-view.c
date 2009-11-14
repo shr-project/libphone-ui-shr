@@ -223,23 +223,8 @@ frame_dialer_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct DialerViewData *data = (struct DialerViewData *) _data;
 	if (strlen(data->number)) {
-		if ((data->number[strlen(data->number) - 1] == '#')
-		    || (strlen(data->number) <= 2)) {
-			g_debug("USSD Request");
-			phoneui_utils_network_send_ussd_request(data->number, NULL,
-							NULL);
-			//Clean number in dialer
-			data->number[0] = '\0';
-			frame_dialer_number_update(data);
-			edje_object_signal_emit(window_layout_get(data->win),
-						"number_empty", "elm");
-		}
-		else {
-			g_debug("Initiate Call");
-			phoneui_utils_call_initiate(data->number,
-					frame_dialer_initiate_callback,
+		phoneui_utils_dial(data->number, frame_dialer_initiate_callback,
 					    data);
-		}
 	}
 }
 

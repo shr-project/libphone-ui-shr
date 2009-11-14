@@ -2,14 +2,13 @@
 #include "views.h"
 #include <unistd.h>		/* for sleep */
 #include <phoneui-utils.h>
-#include <frameworkd-glib/ogsmd/frameworkd-glib-ogsmd-sim.h>
 
 #define _MAX_PIN_LENGTH 9
 
 struct SimAuthInputViewData {
 	struct Window *win;
 
-	int status;
+	enum PhoneuiSimStatus status;
 	int mode;
 	const char *msg;
 
@@ -61,31 +60,31 @@ frame_message_show(void *data);
 
 
 static void
-_evaluate_status(struct SimAuthInputViewData *data, int status)
+_evaluate_status(struct SimAuthInputViewData *data, enum PhoneuiSimStatus status)
 {
 	switch (status) {
-	case SIM_PIN_REQUIRED:
-		g_debug("SIM_PIN_REQUIRED");
+	case PHONEUI_SIM_PIN_REQUIRED:
+		g_debug("PHONEUI_SIM_PIN_REQUIRED");
 		data->mode = MODE_PIN;
 		data->msg = D_("Please enter your PIN");
 		break;
-	case SIM_PIN2_REQUIRED:
-		g_dbug("SIM_PIN2_REQUIRED");
+	case PHONEUI_SIM_PIN2_REQUIRED:
+		g_dbug("PHONEUI_SIM_PIN2_REQUIRED");
 		data->mode = MODE_PIN;
 		data->msg = D_("Please enter your PIN2");
 		break;
-	case SIM_PUK_REQUIRED:
-		g_debug("SIM_PUK_REQUIRED");
+	case PHONEUI_SIM_PUK_REQUIRED:
+		g_debug("PHONEUI_SIM_PUK_REQUIRED");
 		data->mode = MODE_PUK;
 		data->msg = D_("Please enter your PUK");
 		break;
-	case SIM_PUK2_REQUIRED:
-		g_debug("SIM_PUK2_REQUIRED");
+	case PHONEUI_SIM_PUK2_REQUIRED:
+		g_debug("PHONEUI_SIM_PUK2_REQUIRED");
 		data->mode = MODE_PUK;
 		data->msg = D_("Please enter your PUK2");
 		break;
-	case SIM_READY:
-		g_debug("SIM_READY");
+	case PHONEUI_SIM_READY:
+		g_debug("PHONEUI_SIM_READY");
 		data->msg = D_("OK");
 		window_frame_show(data->win, data, frame_message_show, NULL);
 		ecore_timer_add(2, exit_callback, data);
@@ -168,7 +167,7 @@ sim_auth_clear(struct SimAuthInputViewData *data)
 }
 
 static void
-_sim_auth_result_callback(int status, gpointer _data)
+_sim_auth_result_callback(enum PhoneuiSimStatus status, gpointer _data)
 {
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
@@ -176,7 +175,7 @@ _sim_auth_result_callback(int status, gpointer _data)
 	g_debug("_sim_auth_result_callback(status=%d)", status);
 
 	data->status = status;
-	if (status == SIM_READY) {
+	if (status == PHONEUI_SIM_READY) {
 		g_debug("PIN correct");
 		data->msg = D_("PIN correct");
 		window_frame_show(data->win, data, frame_message_show, NULL);
