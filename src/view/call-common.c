@@ -1,7 +1,10 @@
 #include "views.h"
 #include "call-common.h"
+#include "widget/elm_keypad.h"
 
 #include <phoneui/phoneui-utils.h>
+
+
 
 
 static GQueue *active_calls_list = NULL;
@@ -29,7 +32,7 @@ call_common_activate_call(struct CallActiveViewData *win)
 #if 0
 	phongeui_call_activate(win->parent.id, _call_activate_callback, win);
 #else
-	phongeui_call_activate(win->parent.id, NULL, NULL);
+	phoneui_utils_call_activate(win->parent.id, NULL, NULL);
 	call_common_window_to_active(win);
 #endif
 }
