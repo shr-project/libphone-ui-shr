@@ -1,5 +1,7 @@
 
 #include "views.h"
+#include "widget/elm_keypad.h" 
+
 #include <unistd.h>		/* for sleep */
 #include <phoneui-utils.h>
 
@@ -69,7 +71,7 @@ _evaluate_status(struct SimAuthInputViewData *data, enum PhoneuiSimStatus status
 		data->msg = D_("Please enter your PIN");
 		break;
 	case PHONEUI_SIM_PIN2_REQUIRED:
-		g_dbug("PHONEUI_SIM_PIN2_REQUIRED");
+		g_debug("PHONEUI_SIM_PIN2_REQUIRED");
 		data->mode = MODE_PIN;
 		data->msg = D_("Please enter your PIN2");
 		break;
