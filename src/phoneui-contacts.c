@@ -53,7 +53,7 @@ _contact_get_cb(GError *error, GHashTable *content, gpointer data)
 void
 phoneui_backend_contacts_contact_show(const char *contact_path)
 {
-	phoneui_contact_get(contact_path, _contact_get_cb, NULL);
+	phoneui_utils_contact_get(contact_path, _contact_get_cb, NULL);
 }
 
 
