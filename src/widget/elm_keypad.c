@@ -1,4 +1,5 @@
 #include "elm_keypad.h"
+#include <Elementary.h>
 
 // for g_debug()
 #include <glib-2.0/glib.h>
