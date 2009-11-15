@@ -4,6 +4,12 @@
 
 #include <phone-utils.h>
 
+/* FIXME: HACKS FROM elm_priv.h that should be removed */
+#if 1
+void         elm_widget_scale_set(Evas_Object *obj, double scale);
+void         elm_widget_focus_set(Evas_Object *obj, int first);
+#endif
+
 
 enum MessageNewModes {
 	MODE_CONTENT,

@@ -3,6 +3,11 @@
 
 #include <ctype.h> /* to upper */
 
+/* FIXME: HACKS FROM elm_priv.h that should be removed */
+#if 1
+void         elm_widget_scale_set(Evas_Object *obj, double scale);
+#endif
+
 static Elm_Genlist_Item_Class itc;
 
 
