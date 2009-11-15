@@ -6,6 +6,16 @@
 
 #include "elm_config.h"
 
+/* HACKS FROM elm_priv.h that should be removed */
+#if 1
+void         elm_widget_data_set(Evas_Object *obj, void *data);
+void        *elm_widget_data_get(const Evas_Object *obj);
+void         elm_widget_del_hook_set(Evas_Object *obj, void (*func) (Evas_Object *obj));
+void         elm_widget_resize_object_set(Evas_Object *obj, Evas_Object *sobj);
+Evas_Object *elm_widget_add(Evas *evas);
+#endif
+
+
 // TODO: Talk about it with raster
 // got it from elm_priv.h
 #define ELM_NEW(t) calloc(1, sizeof(t))
