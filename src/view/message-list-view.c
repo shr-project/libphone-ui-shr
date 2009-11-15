@@ -1,6 +1,11 @@
 #include "views.h"
 
 #include <phoneui/phoneui-utils.h>
+/* FIXME: HACKS FROM elm_priv.h that should be removed */
+#if 1
+void         elm_widget_scale_set(Evas_Object *obj, double scale);
+#endif
+
 
 struct MessageListViewData {
 	struct Window *win;
