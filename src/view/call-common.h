@@ -46,6 +46,9 @@ struct CallIncomingViewData {
 void call_common_contact_callback(GHashTable *contact, void *_data);
 void call_common_contact_callback2(void *_data);
 
+int call_common_set_sound_state(enum SoundState state);
+
+
 int call_common_active_call_add(struct CallActiveViewData *win);
 int call_common_active_call_remove(int id);
 int call_common_active_call_get_last_id();
