@@ -14,7 +14,6 @@ struct MessageListViewData {
 };
 
 
-static DBusGProxy *GQuery = NULL;
 static Elm_Genlist_Item_Class itc;
 
 static void
@@ -34,8 +33,6 @@ static void
 static void
 retrieve_messagebook_callback(GError * error, GPtrArray * messages,
 			      void *_data);
-static void
-  retrieve_messagebook_callback2(struct MessageListViewData *data);
 static void
   process_message(gpointer _message, gpointer _data);
 
@@ -86,62 +83,6 @@ static void
 gl_del(const void *data, Evas_Object * obj)
 {
 }
-
-struct _messages_pack {
-	void (*callback) (GError *, GPtrArray *, void *);
-	void *data;
-};
-
-
-static void
-_result_callback(GError * error, int count, void *_data)
-{
-	struct _messages_pack *data = (struct _messages_pack *) _data;
-	if (error == NULL) {
-		g_debug("result gave %d entries --> retrieving", count);
-		opimd_message_query_get_multiple_results(GQuery, count,
-							 data->callback,
-							 data->data);
-	}
-}
-
-static void
-_query_callback(GError * error, char *query_path, void *data)
-{
-	if (error == NULL) {
-		g_debug("query path is %s", query_path);
-		GQuery = dbus_connect_to_opimd_message_query(query_path);
-		opimd_message_query_get_result_count(GQuery, _result_callback,
-						     data);
-	}
-}
-
-static void
-_retrieve_messagebook(void (*callback) (GError *, GPtrArray *, void *),
-		      void *_data)
-{
-	struct _messages_pack *data;
-	g_debug("retrieving messagebook");
-	/*FIXME: I need to free, I allocate and don't free */
-	data = malloc(sizeof(struct _messages_pack *));
-	data->callback = callback;
-	data->data = _data;
-	GHashTable *query = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);	/*g_slice_alloc0 needs freeing */
-
-	GValue *sortby = g_slice_alloc0(sizeof(GValue));
-	g_value_init(sortby, G_TYPE_STRING);
-	g_value_set_string(sortby, "Timestamp");
-	g_hash_table_insert(query, "_sortby", sortby);
-
-	GValue *sortdesc = g_slice_alloc0(sizeof(GValue));
-	g_value_init(sortdesc, G_TYPE_BOOLEAN);
-	g_value_set_boolean(sortdesc, 1);
-	g_hash_table_insert(query, "_sortdesc", sortdesc);
-
-	opimd_messages_query(query, _query_callback, data);
-	g_hash_table_destroy(query);
-}
-
 
 void *
 message_list_view_show(struct Window *win, void *_options)
@@ -223,7 +164,7 @@ message_list_view_show(struct Window *win, void *_options)
 	//evas_object_size_hint_weight_set(data->list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_show(data->list);
 
-	_retrieve_messagebook(retrieve_messagebook_callback, data);
+	phoneui_utils_messages_get(retrieve_messagebook_callback, data);
 
 	window_show(win);
 
