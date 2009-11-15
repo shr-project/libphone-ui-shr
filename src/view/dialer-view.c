@@ -1,6 +1,10 @@
 #include "views.h"
+#include "widget/elm_keypad.h"
+#include "common-utils.h"
 
+#include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
+
 
 struct DialerViewData {
 	struct Window *win;
