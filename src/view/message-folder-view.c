@@ -41,10 +41,10 @@ message_folder_view_show(struct Window *win, void *_options)
 	window_text_set(win, "text", D_("Loading.."));
 	window_show(win);
 
-	ogsmd_sim_retrieve_messagebook("read",
+	/*ogsmd_sim_retrieve_messagebook("read",
 				       message_folder_view_retrieve_messagebook_callback,
 				       data);
-
+*/
 	return (data);
 }
 
@@ -98,9 +98,11 @@ message_folder_view_retrieve_messagebook_callback(GError * error,
 	data->col1 =
 		etk_tree_col_new(ETK_TREE(data->tree_folders), "Title", 300,
 				 0.0);
+/* FIXME: should fix this, just commented out because we don't use this source file anyway, and it's broken
 	etk_tree_col_model_add(data->col1,
 			       etk_tree_model_edje_new(DEFAULT_THEME,
 						       "folder_row"));
+*/
 	etk_tree_build(ETK_TREE(data->tree_folders));
 
 	Etk_Scrolled_View *scrolled_view =
