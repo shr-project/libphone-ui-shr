@@ -480,7 +480,9 @@ frame_photo_hide(void *_data)
 static void
 _update_contact_data(struct ContactViewData *data)
 {
-	phoneui_utils_contacts_refresh();
+	// TODO: what is phoneui_utils_contact_refresh?
+	//       and why doesn't it exist but was used here?
+	//phoneui_utils_contacts_refresh();
 	GHashTable *tmp = phoneui_utils_contact_sanitize_content(data->properties);
 	g_hash_table_destroy(data->properties);
 	data->properties = tmp;

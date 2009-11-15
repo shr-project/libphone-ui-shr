@@ -213,7 +213,7 @@ frame_dialer_save_clicked(void *_data, Evas_Object * obj, void *event_info)
 	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	g_hash_table_insert(contact, "Phone",
 			common_utils_new_gvalue_string(strdup(data->number)));
-	phoneui_utils_contacts_contact_new(contact);
+	phoneui_contacts_contact_new(contact);
 	g_hash_table_destroy(contact);
 	window_destroy(data->win, NULL);
 }
