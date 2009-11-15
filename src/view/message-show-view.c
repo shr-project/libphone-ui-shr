@@ -1,5 +1,6 @@
 #include "views.h"
 #include "common-utils.h"
+#include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
 
 struct MessageShowViewData {
@@ -335,6 +336,10 @@ static void
 message_show_view_new_contact_clicked(struct MessageShowViewData *data,
 				      Evas_Object * obj, void *event_info)
 {
-	phoneui_utils_contacts_new_show(NULL, data->number);
+	/*FIXME should free this hashtable*/
+	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+	g_hash_table_insert(options, "Phone", data->number);
+
+	phoneui_contacts_contact_new(options);
 }
 
