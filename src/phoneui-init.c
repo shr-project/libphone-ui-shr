@@ -5,6 +5,8 @@
 #include <Etk.h>
 #include <Elementary.h>
 #include <glib.h>
+#include <glib-object.h>
+
 
 int phoneui_argc;
 char **phoneui_argv;
@@ -40,7 +42,8 @@ void phoneui_backend_loop()
 	g_debug("Initiated elementary");
 
 	if (!ecore_main_loop_glib_integrate()) {
-		g_fatal("failed integrating the glib mainloop");
+		g_critical("failed integrating the glib mainloop");
+		return;
 	}
 
 	elm_run();
