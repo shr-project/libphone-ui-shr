@@ -15,6 +15,7 @@
 # Fix the mess with hash tables in call-* and probably everywhere else as well, atm we don't free just allocate, a lot, even when there's no real need.
 # When calling cross frame functions (i.e contacts from dialer and etc, use phoneui_* functions and *not* frame show functions)
 #order the mess in the makefile.am's split into dirs
+#Remove the ugly hack from views.h (and actually drop most of it entirely)
 
 KNOWN BUGS
 
