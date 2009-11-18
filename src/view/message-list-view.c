@@ -380,10 +380,10 @@ process_message(gpointer _entry, gpointer _data)
 	}
 
 
-	char datestr[32];
+	char datestr[35];
 
 	g_debug("processing entry");
-	strftime(datestr, 31, "%d.%m.%Y %H:%M", localtime(&timestamp));
+	strftime(datestr, 31, "%d.%m.%Y %H:%M" LTR_STRING, localtime(&timestamp)); 
 
 	char *tmp;
 
