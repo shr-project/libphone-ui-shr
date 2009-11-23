@@ -476,9 +476,10 @@ static void
 message_list_view_message_deleted(void *_data)
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
-	data->selected_row = elm_genlist_selected_item_get(data->list);
-	if (data->selected_row != NULL) {
+	//TODO: Handle possible error !!!
+	if (error == NULL && data->selected_row != NULL) {
 		elm_genlist_item_del(data->selected_row);
 		data->selected_row = NULL;
 	}
 }
+

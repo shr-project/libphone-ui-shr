@@ -46,7 +46,7 @@ message_delete_view_show(struct Window *win, void *_options)
 	data->win = win;
 
 	if (options == NULL)
-		g_error("At least option[id] must be set.");
+		g_error("At least option[path] must be set.");
 	else {
 		data->path = g_hash_table_lookup(options, "path");
 		data->callback =
@@ -76,6 +76,9 @@ delete_callback(GError * error, gpointer _data)
 {
 	struct MessageDeleteViewData *data =
 		(struct MessageDeleteViewData *) _data;
+
+	if (data->callback)
+		data->callback(data->callback_data);
 
 	window_destroy(data->win, NULL);
 }
@@ -164,3 +167,4 @@ frame_deleting_show(void *_data)
 	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/deleting");
 	window_text_set(win, "text", D_("Deleting.."));
 }
+
