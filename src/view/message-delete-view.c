@@ -77,7 +77,8 @@ delete_callback(GError * error, gpointer _data)
 	struct MessageDeleteViewData *data =
 		(struct MessageDeleteViewData *) _data;
 
-	if (data->callback)
+	/* TODO: handle error in some way */
+	if (data->callback && error == NULL)
 		data->callback(data->callback_data);
 
 	window_destroy(data->win, NULL);
