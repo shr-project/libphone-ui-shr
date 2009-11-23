@@ -10,8 +10,8 @@ struct MessageShowViewData {
 	GHashTable *properties;
 	GHashTable *query;
 	GValueArray *message;
-	Evas_Object *content_entry, *bt1, *bt2, *bt3, *hv, *bx, *hbt1, *hbt2,
-		*hbt3;
+	Evas_Object *lbl_content, *sc_content, *bt1, *bt2, *bt3, *hv, *bx,
+		    *hbt1, *hbt2, *hbt3;
 
 	void (*callback) ();
 	void *callback_data;
@@ -112,6 +112,8 @@ message_show_view_hide(void *_data)
 
 	g_debug("message_show_view_hide()");
 
+	evas_object_del(data->lbl_content);
+	evas_object_del(data->sc_content);
 	evas_object_del(data->bt1);
 	evas_object_del(data->bt2);
 	evas_object_del(data->bt3);
@@ -261,11 +263,28 @@ retrieve_callback(GHashTable * properties, gpointer _data)
 
 	window_text_set(win, "text_status", data->status);
 	window_text_set(win, "text_number", data->number);
-	window_text_set(win, "text_content", content);
 	window_text_set(win, "text_date", data->date);
 	window_text_set(win, "label_number", D_("From:"));
 	window_text_set(win, "label_date", D_("Date:"));
 	window_text_set(win, "label_status", D_("Status:"));
+
+	data->lbl_content = elm_entry_add(data->win->win);
+	elm_entry_editable_set(data->lbl_content, EINA_FALSE);
+	elm_entry_entry_set(data->lbl_content, content);
+	evas_object_size_hint_weight_set(data->lbl_content, EVAS_HINT_EXPAND,
+			EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(data->lbl_content, EVAS_HINT_FILL,
+			EVAS_HINT_FILL);
+
+	data->sc_content = elm_scroller_add(data->win->win);
+	elm_scroller_bounce_set(data->sc_content, EINA_FALSE, EINA_FALSE);
+	//elm_scroller_policy_set(data->sc_content, ELM_SCROLLER_POLICY_OFF,
+	//		ELM_SCROLLER_POLICY_ON);
+	elm_scroller_content_set(data->sc_content, data->lbl_content);
+	evas_object_show(data->lbl_content);
+	window_swallow(data->win, "text_content", data->sc_content);
+	evas_object_show(data->sc_content);
+
 
 	data->bt1 = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt1, D_("Close"));
