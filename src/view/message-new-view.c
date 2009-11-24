@@ -307,11 +307,21 @@ frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 	int limit;		/* the limit of the sms */
 	int len;		/* the number of characters in the sms */
 	char text[64];
+
 	/*FIXME: consider changing to an iterative way by using get_size (emulating what's
 	 * being done in phone_utils) as calculating for all the string on every keystroke is a bit sluggish. */
-	content =
-		g_strstrip(elm_entry_markup_to_utf8
-			    (elm_entry_entry_get(data->entry)));
+	content = elm_entry_markup_to_utf8(elm_entry_entry_get(obj));
+	/* if the entry is still empty elm_entry_markup_to_utf8 will return
+	 * NULL - which makes g_strstrip segfault :|
+	 * and we don't have to do all the fancy calculation
+	 * if it is empty */
+	if (!content) {
+		sprintf(text, D_("%d characters left [%d]"),
+				PHONE_UTILS_GSM_SMS_TEXT_LIMIT,
+				PHONE_UTILS_GSM_SMS_TEXT_LIMIT);
+		window_text_set(data->win, "characters_left", text);
+		return;
+	}
 
 	len = phone_utils_gsm_sms_strlen(content);
 
