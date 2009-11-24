@@ -247,6 +247,8 @@ frame_content_show(void *_data)
 
 	data->sc = elm_scroller_add(window_evas_object_get(win));
 	data->entry = elm_entry_add(window_evas_object_get(win));
+	evas_object_size_hint_weight_set(data->entry,
+			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_smart_callback_add(data->entry, "changed",
 				       frame_content_content_changed, data);
 	if (data->content != NULL)
