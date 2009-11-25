@@ -48,6 +48,19 @@ _mic_slider_change(void *data, Evas_Object *obj, void *event_info)
 	phoneui_utils_sound_volume_set(CONTROL_MICROPHONE, vol);
 }
 
+static void
+_volume_changed(enum SoundControlType type, int value, void *_data)
+{
+	struct CallActiveViewData *data = (struct CallActiveViewData *)_data;
+	switch (type) {
+	case CONTROL_SPEAKER:
+		elm_slider_value_set(data->volume_slider, (double)value);
+		break;
+	case CONTROL_MICROPHONE:
+		elm_slider_value_set(data->mic_slider, (double)value);
+		break;
+	}
+}
 
 
 struct CallActiveViewData *
@@ -163,6 +176,8 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	evas_object_show(data->bt_keypad);
 
 	window_show(win);
+
+	phoneui_utils_sound_volume_change_callback_set(_volume_changed, data);
 
 	return data;
 }
