@@ -55,7 +55,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	GHashTable *parameters = (GHashTable *) data;
 	char *label = NULL;
 
-	g_debug("getting label for %s", part);
+	//g_debug("getting label for %s", part);
 	if (!strcmp(part, "elm.text")) {
 		label = g_hash_table_lookup(parameters, "name");
 		if (!label) {
