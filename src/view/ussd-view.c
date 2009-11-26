@@ -30,7 +30,7 @@ ussd_view_show(struct Window *win, void *_options)
 
 	assert(options != NULL);
 
-	struct UssdViewData *data = g_slice_alloc0(sizeof(struct UssdViewData));
+	struct UssdViewData *data = calloc(1, sizeof(struct UssdViewData));
 	data->win = win;
 
 	data->mode = (int) g_hash_table_lookup(options, "mode");
@@ -48,7 +48,7 @@ ussd_view_hide(void *_data)
 {
 	struct UssdViewData *data = (struct UssdViewData *) _data;
 	free(data->message);
-	g_slice_free(struct UssdViewData, data);
+	free(data);
 }
 
 

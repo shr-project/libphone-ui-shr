@@ -74,7 +74,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	g_debug("call_active_show()");
 
 	struct CallActiveViewData *data =
-		g_slice_alloc0(sizeof(struct CallActiveViewData));
+		calloc(1, sizeof(struct CallActiveViewData));
 	data->parent.options = options;
 	data->parent.win = win;
 	data->parent.id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));

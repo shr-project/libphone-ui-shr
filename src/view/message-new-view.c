@@ -161,7 +161,7 @@ message_new_view_show(struct Window *win, void *_options)
 	g_debug("message_new_view_show()");
 
 	struct MessageNewViewData *data =
-		g_slice_alloc0(sizeof(struct MessageNewViewData));
+		calloc(1, sizeof(struct MessageNewViewData));
 
 	data->win = win;
 	data->mode = MODE_CONTENT;
@@ -209,7 +209,7 @@ void
 message_new_view_hide(void *_data)
 {
 	g_debug("message_new_view_hide()");
-	g_slice_free(struct MessageNewViewData, _data);
+	free(_data);
 }
 
 //static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data) 
@@ -548,7 +548,7 @@ frame_contact_add_show(void *_data)
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 	struct Window *win = data->win;
 
-	data->cdata = g_slice_alloc0(sizeof(struct ContactListViewData));
+	data->cdata = calloc(1, sizeof(struct ContactListViewData));
 	data->cdata->win = data->win;
 
 	g_debug("frame_contact_add_show()");

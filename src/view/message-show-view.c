@@ -73,7 +73,7 @@ message_show_view_show(struct Window *win, void *_options)
 	g_debug("message_show_view_show()");
 
 	struct MessageShowViewData *data =
-		g_slice_alloc0(sizeof(struct MessageShowViewData));
+		calloc(1, sizeof(struct MessageShowViewData));
 	data->win = win;
 
 	char *direction, *status, *tmp;
@@ -123,7 +123,7 @@ message_show_view_hide(void *_data)
 	evas_object_del(data->bx);
 	evas_object_del(data->hv);
 
-	g_slice_free(struct MessageShowViewData, data);
+	free(data);
 }
 
 

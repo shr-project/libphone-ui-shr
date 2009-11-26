@@ -56,7 +56,7 @@ dialer_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *) _options;
 	struct DialerViewData *data =
-		g_slice_alloc0(sizeof(struct DialerViewData));
+		calloc(1, sizeof(struct DialerViewData));
 	data->win = win;
 	data->number[0] = '\0';
 	data->delete_timer = NULL;
@@ -69,7 +69,7 @@ dialer_view_show(struct Window *win, void *_options)
 void
 dialer_view_hide(void *_data)
 {
-	g_slice_free(struct DialerViewData, _data);
+	free(_data);
 }
 
 

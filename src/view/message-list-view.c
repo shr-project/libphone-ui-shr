@@ -95,7 +95,7 @@ message_list_view_show(struct Window *win, void *_options)
 	g_debug("message_list_view_show()");
 
 	struct MessageListViewData *data =
-		g_slice_alloc0(sizeof(struct MessageListViewData));
+		calloc(1, sizeof(struct MessageListViewData));
 	data->win = win;
 
 	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/list");
