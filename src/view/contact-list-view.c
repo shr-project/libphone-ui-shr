@@ -29,7 +29,7 @@ void *
 contact_list_view_show(struct Window *win, void *_options)
 {
 	struct ContactListViewData *data =
-		g_slice_alloc0(sizeof(struct ContactListViewData));
+		calloc(1, sizeof(struct ContactListViewData));
 	data->win = win;
 	data->inwin = NULL;
 	data->query = NULL;
@@ -47,7 +47,7 @@ void
 contact_list_view_hide(void *_data)
 {
 	g_debug("contact_list_view_hide()");
-	g_slice_free(struct ContactListViewData, _data);
+	free(_data);
 }
 
 

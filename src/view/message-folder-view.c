@@ -34,7 +34,7 @@ void *
 message_folder_view_show(struct Window *win, void *_options)
 {
 	struct MessageFolderViewData *data =
-		g_slice_alloc0(sizeof(struct MessageFolderViewData));
+		calloc(1, sizeof(struct MessageFolderViewData));
 	data->win = win;
 
 	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/loading");

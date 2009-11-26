@@ -22,7 +22,7 @@ window_new(char *title)
 {
 	g_debug("window_new");
 	struct Window *win;
-	win = g_slice_alloc0(sizeof(struct Window));
+	win = calloc(1, sizeof(struct Window));
 	win->title = strdup(title);
 
 	return (win);
@@ -220,7 +220,7 @@ window_destroy(struct Window *win, void *options)
 
 	if (win->exit_cb)
 		win->exit_cb();
-	g_slice_free1(sizeof(struct Window), win);
+	free(win);
 }
 
 
