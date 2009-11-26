@@ -1,3 +1,4 @@
+#include "phoneui-shr.h"
 #include "phoneui-init.h"
 #include <Ecore_Evas.h>
 #include <Ecore.h>
@@ -15,6 +16,12 @@ char **phoneui_argv;
 void
 phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 {
+	GKeyFile *keyfile;
+	GKeyFileFlags flags;
+	GError *error = NULL;
+	char *theme = NULL;
+	int theme_len;
+
 	// Initialize gettext
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
@@ -24,6 +31,28 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 
 	g_type_init();
 
+	keyfile = g_key_file_new();
+	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
+	if (!g_key_file_load_from_file
+	    (keyfile, PHONEUI_SHR_CONFIG, flags, &error)) {
+		g_warning("%s", error->message);
+		return;
+	}
+
+	theme = g_key_file_get_string(keyfile, "global", "theme", NULL);
+	if (theme) {
+		/* +6 for /, .edj and ending 0 */
+		theme_len = strlen(PKGDATADIR) + strlen(theme) + 6;
+		phoneui_theme = malloc(theme_len);
+		if (phoneui_theme == NULL) {
+			g_error("Out of memory allocating theme path");
+		}
+		snprintf(phoneui_theme, theme_len, "%s/%s.edj",
+				PKGDATADIR, theme);
+		g_debug("setting theme to (%d) %s", theme_len, phoneui_theme);
+	}
+
+	g_key_file_free(keyfile);
 }
 
 void phoneui_backend_loop()
