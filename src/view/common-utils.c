@@ -5,6 +5,8 @@
 
 #include "common-utils.h"
 
+static GHashTable *ref_counter = NULL;
+
 char *
 common_utils_skip_prefix(char *string, const char *prefix)
 {
@@ -70,4 +72,46 @@ common_utils_new_with_prefix(const char *_number, const char *prefix)
 
 
 	return number;
+}
+void *
+common_utils_object_ref(void *object)
+{
+	void *ret;
+	int count;
+	if (!ref_counter) {
+		ref_counter = g_hash_table_new_full(g_direct_hash, g_direct_equal,
+					NULL, NULL); 
+	}
+	ret = g_hash_table_lookup(ref_counter, object);
+	if (ret) {
+		count = GPOINTER_TO_INT(ret);
+		count++;
+	}
+	else {
+		count = 1;
+	}
+	g_hash_table_replace(ref_counter, object, count);
+	return object;
+}
+
+void *
+common_utils_object_unref(void *object)
+{
+	void *ret;
+	int count;
+	
+	ret = g_hash_table_lookup(ref_counter, object);
+	if (!ret) {
+		return object;
+	}
+
+	count = GPOINTER_TO_INT(ret);
+	count--;
+	if (count <= 0) {
+		free(object);
+	}
+	else {
+		g_hash_table_replace(ref_counter, object, count);
+	}
+	return object;
 }
