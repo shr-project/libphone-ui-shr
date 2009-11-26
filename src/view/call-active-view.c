@@ -56,9 +56,11 @@ _volume_changed(enum SoundControlType type, int value, void *_data)
 	struct CallActiveViewData *data = (struct CallActiveViewData *)_data;
 	switch (type) {
 	case CONTROL_SPEAKER:
+		g_debug("new speaker volume is %d", value);
 		elm_slider_value_set(data->volume_slider, (double)value);
 		break;
 	case CONTROL_MICROPHONE:
+		g_debug("new mic sensitivity is %d", value);
 		elm_slider_value_set(data->mic_slider, (double)value);
 		break;
 	}
@@ -194,6 +196,8 @@ call_active_view_hide(struct CallActiveViewData *data)
 	if (data->parent.dtmf_active) {
 		call_dtmf_disable(&(data->parent));
 	}
+
+	phoneui_utils_sound_volume_change_callback_set(NULL, NULL);
 
 	data->parent.number_state = CALL_NUMBER_NULL;
 	evas_object_del(data->parent.elmphoto);
