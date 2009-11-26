@@ -94,7 +94,7 @@ common_utils_object_ref(void *object)
 	return object;
 }
 
-void *
+int
 common_utils_object_unref(void *object)
 {
 	void *ret;
@@ -102,16 +102,38 @@ common_utils_object_unref(void *object)
 	
 	ret = g_hash_table_lookup(ref_counter, object);
 	if (!ret) {
-		return object;
+		return -1;
 	}
 
 	count = GPOINTER_TO_INT(ret);
 	count--;
 	if (count <= 0) {
-		free(object);
+		return 0;
 	}
 	else {
 		g_hash_table_replace(ref_counter, object, count);
 	}
-	return object;
+	return count;
+}
+
+void
+common_utils_object_unref_free(void *object)
+{
+	if (!common_utils_object_unref(object)) {
+		free(object);
+	}
+}
+
+int
+common_utils_object_get_ref(void *object)
+{
+	void *ret;
+	int count;
+	ret = g_hash_table_lookup(ref_counter, object);
+	if (!ret) {
+		return 0;
+	}
+
+	count = GPOINTER_TO_INT(ret);
+	return count;
 }
