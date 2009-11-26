@@ -2,6 +2,7 @@
 #include "call-common.h"
 
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-sound.h>
 
 static void call_button_sound_state_clicked(struct CallActiveViewData *data,
 					    Evas_Object * obj,
