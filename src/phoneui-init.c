@@ -11,12 +11,6 @@
 int phoneui_argc;
 char **phoneui_argv;
 
-static gboolean
-_idle_foo(void *foo)
-{
-	return (TRUE);
-}
-
 
 void
 phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
