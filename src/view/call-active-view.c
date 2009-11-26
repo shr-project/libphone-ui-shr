@@ -21,15 +21,17 @@ _hangup_toggle_change(void *data, Evas_Object *obj, void *event_info)
 static void
 _speaker_toggle_change(void *data, Evas_Object *obj, void *event_info)
 {
-	g_debug("speaker toggled %s",
-			elm_toggle_state_get(obj) ? "ON" : "OFF");
+	if (elm_toggle_state_get(obj))
+		call_common_set_sound_state(SOUND_STATE_HANDSET);
+	else
+		call_common_set_sound_state(SOUND_STATE_SPEAKER);
 }
 
 static void
 _mute_toggle_change(void *data, Evas_Object *obj, void *event_info)
 {
-	g_debug("mute toggled %s",
-			elm_toggle_state_get(obj) ? "ON" : "OFF");
+	phoneui_utils_sound_volume_mute_set(CONTROL_MICROPHONE,
+			elm_toggle_state_get(obj));
 }
 
 static void
@@ -122,7 +124,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 
 	g_debug("adding the mute toggle...");
 	data->mute_toggle = elm_toggle_add(window_evas_object_get(win));
-	elm_toggle_label_set(data->mute_toggle, D_("Silent"));
+	elm_toggle_label_set(data->mute_toggle, D_("Mute"));
 	elm_toggle_state_set(data->mute_toggle, EINA_FALSE);
 	evas_object_smart_callback_add(data->mute_toggle, "changed",
 			_mute_toggle_change, data);
