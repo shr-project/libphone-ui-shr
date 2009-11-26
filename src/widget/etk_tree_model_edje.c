@@ -221,8 +221,9 @@ _edje_render(Etk_Tree_Model * model, Etk_Tree_Row * row, Etk_Geometry geometry,
 			return (ETK_FALSE);
 	}
 	if (!edje_file_group_exists(edje_model->file, edje_model->part)) {
-		g_error("%s does not exist in %s", edje_model->part,
+		g_critical("%s does not exist in %s", edje_model->part,
 			edje_model->file);
+		return ETK_FALSE;
 	}
 	edje_object_file_set(cell_objects[0], edje_model->file,
 			     edje_model->part);

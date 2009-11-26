@@ -42,11 +42,15 @@ message_delete_view_show(struct Window *win, void *_options)
 	g_debug("message_delete_view_show()");
 
 	struct MessageDeleteViewData *data =
-		g_slice_alloc0(sizeof(struct MessageDeleteViewData));
+		calloc(1, sizeof(struct MessageDeleteViewData));
+	/*FIXME: make sure data allocated correctly */
 	data->win = win;
 
-	if (options == NULL)
-		g_error("At least option[path] must be set.");
+	if (!options) {
+		g_critical("At least option[path] must be set.");
+		free(data);
+		return NULL;
+	}
 	else {
 		data->path = g_hash_table_lookup(options, "path");
 		data->callback =
@@ -68,7 +72,7 @@ message_delete_view_hide(void *data)
 {
 	g_debug("message_delete_view_hide()");
 
-	g_slice_free(struct MessageDeleteViewData, data);
+	free(data);
 }
 
 static void
