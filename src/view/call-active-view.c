@@ -67,6 +67,15 @@ _volume_changed(enum SoundControlType type, int value, void *_data)
 	}
 }
 
+static void
+_mute_changed(enum SoundControlType type, int mute, void *_data)
+{
+	struct CallActiveViewData *data = (struct CallActiveViewData *)_data;
+	if (type == CONTROL_MICROPHONE) {
+		elm_toggle_state_set(data->mute_toggle, mute);
+	}
+}
+
 
 struct CallActiveViewData *
 call_active_view_show(struct Window *win, GHashTable * options)
@@ -182,7 +191,10 @@ call_active_view_show(struct Window *win, GHashTable * options)
 
 	window_show(win);
 
-	phoneui_utils_sound_volume_change_callback_set(_volume_changed, data);
+	phoneui_utils_sound_volume_change_callback_set(
+			_volume_changed, data);
+	phoneui_utils_sound_volume_mute_change_callback_set(
+			_mute_changed, data);
 
 	return data;
 }
@@ -199,6 +211,7 @@ call_active_view_hide(struct CallActiveViewData *data)
 	}
 
 	phoneui_utils_sound_volume_change_callback_set(NULL, NULL);
+	phoneui_utils_sound_volume_mute_change_callback_set(NULL, NULL);
 
 	data->parent.number_state = CALL_NUMBER_NULL;
 	evas_object_del(data->parent.elmphoto);
