@@ -106,12 +106,12 @@ common_utils_object_unref(void *object)
 	}
 
 	count = GPOINTER_TO_INT(ret);
-	count--;
-	if (count <= 0) {
+	if (count <= 1) {
+		g_hash_table_remove(ref_counter, object);
 		return 0;
 	}
 	else {
-		g_hash_table_replace(ref_counter, object, count);
+		g_hash_table_replace(ref_counter, object, count - 1);
 	}
 	return count;
 }
@@ -119,7 +119,7 @@ common_utils_object_unref(void *object)
 void
 common_utils_object_unref_free(void *object)
 {
-	if (!common_utils_object_unref(object)) {
+	if (common_utils_object_unref(object) <= 1) {
 		free(object);
 	}
 }

@@ -351,33 +351,35 @@ _remove_tel(char *number)
 
 struct _contact_lookup_pack {
 	struct MessageListViewData *data;
-	void *param;
+	Elm_Genlist_Item *param;
 };
 
 static void
 _contact_lookup(GHashTable *contact, gpointer _pack)
 {
 	struct _contact_lookup_pack *pack = _pack;
-	if (!contact || !pack->data->win) {
+	int count;
+
+	count = common_utils_object_get_ref(pack->param);
+	if (!contact || count < 1 || !pack->data->win) {
 		if (common_utils_object_get_ref(pack->data) == 1) {
 			evas_object_del(pack->data->list);
 		}
-		common_utils_object_unref_free(pack->data);
-		free(pack);
-		return;
+		goto end;
 	}
 
 	GValue *gval_tmp = g_hash_table_lookup(contact, "_Name");
 	if (gval_tmp) {
-		Elm_Genlist_Item *it = (Elm_Genlist_Item *)pack->param;
-		GHashTable *parameters = elm_genlist_item_data_get(it);
+		GHashTable *parameters = elm_genlist_item_data_get(pack->param);
 		g_hash_table_insert(parameters, "name",
 				strdup(g_value_get_string(gval_tmp)));
-		elm_genlist_item_update(it);
+		elm_genlist_item_update(pack->param);
 	}
 	if (common_utils_object_get_ref(pack->data) == 1) {
 		evas_object_del(pack->data->list);
 	}
+end:
+	common_utils_object_unref(pack->param);
 	common_utils_object_unref_free(pack->data);
 	free(pack);
 }
@@ -466,7 +468,7 @@ process_message(gpointer _entry, gpointer _data)
 		struct _contact_lookup_pack *pack;
 		pack = malloc(sizeof(*pack));
 		pack->data = common_utils_object_ref(data);
-		pack->param = it;
+		pack->param = common_utils_object_ref(it);
 		phoneui_utils_contact_lookup(number, _contact_lookup, pack);
 	}
 }
@@ -501,6 +503,8 @@ static void
 message_list_view_message_deleted(void *_data)
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	int count;
+	count = common_utils_object_unref(data->selected_row);
 	if (data->selected_row != NULL) {
 		elm_genlist_item_del(data->selected_row);
 		data->selected_row = NULL;
