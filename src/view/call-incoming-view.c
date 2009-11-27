@@ -1,6 +1,6 @@
 #include "views.h"
 #include "call-common.h"
-
+#include "common-utils.h"
 #include <phoneui/phoneui-utils.h>
 
 
@@ -16,7 +16,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	g_debug("call_incoming_view_show()");
 
 	struct CallIncomingViewData *data =
-		calloc(1, sizeof(struct CallIncomingViewData));
+		common_utils_object_ref(calloc(1, sizeof(struct CallIncomingViewData)));
 	data->parent.options = options;
 	data->parent.win = win;
 	data->parent.id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
@@ -36,7 +36,9 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	window_text_set(win, "number", data->parent.number);
 
 	phoneui_utils_contact_lookup(data->parent.number,
-				call_common_contact_callback, &data->parent);
+				call_common_contact_callback,
+				common_utils_object_ref(
+						(struct CallViewData *) data));
 
 	Evas_Object *ic = elm_icon_add(win);
 	elm_icon_file_set(ic, ICON_CALL_ACCEPT, NULL);
@@ -85,6 +87,8 @@ call_incoming_view_hide(struct CallIncomingViewData *data)
 	if (data->parent.dtmf_active) {
 		call_dtmf_disable(&data->parent);
 	}
+
+	common_utils_object_unref_free(data);
 }
 
 

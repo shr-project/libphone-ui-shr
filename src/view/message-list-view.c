@@ -1,5 +1,5 @@
 #include "views.h"
-
+#include "common-utils.h"
 #include <phoneui/phoneui-utils.h>
 /* FIXME: HACKS FROM elm_priv.h that should be removed */
 #if 1
@@ -95,7 +95,7 @@ message_list_view_show(struct Window *win, void *_options)
 	g_debug("message_list_view_show()");
 
 	struct MessageListViewData *data =
-		calloc(1, sizeof(struct MessageListViewData));
+		common_utils_object_ref(calloc(1, sizeof(struct MessageListViewData)));
 	data->win = win;
 
 	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/list");
@@ -192,7 +192,12 @@ message_list_view_hide(void *_data)
 	evas_object_del(data->button_delete);
 	evas_object_del(data->bx);
 	evas_object_del(data->hv);
-	evas_object_del(data->list);
+	data->win = NULL;
+	
+	if (common_utils_object_get_ref(data) == 1) {
+		evas_object_del(data->list);
+	}
+	common_utils_object_unref_free(data);
 }
 
 
@@ -344,21 +349,37 @@ _remove_tel(char *number)
 	}
 }
 
+struct _contact_lookup_pack {
+	struct MessageListViewData *data;
+	void *param;
+};
 
 static void
-_contact_lookup(GHashTable *contact, gpointer _data)
+_contact_lookup(GHashTable *contact, gpointer _pack)
 {
-	if (!contact)
+	struct _contact_lookup_pack *pack = _pack;
+	if (!contact || !pack->data->win) {
+		if (common_utils_object_get_ref(pack->data) == 1) {
+			evas_object_del(pack->data->list);
+		}
+		common_utils_object_unref_free(pack->data);
+		free(pack);
 		return;
+	}
 
 	GValue *gval_tmp = g_hash_table_lookup(contact, "_Name");
 	if (gval_tmp) {
-		Elm_Genlist_Item *it = (Elm_Genlist_Item *)_data;
+		Elm_Genlist_Item *it = (Elm_Genlist_Item *)pack->param;
 		GHashTable *parameters = elm_genlist_item_data_get(it);
 		g_hash_table_insert(parameters, "name",
 				strdup(g_value_get_string(gval_tmp)));
 		elm_genlist_item_update(it);
 	}
+	if (common_utils_object_get_ref(pack->data) == 1) {
+		evas_object_del(pack->data->list);
+	}
+	common_utils_object_unref_free(pack->data);
+	free(pack);
 }
 
 
@@ -442,7 +463,11 @@ process_message(gpointer _entry, gpointer _data)
 	Elm_Genlist_Item *it = elm_genlist_item_append(data->list, &itc, parameters, NULL,
 				ELM_GENLIST_ITEM_NONE, NULL, NULL);
 	if (number) {
-		phoneui_utils_contact_lookup(number, _contact_lookup, it);
+		struct _contact_lookup_pack *pack;
+		pack = malloc(sizeof(*pack));
+		pack->data = common_utils_object_ref(data);
+		pack->param = it;
+		phoneui_utils_contact_lookup(number, _contact_lookup, pack);
 	}
 }
 

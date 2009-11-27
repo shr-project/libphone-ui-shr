@@ -1,5 +1,6 @@
 #include "views.h"
 #include "call-common.h"
+#include "common-utils.h"
 #include "widget/elm_keypad.h"
 
 #include <phoneui/phoneui-utils.h>
@@ -42,6 +43,10 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 {
 	struct CallViewData *data =
 		(struct CallViewData *) _data;
+	if (data->number_state == CALL_NUMBER_NULL) {
+		common_utils_object_unref_free(data);
+		return;
+	}
 	if (contact) {
 		g_debug("call_common_contact_callback... got a contact");
 		GValue *tmp;
@@ -76,6 +81,7 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 	elm_icon_file_set(data->elmphoto, data->photo, NULL);
 	window_text_set(data->win, "name", data->name);
 	data->number_state = CALL_NUMBER_CONTACT;
+	common_utils_object_unref_free(data);
 }
 
 

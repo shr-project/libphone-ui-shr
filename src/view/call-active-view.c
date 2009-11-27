@@ -1,6 +1,6 @@
 #include "views.h"
 #include "call-common.h"
-
+#include "common-utils.h"
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-utils-sound.h>
 
@@ -74,7 +74,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	g_debug("call_active_show()");
 
 	struct CallActiveViewData *data =
-		calloc(1, sizeof(struct CallActiveViewData));
+		common_utils_object_ref(calloc(1, sizeof(struct CallActiveViewData)));
 	data->parent.options = options;
 	data->parent.win = win;
 	data->parent.id = GPOINTER_TO_INT(g_hash_table_lookup(options, "id"));
@@ -101,7 +101,9 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	window_text_set(win, "number", data->parent.number);
 	if (data->parent.number_state == CALL_NUMBER_NUMBER) {
 		phoneui_utils_contact_lookup(data->parent.number,
-					call_common_contact_callback, &data->parent);
+					call_common_contact_callback,
+					common_utils_object_ref(
+						(struct CallViewData *) data));
 	}
 	else {
 		window_text_set(win, "name", data->parent.name);
@@ -208,6 +210,8 @@ call_active_view_hide(struct CallActiveViewData *data)
 	evas_object_del(data->bt_call_state);
 	evas_object_del(data->bt_sound_state);
 	evas_object_del(data->bt_keypad);
+
+	common_utils_object_unref_free(data);	
 }
 
 /* FIXME: Should fix to handle bt/headset as well */
