@@ -128,10 +128,16 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	//window_swallow(win, "hangup_toggle", data->hangup_toggle);
 	//evas_object_show(data->hangup_toggle);
 
+	//Evas_Object *ico = elm_icon_add(window_evas_object_get(win));
+	//elm_icon_file_set(ico, "speaker.png", "phoneui/images");
+	//evas_object_show(ico);
+
 	g_debug("adding the speaker toggle...");
 	data->speaker_toggle = elm_toggle_add(window_evas_object_get(win));
 	elm_toggle_label_set(data->speaker_toggle, D_("Speaker"));
+	//elm_toggle_icon_set(data->speaker_toggle, ico);
 	elm_toggle_state_set(data->speaker_toggle, EINA_FALSE);
+	elm_object_scale_set(data->speaker_toggle, 1.2);
 	evas_object_smart_callback_add(data->speaker_toggle, "changed",
 			_speaker_toggle_change, data);
 	window_swallow(win, "speaker_toggle", data->speaker_toggle);
@@ -141,6 +147,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	data->mute_toggle = elm_toggle_add(window_evas_object_get(win));
 	elm_toggle_label_set(data->mute_toggle, D_("Mute"));
 	elm_toggle_state_set(data->mute_toggle, EINA_FALSE);
+	elm_object_scale_set(data->mute_toggle, 1.2);
 	evas_object_smart_callback_add(data->mute_toggle, "changed",
 			_mute_toggle_change, data);
 	window_swallow(win, "mute_toggle", data->mute_toggle);
@@ -177,13 +184,6 @@ call_active_view_show(struct Window *win, GHashTable * options)
 				       call_button_state_clicked, data);
 	window_swallow(win, "button_release", data->bt_call_state);
 	evas_object_show(data->bt_call_state);
-
-	data->bt_sound_state = elm_button_add(window_evas_object_get(win));
-	evas_object_smart_callback_add(data->bt_sound_state, "clicked",
-				       call_button_sound_state_clicked, data);
-	window_swallow(win, "button_speaker", data->bt_sound_state);
-	call_common_window_update_state(data, phoneui_utils_sound_state_get());
-	evas_object_show(data->bt_sound_state);
 
 	data->bt_keypad = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt_keypad, D_("Keypad"));
@@ -222,7 +222,6 @@ call_active_view_hide(struct CallActiveViewData *data)
 	evas_object_del(data->speaker_toggle);
 	evas_object_del(data->volume_slider);
 	evas_object_del(data->bt_call_state);
-	evas_object_del(data->bt_sound_state);
 	evas_object_del(data->bt_keypad);
 
 	common_utils_object_unref_free(data);	

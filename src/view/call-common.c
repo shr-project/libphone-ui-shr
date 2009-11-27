@@ -112,7 +112,6 @@ call_common_window_update_state(struct CallActiveViewData *win,
 		break;
 	}
 
-	elm_button_label_set(win->bt_sound_state, state_string);
 	elm_toggle_state_set(win->speaker_toggle, speaker_state);
 }
 
