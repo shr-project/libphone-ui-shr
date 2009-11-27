@@ -91,10 +91,12 @@ call_common_window_update_state(struct CallActiveViewData *win,
 				enum SoundState state)
 {
 	const char *state_string = "";
+	int speaker_state = 0;
 
 	switch (state) {
 	case SOUND_STATE_SPEAKER:
 		state_string = D_("Handset");
+		speaker_state = 1;
 		break;
 	case SOUND_STATE_HEADSET:
 		break;
@@ -102,6 +104,7 @@ call_common_window_update_state(struct CallActiveViewData *win,
 	case SOUND_STATE_IDLE:
 	case SOUND_STATE_HANDSET:
 		state_string = D_("Speaker");
+		speaker_state = 0;
 		break;
 	case SOUND_STATE_BT:
 		break;
@@ -110,6 +113,7 @@ call_common_window_update_state(struct CallActiveViewData *win,
 	}
 
 	elm_button_label_set(win->bt_sound_state, state_string);
+	elm_toggle_state_set(win->speaker_toggle, speaker_state);
 }
 
 static void

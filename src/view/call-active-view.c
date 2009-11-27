@@ -23,9 +23,9 @@ static void
 _speaker_toggle_change(void *data, Evas_Object *obj, void *event_info)
 {
 	if (elm_toggle_state_get(obj))
-		call_common_set_sound_state(SOUND_STATE_HANDSET);
-	else
 		call_common_set_sound_state(SOUND_STATE_SPEAKER);
+	else
+		call_common_set_sound_state(SOUND_STATE_HANDSET);
 }
 
 static void
@@ -71,6 +71,7 @@ static void
 _mute_changed(enum SoundControlType type, int mute, void *_data)
 {
 	struct CallActiveViewData *data = (struct CallActiveViewData *)_data;
+	g_debug("Mute changed: type %d value %d", type, mute);
 	if (type == CONTROL_MICROPHONE) {
 		elm_toggle_state_set(data->mute_toggle, mute);
 	}
