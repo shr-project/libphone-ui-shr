@@ -1,4 +1,5 @@
 
+#include "../phoneui-shr.h"
 #include "window.h"
 #include <stdlib.h>
 #include <Ecore_Evas.h>
@@ -21,7 +22,7 @@ window_new(char *title)
 {
 	g_debug("window_new");
 	struct Window *win;
-	win = g_slice_alloc0(sizeof(struct Window));
+	win = calloc(1, sizeof(struct Window));
 	win->title = strdup(title);
 
 	return (win);
@@ -31,6 +32,9 @@ void
 window_init(struct Window *win)
 {
 	g_debug("window_init(win=%d)", win);
+
+	if (phoneui_theme)
+		elm_theme_overlay_add(phoneui_theme);
 
 	// Window
 	win->win = elm_win_add(NULL, "main", ELM_WIN_BASIC);
@@ -216,7 +220,7 @@ window_destroy(struct Window *win, void *options)
 
 	if (win->exit_cb)
 		win->exit_cb();
-	g_slice_free1(sizeof(struct Window), win);
+	free(win);
 }
 
 

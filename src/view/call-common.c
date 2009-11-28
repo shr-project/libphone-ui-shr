@@ -1,5 +1,6 @@
 #include "views.h"
 #include "call-common.h"
+#include "common-utils.h"
 #include "widget/elm_keypad.h"
 
 #include <phoneui/phoneui-utils.h>
@@ -42,6 +43,10 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 {
 	struct CallViewData *data =
 		(struct CallViewData *) _data;
+	if (data->number_state == CALL_NUMBER_NULL) {
+		common_utils_object_unref_free(data);
+		return;
+	}
 	if (contact) {
 		g_debug("call_common_contact_callback... got a contact");
 		GValue *tmp;
@@ -76,6 +81,7 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 	elm_icon_file_set(data->elmphoto, data->photo, NULL);
 	window_text_set(data->win, "name", data->name);
 	data->number_state = CALL_NUMBER_CONTACT;
+	common_utils_object_unref_free(data);
 }
 
 
@@ -85,10 +91,12 @@ call_common_window_update_state(struct CallActiveViewData *win,
 				enum SoundState state)
 {
 	const char *state_string = "";
+	int speaker_state = 0;
 
 	switch (state) {
 	case SOUND_STATE_SPEAKER:
 		state_string = D_("Handset");
+		speaker_state = 1;
 		break;
 	case SOUND_STATE_HEADSET:
 		break;
@@ -96,6 +104,7 @@ call_common_window_update_state(struct CallActiveViewData *win,
 	case SOUND_STATE_IDLE:
 	case SOUND_STATE_HANDSET:
 		state_string = D_("Speaker");
+		speaker_state = 0;
 		break;
 	case SOUND_STATE_BT:
 		break;
@@ -103,7 +112,7 @@ call_common_window_update_state(struct CallActiveViewData *win,
 		break;
 	}
 
-	elm_button_label_set(win->bt_sound_state, state_string);
+	elm_toggle_state_set(win->speaker_toggle, speaker_state);
 }
 
 static void

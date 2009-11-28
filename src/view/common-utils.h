@@ -18,4 +18,14 @@ common_utils_new_gvalue_int(int value);
 GValue *
 common_utils_new_gvalue_boolean(int value);
 
+void *
+common_utils_object_ref(void *object);
+
+int
+common_utils_object_unref(void *object);
+void
+common_utils_object_unref_free(void *object);
+int
+common_utils_object_get_ref(void *object);
+
 #endif

@@ -72,7 +72,8 @@ _show(const int id, const int status, const char *number, int type)
 				 call_active_view_hide, NULL);
 	}
 	else {
-		g_error("Unknown call type: %d", type);
+		g_critical("Unknown call type: %d", type);
+		g_hash_table_destroy(options);
 	}
 }
 

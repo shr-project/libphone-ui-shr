@@ -23,7 +23,7 @@ dialog_view_show(struct Window *win, void *_options)
 	g_debug("dialog_view_show()");
 
 	struct DialogViewData *data =
-		g_slice_alloc0(sizeof(struct DialogViewData));
+		calloc(1, sizeof(struct DialogViewData));
 	data->win = win;
 	data->type = GPOINTER_TO_INT(g_hash_table_lookup(options, "type"));
 

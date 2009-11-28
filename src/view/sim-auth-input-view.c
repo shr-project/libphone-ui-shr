@@ -114,7 +114,7 @@ sim_auth_input_view_show(struct Window *win, void *_options)
 	/* see if we are called for the first time and create
 	 * the data if so... otherwise update */
 	if (!win->view_data) {
-		data = g_slice_alloc0(sizeof(struct SimAuthInputViewData));
+		data = calloc(1, sizeof(struct SimAuthInputViewData));
 		data->win = win;
 	}
 	else {

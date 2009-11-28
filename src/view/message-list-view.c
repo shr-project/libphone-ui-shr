@@ -1,5 +1,5 @@
 #include "views.h"
-
+#include "common-utils.h"
 #include <phoneui/phoneui-utils.h>
 /* FIXME: HACKS FROM elm_priv.h that should be removed */
 #if 1
@@ -55,7 +55,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	GHashTable *parameters = (GHashTable *) data;
 	char *label = NULL;
 
-	g_debug("getting label for %s", part);
+	//g_debug("getting label for %s", part);
 	if (!strcmp(part, "elm.text")) {
 		label = g_hash_table_lookup(parameters, "name");
 		if (!label) {
@@ -95,7 +95,7 @@ message_list_view_show(struct Window *win, void *_options)
 	g_debug("message_list_view_show()");
 
 	struct MessageListViewData *data =
-		g_slice_alloc0(sizeof(struct MessageListViewData));
+		common_utils_object_ref(calloc(1, sizeof(struct MessageListViewData)));
 	data->win = win;
 
 	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/list");
@@ -192,7 +192,12 @@ message_list_view_hide(void *_data)
 	evas_object_del(data->button_delete);
 	evas_object_del(data->bx);
 	evas_object_del(data->hv);
-	evas_object_del(data->list);
+	data->win = NULL;
+	
+	if (common_utils_object_get_ref(data) == 1) {
+		evas_object_del(data->list);
+	}
+	common_utils_object_unref_free(data);
 }
 
 
@@ -344,21 +349,39 @@ _remove_tel(char *number)
 	}
 }
 
+struct _contact_lookup_pack {
+	struct MessageListViewData *data;
+	Elm_Genlist_Item *param;
+};
 
 static void
-_contact_lookup(GHashTable *contact, gpointer _data)
+_contact_lookup(GHashTable *contact, gpointer _pack)
 {
-	if (!contact)
-		return;
+	struct _contact_lookup_pack *pack = _pack;
+	int count;
+
+	count = common_utils_object_get_ref(pack->param);
+	if (!contact || count < 1 || !pack->data->win) {
+		if (common_utils_object_get_ref(pack->data) == 1) {
+			evas_object_del(pack->data->list);
+		}
+		goto end;
+	}
 
 	GValue *gval_tmp = g_hash_table_lookup(contact, "_Name");
 	if (gval_tmp) {
-		Elm_Genlist_Item *it = (Elm_Genlist_Item *)_data;
-		GHashTable *parameters = elm_genlist_item_data_get(it);
+		GHashTable *parameters = elm_genlist_item_data_get(pack->param);
 		g_hash_table_insert(parameters, "name",
 				strdup(g_value_get_string(gval_tmp)));
-		elm_genlist_item_update(it);
+		elm_genlist_item_update(pack->param);
 	}
+	if (common_utils_object_get_ref(pack->data) == 1) {
+		evas_object_del(pack->data->list);
+	}
+end:
+	common_utils_object_unref(pack->param);
+	common_utils_object_unref_free(pack->data);
+	free(pack);
 }
 
 
@@ -442,7 +465,11 @@ process_message(gpointer _entry, gpointer _data)
 	Elm_Genlist_Item *it = elm_genlist_item_append(data->list, &itc, parameters, NULL,
 				ELM_GENLIST_ITEM_NONE, NULL, NULL);
 	if (number) {
-		phoneui_utils_contact_lookup(number, _contact_lookup, it);
+		struct _contact_lookup_pack *pack;
+		pack = malloc(sizeof(*pack));
+		pack->data = common_utils_object_ref(data);
+		pack->param = common_utils_object_ref(it);
+		phoneui_utils_contact_lookup(number, _contact_lookup, pack);
 	}
 }
 
@@ -476,6 +503,8 @@ static void
 message_list_view_message_deleted(void *_data)
 {
 	struct MessageListViewData *data = (struct MessageListViewData *)_data;
+	int count;
+	count = common_utils_object_unref(data->selected_row);
 	if (data->selected_row != NULL) {
 		elm_genlist_item_del(data->selected_row);
 		data->selected_row = NULL;

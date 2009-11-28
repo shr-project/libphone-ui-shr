@@ -185,7 +185,7 @@ frame_show_edit_field(void *_data, Evas_Object * obj, void *event_info)
 		(struct ContactFieldData *) elm_genlist_item_data_get(it);
 	g_debug("editing field %s of %s", fd->name,
 		data->path ? data->path : "new contact");
-	data->field = g_slice_alloc0(sizeof(struct ContactFieldData));
+	data->field = calloc(1, sizeof(struct ContactFieldData));
 	data->field->name = g_strdup(fd->name);
 	data->field->value = g_strdup(fd->value);
 	window_frame_show(data->win, data, frame_edit_show, frame_edit_hide);
@@ -728,7 +728,7 @@ frame_edit_hide(void *_data)
 	evas_object_del(data->label_name);
 	evas_object_del(data->label_number);
 
-	g_slice_free1(sizeof(struct ContactFieldData), data->field);
+	free(data->field);
 	data->field = NULL;
 }
 
@@ -778,7 +778,7 @@ contact_show_view_hide(void *_data)
 	//struct ContactViewData *data = (struct ContactViewData *)_data;
 
 	g_debug("contact_view_hide()");
-	g_slice_free1(sizeof(struct ContactViewData), _data);
+	free(_data);
 }
 
 

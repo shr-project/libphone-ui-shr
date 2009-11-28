@@ -435,7 +435,7 @@ group { name: "phoneui/call_management/active_call";
 				state: "default" 0.0;
 				align: 0.5 1.0;
 				rel1.relative: 0.2 0.5;
-				rel2.relative: 0.8 0.6;
+				rel2.relative: 0.8 0.57;
 			}
 		}
 		part { name: "mic_slider";
@@ -444,8 +444,8 @@ group { name: "phoneui/call_management/active_call";
 			description {
 				state: "default" 0.0;
 				align: 0.5 1.0;
-				rel1.relative: 0.2 0.6;
-				rel2.relative: 0.8 0.7;
+				rel1.relative: 0.2 0.57;
+				rel2.relative: 0.8 0.64;
 			}
 		}
 		part { name: "speaker_toggle";
@@ -454,8 +454,8 @@ group { name: "phoneui/call_management/active_call";
 			description {
 				state: "default" 0.0;
 				align: 1.0 0.5;
-				rel1.relative: 0.2 0.7;
-				rel2.relative: 0.8 0.75;
+				rel1.relative: 0.1 0.64;
+				rel2.relative: 0.9 0.72;
 			}
 		}
 		part { name: "mute_toggle";
@@ -464,8 +464,8 @@ group { name: "phoneui/call_management/active_call";
 			description {
 				state: "default" 0.0;
 				align: 1.0 0.5;
-				rel1.relative: 0.2 0.75;
-				rel2.relative: 0.8 0.8;
+				rel1.relative: 0.1 0.72;
+				rel2.relative: 0.9 0.8;
 				rel2.offset: 0 10;
 			}
 		}
@@ -491,20 +491,7 @@ group { name: "phoneui/call_management/active_call";
 					relative: 0.0 0.85;
 				}
 				rel2 {
-					relative: 0.33 1.0;
-				}
-			}
-		}
-		part { name: "button_speaker";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.33 0.85;
-				}
-				rel2 {
-					relative: 0.66 1.0;
+					relative: 0.5 1.0;
 				}
 			}
 		}
@@ -514,7 +501,7 @@ group { name: "phoneui/call_management/active_call";
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0.66 0.85;
+					relative: 0.5 0.85;
 				}
 				rel2 {
 					relative: 1.0 1.0;

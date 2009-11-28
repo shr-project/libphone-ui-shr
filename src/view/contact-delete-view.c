@@ -40,11 +40,14 @@ contact_delete_view_show(struct Window *win, void *_options)
 	g_debug("contact_delete_view_show()");
 
 	struct ContactDeleteViewData *data =
-		g_slice_alloc0(sizeof(struct ContactDeleteViewData));
+		calloc(1, sizeof(struct ContactDeleteViewData));
+	/*FIXME: make sure data allocated correctly */
 	data->win = win;
 
-	if (options == NULL) {
-		g_error("At least option[path] must be set.");
+	if (!options) {
+		g_critical("At least option[path] must be set.");
+		free(data);
+		return NULL;
 	}
 	else {
 		data->path = g_hash_table_lookup(options, "path");
@@ -63,7 +66,7 @@ contact_delete_view_show(struct Window *win, void *_options)
 void
 contact_delete_view_hide(void *_data)
 {
-	g_slice_free(struct ContactDeleteViewData, _data);
+	free(_data);
 }
 
 
