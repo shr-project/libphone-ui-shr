@@ -12,9 +12,9 @@ _exit_cb()
 }
 
 void
-phoneui_backend_quick-settings_show()
+phoneui_backend_quick_settings_show()
 {
-	g_debug("phoneui_backend_quick-settings_show()");
+	g_debug("phoneui_backend_quick_settings_show()");
 	if (win) {
 		window_show(win);
 		return;

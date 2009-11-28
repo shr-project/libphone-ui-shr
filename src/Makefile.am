@@ -21,6 +21,7 @@ shr_la_SOURCES = \
 	phoneui-call.h phoneui-call.c \
 	phoneui-contacts.h phoneui-contacts.c \
 	phoneui-ussd.h phoneui-ussd.c \
+	phoneui-quick-settings.h phoneui-quick-settings.c \
 	widget/etk_tree_model_edje.h widget/etk_tree_model_edje.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	util/helper.h util/helper.c \
@@ -45,5 +46,6 @@ shr_la_SOURCES = \
 	view/call-active-view.c \
 	view/sim-auth-input-view.c \
 	view/common-utils.c \
-	view/ussd-view.c
+	view/ussd-view.c \
+	view/quick-settings-view.c
 
