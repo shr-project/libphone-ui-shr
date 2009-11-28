@@ -64,8 +64,7 @@ on_toggle_airplane_mode(void * _data, Evas_Object *this_check, void *event_info)
 	w = window_evas_object_get(data->win);
 	win_evas = evas_object_evas_get(w);
 	toggle=evas_object_name_find(win_evas, "airplane_mode");
-	if(elm_toggle_state_get(toggle))
-	{
+	if(elm_toggle_state_get(toggle)) {
 		check = evas_object_name_find(win_evas, "network_gsm");
 		if(check) elm_check_state_set(check, 0);
 		data->network_gsm = 0;
@@ -87,8 +86,7 @@ on_toggle_airplane_mode(void * _data, Evas_Object *this_check, void *event_info)
 		data->network_gps = 0;
 
 		data->airplane_mode = 1;
-	}
-	else
+	} else
 		data->airplane_mode = 0;
 
 	printf("Airplane mode: %d\n", data->airplane_mode);
@@ -104,13 +102,10 @@ on_toggle_network_gsm(void *_data, Evas_Object *this_check, void *event_info)
 
 	entry = evas_object_name_find(win_evas, "network_gsm_status");
 
-	if(elm_toggle_state_get(toggle))
-	{
-		if(data->airplane_mode)
-		{
+	if(elm_toggle_state_get(toggle)) {
+		if(data->airplane_mode) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
-			if(check)
-			{
+			if(check) {
 				elm_toggle_state_set(check, 0);
 				on_toggle_airplane_mode(_data, NULL, NULL);
 			}
@@ -119,9 +114,7 @@ on_toggle_network_gsm(void *_data, Evas_Object *this_check, void *event_info)
 
 		data->network_gsm = 1;
 		elm_entry_entry_set(entry, D_("Connecting GSM..."));
-	}
-	else
-	{
+	} else {
 		data->network_gsm = 0;
 		elm_entry_entry_set(entry, D_("GSM is disconnected."));
 	}
@@ -137,13 +130,10 @@ on_toggle_network_wifi(void *_data, Evas_Object *this_check, void *event_info)
 
 	entry = evas_object_name_find(win_evas, "network_wifi_status");
 
-	if(elm_toggle_state_get(toggle))
-	{
-		if(data->airplane_mode)
-		{
+	if(elm_toggle_state_get(toggle)) {
+		if(data->airplane_mode) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
-			if(check)
-			{
+			if(check) {
 				elm_toggle_state_set(check, 0);
 				on_toggle_airplane_mode(_data, NULL, NULL);
 			}
@@ -152,9 +142,7 @@ on_toggle_network_wifi(void *_data, Evas_Object *this_check, void *event_info)
 
 		data->network_wifi = 1;
 		elm_entry_entry_set(entry, D_("Connecting..."));
-	}
-	else
-	{
+	} else {
 		data->network_wifi = 0;
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
@@ -170,13 +158,10 @@ on_toggle_network_gprs(void *_data, Evas_Object *this_check, void *event_info)
 
 	entry = evas_object_name_find(win_evas, "network_gprs_status");
 
-	if(elm_toggle_state_get(toggle))
-	{
-		if(data->airplane_mode)
-		{
+	if(elm_toggle_state_get(toggle)) {
+		if(data->airplane_mode) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
-			if(check)
-			{
+			if(check) {
 				elm_toggle_state_set(check, 0);
 				on_toggle_airplane_mode(_data, NULL, NULL);
 			}
@@ -185,9 +170,7 @@ on_toggle_network_gprs(void *_data, Evas_Object *this_check, void *event_info)
 
 		data->network_gprs = 1;
 		elm_entry_entry_set(entry, D_("Connecting..."));
-	}
-	else
-	{
+	} else {
 		data->network_gprs = 0;
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
@@ -203,13 +186,10 @@ on_toggle_network_bluez(void *_data, Evas_Object *this_check, void *event_info)
 
 	entry = evas_object_name_find(win_evas, "network_bluez_status");
 
-	if(elm_toggle_state_get(toggle))
-	{
-		if(data->airplane_mode)
-		{
+	if(elm_toggle_state_get(toggle)) {
+		if(data->airplane_mode) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
-			if(check)
-			{
+			if(check) {
 				elm_toggle_state_set(check, 0);
 				on_toggle_airplane_mode(_data, NULL, NULL);
 			}
@@ -218,9 +198,7 @@ on_toggle_network_bluez(void *_data, Evas_Object *this_check, void *event_info)
 
 		data->network_bluez = 1;
 		elm_entry_entry_set(entry, D_("Connecting..."));
-	}
-	else
-	{
+	} else {
 		data->network_bluez = 0;
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
@@ -236,13 +214,10 @@ on_toggle_network_gps(void *_data, Evas_Object *this_check, void *event_info)
 
 	entry = evas_object_name_find(win_evas, "network_gps_status");
 
-	if(elm_toggle_state_get(toggle))
-	{
-		if(data->airplane_mode)
-		{
+	if(elm_toggle_state_get(toggle)) {
+		if(data->airplane_mode) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
-			if(check)
-			{
+			if(check) {
 				elm_toggle_state_set(check, 0);
 				on_toggle_airplane_mode(_data, NULL, NULL);
 			}
@@ -251,9 +226,7 @@ on_toggle_network_gps(void *_data, Evas_Object *this_check, void *event_info)
 
 		data->network_gps = 1;
 		elm_entry_entry_set(entry, D_("Connecting..."));
-	}
-	else
-	{
+	} else {
 		data->network_gps = 0;
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
@@ -269,13 +242,10 @@ on_toggle_network_usb(void *_data, Evas_Object *this_check, void *event_info)
 
 	entry = evas_object_name_find(win_evas, "network_usb_status");
 
-	if(elm_toggle_state_get(toggle))
-	{
+	if(elm_toggle_state_get(toggle)) {
 		data->network_usb = 1;
 		elm_entry_entry_set(entry, D_("Connecting..."));
-	}
-	else
-	{
+	} else {
 		data->network_usb = 0;
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
@@ -350,8 +320,7 @@ profiles_fill(Evas_Object *profiles)
 	const char * profile_list[] = { "Default", "Ring", "Vibrate", "Silence", NULL };
 
 	elm_hoversel_hover_begin(profiles);
-	while(profile_list[idx] != NULL)
-	{
+	while(profile_list[idx] != NULL) {
 		hsi = elm_hoversel_item_add(profiles, profile_list[idx], NULL, ELM_ICON_NONE, on_phone_profile_set, profile_list[idx]);
 		idx++;
 	}
