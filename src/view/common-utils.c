@@ -62,7 +62,7 @@ common_utils_new_with_prefix(const char *_number, const char *prefix)
 	char *number = NULL;
 	int prefix_len = strlen(prefix);
 	if (strncmp(_number, prefix, prefix_len)) {
-		number = malloc(strlen(_number) + prefix_len + 1); /* 5 is for "tel:" and the null */
+		number = malloc(strlen(_number) + prefix_len + 1);
 		if (!number) {
 			return NULL;
 		}
