@@ -24,116 +24,117 @@ enum Resources {
 	GPS
 };
 
-static void frame_idle_screen_show(struct IdleScreenViewData *data);
-static void frame_idle_screen_hide(struct IdleScreenViewData *data);
-static void frame_idle_screen_update_calls(int i, struct IdleScreenViewData *data);
-static void frame_idle_screen_update_messages(int i, struct IdleScreenViewData *data);
-static void frame_idle_screen_update_tasks(int i, struct IdleScreenViewData *data);
-static void frame_idle_screen_update_power(int i, struct IdleScreenViewData *data);
-static void frame_idle_screen_update_time(struct IdleScreenViewData *data);
-static void frame_idle_screen_update_gsm(int i, const char *provider, struct IdleScreenViewData *data);
-static void frame_idle_screen_update_resources(int i, enum Resources resource, struct IdleScreenViewData *data);
-static void frame_idle_screen_update_call(enum IdleScreenCallState state, const char *name, const char *number,
-			      struct IdleScreenViewData *data);
-static void frame_idle_screen_update_alarm(int i, struct IdleScreenViewData *data);
-static void frame_idle_screen_update_profile(const char *profile, struct IdleScreenViewData *data);
+struct IdleScreenViewData {
+	struct Window *win;
+	Evas_Object *wallpaper;
+};
+/* No need to pass the active window everywhere, as we don't allow multiple windows. */
+static struct IdleScreenViewData data;
 
+static void frame_idle_screen_show();
+static void frame_idle_screen_hide();
+static void frame_idle_screen_update_calls(int i);
+static void frame_idle_screen_update_messages(int i);
+static void frame_idle_screen_update_tasks(int i);
+static void frame_idle_screen_update_power(int i);
+static void frame_idle_screen_update_time();
+static void frame_idle_screen_update_gsm(int i, const char *provider);
+static void frame_idle_screen_update_resources(int i, enum Resources resource);
+static void frame_idle_screen_update_call(enum IdleScreenCallState state, const char *name, const char *number);
+static void frame_idle_screen_update_alarm(int i);
+static void frame_idle_screen_update_profile(const char *profile);
 
-struct IdleScreenViewData *
+/*Hackish prototypes, just to make broken window.h happy */
+void *
 idle_screen_view_show(struct Window *win, GHashTable *options)
 {
 	g_debug("idle_screen_view_show()");
-	struct IdleScreenViewData *data =
-		calloc(1, sizeof(struct IdleScreenViewData));
-	data->win = win;
+	data.win = win;
 
-	window_frame_show(win, data, frame_idle_screen_show,
+	window_frame_show(win, &data, frame_idle_screen_show,
 			  frame_idle_screen_hide);
 	window_show(win);
-	return data;
+	return;
 }
 
 void
-idle_screen_view_hide(struct IdleScreenViewData *data)
+idle_screen_view_hide(struct Window *win)
 {
 	/* no need to do anything here */
 }
 
-void
-idle_screen_view_update(enum PhoneuiIdleScreenRefresh type, struct Window *win)
+void 
+idle_screen_view_update(enum PhoneuiIdleScreenRefresh type)
 {
 	g_debug("idle_screen_view_update()");
 	switch (type) {
 	case PHONEUI_IDLE_SCREEN_REFRESH_ALL:
-		idle_screen_view_update
-			(PHONEUI_IDLE_SCREEN_REFRESH_MISSED_CALLS, win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_MESSAGES,
-					win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_TASKS, win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_POWER, win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_CALL, win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_GSM, win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_RESOURCES,
-					win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_TIME, win);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_ALARM, win);
-		//idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_PROFILE, win);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_MISSED_CALLS);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_MESSAGES);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_TASKS);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_POWER);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_CALL);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_GSM);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_RESOURCES);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_TIME);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_ALARM);
+		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_PROFILE);
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_MISSED_CALLS:
-		//frame_idle_screen_update_calls(3, win->view_data);
+		//frame_idle_screen_update_calls(3);
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_MESSAGES:
-		//frame_idle_screen_update_messages(425, win->view_data);
+		//frame_idle_screen_update_messages(425);
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_TASKS:
-		//frame_idle_screen_update_tasks(1, win->view_data);
+		//frame_idle_screen_update_tasks(1);
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_POWER:
-		//frame_idle_screen_update_power(10, win->view_data);
+		//frame_idle_screen_update_power(10);
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_CALL:
 		/*frame_idle_screen_update_call(INCOMING,
-		* "Mr. Anonymous", "+49123456789", win->view_data);
+		* "Mr. Anonymous", "+49123456789");
 		* frame_idle_screen_update_call(ACTIVE,
-		* "Mr. Anonymous", "+49123456789", win->view_data);
+		* "Mr. Anonymous", "+49123456789");
 		* frame_idle_screen_update_call(RELEASED,
-		* "Mr. Anonymous", "+49123456789", win->view_data);
+		* "Mr. Anonymous", "+49123456789");
 		*/
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_GSM:
-		//frame_idle_screen_update_gsm(23, "Provider", win->view_data);
+		//frame_idle_screen_update_gsm(23, "Provider");
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_RESOURCES:
-		/*frame_idle_screen_update_resources(1,CPU,win->view_data);
-		* frame_idle_screen_update_resources(1,Display,win->view_data);
-		* frame_idle_screen_update_resources(1,Bluetooth,win->view_data);
-		* frame_idle_screen_update_resources(1,WiFi,win->view_data);
-		* frame_idle_screen_update_resources(1,GPS,win->view_data);
+		/*frame_idle_screen_update_resources(1,CPU);
+		* frame_idle_screen_update_resources(1,Display);
+		* frame_idle_screen_update_resources(1,Bluetooth);
+		* frame_idle_screen_update_resources(1,WiFi);
+		* frame_idle_screen_update_resources(1,GPS);
 		*
-		* frame_idle_screen_update_resources(0,WiFi,win->view_data);
-		* frame_idle_screen_update_resources(0,GPS,win->view_data);
+		* frame_idle_screen_update_resources(0,WiFi);
+		* frame_idle_screen_update_resources(0,GPS);
 		*/
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_TIME:
-		//frame_idle_screen_update_time(win->view_data);
+		//frame_idle_screen_update_time();
 		break;
 
 	case PHONEUI_IDLE_SCREEN_REFRESH_ALARM:
-		//frame_idle_screen_update_alarm(1,win->view_data);
-		//frame_idle_screen_update_alarm(0,win->view_data);
+		//frame_idle_screen_update_alarm(1);
+		//frame_idle_screen_update_alarm(0);
 		break;
 
 /* TODO: Implement this in libphone-ui */
 	case PHONEUI_IDLE_SCREEN_REFRESH_PROFILE:
-		//frame_idle_screen_update_profile("Vibrate",win->view_data);
+		//frame_idle_screen_update_profile("Vibrate");
 		break;
 
 	}
@@ -144,34 +145,33 @@ idle_screen_view_update(enum PhoneuiIdleScreenRefresh type, struct Window *win)
  */
 
 static void
-  frame_idle_screen_show(struct IdleScreenViewData *data) {
-	struct Window *win = data->win;
+  frame_idle_screen_show() {
+	struct Window *win = data.win;
 	window_layout_set(win, IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
-	data->wallpaper = elm_icon_add(window_evas_object_get(win));
-	elm_icon_file_set(data->wallpaper, IDLE_SCREEN_WALLPAPER, NULL);
-	window_swallow(win, "background", data->wallpaper);
-	evas_object_show(data->wallpaper);
+	data.wallpaper = elm_icon_add(window_evas_object_get(win));
+	elm_icon_file_set(data.wallpaper, IDLE_SCREEN_WALLPAPER, NULL);
+	window_swallow(win, "background", data.wallpaper);
+	evas_object_show(data.wallpaper);
 
 	edje_object_signal_callback_add(window_layout_get(win), "unlockScreen",
-					"slider", phoneui_idle_screen_hide, data);
+					"slider", phoneui_idle_screen_hide, &data);
 }
 
 static void
-  frame_idle_screen_hide(struct IdleScreenViewData *data) {
-	struct Window *win = data->win;
+  frame_idle_screen_hide() {
+	struct Window *win = data.win;
 
-	evas_object_del(data->wallpaper);
+	evas_object_del(data.wallpaper);
 }
 
 
 static void
-frame_idle_screen_update_counter(struct IdleScreenViewData *data,
-				const char *name, const char *label_name,
+frame_idle_screen_update_counter(const char *name, const char *label_name,
 				int count)
 {
-	struct Window *win = data->win;
+	struct Window *win = data.win;
 
 	char buf[16];
 	snprintf(buf, 16, "%d", count);
@@ -182,36 +182,36 @@ frame_idle_screen_update_counter(struct IdleScreenViewData *data,
 		window_text_set(win, label_name, buf);
 	}
 	else {
-		edje_edit_part_selected_state_set(window_layout_get(data->win),
+		edje_edit_part_selected_state_set(window_layout_get(data.win),
 						  name, "default 0.0");
-		window_text_set(data->win, label_name, buf);
+		window_text_set(data.win, label_name, buf);
 	}
 }
 static void
-frame_idle_screen_update_calls(int i, struct IdleScreenViewData *data)
+frame_idle_screen_update_calls(int i)
 {
-	frame_idle_screen_update_counter(data, "missedCalls", "missedCallsLabel",
+	frame_idle_screen_update_counter("missedCalls", "missedCallsLabel",
 						i);
 }
 
 static void
-frame_idle_screen_update_messages(int i, struct IdleScreenViewData *data)
+frame_idle_screen_update_messages(int i)
 {
-	frame_idle_screen_update_counter(data, "unreadMessages", "unreadMessagesLabel",
+	frame_idle_screen_update_counter("unreadMessages", "unreadMessagesLabel",
 						i);
 }
 
 static void
-frame_idle_screen_update_tasks(int i, struct IdleScreenViewData *data) {
+frame_idle_screen_update_tasks(int i) {
 	
-	frame_idle_screen_update_counter(data, "unfinishedTasks", "unfinishedTasksLabel",
+	frame_idle_screen_update_counter("unfinishedTasks", "unfinishedTasksLabel",
 						i);
 }
 
 static void
-  frame_idle_screen_update_power(int i, struct IdleScreenViewData *data) {
+  frame_idle_screen_update_power(int i) {
 	g_debug("frame_idle_screen_update_power()");
-	struct Window *win = data->win;
+	struct Window *win = data.win;
 
 	char buf[16];
 	snprintf(buf, 16, "%d", i);
@@ -221,9 +221,9 @@ static void
 }
 
 static void
-frame_idle_screen_update_time(struct IdleScreenViewData *data) {
+frame_idle_screen_update_time() {
 	g_debug("frame_idle_screen_update_time()");
-	struct Window *win = data->win;
+	struct Window *win = data.win;
 	char date_str[16];
 	struct timeval tv;
 	struct tm ptime;
@@ -241,10 +241,10 @@ frame_idle_screen_update_time(struct IdleScreenViewData *data) {
 }
 
 static void
-frame_idle_screen_update_gsm(int i, const char *provider, struct IdleScreenViewData *data)
+frame_idle_screen_update_gsm(int i, const char *provider)
 {
 	g_debug("frame_idle_screen_update_gsm()");
-	struct Window *win = data->win;
+	struct Window *win = data.win;
 
 	char buf[16];
 	snprintf(buf, 16, "%d", i);
@@ -254,10 +254,9 @@ frame_idle_screen_update_gsm(int i, const char *provider, struct IdleScreenViewD
 }
 
 static void
-frame_idle_screen_update_resources(int i, enum Resources resource,
-					   struct IdleScreenViewData *data)
+frame_idle_screen_update_resources(int i, enum Resources resource)
 {
-	struct Window *win = data->win;
+	struct Window *win = data.win;
 
 	const char *resource_name;
 
@@ -289,17 +288,17 @@ frame_idle_screen_update_resources(int i, enum Resources resource,
 	}
 
 	if (i > 0)
-		edje_edit_part_selected_state_set(window_layout_get(data->win),
+		edje_edit_part_selected_state_set(window_layout_get(data.win),
 						  resource_name, "active 0.0");
 	else
-		edje_edit_part_selected_state_set(window_layout_get(data->win),
+		edje_edit_part_selected_state_set(window_layout_get(data.win),
 						  resource_name, "default 0.0");
 }
 
 static void
 frame_idle_screen_update_call(enum IdleScreenCallState state, const char *name,
-				     const char *number, struct IdleScreenViewData *data) {
-	struct Window *win = data->win;
+				     const char *number) {
+	struct Window *win = data.win;
 
 	switch (state) {
 	case INCOMING:
@@ -329,22 +328,22 @@ frame_idle_screen_update_call(enum IdleScreenCallState state, const char *name,
 }
 
 static void
-frame_idle_screen_update_alarm(int i, struct IdleScreenViewData *data)
+frame_idle_screen_update_alarm(int i)
 {
-	struct Window *win = data->win;
+	struct Window *win = data.win;
 
 	if (i > 0)
-		edje_edit_part_selected_state_set(window_layout_get(data->win),
+		edje_edit_part_selected_state_set(window_layout_get(data.win),
 						  "alarm", "active 0.0");
 	else
-		edje_edit_part_selected_state_set(window_layout_get(data->win),
+		edje_edit_part_selected_state_set(window_layout_get(data.win),
 						  "alarm", "default 0.0");
 }
 
 static void
-frame_idle_screen_update_profile(const char *profile, struct IdleScreenViewData *data)
+frame_idle_screen_update_profile(const char *profile)
 {
-	struct Window *win = data->win;
+	struct Window *win = data.win;
 
 	window_text_set(win, "profile", profile);
 }

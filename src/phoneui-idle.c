@@ -49,6 +49,6 @@ phoneui_backend_idle_screen_update(enum PhoneuiIdleScreenRefresh type)
 {
 	g_debug("phoneui_backend_idle_screen_update()");
 	if (win) {
-		idle_screen_view_update(type, win);
+		idle_screen_view_update(type);
 	}
 }
