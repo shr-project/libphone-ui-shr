@@ -1,9 +1,11 @@
-#include "phoneui-idle.h"
 #include <glib.h>
 #include <phoneui/phoneui.h>
+#include <Elementary.h>
+
+#include "phoneui-idle.h"
 #include "window.h"
 #include "views.h"
-#include <Elementary.h>
+#include "idle-view.h"
 
 static struct Window *win = NULL;
 
@@ -16,24 +18,28 @@ _exit_cb()
 void
 phoneui_backend_idle_screen_show()
 {
-	g_debug("phoneui_backend_idle_screen_show()");
 	if (win) {
-		window_show(win);
-		return;
+		g_debug("Idle_screen: Showing an existing screen");
+		window_show(win, NULL);
 	}
-	win = window_new(D_("Idle_Screen"));
-	window_init(win);
-	window_view_show(win, NULL, idle_screen_view_show,
-			 idle_screen_view_hide, _exit_cb);
+	else {
+		g_debug("Idle_screen: Showing and creating idle screen");
+		win = window_new(D_("Idle_Screen"));
+		window_init(win);
+		window_view_show(win, NULL, idle_screen_view_show,
+			 	idle_screen_view_hide, _exit_cb);
+	}
 }
 
 void
 phoneui_backend_idle_screen_hide()
 {
-	g_debug("phoneui_backend_idle_screen_hide()");
-	if (win != NULL) {
-		window_destroy(win, NULL);
-		win = NULL;
+	if (win) {
+		g_debug("Idle_screen: Hiding.");
+		window_view_hide(win, NULL);
+	}
+	else {
+		g_critical("Idle_screen: Tried to hide a non existing screen");
 	}
 }
 
@@ -41,5 +47,7 @@ void
 phoneui_backend_idle_screen_update(enum PhoneuiIdleScreenRefresh type)
 {
 	g_debug("phoneui_backend_idle_screen_update()");
-	idle_screen_view_update(type, win);
+	if (win) {
+		idle_screen_view_update(type, win);
+	}
 }
