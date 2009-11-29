@@ -5,13 +5,14 @@
 #include "phoneui-idle.h"
 #include "window.h"
 #include "views.h"
-#include "idle-view.h"
+#include "view/idle-view.h"
 
 static struct Window *win = NULL;
 
 static void
 _exit_cb()
 {
+	/*FIXME: free data*/
 	win = NULL;
 }
 
@@ -20,7 +21,7 @@ phoneui_backend_idle_screen_show()
 {
 	if (win) {
 		g_debug("Idle_screen: Showing an existing screen");
-		window_show(win, NULL);
+		window_show(win);
 	}
 	else {
 		g_debug("Idle_screen: Showing and creating idle screen");

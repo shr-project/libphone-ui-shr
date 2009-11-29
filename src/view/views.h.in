@@ -38,10 +38,6 @@
 void *dialer_view_show(struct Window *win, void *_options);
 void dialer_view_hide(void *_data);
 
-void *idle_screen_view_show(struct Window *win, void *_options);
-void idle_screen_view_hide(void *_data);
-void idle_screen_view_update(enum PhoneuiIdleScreenRefresh type, struct Window *win);
-
 void *dialog_view_show(struct Window *win, void *_options);
 void dialog_view_hide(void *_data);
 
