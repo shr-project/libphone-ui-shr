@@ -14,6 +14,7 @@ shr_la_LDFLAGS = -module -avoid-version
 shr_la_SOURCES = \
 	phoneui-init.h phoneui-init.c \
 	phoneui-dialer.h phoneui-dialer.c \
+	phoneui-idle.h phoneui-idle.c \
 	phoneui-dialog.h phoneui-dialog.c \
 	phoneui-messages.h phoneui-messages.c \
 	phoneui-incoming-message.h phoneui-incoming-message.c \
@@ -30,6 +31,7 @@ shr_la_SOURCES = \
 	util/view.h util/view.c \
 	view/views.h \
 	view/dialer-view.c \
+	view/idle-view.c \
 	view/dialog-view.c \
 	view/contact-list-common.h \
 	view/contact-list-common.c \

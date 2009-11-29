@@ -3,6 +3,7 @@
 
 #include <dbus/dbus-glib.h>
 #include <glib.h>
+#include <phoneui/phoneui.h>
 #include <Ecore_Evas.h>
 #include <Ecore.h>
 #include <Edje.h>
@@ -23,7 +24,9 @@
 #define CONTACT_PHONE_UNDEFINED_STRING D_("(no number)")
 
 #define DEFAULT_THEME "@DATADIR@/libphone-ui-shr/default.edj"
+#define IDLE_SCREEN_THEME "@DATADIR@/libphone-ui-shr/idle_screen.edj"
 
+#define IDLE_SCREEN_WALLPAPER "@DATADIR@/libphone-ui-shr/idle_screen_wallpaper.png"
 #define DELETE_TEXT_ICON "@DATADIR@/libphone-ui-shr/edit-undo.png"
 #define CONTACT_DEFAULT_PHOTO "@DATADIR@/libphone-ui-shr/contact.png"
 #define CONTACT_NUMBER_PHOTO "@DATADIR@/libphone-ui-shr/number-icon.png"
@@ -34,6 +37,10 @@
 
 void *dialer_view_show(struct Window *win, void *_options);
 void dialer_view_hide(void *_data);
+
+void *idle_screen_view_show(struct Window *win, void *_options);
+void idle_screen_view_hide(void *_data);
+void idle_screen_view_update(enum PhoneuiIdleScreenRefresh type, struct Window *win);
 
 void *dialog_view_show(struct Window *win, void *_options);
 void dialog_view_hide(void *_data);
