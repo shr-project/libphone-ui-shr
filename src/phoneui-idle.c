@@ -12,7 +12,7 @@ static struct Window *win = NULL;
 static void
 _exit_cb()
 {
-	/*FIXME: free data*/
+	/*FIXME: free data */
 	win = NULL;
 }
 
@@ -28,7 +28,7 @@ phoneui_backend_idle_screen_show()
 		win = window_new(D_("Idle_Screen"));
 		window_init(win);
 		window_view_show(win, NULL, idle_screen_view_show,
-			 	idle_screen_view_hide, _exit_cb);
+				 idle_screen_view_hide, _exit_cb);
 	}
 }
 
