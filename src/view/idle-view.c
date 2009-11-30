@@ -156,6 +156,7 @@ frame_idle_screen_show()
 	edje_object_signal_emit(window_layout_get(win),
 				"clock_init", "");
 
+	elm_win_fullscreen_set(win->win, 1);
 	data.wallpaper = elm_icon_add(window_evas_object_get(win));
 	elm_icon_file_set(data.wallpaper, IDLE_SCREEN_WALLPAPER, NULL);
 	window_swallow(win, "background", data.wallpaper);
@@ -169,9 +170,7 @@ frame_idle_screen_show()
 static void
 frame_idle_screen_hide()
 {
-	struct Window *win = data.win;
-
-	evas_object_del(data.wallpaper);
+	/* No need for this: evas_object_del(data.wallpaper); */
 }
 
 
