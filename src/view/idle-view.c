@@ -153,6 +153,7 @@ frame_idle_screen_show()
 	window_layout_set(win, IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
+	elm_win_fullscreen_set(win->win, 1);
 	data.wallpaper = elm_icon_add(window_evas_object_get(win));
 	elm_icon_file_set(data.wallpaper, IDLE_SCREEN_WALLPAPER, NULL);
 	window_swallow(win, "background", data.wallpaper);

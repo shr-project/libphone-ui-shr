@@ -42,7 +42,7 @@ window_init(struct Window *win)
 		g_critical("Wasn't able to create a window for idle_screen");
 		return;
 	}
-	elm_win_fullscreen_set(win->win, 1);
+
 	elm_win_title_set(win->win, win->title);
 	elm_win_autodel_set(win->win, 1);	// Disable it?
 	evas_object_smart_callback_add(win->win, "delete-request",
