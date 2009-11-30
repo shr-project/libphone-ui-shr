@@ -153,6 +153,9 @@ frame_idle_screen_show()
 	window_layout_set(win, IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
+	edje_object_signal_emit(window_layout_get(win),
+				"clock_init", "");
+
 	data.wallpaper = elm_icon_add(window_evas_object_get(win));
 	elm_icon_file_set(data.wallpaper, IDLE_SCREEN_WALLPAPER, NULL);
 	window_swallow(win, "background", data.wallpaper);
@@ -244,8 +247,10 @@ frame_idle_screen_update_time()
 
 	window_text_set(win, "date", date_str);
 
-	strftime(date_str, 14, "%H:%M", &ptime);
-	window_text_set(win, "time", date_str);
+/* Time calculation is now done in the edje file
+ *	strftime(date_str, 14, "%H:%M", &ptime);
+ *	window_text_set(win, "time", date_str);
+ */
 }
 
 static void
