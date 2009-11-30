@@ -166,9 +166,7 @@ frame_idle_screen_show()
 static void
 frame_idle_screen_hide()
 {
-	struct Window *win = data.win;
-
-	evas_object_del(data.wallpaper);
+	/* No need for this: evas_object_del(data.wallpaper); */
 }
 
 
