@@ -8,7 +8,6 @@
 #include <Ecore.h>
 #include <Edje.h>
 #include <stdlib.h>
-#include <assert.h>
 #include "window.h"
 
 
@@ -36,4 +35,4 @@ void
 Evas_Object *contact_list_add(struct ContactListViewData *data);
 
 
-#endif // _CONTACTS_COMMON_H
+#endif 

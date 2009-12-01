@@ -82,8 +82,12 @@ _hide(const int id)
 	call_common_active_call_remove(id);
 
 	struct Window *win = instance_manager_remove(INSTANCE_CALL, id);
-	assert(win != NULL);
-	window_destroy(win, NULL);
+	if (win) {
+		window_destroy(win, NULL);
+	}
+	else {
+		g_critical("Tried to hide a unitinialized window");
+	}
 }
 
 static void

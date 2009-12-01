@@ -28,7 +28,10 @@ ussd_view_show(struct Window *win, void *_options)
 
 	g_debug("ussd_view_show()");
 
-	assert(options != NULL);
+	if (!options) {
+		g_critical("'options' is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 
 	struct UssdViewData *data = calloc(1, sizeof(struct UssdViewData));
 	data->win = win;

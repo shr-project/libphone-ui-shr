@@ -6,7 +6,6 @@
 #include <Ecore.h>
 #include <Edje.h>
 #include <string.h>
-#include <assert.h>
 #include <glib.h>
 
 // TODO: Remove this:
@@ -65,16 +64,23 @@ window_init(struct Window *win)
 void
 window_show(struct Window *win)
 {
-	assert(win != NULL);
-	g_debug("window_show(win=%d)", win);
-	evas_object_show(win->win);
-	elm_win_activate(win->win);
+	if (win) {
+		g_debug("window_show(win=%d)", win);
+		evas_object_show(win->win);
+		elm_win_activate(win->win);
+	}
+	else {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+	}
 }
 
 void
 window_layout_set(struct Window *win, const char *file, const char *part)
 {
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	g_debug("setting layout from file '%s' (%s)", file, part);
 	elm_layout_file_set(win->layout, file, part);
 }
@@ -82,14 +88,20 @@ window_layout_set(struct Window *win, const char *file, const char *part)
 Evas_Object *
 window_layout_get(struct Window *win)
 {
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	return elm_layout_edje_get(win->layout);
 }
 
 Evas_Object *
 window_evas_object_get(struct Window * win)
 {
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	return win->win;
 }
 
@@ -98,22 +110,34 @@ window_delete_callback_set(struct Window *win,
 			   void (*cb) (void *data, Evas_Object * win,
 				       void *event_info))
 {
-	assert(win != NULL);
-	assert(cb != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
+	if (!cb) {
+		g_warning("Tried to set cb to NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	evas_object_smart_callback_add(win->win, "delete-request", cb, win);
 }
 
 void
 window_text_set(struct Window *win, const char *key, const char *value)
 {
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	edje_object_part_text_set(elm_layout_edje_get(win->layout), key, value);
 }
 
 void
 window_swallow(struct Window *win, const char *key, Evas_Object * object)
 {
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	//edje_object_part_swallow(elm_layout_edje_get(win->layout), key, object);
 	elm_layout_content_set(win->layout, key, object);
 }
@@ -121,7 +145,10 @@ window_swallow(struct Window *win, const char *key, Evas_Object * object)
 void
 window_unswallow(struct Window *win, Evas_Object * object)
 {
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	edje_object_part_unswallow(elm_layout_edje_get(win->layout), object);
 }
 
@@ -131,8 +158,14 @@ window_view_show(struct Window *win, void *options,
 		 void (*hide_cb) (void *data), void (*exit_cb)())
 {
 	g_debug("window_view_show()");
-	assert(win != NULL);
-	assert(show_cb != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
+	if (!show_cb) {
+		g_warning("Tried to set cb to NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 
 	// Clear old view
 	window_view_hide(win, NULL);
@@ -148,7 +181,10 @@ void
 window_view_hide(struct Window *win, void *options)
 {
 	g_debug("window_view_hide()");
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 
 	// Hide last frame
 	window_frame_hide(win, win->view_data);
@@ -169,7 +205,10 @@ void
 window_frame_show(struct Window *win, void *data, void (*show_cb) (void *data),
 		  void (*hide_cb) (void *data))
 {
-	assert(show_cb != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 
 	if (win->frame_hide_cb != NULL)
 		win->frame_hide_cb(data);
@@ -185,7 +224,10 @@ window_frame_show(struct Window *win, void *data, void (*show_cb) (void *data),
 void
 window_frame_hide(struct Window *win, void *data)
 {
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 
 	if (win->frame_hide_cb != NULL) {
 		win->frame_hide_cb(data);
@@ -215,7 +257,10 @@ void
 window_destroy(struct Window *win, void *options)
 {
 	g_debug("destroying window (win=%d)", win);
-	assert(win != NULL);
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 	window_view_hide(win, options);
 
 	evas_object_del(win->layout);

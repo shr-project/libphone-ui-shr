@@ -66,9 +66,15 @@ static void
 void *
 message_show_view_show(struct Window *win, void *_options)
 {
-	assert(win != NULL);
-	assert(_options != NULL);
 	GHashTable *options = (GHashTable *) _options;
+	if (!win) {
+		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
+	if (!options) {
+		g_critical("Passed NULL options (%s:%d)", __FUNCTION__, __LINE__);
+		return;
+	}
 
 	g_debug("message_show_view_show()");
 

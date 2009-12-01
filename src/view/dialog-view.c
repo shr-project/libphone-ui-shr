@@ -19,18 +19,21 @@ void *
 dialog_view_show(struct Window *win, void *_options)
 {
 	GHashTable *options = (GHashTable *) _options;
-
+	struct DialogViewData *data;
 	g_debug("dialog_view_show()");
-
-	struct DialogViewData *data =
-		calloc(1, sizeof(struct DialogViewData));
-	data->win = win;
-	data->type = GPOINTER_TO_INT(g_hash_table_lookup(options, "type"));
-
 	// Check if type was provided
 	gboolean type_exists =
 		g_hash_table_lookup_extended(options, "type", NULL, NULL);
-	assert(type_exists == TRUE);
+	if (!type_exists) {
+		g_critical("Tried to pass a non-exisiting type (%s:%d)", __FUNCTION__, __LINE__);
+		return NULL;
+	}
+	
+	data = calloc(1, sizeof(struct DialogViewData));
+	data->win = win;
+	data->type = GPOINTER_TO_INT(g_hash_table_lookup(options, "type"));
+
+	
 
 	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/dialog");
 	if (data->type == PHONEUI_DIALOG_MESSAGE_STORAGE_FULL)
