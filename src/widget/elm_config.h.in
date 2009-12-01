@@ -1,6 +1,0 @@
-#ifndef _WIDGET_ELM_CONFIG_H
-#define _WIDGET_ELM_CONFIG_H 1
-
-#define DEFAULT_THEME "@DATADIR@/libphone-ui-shr/default.edj"
-
-#endif
