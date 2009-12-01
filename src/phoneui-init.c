@@ -3,7 +3,6 @@
 #include <Ecore_Evas.h>
 #include <Ecore.h>
 #include <Edje.h>
-#include <Etk.h>
 #include <Elementary.h>
 #include <glib.h>
 #include <glib-object.h>

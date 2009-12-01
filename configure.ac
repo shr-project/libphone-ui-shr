@@ -20,7 +20,6 @@ PKG_CHECK_MODULES(E, [
 	ecore
 	ecore-evas
 	edje
-	etk
 	elementary
 ])
 

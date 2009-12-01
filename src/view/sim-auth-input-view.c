@@ -222,7 +222,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 	g_debug("sim_auth_ok_clicked(win=%d)", data->win);
 
 	if (data->mode == MODE_PIN && strcmp(data->pin, "")) {
-		if (string_is_pin(data->pin)) {
+		if (common_utils_is_pin(data->pin)) {
 			// PIN length is correct, try it
 			g_debug("PIN looks correct... sending");
 			data->msg = D_("Checking");
@@ -257,7 +257,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 	}
 	else if (data->mode == MODE_PUK_NEW_PIN_CONFIRM) {
 		g_debug("See if NEW PINs are identical");
-		if (!string_is_pin(data->pin)) {
+		if (!common_utils_is_pin(data->pin)) {
 			g_debug("NEW PIN must be 4-8 chars long and consist of digits");
 			data->mode = MODE_PUK;
 			data->msg = D_("PIN must be 4-8 chars long");
@@ -273,7 +273,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 					  frame_message_show, NULL);
 			ecore_timer_add(2, reset_callback, data);
 		}
-		else if (!string_is_puk(data->puk)) {
+		else if (!common_utils_is_puk(data->puk)) {
 			g_debug("PUK is invalid");
 			data->mode = MODE_PUK;
 			data->msg = D_("");

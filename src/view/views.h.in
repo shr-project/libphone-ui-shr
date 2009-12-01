@@ -7,10 +7,8 @@
 #include <Ecore_Evas.h>
 #include <Ecore.h>
 #include <Edje.h>
-#include <Etk.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "helper.h"
 #include "window.h"
 #include "call-common.h"
 #include "contact-list-common.h"

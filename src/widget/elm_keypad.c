@@ -1,10 +1,9 @@
-#include "elm_keypad.h"
 #include <Elementary.h>
-
-// for g_debug()
 #include <glib-2.0/glib.h>
 
-#include "elm_config.h"
+#include "elm_keypad.h"
+
+#define DEFAULT_THEME "@DATADIR@/libphone-ui-shr/default.edj"
 
 /* HACKS FROM elm_priv.h that should be removed */
 #if 1
@@ -14,11 +13,6 @@ void         elm_widget_del_hook_set(Evas_Object *obj, void (*func) (Evas_Object
 void         elm_widget_resize_object_set(Evas_Object *obj, Evas_Object *sobj);
 Evas_Object *elm_widget_add(Evas *evas);
 #endif
-
-
-// TODO: Talk about it with raster
-// got it from elm_priv.h
-#define ELM_NEW(t) calloc(1, sizeof(t))
 
 typedef struct _Widget_Data Widget_Data;
 
@@ -132,7 +126,7 @@ elm_keypad_add(Evas_Object * parent)
 	Evas *e;
 	Widget_Data *wd;
 
-	wd = ELM_NEW(Widget_Data);
+	wd = calloc(1, sizeof(Widget_Data));
 	e = evas_object_evas_get(parent);
 	wd->widget = elm_widget_add(e);
 	elm_widget_data_set(wd->widget, wd);

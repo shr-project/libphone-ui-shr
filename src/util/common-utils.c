@@ -2,6 +2,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "common-utils.h"
 
@@ -137,3 +138,37 @@ common_utils_object_get_ref(void *object)
 	count = GPOINTER_TO_INT(ret);
 	return count;
 }
+
+int
+common_utils_is_pin(const char *string)
+{
+	if (strlen(string) < 4 || strlen(string) > 8)
+		return 0;
+
+	const char *p;
+	for (p = string ; *p ; p++) {
+		if (!isdigit(*p)) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
+
+int
+common_utils_is_puk(const char *string)
+{
+	if (strlen(string) != 8)
+		return 0;
+
+	const char *p;
+	for (p = string ; *p ; p++) {
+		if (!isdigit(*p)) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+

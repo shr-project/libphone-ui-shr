@@ -23,12 +23,9 @@ shr_la_SOURCES = \
 	phoneui-contacts.h phoneui-contacts.c \
 	phoneui-ussd.h phoneui-ussd.c \
 	phoneui-quick-settings.h phoneui-quick-settings.c \
-	widget/etk_tree_model_edje.h widget/etk_tree_model_edje.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	util/helper.h util/helper.c \
-	util/instance.h util/instance.c \
 	util/window.h util/window.c \
-	util/view.h util/view.c \
 	view/views.h \
 	view/dialer-view.c \
 	view/idle-view.c \
@@ -42,7 +39,6 @@ shr_la_SOURCES = \
 	view/message-delete-view.c \
 	view/message-show-view.c \
 	view/message-list-view.c \
-	view/message-folder-view.c \
 	view/call-common.h view/call-common.c \
 	view/call-incoming-view.c \
 	view/call-active-view.c \

@@ -28,4 +28,9 @@ common_utils_object_unref_free(void *object);
 int
 common_utils_object_get_ref(void *object);
 
+int
+common_utils_is_pin(const char *string);
+int
+common_utils_is_puk(const char *string);
+
 #endif

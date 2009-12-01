@@ -1,8 +1,6 @@
 #include "phoneui-call.h"
 #include "call-common.h"
 #include <glib.h>
-#include <assert.h>
-#include "instance.h"
 #include "window.h"
 #include "views.h"
 
@@ -53,7 +51,6 @@ _show(const int id, const int status, const char *number, int type)
 {
 	struct Window *win = window_new(D_("Call"));
 	window_delete_callback_set(win, _delete);
-	instance_manager_add(INSTANCE_CALL, id, win);
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
