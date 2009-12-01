@@ -57,7 +57,6 @@ data/Makefile
 src/Makefile
 src/phoneui-shr.h
 src/view/views.h
-src/widget/elm_config.h
 po/Makefile.in
 ])
 
