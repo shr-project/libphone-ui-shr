@@ -1,9 +1,8 @@
 #include <Elementary.h>
 #include <glib-2.0/glib.h>
 
-#include "elm_keypad.h"
+#include "view/views.h"
 
-#define DEFAULT_THEME "@DATADIR@/libphone-ui-shr/default.edj"
 
 /* HACKS FROM elm_priv.h that should be removed */
 #if 1
