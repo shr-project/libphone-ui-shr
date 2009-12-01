@@ -1,8 +1,9 @@
+#: src/view/sim-auth-input-view.c:279
 msgid ""
 msgstr ""
 "Project-Id-Version: libframeworkd-phoneui-efl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-05 23:57+0200\n"
+"POT-Creation-Date: 2009-12-01 21:15+0200\n"
 "PO-Revision-Date: 2009-04-07 14:55+0100\n"
 "Last-Translator: Pau Espin Pedrol <pespin.shar@gmail.com>\n"
 "Language-Team:  <pespin.shar@gmail.com>\n"
@@ -12,417 +13,453 @@ msgstr ""
 "X-Poedit-Language: Catalan\n"
 "X-Poedit-Country: SPAIN\n"
 
-#: libframeworkd-phoneui-efl/src/phoneui-contacts.c:16
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:254
-msgid "Contacts"
-msgstr "Contactes"
-
-#: libframeworkd-phoneui-efl/src/phoneui-messages.c:16
-msgid "Messages"
-msgstr "Missatges"
-
-#: libframeworkd-phoneui-efl/src/view/ussd-view.c:51
-msgid "Data:"
-msgstr "Data:"
-
-#: libframeworkd-phoneui-efl/src/view/ussd-view.c:55
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:112
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:177
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:84
-#: libframeworkd-phoneui-efl/src/view/dialog-view.c:31
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:107
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:298
-msgid "Close"
-msgstr "Tancar"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:35
-msgid "Inbox"
-msgstr "Safata d'entrada"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:38
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:55
-#: libframeworkd-phoneui-efl/src/view/message-folder-view.c:71
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:94
-msgid "New"
-msgstr "Nou"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:48
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:67
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:117
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:106
-msgid "Options"
-msgstr "Opcions"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:62
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:148
-msgid "Answer"
-msgstr "Respondre"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:69
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:98
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:302
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:131
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:189
-msgid "Delete"
-msgstr "Elimina"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:79
-#: libframeworkd-phoneui-efl/src/view/message-folder-view.c:77
-msgid "Show"
-msgstr "Mostra"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:215
-msgid "SMS Answer"
-msgstr "Respon SMS"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:225
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:148
-#: libframeworkd-phoneui-efl/src/view/message-folder-view.c:119
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:204
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:168
-msgid "Compose SMS"
-msgstr "Escriu SMS"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:243
-msgid "Show Message"
-msgstr "Mostra el Missatge"
-
-#: libframeworkd-phoneui-efl/src/view/message-list-view.c:263
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:183
-msgid "Delete Message"
-msgstr "Elimina el Missatge"
-
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:61
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:96
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:138
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:100
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:177
-#: libframeworkd-phoneui-efl/src/phoneui-call.c:44
+#: src/phoneui-call.c:132 src/view/contact-list-view.c:87
+#: src/view/contact-show-view.c:338 src/view/dialer-view.c:136
+#: src/view/message-show-view.c:335
 msgid "Call"
 msgstr "Trucar"
 
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:84
-msgid "SMS"
-msgstr "SMS"
+#: src/phoneui-contacts.c:22 src/view/dialer-view.c:314
+msgid "Contacts"
+msgstr "Contactes"
 
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:91
-msgid "Edit"
-msgstr "Edita"
+#: src/phoneui-contacts.c:46
+#, fuzzy
+msgid "Contact"
+msgstr "Contactes"
 
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:122
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:172
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:226
+#: src/phoneui-contacts.c:69 src/view/contact-list-view.c:159
 msgid "New Contact"
 msgstr "Contacte Nou"
 
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:166
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:174
-msgid "Edit Contact"
-msgstr "Editar Contacte"
+#: src/phoneui-dialer.c:22
+msgid "Dialer"
+msgstr "Marcador"
 
-#: libframeworkd-phoneui-efl/src/view/contact-list-view.c:182
-msgid "Delete Contact"
-msgstr "Eliminar Contacte"
+#: src/phoneui-dialog.c:11
+msgid "Information"
+msgstr "Informació"
 
-#: libframeworkd-phoneui-efl/src/view/call-incoming-view.c:29
-msgid "Incoming call"
-msgstr "Trucada entrant"
+#: src/phoneui-incoming-message.c:12
+msgid "New Message"
+msgstr "Missatge Nou"
 
-#: libframeworkd-phoneui-efl/src/view/call-incoming-view.c:34
-msgid "Accept"
-msgstr "Accepta"
+#: src/phoneui-messages.c:23
+msgid "Messages"
+msgstr "Missatges"
 
-#: libframeworkd-phoneui-efl/src/view/call-incoming-view.c:40
-#: libframeworkd-phoneui-efl/src/view/call-active-view.c:34
-msgid "Release"
-msgstr "Despenja"
+#: src/phoneui-messages.c:32
+#, fuzzy
+msgid "Message"
+msgstr "Missatges"
 
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:208
-msgid "Enter a NEW PIN"
-msgstr "Introdueix un nou PIN"
+#: src/phoneui-sim-auth.c:20
+msgid "SIM Auth"
+msgstr "Identificació SIM"
 
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:214
-msgid "Confirm your NEW PIN"
-msgstr "Confirma el nou PIN"
+#: src/phoneui-ussd.c:12
+msgid "Service Data"
+msgstr "Service Data"
 
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:296
-msgid "Please enter your PIN"
-msgstr "Si us plau, introdueix el teu PIN"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:298
-msgid "Please enter your PUK"
-msgstr "Si us plau, introdueix el teu PUK"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:308
-msgid "OK"
-msgstr "D'acord"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:336
-msgid "Checking"
-msgstr "Verificant"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:341
-msgid "PIN correct"
-msgstr "PIN correcte"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:346
-msgid "PIN wrong"
-msgstr "PIN incorrecte"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:351
-msgid "PIN confirmation wrong"
-msgstr "Confirmació del PIN incorrecta"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:356
-msgid "New PIN saved"
-msgstr "Nou PIN desat"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:361
-msgid "PUK wrong"
-msgstr "PUK incorrecte"
-
-#: libframeworkd-phoneui-efl/src/view/sim-auth-input-view.c:366
-msgid "PIN must be 4-8 chars long"
-msgstr "el PIN ha de tenir una longitud d'entre 4 i 8 caràcters."
-
-#: libframeworkd-phoneui-efl/src/view/call-active-view.c:29
-msgid "Active call"
-msgstr "Trucada activa"
-
-#: libframeworkd-phoneui-efl/src/view/call-active-view.c:40
-#: libframeworkd-phoneui-efl/src/view/call-common.c:33
+#: src/view/call-active-view.c:137 src/view/call-common.c:106
 msgid "Speaker"
 msgstr "Altaveus"
 
-#: libframeworkd-phoneui-efl/src/view/call-active-view.c:46
+#: src/view/call-active-view.c:148
+msgid "Mute"
+msgstr ""
+
+#: src/view/call-active-view.c:158
+msgid "Volume"
+msgstr ""
+
+#: src/view/call-active-view.c:171
+msgid "Mic"
+msgstr ""
+
+#: src/view/call-active-view.c:182 src/view/call-common.c:169
+msgid "Release"
+msgstr "Despenja"
+
+#: src/view/call-active-view.c:189 src/view/call-active-view.c:258
 msgid "Keypad"
 msgstr "Teclat Numèric"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:118
+#: src/view/call-active-view.c:263
+msgid "Hide Keypad"
+msgstr "Amaga el Teclat Numèric"
+
+#: src/view/call-common.c:98
+msgid "Handset"
+msgstr ""
+
+#: src/view/call-common.c:147
+msgid "Pickup"
+msgstr ""
+
+#: src/view/call-incoming-view.c:48
+msgid "Accept"
+msgstr "Accepta"
+
+#: src/view/call-incoming-view.c:60
+msgid "Reject"
+msgstr ""
+
+#: src/view/contact-delete-view.c:89 src/view/message-delete-view.c:106
+msgid "Do you really want to delete it?"
+msgstr "Estàs segur que vols eliminar-lo?"
+
+#: src/view/contact-delete-view.c:94 src/view/contact-list-view.c:313
+#: src/view/contact-show-view.c:622 src/view/message-delete-view.c:109
+#: src/view/message-new-view.c:764
+msgid "Yes"
+msgstr "Sí"
+
+#: src/view/contact-delete-view.c:101 src/view/contact-list-view.c:318
+#: src/view/contact-show-view.c:626 src/view/message-delete-view.c:116
+#: src/view/message-new-view.c:771
+msgid "No"
+msgstr "No"
+
+#: src/view/contact-list-view.c:80 src/view/message-list-view.c:105
+msgid "New"
+msgstr "Nou"
+
+#: src/view/contact-list-view.c:94 src/view/message-list-view.c:115
+#: src/view/message-show-view.c:312
+msgid "Options"
+msgstr "Opcions"
+
+#: src/view/contact-list-view.c:112 src/view/contact-show-view.c:358
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:120 src/view/message-list-view.c:149
+msgid "Show"
+msgstr "Mostra"
+
+#: src/view/contact-list-view.c:128 src/view/message-list-view.c:138
+#: src/view/message-show-view.c:327 src/view/sim-auth-input-view.c:375
+msgid "Delete"
+msgstr "Elimina"
+
+#: src/view/contact-list-view.c:230 src/view/dialer-view.c:242
+#: src/view/message-list-view.c:212 src/view/message-show-view.c:163
+msgid "Compose SMS"
+msgstr "Escriu SMS"
+
+#: src/view/contact-list-view.c:255
+#, fuzzy
+msgid "Show Contact"
+msgstr "Contacte Nou"
+
+#: src/view/contact-list-view.c:324
+msgid "Really delete this contact?"
+msgstr ""
+
+#: src/view/contact-show-view.c:298 src/view/dialer-view.c:122
+#: src/view/dialog-view.c:49 src/view/message-new-view.c:235
+#: src/view/message-show-view.c:301 src/view/ussd-view.c:71
+msgid "Close"
+msgstr "Tancar"
+
+#: src/view/contact-show-view.c:305
+msgid "Add Field"
+msgstr ""
+
+#: src/view/contact-show-view.c:312
+#, fuzzy
+msgid "Actions"
+msgstr "Opcions"
+
+#: src/view/contact-show-view.c:448 src/view/contact-show-view.c:455
+#: src/view/contact-show-view.c:462 src/view/contact-show-view.c:658
+#: src/view/message-new-view.c:377 src/view/message-new-view.c:561
+#: src/view/message-new-view.c:663
+msgid "Back"
+msgstr "Enrere"
+
+#: src/view/contact-show-view.c:632
+msgid "Really discard all changes?"
+msgstr ""
+
+#: src/view/contact-show-view.c:655
+msgid "Edit Field"
+msgstr ""
+
+#: src/view/contact-show-view.c:665 src/view/dialer-view.c:160
+msgid "Save"
+msgstr "Desa"
+
+#: src/view/contact-show-view.c:672
+msgid "Field: "
+msgstr ""
+
+#: src/view/contact-show-view.c:690
+#, fuzzy
+msgid "Value: "
+msgstr "Nom: "
+
+#: src/view/dialer-view.c:95
+msgid "Click to open contactlist."
+msgstr "Clic per a obrir la llista de contactes."
+
+#: src/view/dialer-view.c:129
+msgid "More"
+msgstr "Més"
+
+#: src/view/dialer-view.c:168
+msgid "Send SMS"
+msgstr "Envia SMS"
+
+#: src/view/dialog-view.c:41
+msgid ""
+"Your storage is full. Please delete some messages or you are not going to "
+"receive messages anymore!"
+msgstr ""
+"L'emmagatzematge està ple. Si us plau, elimina alguns missatges o no podràs "
+"rebre'n més!"
+
+#: src/view/dialog-view.c:44
+msgid "GSM is not available, because no SIM card is present."
+msgstr "El GSM no està disponible perquè no hi ha cap targeta SIM."
+
+#: src/view/dialog-view.c:46
+msgid "Unknown message."
+msgstr "Missatge desconegut."
+
+#: src/view/message-delete-view.c:173
+msgid "Deleting.."
+msgstr "Eliminant.."
+
+#: src/view/message-list-view.c:102
+msgid "Inbox"
+msgstr "Safata d'entrada"
+
+#: src/view/message-list-view.c:130 src/view/message-show-view.c:355
+msgid "Answer"
+msgstr "Respondre"
+
+#: src/view/message-list-view.c:250
+msgid "Show Message"
+msgstr "Mostra el Missatge"
+
+#: src/view/message-list-view.c:278
+msgid "SMS Answer"
+msgstr "Respon SMS"
+
+#: src/view/message-list-view.c:310 src/view/message-show-view.c:193
+msgid "Delete Message"
+msgstr "Elimina el Missatge"
+
+#: src/view/message-new-view.c:242
 msgid "Continue"
 msgstr "Continuar"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:175
+#: src/view/message-new-view.c:321 src/view/message-new-view.c:352
 #, c-format
 msgid "%d characters left [%d]"
 msgstr "%d caràcters restants [%d]"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:191
+#: src/view/message-new-view.c:374
 msgid "Define Recipients"
 msgstr "Defineix Destinataris"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:194
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:337
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:389
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:171
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:229
-msgid "Back"
-msgstr "Enrere"
-
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:200
+#: src/view/message-new-view.c:384
 msgid "Send"
 msgstr "Envia"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:206
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:181
+#: src/view/message-new-view.c:391 src/view/message-show-view.c:343
 msgid "Add Contact"
 msgstr "Afegir Contacte"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:212
+#: src/view/message-new-view.c:399
 msgid "Add Number"
 msgstr "Afegir Número"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:218
+#: src/view/message-new-view.c:407
 msgid "Remove"
 msgstr "Suprimeix"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:334
+#: src/view/message-new-view.c:558
 msgid "Add a Contact"
 msgstr "Afegir un Contacte"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:343
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:395
+#: src/view/message-new-view.c:568 src/view/message-new-view.c:670
 msgid "Add"
 msgstr "Afegir"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:386
+#: src/view/message-new-view.c:660
 msgid "Add a Number"
 msgstr "Afegir un Número"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:454
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:336
+#: src/view/message-new-view.c:759
 msgid "Do you really want to quit?"
 msgstr "Estàs segur que vols sortir?"
 
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:459
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:341
-#: libframeworkd-phoneui-efl/src/view/message-delete-view.c:77
-#: libframeworkd-phoneui-efl/src/view/contact-delete-view.c:78
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:273
-msgid "Yes"
-msgstr "Sí"
-
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:465
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:347
-#: libframeworkd-phoneui-efl/src/view/message-delete-view.c:83
-#: libframeworkd-phoneui-efl/src/view/contact-delete-view.c:84
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:279
-msgid "No"
-msgstr "No"
-
-#: libframeworkd-phoneui-efl/src/view/message-new-view.c:493
+#: src/view/message-new-view.c:823
 msgid "Sending.."
 msgstr "Enviant.."
 
-#: libframeworkd-phoneui-efl/src/view/message-folder-view.c:35
-msgid "Loading.."
-msgstr "Carregant.."
-
-#: libframeworkd-phoneui-efl/src/view/message-folder-view.c:68
-msgid "Folders"
-msgstr "Directoris"
-
-#: libframeworkd-phoneui-efl/src/view/message-folder-view.c:100
-#, c-format
-msgid "%d messages"
-msgstr "%d missatges"
-
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:183
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:115
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:235
-msgid "Save"
-msgstr "Desa"
-
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:189
-msgid "Name: "
-msgstr "Nom: "
-
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:205
-msgid "Number: "
-msgstr "Número: "
-
-#: libframeworkd-phoneui-efl/src/view/contact-edit-view.c:376
-msgid "Loading... "
-msgstr "Carregant..."
-
-#: libframeworkd-phoneui-efl/src/view/message-delete-view.c:74
-#: libframeworkd-phoneui-efl/src/view/contact-delete-view.c:73
-msgid "Do you really want to delete it?"
-msgstr "Estàs segur que vols eliminar-lo?"
-
-#: libframeworkd-phoneui-efl/src/view/message-delete-view.c:115
-msgid "Deleting.."
-msgstr "Eliminant.."
-
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:61
-msgid "Click to open contactlist."
-msgstr "Clic per a obrir la llista de contactes."
-
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:90
-msgid "More"
-msgstr "Més"
-
-#: libframeworkd-phoneui-efl/src/view/dialer-view.c:122
-msgid "Send SMS"
-msgstr "Envia SMS"
-
-#: libframeworkd-phoneui-efl/src/view/dialog-view.c:24
-msgid "Your storage is full. Please delete some messages or you are not going to receive messages anymore!"
-msgstr "L'emmagatzematge està ple. Si us plau, elimina alguns missatges o no podràs rebre'n més!"
-
-#: libframeworkd-phoneui-efl/src/view/dialog-view.c:26
-msgid "GSM is not available, because no SIM card is present."
-msgstr "El GSM no està disponible perquè no hi ha cap targeta SIM."
-
-#: libframeworkd-phoneui-efl/src/view/dialog-view.c:28
-msgid "Unknown message."
-msgstr "Missatge desconegut."
-
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:102
+#: src/view/message-show-view.c:278
 msgid "From:"
 msgstr "De:"
 
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:103
+#: src/view/message-show-view.c:279
 msgid "Date:"
 msgstr "Data:"
 
-#: libframeworkd-phoneui-efl/src/view/message-show-view.c:104
+#: src/view/message-show-view.c:280
 msgid "Status:"
 msgstr "Estat:"
 
-#: libframeworkd-phoneui-efl/src/view/call-common.c:37
-msgid "No Speaker"
-msgstr "No Altaveus"
+#: src/view/sim-auth-input-view.c:71
+msgid "Please enter your PIN"
+msgstr "Si us plau, introdueix el teu PIN"
 
-#: libframeworkd-phoneui-efl/src/view/call-common.c:46
-msgid "Show Keypad"
-msgstr "Mostra el Teclat Numèric"
+#: src/view/sim-auth-input-view.c:76
+#, fuzzy
+msgid "Please enter your PIN2"
+msgstr "Si us plau, introdueix el teu PIN"
 
-#: libframeworkd-phoneui-efl/src/view/call-common.c:50
-msgid "Hide Keypad"
-msgstr "Amaga el Teclat Numèric"
+#: src/view/sim-auth-input-view.c:81
+msgid "Please enter your PUK"
+msgstr "Si us plau, introdueix el teu PUK"
 
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:183
-msgid "Modify"
-msgstr "Modificar"
+#: src/view/sim-auth-input-view.c:86
+#, fuzzy
+msgid "Please enter your PUK2"
+msgstr "Si us plau, introdueix el teu PUK"
 
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:212
-msgid "Modify Contact"
-msgstr "Modificar Contacte"
+#: src/view/sim-auth-input-view.c:90 src/view/sim-auth-input-view.c:382
+msgid "OK"
+msgstr "D'acord"
 
-#: libframeworkd-phoneui-efl/src/view/contact-show-view.c:295
-msgid "Your storage is full. Before adding new contacts, you have to delete some old ones."
-msgstr "L'emmagatzematge està ple. Abans d'afegir nous missatges has de eliminar-ne algun d'antic."
+#: src/view/sim-auth-input-view.c:97
+#, fuzzy
+msgid "Unknown error"
+msgstr "Missatge desconegut."
 
-#: libframeworkd-phoneui-efl/src/phoneui-ussd.c:17
-msgid "Service Data"
-msgstr "Service Data"
+#: src/view/sim-auth-input-view.c:182
+msgid "PIN correct"
+msgstr "PIN correcte"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:133
+#: src/view/sim-auth-input-view.c:187
+msgid "Failed"
+msgstr ""
+
+#: src/view/sim-auth-input-view.c:228 src/view/sim-auth-input-view.c:286
+#: src/view/sim-auth-input-view.c:418
+msgid "Checking"
+msgstr "Verificant"
+
+#: src/view/sim-auth-input-view.c:237
+msgid "PIN wrong"
+msgstr "PIN incorrecte"
+
+#: src/view/sim-auth-input-view.c:246
+msgid "Enter a NEW PIN"
+msgstr "Introdueix un nou PIN"
+
+#: src/view/sim-auth-input-view.c:254
+msgid "Confirm your NEW PIN"
+msgstr "Confirma el nou PIN"
+
+#: src/view/sim-auth-input-view.c:263
+msgid "PIN must be 4-8 chars long"
+msgstr "el PIN ha de tenir una longitud d'entre 4 i 8 caràcters."
+
+#: src/view/sim-auth-input-view.c:271
+msgid "PIN confirmation wrong"
+msgstr "Confirmació del PIN incorrecta"
+
+#: src/view/ussd-view.c:67
+msgid "Data:"
+msgstr "Data:"
+
+#: src/widget/elm_keypad.c:145
 msgid "ABC"
 msgstr "ABC"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:134
+#: src/widget/elm_keypad.c:146
 msgid "DEF"
 msgstr "DEF"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:135
+#: src/widget/elm_keypad.c:147
 msgid "GHI"
 msgstr "GHI"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:136
+#: src/widget/elm_keypad.c:148
 msgid "JKL"
 msgstr "JKL"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:137
+#: src/widget/elm_keypad.c:149
 msgid "MNO"
 msgstr "MNO"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:138
+#: src/widget/elm_keypad.c:150
 msgid "PQRS"
 msgstr "PQRS"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:139
+#: src/widget/elm_keypad.c:151
 msgid "TUV"
 msgstr "TUV"
 
-#: libframeworkd-phoneui-efl/src/widget/elm_keypad.c:140
+#: src/widget/elm_keypad.c:152
 msgid "XYZ"
 msgstr "XYZ"
 
-#: libframeworkd-phoneui-efl/src/phoneui-dialer.c:16
-msgid "Dialer"
-msgstr "Marcador"
+#~ msgid "Edit"
+#~ msgstr "Edita"
 
-#: libframeworkd-phoneui-efl/src/phoneui-incoming-message.c:16
-msgid "New Message"
-msgstr "Missatge Nou"
+#~ msgid "Edit Contact"
+#~ msgstr "Editar Contacte"
 
-#: libframeworkd-phoneui-efl/src/phoneui-sim-auth.c:18
-msgid "SIM Auth"
-msgstr "Identificació SIM"
+#~ msgid "Delete Contact"
+#~ msgstr "Eliminar Contacte"
 
-#: libframeworkd-phoneui-efl/src/phoneui-dialog.c:14
-msgid "Information"
-msgstr "Informació"
+#~ msgid "Incoming call"
+#~ msgstr "Trucada entrant"
 
+#~ msgid "New PIN saved"
+#~ msgstr "Nou PIN desat"
+
+#~ msgid "PUK wrong"
+#~ msgstr "PUK incorrecte"
+
+#~ msgid "Active call"
+#~ msgstr "Trucada activa"
+
+#~ msgid "Loading.."
+#~ msgstr "Carregant.."
+
+#~ msgid "Folders"
+#~ msgstr "Directoris"
+
+#~ msgid "%d messages"
+#~ msgstr "%d missatges"
+
+#~ msgid "Number: "
+#~ msgstr "Número: "
+
+#~ msgid "Loading... "
+#~ msgstr "Carregant..."
+
+#~ msgid "No Speaker"
+#~ msgstr "No Altaveus"
+
+#~ msgid "Show Keypad"
+#~ msgstr "Mostra el Teclat Numèric"
+
+#~ msgid "Modify"
+#~ msgstr "Modificar"
+
+#~ msgid "Modify Contact"
+#~ msgstr "Modificar Contacte"
+
+#~ msgid ""
+#~ "Your storage is full. Before adding new contacts, you have to delete some "
+#~ "old ones."
+#~ msgstr ""
+#~ "L'emmagatzematge està ple. Abans d'afegir nous missatges has de eliminar-"
+#~ "ne algun d'antic."

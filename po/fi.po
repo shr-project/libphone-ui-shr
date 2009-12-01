@@ -3,11 +3,12 @@
 # Jussi Timperi <jussi.timperi@gmail.com>, 2009.
 # Timo Jyrinki <timo.jyrinki@iki.fi>, 2009.
 #
+#: src/view/sim-auth-input-view.c:279
 msgid ""
 msgstr ""
 "Project-Id-Version: libframeworkd-phoneui-efl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-02-26 18:51+0200\n"
+"POT-Creation-Date: 2009-12-01 21:15+0200\n"
 "PO-Revision-Date: 2009-03-10 15:49+0200\n"
 "Last-Translator: Timo Jyrinki <timo.jyrinki@iki.fi>\n"
 "Language-Team: Finnish <laatu@lokalisointi.org>\n"
@@ -15,388 +16,451 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/view/message-show-view.c:102
-msgid "From:"
-msgstr "Lähettäjä:"
-
-#: src/view/message-show-view.c:103
-msgid "Date:"
-msgstr "Päivämäärä:"
-
-#: src/view/message-show-view.c:104
-msgid "Status:"
-msgstr "Tila:"
-
-#: src/view/message-show-view.c:107 src/view/ussd-view.c:55
-#: src/view/message-new-view.c:112 src/view/contact-show-view.c:298
-#: src/view/dialer-view.c:86 src/view/dialog-view.c:31
-#: src/view/contact-edit-view.c:177
-msgid "Close"
-msgstr "Sulje"
-
-#: src/view/message-show-view.c:117 src/view/contact-list-view.c:67
-#: src/view/contact-show-view.c:106 src/view/message-list-view.c:46
-msgid "Options"
-msgstr "Valinnat"
-
-#: src/view/message-show-view.c:131 src/view/contact-list-view.c:98
-#: src/view/contact-show-view.c:189 src/view/sim-auth-input-view.c:302
-#: src/view/message-list-view.c:67
-msgid "Delete"
-msgstr "Poista"
-
-#: src/view/message-show-view.c:138 src/view/contact-list-view.c:61
-#: src/view/contact-show-view.c:100 src/view/contact-show-view.c:177
-#: src/view/dialer-view.c:98 src/phoneui-call.c:44
+#: src/phoneui-call.c:132 src/view/contact-list-view.c:87
+#: src/view/contact-show-view.c:338 src/view/dialer-view.c:136
+#: src/view/message-show-view.c:335
 msgid "Call"
 msgstr "Soita"
 
-#: src/view/message-show-view.c:148 src/view/message-list-view.c:60
-msgid "Answer"
-msgstr "Vastaa"
-
-#: src/view/message-show-view.c:168 src/view/message-folder-view.c:119
-#: src/view/contact-list-view.c:148 src/view/message-list-view.c:223
-#: src/view/dialer-view.c:206
-msgid "Compose SMS"
-msgstr "Luo viesti"
-
-#: src/view/message-show-view.c:183 src/view/message-list-view.c:261
-msgid "Delete Message"
-msgstr "Poista viesti"
-
-#: src/view/ussd-view.c:51
-msgid "Data:"
-msgstr "Data:"
-
-#: src/view/call-common.c:33 src/view/call-active-view.c:40
-msgid "Speaker"
-msgstr "Kaiutin"
-
-#: src/view/call-common.c:37
-msgid "No Speaker"
-msgstr "Kaiutin pois"
-
-#: src/view/call-common.c:46
-msgid "Show Keypad"
-msgstr "Näytä näppäimistö"
-
-#: src/view/call-common.c:50
-msgid "Hide Keypad"
-msgstr "Piilota näppäimistö"
-
-#: src/view/message-new-view.c:118
-msgid "Continue"
-msgstr "Jatka"
-
-#: src/view/message-new-view.c:176
-#, c-format
-msgid "%d characters left [%d]"
-msgstr "%d merkkiä jäljellä [%d]"
-
-#: src/view/message-new-view.c:192
-msgid "Define Recipients"
-msgstr "Määritä vastaanottajat"
-
-#: src/view/message-new-view.c:195 src/view/message-new-view.c:338
-#: src/view/message-new-view.c:390 src/view/contact-show-view.c:171
-#: src/view/contact-show-view.c:229
-msgid "Back"
-msgstr "Takaisin"
-
-#: src/view/message-new-view.c:201
-msgid "Send"
-msgstr "Lähetä"
-
-#: src/view/message-new-view.c:207 src/view/dialer-view.c:183
-msgid "Add Contact"
-msgstr "Lisää yhteystieto"
-
-#: src/view/message-new-view.c:213
-msgid "Add Number"
-msgstr "Lisää numero"
-
-#: src/view/message-new-view.c:219
-msgid "Remove"
-msgstr "Poista"
-
-#: src/view/message-new-view.c:335
-msgid "Add a Contact"
-msgstr "Lisää yhteystieto"
-
-#: src/view/message-new-view.c:344 src/view/message-new-view.c:396
-msgid "Add"
-msgstr "Lisää"
-
-#: src/view/message-new-view.c:387
-msgid "Add a Number"
-msgstr "Lisää numero"
-
-#: src/view/message-new-view.c:455 src/view/contact-edit-view.c:333
-msgid "Do you really want to quit?"
-msgstr "Haluatko varmasti lopettaa?"
-
-#: src/view/message-new-view.c:460 src/view/contact-show-view.c:273
-#: src/view/contact-delete-view.c:78 src/view/message-delete-view.c:77
-#: src/view/contact-edit-view.c:338
-msgid "Yes"
-msgstr "Kyllä"
-
-#: src/view/message-new-view.c:466 src/view/contact-show-view.c:279
-#: src/view/contact-delete-view.c:84 src/view/message-delete-view.c:83
-#: src/view/contact-edit-view.c:344
-msgid "No"
-msgstr "Ei"
-
-#: src/view/message-new-view.c:494
-msgid "Sending.."
-msgstr "Lähetetään.."
-
-#: src/view/message-folder-view.c:35
-msgid "Loading.."
-msgstr "Ladataan.."
-
-#: src/view/message-folder-view.c:68
-msgid "Folders"
-msgstr "Kansiot"
-
-#: src/view/message-folder-view.c:71 src/view/contact-list-view.c:55
-#: src/view/contact-show-view.c:94 src/view/message-list-view.c:36
-msgid "New"
-msgstr "Uusi"
-
-#: src/view/message-folder-view.c:77 src/view/message-list-view.c:77
-msgid "Show"
-msgstr "Näytä"
-
-#: src/view/message-folder-view.c:100
-#, c-format
-msgid "%d messages"
-msgstr "%d viestiä"
-
-#: src/view/contact-list-view.c:84
-msgid "SMS"
-msgstr "SMS"
-
-#: src/view/contact-list-view.c:91
-msgid "Edit"
-msgstr "Muokkaa"
-
-#: src/view/contact-list-view.c:122 src/view/contact-show-view.c:226
-#: src/view/contact-edit-view.c:172
-msgid "New Contact"
-msgstr "Uusi yhteystieto"
-
-#: src/view/contact-list-view.c:166 src/view/contact-edit-view.c:174
-msgid "Edit Contact"
-msgstr "Muokkaa yhteystietoa"
-
-#: src/view/contact-list-view.c:182
-msgid "Delete Contact"
-msgstr "Poista yhteystieto"
-
-#: src/view/call-active-view.c:29
-msgid "Active call"
-msgstr "Aktiivinen puhelu"
-
-#: src/view/call-active-view.c:34 src/view/call-incoming-view.c:40
-msgid "Release"
-msgstr "Lopeta"
-
-#: src/view/call-active-view.c:46
-msgid "Keypad"
-msgstr "Näppäimistö"
-
-#: src/view/call-incoming-view.c:29
-msgid "Incoming call"
-msgstr "Saapuva puhelu"
-
-#: src/view/call-incoming-view.c:34
-msgid "Accept"
-msgstr "Hyväksy"
-
-#: src/view/contact-show-view.c:183
-msgid "Modify"
-msgstr "Muokkaa"
-
-#: src/view/contact-show-view.c:212
-msgid "Modify Contact"
-msgstr "Muokkaa yhteystietoa"
-
-#: src/view/contact-show-view.c:235 src/view/dialer-view.c:117
-#: src/view/contact-edit-view.c:183
-msgid "Save"
-msgstr "Tallenna"
-
-#: src/view/contact-show-view.c:295
-msgid ""
-"Your storage is full. Before adding new contacts, you have to delete some "
-"old ones."
-msgstr "Tila on loppu. Poista vanhoja yhteystietoja ennen uusien lisäämistä."
-
-#: src/view/contact-delete-view.c:73 src/view/message-delete-view.c:74
-msgid "Do you really want to delete it?"
-msgstr "Haluatko varmasti poistaa sen?"
-
-#: src/view/message-delete-view.c:115
-msgid "Deleting.."
-msgstr "Poistetaan.."
-
-#: src/view/sim-auth-input-view.c:208
-msgid "Enter a NEW PIN"
-msgstr "Anna uusi PIN-koodi"
-
-#: src/view/sim-auth-input-view.c:214
-msgid "Confirm your NEW PIN"
-msgstr "Vahvista uusi PIN-koodi"
-
-#: src/view/sim-auth-input-view.c:296
-msgid "Please enter your PIN"
-msgstr "Anna PIN-koodi"
-
-#: src/view/sim-auth-input-view.c:298
-msgid "Please enter your PUK"
-msgstr "Anna PUK-koodi"
-
-#: src/view/sim-auth-input-view.c:308
-msgid "OK"
-msgstr "OK"
-
-#: src/view/sim-auth-input-view.c:336
-msgid "Checking"
-msgstr "Tarkistetaan"
-
-#: src/view/sim-auth-input-view.c:341
-msgid "PIN correct"
-msgstr "PIN-koodi oikein"
-
-#: src/view/sim-auth-input-view.c:346
-msgid "PIN wrong"
-msgstr "PIN-koodi väärin"
-
-#: src/view/sim-auth-input-view.c:351
-msgid "PIN confirmation wrong"
-msgstr "PIN-koodin varmennus väärin"
-
-#: src/view/sim-auth-input-view.c:356
-msgid "New PIN saved"
-msgstr "Uusi PIN-koodi tallennettu"
-
-#: src/view/sim-auth-input-view.c:361
-msgid "PUK wrong"
-msgstr "PUK-koodi väärin"
-
-#: src/view/sim-auth-input-view.c:366
-msgid "PIN must be 4-8 chars long"
-msgstr "PIN-koodin täytyy olla 4-8 merkkiä pitkä"
-
-#: src/view/message-list-view.c:33
-msgid "Inbox"
-msgstr "Saapuneet"
-
-#: src/view/message-list-view.c:213
-msgid "SMS Answer"
-msgstr "Vastaa tekstiviestiin"
-
-#: src/view/message-list-view.c:241
-msgid "Show Message"
-msgstr "Näytä viesti"
-
-#: src/view/dialer-view.c:63
-msgid "Click to open contactlist."
-msgstr "Paina avataksesi yhteystietoluettelon."
-
-#: src/view/dialer-view.c:92
-msgid "More"
-msgstr "Lisää"
-
-#: src/view/dialer-view.c:124
-msgid "Send SMS"
-msgstr "Lähetä tekstiviesti"
-
-#: src/view/dialer-view.c:256 src/phoneui-contacts.c:16
+#: src/phoneui-contacts.c:22 src/view/dialer-view.c:314
 msgid "Contacts"
 msgstr "Yhteystiedot"
 
-#: src/view/dialog-view.c:24
+#: src/phoneui-contacts.c:46
+#, fuzzy
+msgid "Contact"
+msgstr "Yhteystiedot"
+
+#: src/phoneui-contacts.c:69 src/view/contact-list-view.c:159
+msgid "New Contact"
+msgstr "Uusi yhteystieto"
+
+#: src/phoneui-dialer.c:22
+msgid "Dialer"
+msgstr "Soitto"
+
+#: src/phoneui-dialog.c:11
+msgid "Information"
+msgstr "Tietoja"
+
+#: src/phoneui-incoming-message.c:12
+msgid "New Message"
+msgstr "Uusi viesti"
+
+#: src/phoneui-messages.c:23
+msgid "Messages"
+msgstr "Viestit"
+
+#: src/phoneui-messages.c:32
+#, fuzzy
+msgid "Message"
+msgstr "Viestit"
+
+#: src/phoneui-sim-auth.c:20
+msgid "SIM Auth"
+msgstr "SIM-todentaminen"
+
+#: src/phoneui-ussd.c:12
+msgid "Service Data"
+msgstr "Palveludata"
+
+#: src/view/call-active-view.c:137 src/view/call-common.c:106
+msgid "Speaker"
+msgstr "Kaiutin"
+
+#: src/view/call-active-view.c:148
+msgid "Mute"
+msgstr ""
+
+#: src/view/call-active-view.c:158
+msgid "Volume"
+msgstr ""
+
+#: src/view/call-active-view.c:171
+msgid "Mic"
+msgstr ""
+
+#: src/view/call-active-view.c:182 src/view/call-common.c:169
+msgid "Release"
+msgstr "Lopeta"
+
+#: src/view/call-active-view.c:189 src/view/call-active-view.c:258
+msgid "Keypad"
+msgstr "Näppäimistö"
+
+#: src/view/call-active-view.c:263
+msgid "Hide Keypad"
+msgstr "Piilota näppäimistö"
+
+#: src/view/call-common.c:98
+msgid "Handset"
+msgstr ""
+
+#: src/view/call-common.c:147
+msgid "Pickup"
+msgstr ""
+
+#: src/view/call-incoming-view.c:48
+msgid "Accept"
+msgstr "Hyväksy"
+
+#: src/view/call-incoming-view.c:60
+msgid "Reject"
+msgstr ""
+
+#: src/view/contact-delete-view.c:89 src/view/message-delete-view.c:106
+msgid "Do you really want to delete it?"
+msgstr "Haluatko varmasti poistaa sen?"
+
+#: src/view/contact-delete-view.c:94 src/view/contact-list-view.c:313
+#: src/view/contact-show-view.c:622 src/view/message-delete-view.c:109
+#: src/view/message-new-view.c:764
+msgid "Yes"
+msgstr "Kyllä"
+
+#: src/view/contact-delete-view.c:101 src/view/contact-list-view.c:318
+#: src/view/contact-show-view.c:626 src/view/message-delete-view.c:116
+#: src/view/message-new-view.c:771
+msgid "No"
+msgstr "Ei"
+
+#: src/view/contact-list-view.c:80 src/view/message-list-view.c:105
+msgid "New"
+msgstr "Uusi"
+
+#: src/view/contact-list-view.c:94 src/view/message-list-view.c:115
+#: src/view/message-show-view.c:312
+msgid "Options"
+msgstr "Valinnat"
+
+#: src/view/contact-list-view.c:112 src/view/contact-show-view.c:358
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:120 src/view/message-list-view.c:149
+msgid "Show"
+msgstr "Näytä"
+
+#: src/view/contact-list-view.c:128 src/view/message-list-view.c:138
+#: src/view/message-show-view.c:327 src/view/sim-auth-input-view.c:375
+msgid "Delete"
+msgstr "Poista"
+
+#: src/view/contact-list-view.c:230 src/view/dialer-view.c:242
+#: src/view/message-list-view.c:212 src/view/message-show-view.c:163
+msgid "Compose SMS"
+msgstr "Luo viesti"
+
+#: src/view/contact-list-view.c:255
+#, fuzzy
+msgid "Show Contact"
+msgstr "Uusi yhteystieto"
+
+#: src/view/contact-list-view.c:324
+msgid "Really delete this contact?"
+msgstr ""
+
+#: src/view/contact-show-view.c:298 src/view/dialer-view.c:122
+#: src/view/dialog-view.c:49 src/view/message-new-view.c:235
+#: src/view/message-show-view.c:301 src/view/ussd-view.c:71
+msgid "Close"
+msgstr "Sulje"
+
+#: src/view/contact-show-view.c:305
+msgid "Add Field"
+msgstr ""
+
+#: src/view/contact-show-view.c:312
+#, fuzzy
+msgid "Actions"
+msgstr "Valinnat"
+
+#: src/view/contact-show-view.c:448 src/view/contact-show-view.c:455
+#: src/view/contact-show-view.c:462 src/view/contact-show-view.c:658
+#: src/view/message-new-view.c:377 src/view/message-new-view.c:561
+#: src/view/message-new-view.c:663
+msgid "Back"
+msgstr "Takaisin"
+
+#: src/view/contact-show-view.c:632
+msgid "Really discard all changes?"
+msgstr ""
+
+#: src/view/contact-show-view.c:655
+msgid "Edit Field"
+msgstr ""
+
+#: src/view/contact-show-view.c:665 src/view/dialer-view.c:160
+msgid "Save"
+msgstr "Tallenna"
+
+#: src/view/contact-show-view.c:672
+msgid "Field: "
+msgstr ""
+
+#: src/view/contact-show-view.c:690
+#, fuzzy
+msgid "Value: "
+msgstr "Nimi: "
+
+#: src/view/dialer-view.c:95
+msgid "Click to open contactlist."
+msgstr "Paina avataksesi yhteystietoluettelon."
+
+#: src/view/dialer-view.c:129
+msgid "More"
+msgstr "Lisää"
+
+#: src/view/dialer-view.c:168
+msgid "Send SMS"
+msgstr "Lähetä tekstiviesti"
+
+#: src/view/dialog-view.c:41
 msgid ""
 "Your storage is full. Please delete some messages or you are not going to "
 "receive messages anymore!"
 msgstr ""
 "Tila on loppu. Poista vanhoja viestejä tai et voi vastaanottaa viestejä enää."
 
-#: src/view/dialog-view.c:26
+#: src/view/dialog-view.c:44
 msgid "GSM is not available, because no SIM card is present."
 msgstr "GSM ei ole saatavilla, koska SIM-korttia ei löytynyt."
 
-#: src/view/dialog-view.c:28
+#: src/view/dialog-view.c:46
 msgid "Unknown message."
 msgstr "Tuntematon viesti."
 
-#: src/view/contact-edit-view.c:189
-msgid "Name: "
-msgstr "Nimi: "
+#: src/view/message-delete-view.c:173
+msgid "Deleting.."
+msgstr "Poistetaan.."
 
-#: src/view/contact-edit-view.c:204
-msgid "Number: "
-msgstr "Numero: "
+#: src/view/message-list-view.c:102
+msgid "Inbox"
+msgstr "Saapuneet"
 
-#: src/view/contact-edit-view.c:373
-msgid "Loading... "
-msgstr "Ladataan... "
+#: src/view/message-list-view.c:130 src/view/message-show-view.c:355
+msgid "Answer"
+msgstr "Vastaa"
 
-#: src/phoneui-sim-auth.c:18
-msgid "SIM Auth"
-msgstr "SIM-todentaminen"
+#: src/view/message-list-view.c:250
+msgid "Show Message"
+msgstr "Näytä viesti"
 
-#: src/phoneui-dialer.c:16
-msgid "Dialer"
-msgstr "Soitto"
+#: src/view/message-list-view.c:278
+msgid "SMS Answer"
+msgstr "Vastaa tekstiviestiin"
 
-#: src/phoneui-dialog.c:14
-msgid "Information"
-msgstr "Tietoja"
+#: src/view/message-list-view.c:310 src/view/message-show-view.c:193
+msgid "Delete Message"
+msgstr "Poista viesti"
 
-#: src/phoneui-messages.c:16
-msgid "Messages"
-msgstr "Viestit"
+#: src/view/message-new-view.c:242
+msgid "Continue"
+msgstr "Jatka"
 
-#: src/phoneui-incoming-message.c:16
-msgid "New Message"
-msgstr "Uusi viesti"
+#: src/view/message-new-view.c:321 src/view/message-new-view.c:352
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "%d merkkiä jäljellä [%d]"
 
-#: src/widget/elm_keypad.c:133
+#: src/view/message-new-view.c:374
+msgid "Define Recipients"
+msgstr "Määritä vastaanottajat"
+
+#: src/view/message-new-view.c:384
+msgid "Send"
+msgstr "Lähetä"
+
+#: src/view/message-new-view.c:391 src/view/message-show-view.c:343
+msgid "Add Contact"
+msgstr "Lisää yhteystieto"
+
+#: src/view/message-new-view.c:399
+msgid "Add Number"
+msgstr "Lisää numero"
+
+#: src/view/message-new-view.c:407
+msgid "Remove"
+msgstr "Poista"
+
+#: src/view/message-new-view.c:558
+msgid "Add a Contact"
+msgstr "Lisää yhteystieto"
+
+#: src/view/message-new-view.c:568 src/view/message-new-view.c:670
+msgid "Add"
+msgstr "Lisää"
+
+#: src/view/message-new-view.c:660
+msgid "Add a Number"
+msgstr "Lisää numero"
+
+#: src/view/message-new-view.c:759
+msgid "Do you really want to quit?"
+msgstr "Haluatko varmasti lopettaa?"
+
+#: src/view/message-new-view.c:823
+msgid "Sending.."
+msgstr "Lähetetään.."
+
+#: src/view/message-show-view.c:278
+msgid "From:"
+msgstr "Lähettäjä:"
+
+#: src/view/message-show-view.c:279
+msgid "Date:"
+msgstr "Päivämäärä:"
+
+#: src/view/message-show-view.c:280
+msgid "Status:"
+msgstr "Tila:"
+
+#: src/view/sim-auth-input-view.c:71
+msgid "Please enter your PIN"
+msgstr "Anna PIN-koodi"
+
+#: src/view/sim-auth-input-view.c:76
+#, fuzzy
+msgid "Please enter your PIN2"
+msgstr "Anna PIN-koodi"
+
+#: src/view/sim-auth-input-view.c:81
+msgid "Please enter your PUK"
+msgstr "Anna PUK-koodi"
+
+#: src/view/sim-auth-input-view.c:86
+#, fuzzy
+msgid "Please enter your PUK2"
+msgstr "Anna PUK-koodi"
+
+#: src/view/sim-auth-input-view.c:90 src/view/sim-auth-input-view.c:382
+msgid "OK"
+msgstr "OK"
+
+#: src/view/sim-auth-input-view.c:97
+#, fuzzy
+msgid "Unknown error"
+msgstr "Tuntematon viesti."
+
+#: src/view/sim-auth-input-view.c:182
+msgid "PIN correct"
+msgstr "PIN-koodi oikein"
+
+#: src/view/sim-auth-input-view.c:187
+msgid "Failed"
+msgstr ""
+
+#: src/view/sim-auth-input-view.c:228 src/view/sim-auth-input-view.c:286
+#: src/view/sim-auth-input-view.c:418
+msgid "Checking"
+msgstr "Tarkistetaan"
+
+#: src/view/sim-auth-input-view.c:237
+msgid "PIN wrong"
+msgstr "PIN-koodi väärin"
+
+#: src/view/sim-auth-input-view.c:246
+msgid "Enter a NEW PIN"
+msgstr "Anna uusi PIN-koodi"
+
+#: src/view/sim-auth-input-view.c:254
+msgid "Confirm your NEW PIN"
+msgstr "Vahvista uusi PIN-koodi"
+
+#: src/view/sim-auth-input-view.c:263
+msgid "PIN must be 4-8 chars long"
+msgstr "PIN-koodin täytyy olla 4-8 merkkiä pitkä"
+
+#: src/view/sim-auth-input-view.c:271
+msgid "PIN confirmation wrong"
+msgstr "PIN-koodin varmennus väärin"
+
+#: src/view/ussd-view.c:67
+msgid "Data:"
+msgstr "Data:"
+
+#: src/widget/elm_keypad.c:145
 msgid "ABC"
 msgstr "ABC"
 
-#: src/widget/elm_keypad.c:134
+#: src/widget/elm_keypad.c:146
 msgid "DEF"
 msgstr "DEF"
 
-#: src/widget/elm_keypad.c:135
+#: src/widget/elm_keypad.c:147
 msgid "GHI"
 msgstr "GHI"
 
-#: src/widget/elm_keypad.c:136
+#: src/widget/elm_keypad.c:148
 msgid "JKL"
 msgstr "JKL"
 
-#: src/widget/elm_keypad.c:137
+#: src/widget/elm_keypad.c:149
 msgid "MNO"
 msgstr "MNO"
 
-#: src/widget/elm_keypad.c:138
+#: src/widget/elm_keypad.c:150
 msgid "PQRS"
 msgstr "PQRS"
 
-#: src/widget/elm_keypad.c:139
+#: src/widget/elm_keypad.c:151
 msgid "TUV"
 msgstr "TUV"
 
-#: src/widget/elm_keypad.c:140
+#: src/widget/elm_keypad.c:152
 msgid "XYZ"
 msgstr "XYZ"
 
-#: src/phoneui-ussd.c:17
-msgid "Service Data"
-msgstr "Palveludata"
+#~ msgid "No Speaker"
+#~ msgstr "Kaiutin pois"
+
+#~ msgid "Show Keypad"
+#~ msgstr "Näytä näppäimistö"
+
+#~ msgid "Loading.."
+#~ msgstr "Ladataan.."
+
+#~ msgid "Folders"
+#~ msgstr "Kansiot"
+
+#~ msgid "%d messages"
+#~ msgstr "%d viestiä"
+
+#~ msgid "Edit"
+#~ msgstr "Muokkaa"
+
+#~ msgid "Edit Contact"
+#~ msgstr "Muokkaa yhteystietoa"
+
+#~ msgid "Delete Contact"
+#~ msgstr "Poista yhteystieto"
+
+#~ msgid "Active call"
+#~ msgstr "Aktiivinen puhelu"
+
+#~ msgid "Incoming call"
+#~ msgstr "Saapuva puhelu"
+
+#~ msgid "Modify"
+#~ msgstr "Muokkaa"
+
+#~ msgid "Modify Contact"
+#~ msgstr "Muokkaa yhteystietoa"
+
+#~ msgid ""
+#~ "Your storage is full. Before adding new contacts, you have to delete some "
+#~ "old ones."
+#~ msgstr ""
+#~ "Tila on loppu. Poista vanhoja yhteystietoja ennen uusien lisäämistä."
+
+#~ msgid "New PIN saved"
+#~ msgstr "Uusi PIN-koodi tallennettu"
+
+#~ msgid "PUK wrong"
+#~ msgstr "PUK-koodi väärin"
+
+#~ msgid "Number: "
+#~ msgstr "Numero: "
+
+#~ msgid "Loading... "
+#~ msgstr "Ladataan... "

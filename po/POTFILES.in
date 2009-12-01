@@ -18,7 +18,6 @@ src/view/contact-show-view.c
 src/view/dialer-view.c
 src/view/dialog-view.c
 src/view/message-delete-view.c
-src/view/message-folder-view.c
 src/view/message-list-view.c
 src/view/message-new-view.c
 src/view/message-show-view.c

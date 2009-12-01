@@ -1,6 +1,7 @@
 
 #include "views.h"
 
+#include "common-utils.h"
 #include <ctype.h> /* to upper */
 
 /* FIXME: HACKS FROM elm_priv.h that should be removed */
@@ -29,7 +30,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	else if (!strcmp(part, "elm.text.sub")) {
 		GValue *tmp = g_hash_table_lookup(parameters, "_Phone");
 		if (tmp) {
-			label = string_skip_tel_prefix(
+			label = common_utils_skip_prefix("tel:",
 					g_value_get_string(tmp));
 		}
 		if (!label || !*label)

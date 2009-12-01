@@ -2,11 +2,12 @@
 # This file is put in the public domain.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#: src/view/sim-auth-input-view.c:279
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-04-09 19:45+0300\n"
+"POT-Creation-Date: 2009-12-01 21:15+0200\n"
 "PO-Revision-Date: 2009-04-11 17:06+0200\n"
 "Last-Translator: gfather <mjfahmi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,417 +15,450 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/phoneui-incoming-message.c:16
-msgid "New Message"
-msgstr "رسالة جديدية"
-
-#: src/phoneui-contacts.c:16
-#: src/view/dialer-view.c:254
-msgid "Contacts"
-msgstr "الاسماء"
-
-#: src/widget/elm_keypad.c:133
-msgid "ABC"
-msgstr "ﺏﺕﺓ‎ﺙ‎"
-
-#: src/widget/elm_keypad.c:134
-msgid "DEF"
-msgstr "اء"
-
-#: src/widget/elm_keypad.c:135
-msgid "GHI"
-msgstr "ﺱﺵﺹﺽ‎"
-
-#: src/widget/elm_keypad.c:136
-msgid "JKL"
-msgstr "ﺩ‎ﺫ‎ﺭﺯ"
-
-#: src/widget/elm_keypad.c:137
-msgid "MNO"
-msgstr "ﺝﺡﺥ"
-
-#: src/widget/elm_keypad.c:138
-msgid "PQRS"
-msgstr "نﻩ‎ﻭ‎ﻱ"
-
-#: src/widget/elm_keypad.c:139
-msgid "TUV"
-msgstr "ف‎ﻕﻙ‎ﻝﻡ"
-
-#: src/widget/elm_keypad.c:140
-msgid "XYZ"
-msgstr "ﻁ‎ﻅ‎ﻉﻍ‎"
-
-#: src/phoneui-sim-auth.c:18
-msgid "SIM Auth"
-msgstr "تفعل الشريحة"
-
-#: src/view/contact-edit-view.c:172
-#: src/view/contact-list-view.c:122
-#: src/view/contact-show-view.c:226
-msgid "New Contact"
-msgstr "اسم جديد"
-
-#: src/view/contact-edit-view.c:174
-#: src/view/contact-list-view.c:166
-msgid "Edit Contact"
-msgstr "تعديل الاسماء"
-
-#: src/view/contact-edit-view.c:177
-#: src/view/dialog-view.c:31
-#: src/view/ussd-view.c:55
-#: src/view/dialer-view.c:84
-#: src/view/contact-show-view.c:298
-#: src/view/message-show-view.c:107
-#: src/view/message-new-view.c:112
-msgid "Close"
-msgstr "اغلاق"
-
-#: src/view/contact-edit-view.c:183
-#: src/view/dialer-view.c:115
-#: src/view/contact-show-view.c:235
-msgid "Save"
-msgstr "حفظ"
-
-#: src/view/contact-edit-view.c:189
-msgid "Name: "
-msgstr "اسم:"
-
-#: src/view/contact-edit-view.c:205
-msgid "Number: "
-msgstr "رقم:"
-
-#: src/view/contact-edit-view.c:336
-#: src/view/message-new-view.c:454
-msgid "Do you really want to quit?"
-msgstr "هل تريد الخروج ؟ "
-
-#: src/view/contact-edit-view.c:341
-#: src/view/message-delete-view.c:77
-#: src/view/contact-show-view.c:273
-#: src/view/contact-delete-view.c:78
-#: src/view/message-new-view.c:459
-msgid "Yes"
-msgstr "نعم"
-
-#: src/view/contact-edit-view.c:347
-#: src/view/message-delete-view.c:83
-#: src/view/contact-show-view.c:279
-#: src/view/contact-delete-view.c:84
-#: src/view/message-new-view.c:465
-msgid "No"
-msgstr "لا"
-
-#: src/view/contact-edit-view.c:376
-msgid "Loading... "
-msgstr "تحميل..."
-
-#: src/view/message-list-view.c:35
-msgid "Inbox"
-msgstr "صندوق الوارد"
-
-#: src/view/message-list-view.c:38
-#: src/view/contact-list-view.c:55
-#: src/view/message-folder-view.c:71
-#: src/view/contact-show-view.c:94
-msgid "New"
-msgstr "جديد"
-
-#: src/view/message-list-view.c:48
-#: src/view/contact-list-view.c:67
-#: src/view/contact-show-view.c:106
-#: src/view/message-show-view.c:117
-msgid "Options"
-msgstr "	خيارات"
-
-#: src/view/message-list-view.c:62
-#: src/view/message-show-view.c:148
-msgid "Answer"
-msgstr "اجابة"
-
-#: src/view/message-list-view.c:69
-#: src/view/contact-list-view.c:98
-#: src/view/contact-show-view.c:189
-#: src/view/sim-auth-input-view.c:302
-#: src/view/message-show-view.c:131
-msgid "Delete"
-msgstr "حذف "
-
-#: src/view/message-list-view.c:79
-#: src/view/message-folder-view.c:77
-msgid "Show"
-msgstr "أظهر "
-
-#: src/view/message-list-view.c:215
-msgid "SMS Answer"
-msgstr "اجابة رسالة نصية"
-
-#: src/view/message-list-view.c:225
-#: src/view/contact-list-view.c:148
-#: src/view/message-folder-view.c:119
-#: src/view/dialer-view.c:204
-#: src/view/message-show-view.c:168
-msgid "Compose SMS"
-msgstr "رسالة جديدة"
-
-#: src/view/message-list-view.c:243
-msgid "Show Message"
-msgstr "اظهار الرسالة"
-
-#: src/view/message-list-view.c:263
-#: src/view/message-show-view.c:183
-msgid "Delete Message"
-msgstr "حذف رسالة"
-
-#: src/view/dialog-view.c:24
-msgid "Your storage is full. Please delete some messages or you are not going to receive messages anymore!"
-msgstr "لقد امتلأ بريدك . ارجو حذف بعض الرسائل او لن تستطيع من استلام اي رسائل اخرى!"
-
-#: src/view/dialog-view.c:26
-msgid "GSM is not available, because no SIM card is present."
-msgstr "لا يوجد اشارة , السبب عدم وجود شريحة المحمول"
-
-#: src/view/dialog-view.c:28
-msgid "Unknown message."
-msgstr "رسالة غير معروفة"
-
-#: src/view/ussd-view.c:51
-msgid "Data:"
-msgstr "بيانات: "
-
-#: src/view/message-delete-view.c:74
-#: src/view/contact-delete-view.c:73
-msgid "Do you really want to delete it?"
-msgstr "هل تريد حذفها ؟"
-
-#: src/view/message-delete-view.c:115
-msgid "Deleting.."
-msgstr "حذف..."
-
-#: src/view/call-active-view.c:29
-msgid "Active call"
-msgstr "المكالمة الفعالة"
-
-#: src/view/call-active-view.c:34
-#: src/view/call-incoming-view.c:40
-msgid "Release"
-msgstr "اطلاق"
-
-#: src/view/call-active-view.c:40
-#: src/view/call-common.c:33
-msgid "Speaker"
-msgstr "سماعات"
-
-#: src/view/call-active-view.c:46
-msgid "Keypad"
-msgstr "لوخة المفاتيح"
-
-#: src/view/contact-list-view.c:61
-#: src/view/dialer-view.c:96
-#: src/view/contact-show-view.c:100
-#: src/view/contact-show-view.c:177
-#: src/view/message-show-view.c:138
-#: src/phoneui-call.c:44
+#: src/phoneui-call.c:132 src/view/contact-list-view.c:87
+#: src/view/contact-show-view.c:338 src/view/dialer-view.c:136
+#: src/view/message-show-view.c:335
 msgid "Call"
 msgstr "مكالمة"
 
-#: src/view/contact-list-view.c:84
-msgid "SMS"
+#: src/phoneui-contacts.c:22 src/view/dialer-view.c:314
+msgid "Contacts"
+msgstr "الاسماء"
+
+#: src/phoneui-contacts.c:46
+#, fuzzy
+msgid "Contact"
+msgstr "الاسماء"
+
+#: src/phoneui-contacts.c:69 src/view/contact-list-view.c:159
+msgid "New Contact"
+msgstr "اسم جديد"
+
+#: src/phoneui-dialer.c:22
+msgid "Dialer"
+msgstr "الهاتف"
+
+#: src/phoneui-dialog.c:11
+msgid "Information"
+msgstr "معلومات"
+
+#: src/phoneui-incoming-message.c:12
+msgid "New Message"
+msgstr "رسالة جديدية"
+
+#: src/phoneui-messages.c:23
+msgid "Messages"
 msgstr "رسائل"
 
-#: src/view/contact-list-view.c:91
-msgid "Edit"
-msgstr "حرر"
+#: src/phoneui-messages.c:32
+#, fuzzy
+msgid "Message"
+msgstr "رسائل"
 
-#: src/view/contact-list-view.c:182
-msgid "Delete Contact"
-msgstr "حذف اسم"
+#: src/phoneui-sim-auth.c:20
+msgid "SIM Auth"
+msgstr "تفعل الشريحة"
 
-#: src/view/call-common.c:37
-msgid "No Speaker"
-msgstr "لا يوجد سماعة"
+#: src/phoneui-ussd.c:12
+msgid "Service Data"
+msgstr "بيانات الخدمة"
 
-#: src/view/call-common.c:46
-msgid "Show Keypad"
-msgstr "اظهار لوحة المفاتيح"
+#: src/view/call-active-view.c:137 src/view/call-common.c:106
+msgid "Speaker"
+msgstr "سماعات"
 
-#: src/view/call-common.c:50
+#: src/view/call-active-view.c:148
+msgid "Mute"
+msgstr ""
+
+#: src/view/call-active-view.c:158
+msgid "Volume"
+msgstr ""
+
+#: src/view/call-active-view.c:171
+msgid "Mic"
+msgstr ""
+
+#: src/view/call-active-view.c:182 src/view/call-common.c:169
+msgid "Release"
+msgstr "اطلاق"
+
+#: src/view/call-active-view.c:189 src/view/call-active-view.c:258
+msgid "Keypad"
+msgstr "لوخة المفاتيح"
+
+#: src/view/call-active-view.c:263
 msgid "Hide Keypad"
 msgstr "اخفاء لوحة المفاتيح"
 
-#: src/view/message-folder-view.c:35
-msgid "Loading.."
-msgstr "تحميل..."
+#: src/view/call-common.c:98
+msgid "Handset"
+msgstr ""
 
-#: src/view/message-folder-view.c:68
-msgid "Folders"
-msgstr "مجلدات"
+#: src/view/call-common.c:147
+msgid "Pickup"
+msgstr ""
 
-#: src/view/message-folder-view.c:100
-#, c-format
-msgid "%d messages"
-msgstr "%d رسائل"
+#: src/view/call-incoming-view.c:48
+msgid "Accept"
+msgstr "موافق"
 
-#: src/view/dialer-view.c:61
-msgid "Click to open contactlist."
-msgstr "انقر لاظهار لائحة الاسماء"
+#: src/view/call-incoming-view.c:60
+msgid "Reject"
+msgstr ""
 
-#: src/view/dialer-view.c:90
-msgid "More"
-msgstr "اضافى "
+#: src/view/contact-delete-view.c:89 src/view/message-delete-view.c:106
+msgid "Do you really want to delete it?"
+msgstr "هل تريد حذفها ؟"
 
-#: src/view/dialer-view.c:122
-msgid "Send SMS"
-msgstr "ارسال رسالة"
+#: src/view/contact-delete-view.c:94 src/view/contact-list-view.c:313
+#: src/view/contact-show-view.c:622 src/view/message-delete-view.c:109
+#: src/view/message-new-view.c:764
+msgid "Yes"
+msgstr "نعم"
 
-#: src/view/dialer-view.c:181
-#: src/view/message-new-view.c:206
-msgid "Add Contact"
-msgstr "اضافة اسم"
+#: src/view/contact-delete-view.c:101 src/view/contact-list-view.c:318
+#: src/view/contact-show-view.c:626 src/view/message-delete-view.c:116
+#: src/view/message-new-view.c:771
+msgid "No"
+msgstr "لا"
 
-#: src/view/contact-show-view.c:171
-#: src/view/contact-show-view.c:229
-#: src/view/message-new-view.c:194
-#: src/view/message-new-view.c:337
-#: src/view/message-new-view.c:389
+#: src/view/contact-list-view.c:80 src/view/message-list-view.c:105
+msgid "New"
+msgstr "جديد"
+
+#: src/view/contact-list-view.c:94 src/view/message-list-view.c:115
+#: src/view/message-show-view.c:312
+msgid "Options"
+msgstr "\tخيارات"
+
+#: src/view/contact-list-view.c:112 src/view/contact-show-view.c:358
+msgid "SMS"
+msgstr "رسائل"
+
+#: src/view/contact-list-view.c:120 src/view/message-list-view.c:149
+msgid "Show"
+msgstr "أظهر "
+
+#: src/view/contact-list-view.c:128 src/view/message-list-view.c:138
+#: src/view/message-show-view.c:327 src/view/sim-auth-input-view.c:375
+msgid "Delete"
+msgstr "حذف "
+
+#: src/view/contact-list-view.c:230 src/view/dialer-view.c:242
+#: src/view/message-list-view.c:212 src/view/message-show-view.c:163
+msgid "Compose SMS"
+msgstr "رسالة جديدة"
+
+#: src/view/contact-list-view.c:255
+#, fuzzy
+msgid "Show Contact"
+msgstr "اسم جديد"
+
+#: src/view/contact-list-view.c:324
+msgid "Really delete this contact?"
+msgstr ""
+
+#: src/view/contact-show-view.c:298 src/view/dialer-view.c:122
+#: src/view/dialog-view.c:49 src/view/message-new-view.c:235
+#: src/view/message-show-view.c:301 src/view/ussd-view.c:71
+msgid "Close"
+msgstr "اغلاق"
+
+#: src/view/contact-show-view.c:305
+msgid "Add Field"
+msgstr ""
+
+#: src/view/contact-show-view.c:312
+#, fuzzy
+msgid "Actions"
+msgstr "\tخيارات"
+
+#: src/view/contact-show-view.c:448 src/view/contact-show-view.c:455
+#: src/view/contact-show-view.c:462 src/view/contact-show-view.c:658
+#: src/view/message-new-view.c:377 src/view/message-new-view.c:561
+#: src/view/message-new-view.c:663
 msgid "Back"
 msgstr "رجوع"
 
-#: src/view/contact-show-view.c:183
-msgid "Modify"
-msgstr "تعديل"
+#: src/view/contact-show-view.c:632
+msgid "Really discard all changes?"
+msgstr ""
 
-#: src/view/contact-show-view.c:212
-msgid "Modify Contact"
-msgstr "تعديل الاسماء"
+#: src/view/contact-show-view.c:655
+msgid "Edit Field"
+msgstr ""
 
-#: src/view/contact-show-view.c:295
-msgid "Your storage is full. Before adding new contacts, you have to delete some old ones."
-msgstr "امتلا خزين الذاكرة. قبل اضافة اسماء جديدة, عليك حذف اسماء قديمة"
+#: src/view/contact-show-view.c:665 src/view/dialer-view.c:160
+msgid "Save"
+msgstr "حفظ"
 
-#: src/view/sim-auth-input-view.c:208
-msgid "Enter a NEW PIN"
-msgstr "ادخل كلمة سر جديدة "
+#: src/view/contact-show-view.c:672
+msgid "Field: "
+msgstr ""
 
-#: src/view/sim-auth-input-view.c:214
-msgid "Confirm your NEW PIN"
-msgstr "اعادة تاكيد كلمة السر"
+#: src/view/contact-show-view.c:690
+#, fuzzy
+msgid "Value: "
+msgstr "اسم:"
 
-#: src/view/sim-auth-input-view.c:296
-msgid "Please enter your PIN"
-msgstr "الرجاء ادخال كلمة السر"
+#: src/view/dialer-view.c:95
+msgid "Click to open contactlist."
+msgstr "انقر لاظهار لائحة الاسماء"
 
-#: src/view/sim-auth-input-view.c:298
-msgid "Please enter your PUK"
-msgstr "الرجاء ادخال PUK"
+#: src/view/dialer-view.c:129
+msgid "More"
+msgstr "اضافى "
 
-#: src/view/sim-auth-input-view.c:308
-msgid "OK"
-msgstr "تم"
+#: src/view/dialer-view.c:168
+msgid "Send SMS"
+msgstr "ارسال رسالة"
 
-#: src/view/sim-auth-input-view.c:336
-msgid "Checking"
-msgstr "فحص"
+#: src/view/dialog-view.c:41
+msgid ""
+"Your storage is full. Please delete some messages or you are not going to "
+"receive messages anymore!"
+msgstr ""
+"لقد امتلأ بريدك . ارجو حذف بعض الرسائل او لن تستطيع من استلام اي رسائل اخرى!"
 
-#: src/view/sim-auth-input-view.c:341
-msgid "PIN correct"
-msgstr "الكلمة السرية صحيحة"
+#: src/view/dialog-view.c:44
+msgid "GSM is not available, because no SIM card is present."
+msgstr "لا يوجد اشارة , السبب عدم وجود شريحة المحمول"
 
-#: src/view/sim-auth-input-view.c:346
-msgid "PIN wrong"
-msgstr "الكلمة السرية خطاء"
+#: src/view/dialog-view.c:46
+msgid "Unknown message."
+msgstr "رسالة غير معروفة"
 
-#: src/view/sim-auth-input-view.c:351
-msgid "PIN confirmation wrong"
-msgstr "تاكيد كلمة السر خطأ"
+#: src/view/message-delete-view.c:173
+msgid "Deleting.."
+msgstr "حذف..."
 
-#: src/view/sim-auth-input-view.c:356
-msgid "New PIN saved"
-msgstr "تم حفظ كلمة السر"
+#: src/view/message-list-view.c:102
+msgid "Inbox"
+msgstr "صندوق الوارد"
 
-#: src/view/sim-auth-input-view.c:361
-msgid "PUK wrong"
-msgstr "puk خطأ"
+#: src/view/message-list-view.c:130 src/view/message-show-view.c:355
+msgid "Answer"
+msgstr "اجابة"
 
-#: src/view/sim-auth-input-view.c:366
-msgid "PIN must be 4-8 chars long"
-msgstr "يجب ان تكون كلمة السر من 4 - 8 مفاتيح"
+#: src/view/message-list-view.c:250
+msgid "Show Message"
+msgstr "اظهار الرسالة"
 
-#: src/view/message-show-view.c:102
-msgid "From:"
-msgstr "من:"
+#: src/view/message-list-view.c:278
+msgid "SMS Answer"
+msgstr "اجابة رسالة نصية"
 
-#: src/view/message-show-view.c:103
-msgid "Date:"
-msgstr "التاريخ:"
+#: src/view/message-list-view.c:310 src/view/message-show-view.c:193
+msgid "Delete Message"
+msgstr "حذف رسالة"
 
-#: src/view/message-show-view.c:104
-msgid "Status:"
-msgstr "الحالة:"
-
-#: src/view/message-new-view.c:118
+#: src/view/message-new-view.c:242
 msgid "Continue"
 msgstr "اكمال"
 
-#: src/view/message-new-view.c:175
+#: src/view/message-new-view.c:321 src/view/message-new-view.c:352
 #, c-format
 msgid "%d characters left [%d]"
 msgstr "%d حرف متبقي [%d]"
 
-#: src/view/message-new-view.c:191
+#: src/view/message-new-view.c:374
 msgid "Define Recipients"
 msgstr "حدد المرسل اليه"
 
-#: src/view/message-new-view.c:200
+#: src/view/message-new-view.c:384
 msgid "Send"
 msgstr "ارسال"
 
-#: src/view/message-new-view.c:212
+#: src/view/message-new-view.c:391 src/view/message-show-view.c:343
+msgid "Add Contact"
+msgstr "اضافة اسم"
+
+#: src/view/message-new-view.c:399
 msgid "Add Number"
 msgstr "اضافة رقم"
 
-#: src/view/message-new-view.c:218
+#: src/view/message-new-view.c:407
 msgid "Remove"
 msgstr "حذف"
 
-#: src/view/message-new-view.c:334
+#: src/view/message-new-view.c:558
 msgid "Add a Contact"
 msgstr "اضافة اسم"
 
-#: src/view/message-new-view.c:343
-#: src/view/message-new-view.c:395
+#: src/view/message-new-view.c:568 src/view/message-new-view.c:670
 msgid "Add"
 msgstr "اضافة"
 
-#: src/view/message-new-view.c:386
+#: src/view/message-new-view.c:660
 msgid "Add a Number"
 msgstr "اضافة رقم"
 
-#: src/view/message-new-view.c:493
+#: src/view/message-new-view.c:759
+msgid "Do you really want to quit?"
+msgstr "هل تريد الخروج ؟ "
+
+#: src/view/message-new-view.c:823
 msgid "Sending.."
 msgstr "ارسال..."
 
-#: src/view/call-incoming-view.c:29
-msgid "Incoming call"
-msgstr "مكالمة واردة"
+#: src/view/message-show-view.c:278
+msgid "From:"
+msgstr "من:"
 
-#: src/view/call-incoming-view.c:34
-msgid "Accept"
-msgstr "موافق"
+#: src/view/message-show-view.c:279
+msgid "Date:"
+msgstr "التاريخ:"
 
-#: src/phoneui-messages.c:16
-msgid "Messages"
-msgstr "رسائل"
+#: src/view/message-show-view.c:280
+msgid "Status:"
+msgstr "الحالة:"
 
-#: src/phoneui-dialer.c:16
-msgid "Dialer"
-msgstr "الهاتف"
+#: src/view/sim-auth-input-view.c:71
+msgid "Please enter your PIN"
+msgstr "الرجاء ادخال كلمة السر"
 
-#: src/phoneui-dialog.c:14
-msgid "Information"
-msgstr "معلومات"
+#: src/view/sim-auth-input-view.c:76
+#, fuzzy
+msgid "Please enter your PIN2"
+msgstr "الرجاء ادخال كلمة السر"
 
-#: src/phoneui-ussd.c:17
-msgid "Service Data"
-msgstr "بيانات الخدمة"
+#: src/view/sim-auth-input-view.c:81
+msgid "Please enter your PUK"
+msgstr "الرجاء ادخال PUK"
 
+#: src/view/sim-auth-input-view.c:86
+#, fuzzy
+msgid "Please enter your PUK2"
+msgstr "الرجاء ادخال PUK"
+
+#: src/view/sim-auth-input-view.c:90 src/view/sim-auth-input-view.c:382
+msgid "OK"
+msgstr "تم"
+
+#: src/view/sim-auth-input-view.c:97
+#, fuzzy
+msgid "Unknown error"
+msgstr "رسالة غير معروفة"
+
+#: src/view/sim-auth-input-view.c:182
+msgid "PIN correct"
+msgstr "الكلمة السرية صحيحة"
+
+#: src/view/sim-auth-input-view.c:187
+msgid "Failed"
+msgstr ""
+
+#: src/view/sim-auth-input-view.c:228 src/view/sim-auth-input-view.c:286
+#: src/view/sim-auth-input-view.c:418
+msgid "Checking"
+msgstr "فحص"
+
+#: src/view/sim-auth-input-view.c:237
+msgid "PIN wrong"
+msgstr "الكلمة السرية خطاء"
+
+#: src/view/sim-auth-input-view.c:246
+msgid "Enter a NEW PIN"
+msgstr "ادخل كلمة سر جديدة "
+
+#: src/view/sim-auth-input-view.c:254
+msgid "Confirm your NEW PIN"
+msgstr "اعادة تاكيد كلمة السر"
+
+#: src/view/sim-auth-input-view.c:263
+msgid "PIN must be 4-8 chars long"
+msgstr "يجب ان تكون كلمة السر من 4 - 8 مفاتيح"
+
+#: src/view/sim-auth-input-view.c:271
+msgid "PIN confirmation wrong"
+msgstr "تاكيد كلمة السر خطأ"
+
+#: src/view/ussd-view.c:67
+msgid "Data:"
+msgstr "بيانات: "
+
+#: src/widget/elm_keypad.c:145
+msgid "ABC"
+msgstr "ﺏﺕﺓ‎ﺙ‎"
+
+#: src/widget/elm_keypad.c:146
+msgid "DEF"
+msgstr "اء"
+
+#: src/widget/elm_keypad.c:147
+msgid "GHI"
+msgstr "ﺱﺵﺹﺽ‎"
+
+#: src/widget/elm_keypad.c:148
+msgid "JKL"
+msgstr "ﺩ‎ﺫ‎ﺭﺯ"
+
+#: src/widget/elm_keypad.c:149
+msgid "MNO"
+msgstr "ﺝﺡﺥ"
+
+#: src/widget/elm_keypad.c:150
+msgid "PQRS"
+msgstr "نﻩ‎ﻭ‎ﻱ"
+
+#: src/widget/elm_keypad.c:151
+msgid "TUV"
+msgstr "ف‎ﻕﻙ‎ﻝﻡ"
+
+#: src/widget/elm_keypad.c:152
+msgid "XYZ"
+msgstr "ﻁ‎ﻅ‎ﻉﻍ‎"
+
+#~ msgid "Edit Contact"
+#~ msgstr "تعديل الاسماء"
+
+#~ msgid "Number: "
+#~ msgstr "رقم:"
+
+#~ msgid "Loading... "
+#~ msgstr "تحميل..."
+
+#~ msgid "Active call"
+#~ msgstr "المكالمة الفعالة"
+
+#~ msgid "Edit"
+#~ msgstr "حرر"
+
+#~ msgid "Delete Contact"
+#~ msgstr "حذف اسم"
+
+#~ msgid "No Speaker"
+#~ msgstr "لا يوجد سماعة"
+
+#~ msgid "Show Keypad"
+#~ msgstr "اظهار لوحة المفاتيح"
+
+#~ msgid "Loading.."
+#~ msgstr "تحميل..."
+
+#~ msgid "Folders"
+#~ msgstr "مجلدات"
+
+#~ msgid "%d messages"
+#~ msgstr "%d رسائل"
+
+#~ msgid "Modify"
+#~ msgstr "تعديل"
+
+#~ msgid "Modify Contact"
+#~ msgstr "تعديل الاسماء"
+
+#~ msgid ""
+#~ "Your storage is full. Before adding new contacts, you have to delete some "
+#~ "old ones."
+#~ msgstr "امتلا خزين الذاكرة. قبل اضافة اسماء جديدة, عليك حذف اسماء قديمة"
+
+#~ msgid "New PIN saved"
+#~ msgstr "تم حفظ كلمة السر"
+
+#~ msgid "PUK wrong"
+#~ msgstr "puk خطأ"
+
+#~ msgid "Incoming call"
+#~ msgstr "مكالمة واردة"
