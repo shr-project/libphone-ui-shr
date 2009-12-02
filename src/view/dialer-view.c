@@ -35,7 +35,7 @@ static void _dialer_options_clicked_cb(void *data, Evas_Object * obj, void *even
 static void _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info);
-static void _dialer_call_initiated_cb(GError * error, int call_id, void *userdata);
+static void _dialer_call_initiated_cb(GError *error, int call_id, void *userdata);
 
 int
 dialer_view_init()

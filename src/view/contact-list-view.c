@@ -205,7 +205,7 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
-	if (properties != NULL) {
+	if (properties) {
 		const char *photo;
 		GValue *tmp = g_hash_table_lookup(properties, "Phone");
 		if (!tmp) {
@@ -227,10 +227,8 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 				g_value_get_string(tmp));
 		}
 
-		struct Window *win = window_new(D_("Compose SMS"));
-		window_init(win);
-		window_view_show(win, options, message_new_view_show,
-				 message_new_view_hide, NULL);
+		phoneui_messages_message_new(options);
+		g_hash_table_destroy(options);
 	}
 }
 
