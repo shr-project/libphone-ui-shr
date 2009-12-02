@@ -237,11 +237,11 @@ frame_dialer_call_clicked(void *data, Evas_Object * obj, void *event_info)
 static void
 frame_dialer_message_clicked(void *data, Evas_Object * obj, void *event_info)
 {
-	/*FIXME: free this hash table? */
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "number", view.number);
 
-	/*FIXME: use the phone-ui way of calling this, not this hack... */
+	phoneui_messages_message_new(options);
+	g_hash_table_destroy(options);
 
 	ui_utils_view_hide(&view.parent);
 }
