@@ -7,6 +7,12 @@
 #include "common-utils.h"
 #include "util/ui_utils.h"
 
+/*TODO: remove the many hacks here, rename all the frame_* to something
+ * more descriptive/nicer/better.
+ * Check why there are so many timers in this page.
+ * Fix the scale hack, shouldn't exist :|
+ * Change the way it calls to adding contact/sending sms
+ */
 
 
 struct DialerViewData {
@@ -304,7 +310,7 @@ static void
 frame_dialer_number_clicked(void *_data, Evas_Object * o, const char *emission,
 			    const char *source)
 {
-	if (*view.number) {
+	if (!*view.number) {
 		struct Window *win = window_new(D_("Contacts"));
 		window_init(win);
 		window_view_show(win, NULL, contact_list_view_show,
