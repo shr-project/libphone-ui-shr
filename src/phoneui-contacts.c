@@ -58,14 +58,10 @@ phoneui_backend_contacts_contact_show(const char *contact_path)
 
 
 void
-phoneui_backend_contacts_contact_new(GHashTable *values)
+phoneui_backend_contacts_contact_new(GHashTable *options)
 {
-	GHashTable *options = NULL;
-
 	g_debug("phoneui_backend_contacts_contact_new()");
 
-	if (values)
-		options = phoneui_utils_contact_sanitize_content(values);
 	struct Window *win = window_new(D_("New Contact"));
 	window_init(win);
 	window_view_show(win, options, contact_show_view_show,

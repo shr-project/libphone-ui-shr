@@ -209,21 +209,23 @@ frame_show_show(void *_data)
 	g_debug("loading name and number");
 	/* --- name and number --- */
 	if (data->path) {
-		tmp = g_hash_table_lookup(data->properties, "_Name");
-		if (tmp)
-			s = g_value_get_string(tmp);
-		else
-			s = CONTACT_NAME_UNDEFINED_STRING;
-		window_text_set(data->win, "name", s);
-
-		tmp = g_hash_table_lookup(data->properties, "_Phone");
-		if (tmp) {
-			s = g_value_get_string(tmp);
-			s = common_utils_skip_prefix(s, tmp);
+		s = phoneui_utils_contact_display_name_get(data->properties);
+		if (s) {
+			window_text_set(data->win, "name", s);
+			free(s);
 		}
-		else
-			s = "";
-		window_text_set(data->win, "number", s);
+		else {
+			window_text_set(data->win, "name", CONTACT_NAME_UNDEFINED_STRING);
+		}
+
+		s = phoneui_utils_contact_display_phone_get(data->properties);
+		if (s) {
+			window_text_set(data->win, "number", s);
+			free(s);
+		}
+		else {
+			window_text_set(data->win, "number", "");
+		}
 	}
 	else {
 		window_text_set(data->win, "name", CONTACT_NAME_UNDEFINED_STRING);
@@ -489,9 +491,6 @@ _update_contact_data(struct ContactViewData *data)
 	// TODO: what is phoneui_utils_contact_refresh?
 	//       and why doesn't it exist but was used here?
 	//phoneui_utils_contacts_refresh();
-	GHashTable *tmp = phoneui_utils_contact_sanitize_content(data->properties);
-	g_hash_table_destroy(data->properties);
-	data->properties = tmp;
 }
 
 
