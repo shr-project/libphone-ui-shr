@@ -2,7 +2,6 @@
 #include <phoneui/phoneui-utils.h>
 #include <string.h>
 
-#include "window.h" /*FIXME, drop that asap */
 #include "views.h"
 #include "widget/elm_keypad.h"
 #include "common-utils.h"
