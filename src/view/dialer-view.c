@@ -14,7 +14,8 @@
 
 struct DialerViewData {
 	struct View parent;
-	char number[65]; /*FIX this hackish copy */
+	char number[65]; /*FIXME this hackish copy */
+	int length; /*At least while this hack exists, cache length */
 	Evas_Object *keypad, *bt_options, *bt_call, *bt_exit, *hv, *bx,
 		*bt_save, *bt_message;
 	Evas_Object *text_number, *text_number_info, *delete_text_icon,
@@ -141,6 +142,9 @@ dialer_view_init()
 	elm_box_pack_end(view.bx, view.bt_message);
 
 	elm_hover_content_set(view.hv, "top", view.bx);
+
+	view.number[0] = '\0';
+	view.length = 0;
 }
 
 void
@@ -238,11 +242,11 @@ static void
 _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	char input = ((char *) event_info)[0];
-	int length = strlen(view.number);
 
-	if (length < 64) {
-		view.number[length] = input;
-		view.number[length + 1] = '\0';
+	if (view.length < 63) {
+		view.number[view.length] = input;
+		view.number[view.length + 1] = '\0';
+		view.length++;
 		_dialer_number_update();
 	}
 }
@@ -250,15 +254,12 @@ _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 static void
 _dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info)
 {
-	int length = strlen(view.number);
+	int length = view.length;
 
 	if (length) {
 		view.number[length - 1] = '\0';
+		view.length--;
 		_dialer_number_update();
-		length--;
-	}
-	else {
-		g_debug("Number is empty");
 	}
 }
 
@@ -278,7 +279,7 @@ _dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission,
 static void
 _dialer_number_update()
 {
-	int length = strlen(view.number);
+	int length = view.length;
 	char *number = view.number;
 	static char tmp[73];
 
@@ -332,6 +333,7 @@ static int
 _dialer_number_clear()
 {
 	view.number[0] = '\0';
+	view.length = 0;
 	_dialer_number_update();
 
 	return 0;
