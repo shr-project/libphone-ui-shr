@@ -2,6 +2,7 @@
 #include <phoneui/phoneui-utils.h>
 #include <string.h>
 
+#include "window.h" /*FIXME, drop that asap */
 #include "views.h"
 #include "widget/elm_keypad.h"
 #include "common-utils.h"
@@ -241,9 +242,11 @@ frame_dialer_call_clicked(void *data, Evas_Object * obj, void *event_info)
 static void
 frame_dialer_message_clicked(void *data, Evas_Object * obj, void *event_info)
 {
+	/*FIXME: free this hash table? */
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "number", view.number);
 
+	/*FIXME: use the phone-ui way of calling this, not this hack... */
 	struct Window *win = window_new(D_("Compose SMS"));
 	window_init(win);
 	window_view_show(win, options, message_new_view_show,
@@ -311,11 +314,7 @@ frame_dialer_number_clicked(void *_data, Evas_Object * o, const char *emission,
 			    const char *source)
 {
 	if (!*view.number) {
-		struct Window *win = window_new(D_("Contacts"));
-		window_init(win);
-		window_view_show(win, NULL, contact_list_view_show,
-				 contact_list_view_hide, NULL);
-
+		phoneui_contacts_show();
 		ui_utils_view_hide(&view.parent);
 	}
 }
