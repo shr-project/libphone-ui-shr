@@ -63,14 +63,14 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 		}
 		data->photo = g_strdup(s);
 
-		tmp = g_hash_table_lookup(contact, "_Name");
-		if (tmp) {
-			s = g_value_get_string(tmp);
+		s = phoneui_utils_contact_display_name_get(contact);
+		if (s) {
+			window_text_set(data->win, "name", s);
+			data->name = s;
 		}
 		else {
-			s = CONTACT_NAME_UNDEFINED_STRING;
+			data->name = strdup(CONTACT_NAME_UNDEFINED_STRING);
 		}
-		data->name = g_strdup(s);
 	}
 	else {
 		g_debug("call_common_contact_callback... got NO contact");

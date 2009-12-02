@@ -18,26 +18,28 @@ static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
 	GHashTable *parameters = (GHashTable *) data;
-	char *label = NULL;
+	char *s = NULL;
 
 	if (!strcmp(part, "elm.text")) {
-		GValue *tmp = g_hash_table_lookup(parameters, "_Name");
-		if (tmp)
-			label = g_value_get_string(tmp);
-		if (!label || !*label)
-			label = CONTACT_NAME_UNDEFINED_STRING;
+		s = phoneui_utils_contact_display_name_get(parameters);
+		if (s && *s) {
+			return s;
+		}
+		else {
+			s = strdup(CONTACT_NAME_UNDEFINED_STRING);
+		}
 	}
 	else if (!strcmp(part, "elm.text.sub")) {
-		GValue *tmp = g_hash_table_lookup(parameters, "_Phone");
-		if (tmp) {
-			label = common_utils_skip_prefix(g_value_get_string(tmp),
-							"tel:");
+		s = phoneui_utils_contact_display_phone_get(parameters);
+		if (s && *s) {
+			return s;
 		}
-		if (!label || !*label)
-			label = CONTACT_PHONE_UNDEFINED_STRING;
+		else {
+			s = strdup(CONTACT_PHONE_UNDEFINED_STRING);
+		}
 	}
 
-	return (strdup(label));
+	return s;
 }
 
 
