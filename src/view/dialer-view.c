@@ -7,8 +7,7 @@
 #include "common-utils.h"
 #include "util/ui-utils.h"
 
-/*TODO: remove the many hacks here, rename all the frame_* to something
- * more descriptive/nicer/better.
+/*TODO: remove the many hacks here
  * Fix the scale hack, shouldn't exist :|
  */
 
@@ -25,18 +24,17 @@ struct DialerViewData {
 static struct DialerViewData view;
 
 static void _dialer_number_update();
-static void dialer_destroy_cb(struct View *_view);
-static void frame_dialer_delete(void *_data, Evas_Object * o, void *event_info);
-static void frame_dialer_keypad_clicked(void *data, Evas_Object * obj, void *event_info);
-static void frame_dialer_exit_clicked(void *data, Evas_Object * obj, void *event_info);
-static void frame_dialer_number_clicked(void *_data, Evas_Object * o, const char *emission, const char *source);
-static void frame_dialer_options_clicked(void *data, Evas_Object * obj, void *event_info);
-static void frame_dialer_call_clicked(void *data, Evas_Object * obj, void *event_info);
-static void frame_dialer_delete_mouse_down(void *_data, Evas_Object * o, const char *emission, const char *source);
-static void frame_dialer_save_clicked(void *data, Evas_Object * obj, void *event_info);
-static void frame_dialer_message_clicked(void *data, Evas_Object * obj, void *event_info);
-static void frame_dialer_initiate_callback(GError * error, int call_id, void *userdata);
-static int frame_dialer_number_clear(void *_data);
+static int _dialer_number_clear();
+static void _dialer_destroy_cb(struct View *_view);
+static void _dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info);
+static void _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info);
+static void _dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info);
+static void _dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission, const char *source);
+static void _dialer_options_clicked_cb(void *data, Evas_Object * obj, void *event_info);
+static void _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info);
+static void _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info);
+static void _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info);
+static void _dialer_call_initiated_cb(GError * error, int call_id, void *userdata);
 
 int
 dialer_view_init()
@@ -45,7 +43,7 @@ dialer_view_init()
 	Evas_Object *win;
 	int ret;
 	ret = ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Dialer"),
-				NULL, NULL, dialer_destroy_cb);
+				NULL, NULL, _dialer_destroy_cb);
 
 	if (ret) {
 		g_critical("Faild to init dialer view");
@@ -76,7 +74,7 @@ dialer_view_init()
 	view.delete_text_button = elm_button_add(win);
 	elm_button_icon_set(view.delete_text_button, view.delete_text_icon);
 	evas_object_smart_callback_add(view.delete_text_button, "clicked",
-				       frame_dialer_delete, &view);
+				       _dialer_delete_clicked_cb, &view);
 
 	ui_utils_view_swallow(&view.parent, "button_delete", view.delete_text_button);
 	evas_object_show(view.delete_text_button);
@@ -86,38 +84,35 @@ dialer_view_init()
 	view.keypad =
 		(Evas_Object *) elm_keypad_add(win);
 	evas_object_smart_callback_add(view.keypad, "clicked",
-				       frame_dialer_keypad_clicked, &view);
+				       _dialer_keypad_clicked_cb, &view);
 	ui_utils_view_swallow(&view.parent, "keypad", view.keypad);
 	evas_object_show(view.keypad);
 
 	view.bt_exit = elm_button_add(win);
 	elm_button_label_set(view.bt_exit, D_("Close"));
 	evas_object_smart_callback_add(view.bt_exit, "clicked",
-				       frame_dialer_exit_clicked, &view);
+				       _dialer_exit_clicked_cb, &view);
 	ui_utils_view_swallow(&view.parent, "button_exit", view.bt_exit);
 	evas_object_show(view.bt_exit);
 
 	view.bt_options = elm_button_add(win);
 	elm_button_label_set(view.bt_options, D_("More"));
 	evas_object_smart_callback_add(view.bt_options, "clicked",
-				       frame_dialer_options_clicked, &view);
+				       _dialer_options_clicked_cb, &view);
 	ui_utils_view_swallow(&view.parent, "button_options", view.bt_options);
 	evas_object_show(view.bt_options);
 
 	view.bt_call = elm_button_add(win);
 	elm_button_label_set(view.bt_call, D_("Call"));
 	evas_object_smart_callback_add(view.bt_call, "clicked",
-				       frame_dialer_call_clicked, &view);
+				       _dialer_call_clicked_cb, &view);
 	ui_utils_view_swallow(&view.parent, "button_call", view.bt_call);
 	evas_object_show(view.bt_call);
 
 	edje_object_signal_callback_add(ui_utils_view_layout_get(&view.parent), "click",
 					"number",
-					frame_dialer_number_clicked,
+					_dialer_number_clicked_cb,
 					&view);
-	edje_object_signal_callback_add(ui_utils_view_layout_get(&view.parent), "mouse_down",
-					"delete",
-					frame_dialer_delete_mouse_down, &view);
 
 	/* Options */
 	view.hv = elm_hover_add(win);
@@ -133,7 +128,7 @@ dialer_view_init()
 	elm_button_label_set(view.bt_save, D_("Save"));
 	evas_object_size_hint_min_set(view.bt_save, 130, 80);
 	evas_object_smart_callback_add(view.bt_save, "clicked",
-				       frame_dialer_save_clicked, &view);
+				       _dialer_contact_add_clicked_cb, &view);
 	evas_object_show(view.bt_save);
 	elm_box_pack_end(view.bx, view.bt_save);
 
@@ -141,7 +136,7 @@ dialer_view_init()
 	elm_button_label_set(view.bt_message, D_("Send SMS"));
 	evas_object_size_hint_min_set(view.bt_message, 130, 80);
 	evas_object_smart_callback_add(view.bt_message, "clicked",
-				       frame_dialer_message_clicked, &view);
+				       _dialer_message_clicked_cb, &view);
 	evas_object_show(view.bt_message);
 	elm_box_pack_end(view.bx, view.bt_message);
 
@@ -154,7 +149,7 @@ dialer_view_deinit()
 	ui_utils_view_deinit(&view.parent);
 
 	evas_object_smart_callback_del(view.keypad, "clicked",
-				       frame_dialer_keypad_clicked);
+				       _dialer_keypad_clicked_cb);
 	evas_object_del(view.keypad);
 	evas_object_del(view.bt_options);
 	evas_object_del(view.bt_call);
@@ -169,21 +164,12 @@ dialer_view_deinit()
 }
 
 void
-dialer_view_clear_number()
-{
-	view.number[0] = '\0';
-	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
-					"number_empty", "elm");
-	_dialer_number_update();
-}
-
-void
 dialer_view_show()
 {
 	if (!ui_utils_view_is_init(&view.parent)) {
 		dialer_view_init();
 	}
-	dialer_view_clear_number();
+	_dialer_number_clear();
 	ui_utils_view_show(&view.parent);
 }
 
@@ -195,7 +181,7 @@ dialer_view_hide()
 
 
 static void
-dialer_destroy_cb(struct View *_view)
+_dialer_destroy_cb(struct View *_view)
 {
 	struct DialerViewData *view = (struct DialerViewData *) _view;
 	dialer_view_hide();
@@ -203,19 +189,19 @@ dialer_destroy_cb(struct View *_view)
 }
 
 static void
-frame_dialer_options_clicked(void *data, Evas_Object * obj, void *event_info)
+_dialer_options_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	evas_object_show(view.hv);
 }
 
 static void
-frame_dialer_exit_clicked(void *data, Evas_Object * obj, void *event_info)
+_dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	dialer_view_hide();
 }
 
 static void
-frame_dialer_save_clicked(void *data, Evas_Object * obj, void *event_info)
+_dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	g_hash_table_insert(contact, "Phone",
@@ -226,16 +212,16 @@ frame_dialer_save_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-frame_dialer_call_clicked(void *data, Evas_Object * obj, void *event_info)
+_dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	if (*view.number) {
-		phoneui_utils_dial(view.number, frame_dialer_initiate_callback,
+		phoneui_utils_dial(view.number, _dialer_call_initiated_cb,
 					    data);
 	}
 }
 
 static void
-frame_dialer_message_clicked(void *data, Evas_Object * obj, void *event_info)
+_dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "number", view.number);
@@ -247,7 +233,7 @@ frame_dialer_message_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-frame_dialer_keypad_clicked(void *data, Evas_Object * obj, void *event_info)
+_dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	char input = ((char *) event_info)[0];
 	int length = strlen(view.number);
@@ -257,18 +243,10 @@ frame_dialer_keypad_clicked(void *data, Evas_Object * obj, void *event_info)
 		view.number[length + 1] = '\0';
 		_dialer_number_update();
 	}
-
-	/* if length of the number *was* 0 we have to emit the "number_available" signal
-	 * to let the edje do its magic */
-	if (length == 0) {
-		g_debug("emitting 'number_available' signal");
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
-					"number_available", "elm");
-	}
 }
 
 static void
-frame_dialer_delete(void *_data, Evas_Object * o, void *event_info)
+_dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info)
 {
 	int length = strlen(view.number);
 
@@ -278,22 +256,13 @@ frame_dialer_delete(void *_data, Evas_Object * o, void *event_info)
 		length--;
 	}
 	else {
-		g_debug("emitting 'number_empty' signal");
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
-					"number_empty", "elm");
+		g_debug("Number is empty");
 	}
 }
 
 
 static void
-frame_dialer_delete_mouse_down(void *_data, Evas_Object * o,
-			       const char *emission, const char *source)
-{
-
-}
-
-static void
-frame_dialer_number_clicked(void *_data, Evas_Object * o, const char *emission,
+_dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission,
 			    const char *source)
 {
 	if (!*view.number) {
@@ -350,9 +319,8 @@ _dialer_number_update()
 
 
 static int
-frame_dialer_number_clear(void *_data)
+_dialer_number_clear()
 {
-	struct DialerViewData *data = (struct DialerViewData *) _data;
 	view.number[0] = '\0';
 	_dialer_number_update();
 
@@ -360,7 +328,7 @@ frame_dialer_number_clear(void *_data)
 }
 
 static void
-frame_dialer_initiate_callback(GError * error, int call_id, void *userdata)
+_dialer_call_initiated_cb(GError * error, int call_id, void *userdata)
 {
 	dialer_view_hide();
 }
