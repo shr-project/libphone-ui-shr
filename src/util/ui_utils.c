@@ -52,12 +52,13 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 	}
 	
 	elm_win_title_set(view->win, title);
+	/*FIXME: use the specific function in this file */
 	evas_object_smart_callback_add(view->win, "delete-request",
 				      (Evas_Smart_Cb) _view_delete_callback, view);
 
 
 	/*FIXME: check what the heck is this and probably fix it */
-	/*elm_win_autodel_set(view->win, 1);*/
+	elm_win_autodel_set(view->win, 0);
 	if (phoneui_theme) {
 		elm_theme_overlay_add(phoneui_theme);
 	}
@@ -284,8 +285,16 @@ ui_utils_view_inwin_dialog(struct View *view, const char *label, GList *buttons,
 static void
 _view_delete_callback(struct View *view, Evas_Object * win, void *event_info)
 {
-	g_debug("_window_delete_callback");
-	ui_utils_view_deinit(view);
+	/* This commented out means you have to specifcally delete the window
+	 * ui_utils_view_deinit(view);
+	 */
+	if (view->destroy_cb) {
+		view->destroy_cb(view);
+	}
+	else {
+		g_warning("Pontential leak, not freeing a view");
+	}
+		
 }
 
 int
