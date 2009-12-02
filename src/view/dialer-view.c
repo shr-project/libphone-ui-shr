@@ -170,6 +170,7 @@ dialer_view_show()
 		dialer_view_init();
 	}
 	_dialer_number_clear();
+	evas_object_hide(view.hv);
 	ui_utils_view_show(&view.parent);
 }
 
@@ -208,6 +209,7 @@ _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 			common_utils_new_gvalue_string(view.number));
 	phoneui_contacts_contact_new(contact);
 	g_hash_table_destroy(contact);
+	
 	ui_utils_view_hide(&view.parent);
 }
 
@@ -272,7 +274,7 @@ _dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission,
 }
 
 
-/* FIXME: haven't reviewd this yet, though looks to hackish to believe */
+/* FIXME: haven't reviewd this yet, though looks too hackish to believe */
 static void
 _dialer_number_update()
 {
