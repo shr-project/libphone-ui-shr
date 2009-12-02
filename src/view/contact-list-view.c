@@ -1,7 +1,8 @@
+#include <phoneui/phoneui.h>
+#include <phoneui/phoneui-utils.h>
+
 #include "views.h"
 #include "common-utils.h"
-
-#include <phoneui/phoneui-utils.h>
 
 static void
   frame_list_show(void *_data);
@@ -156,10 +157,7 @@ frame_list_hide(void *_data)
 static void
 frame_list_new_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct Window *win = window_new(D_("New Contact"));
-	window_init(win);
-	window_view_show(win, NULL, contact_show_view_show,
-			 contact_show_view_hide, NULL);
+	phoneui_contacts_contact_new(NULL);
 }
 
 static void

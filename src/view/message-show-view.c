@@ -160,10 +160,8 @@ message_show_view_answer_clicked(void *_data, Evas_Object * obj,
 	g_hash_table_insert(options, "name", data->name);
 	g_hash_table_insert(options, "number", data->number);
 
-	struct Window *win = window_new(D_("Compose SMS"));
-	window_init(win);
-	window_view_show(win, options, message_new_view_show,
-			 message_new_view_hide, NULL);
+	phoneui_messages_message_new(options);
+	g_hash_table_destroy(options);
 }
 
 static void

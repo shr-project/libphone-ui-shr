@@ -209,10 +209,7 @@ message_list_view_new_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	g_debug("message_list_view_new_clicked()");
 
-	struct Window *win = window_new(D_("Compose SMS"));
-	window_init(win);
-	window_view_show(win, NULL, message_new_view_show,
-			 message_new_view_hide, NULL);
+	phoneui_messages_message_new(NULL);
 }
 
 static void
@@ -275,10 +272,7 @@ message_list_view_answer_clicked(void *_data, Evas_Object * obj,
 		g_hash_table_insert(options, "number",
 				    g_hash_table_lookup(parameters, "number"));
 
-		struct Window *win = window_new(D_("SMS Answer"));
-		window_init(win);
-		window_view_show(win, options, message_new_view_show,
-				 message_new_view_hide, NULL);
+		phoneui_messages_message_new(options);
 	}
 }
 
