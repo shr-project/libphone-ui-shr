@@ -1,7 +1,7 @@
 #include <Elementary.h>
 #include <Evas.h>
 
-#include "ui_utils.h"
+#include "ui-utils.h"
 
 /* FIXME: hackish, remove */
 #include "phoneui-shr.h"

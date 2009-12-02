@@ -4,14 +4,12 @@
 
 #include "views.h"
 #include "widget/elm_keypad.h"
-#include "common-utils.h"
-#include "util/ui_utils.h"
+#include "util/ui-utils.h"
 
 /*TODO: remove the many hacks here, rename all the frame_* to something
  * more descriptive/nicer/better.
  * Check why there are so many timers in this page.
  * Fix the scale hack, shouldn't exist :|
- * Change the way it calls to adding contact/sending sms
  */
 
 

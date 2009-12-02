@@ -25,7 +25,7 @@ shr_la_SOURCES = \
 	phoneui-quick-settings.h phoneui-quick-settings.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	util/window.h util/window.c \
-	util/ui_utils.h util/ui_utils.c \
+	util/ui-utils.h util/ui-utils.c \
 	view/views.h \
 	view/dialer-view.c \
 	view/idle-view.c \
