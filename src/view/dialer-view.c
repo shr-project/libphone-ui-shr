@@ -317,6 +317,14 @@ _dialer_number_update()
 	}
 
 	elm_label_label_set(view.text_number, number);
+	if (length == 0) {
+		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+					"number_empty", "elm");
+	}
+	else {
+		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+					"number_available", "elm");
+	}
 }
 
 
