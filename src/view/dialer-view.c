@@ -243,7 +243,7 @@ _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	char input = ((char *) event_info)[0];
 
-	if (view.length < 63) {
+	if (view.length < 64) {
 		view.number[view.length] = input;
 		view.number[view.length + 1] = '\0';
 		view.length++;
