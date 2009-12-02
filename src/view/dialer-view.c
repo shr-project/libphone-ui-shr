@@ -9,7 +9,6 @@
 
 /*TODO: remove the many hacks here, rename all the frame_* to something
  * more descriptive/nicer/better.
- * Check why there are so many timers in this page.
  * Fix the scale hack, shouldn't exist :|
  */
 
@@ -21,7 +20,6 @@ struct DialerViewData {
 		*bt_save, *bt_message;
 	Evas_Object *text_number, *text_number_info, *delete_text_icon,
 		*delete_text_button;
-	Ecore_Timer *delete_timer;
 };
 
 static struct DialerViewData view;
@@ -174,7 +172,6 @@ void
 dialer_view_clear_number()
 {
 	view.number[0] = '\0';
-	view.delete_timer = NULL;
 	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
 					"number_empty", "elm");
 	_dialer_number_update();
@@ -275,18 +272,12 @@ frame_dialer_delete(void *_data, Evas_Object * o, void *event_info)
 {
 	int length = strlen(view.number);
 
-	if (view.delete_timer != NULL) {
-		ecore_timer_del(view.delete_timer);
-		view.delete_timer = NULL;
-	}
-
-	if (length != 0) {
+	if (length) {
 		view.number[length - 1] = '\0';
 		_dialer_number_update();
 		length--;
 	}
-
-	if (length == 0) {
+	else {
 		g_debug("emitting 'number_empty' signal");
 		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
 					"number_empty", "elm");
@@ -298,9 +289,7 @@ static void
 frame_dialer_delete_mouse_down(void *_data, Evas_Object * o,
 			       const char *emission, const char *source)
 {
-	if (view.delete_timer == NULL)
-		view.delete_timer =
-			ecore_timer_add(0.5, frame_dialer_number_clear, &view);
+
 }
 
 static void
@@ -364,15 +353,10 @@ static int
 frame_dialer_number_clear(void *_data)
 {
 	struct DialerViewData *data = (struct DialerViewData *) _data;
-	if (view.delete_timer != NULL) {
-		view.delete_timer = NULL;
+	view.number[0] = '\0';
+	_dialer_number_update();
 
-		view.number[0] = '\0';
-		_dialer_number_update();
-
-		
-	}
-	return (0);
+	return 0;
 }
 
 static void
