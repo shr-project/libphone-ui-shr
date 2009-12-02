@@ -169,7 +169,6 @@ dialer_view_show()
 	if (!ui_utils_view_is_init(&view.parent)) {
 		dialer_view_init();
 	}
-	_dialer_number_clear();
 	evas_object_hide(view.hv);
 	ui_utils_view_show(&view.parent);
 }
@@ -177,6 +176,7 @@ dialer_view_show()
 void
 dialer_view_hide()
 {
+	_dialer_number_clear();
 	ui_utils_view_hide(&view.parent);	
 }
 
@@ -210,7 +210,7 @@ _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 	phoneui_contacts_contact_new(contact);
 	g_hash_table_destroy(contact);
 	
-	ui_utils_view_hide(&view.parent);
+	dialer_view_hide();
 }
 
 static void
@@ -231,7 +231,7 @@ _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 	phoneui_messages_message_new(options);
 	g_hash_table_destroy(options);
 
-	ui_utils_view_hide(&view.parent);
+	dialer_view_hide();
 }
 
 static void
@@ -269,7 +269,7 @@ _dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission,
 {
 	if (!*view.number) {
 		phoneui_contacts_show();
-		ui_utils_view_hide(&view.parent);
+		dialer_view_hide();
 	}
 }
 
