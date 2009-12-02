@@ -35,3 +35,11 @@ phoneui_backend_messages_message_show(const char *path)
 			message_show_view_hide, NULL);
 }
 
+void
+phoneui_backend_messages_message_new(GHashTable *options)
+{
+	struct Window *win = window_new(D_("Compose SMS"));
+	window_init(win);
+	window_view_show(win, options, message_new_view_show,
+			 message_new_view_hide, NULL);
+}

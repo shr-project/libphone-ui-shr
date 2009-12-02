@@ -247,10 +247,6 @@ frame_dialer_message_clicked(void *data, Evas_Object * obj, void *event_info)
 	g_hash_table_insert(options, "number", view.number);
 
 	/*FIXME: use the phone-ui way of calling this, not this hack... */
-	struct Window *win = window_new(D_("Compose SMS"));
-	window_init(win);
-	window_view_show(win, options, message_new_view_show,
-			 message_new_view_hide, NULL);
 
 	ui_utils_view_hide(&view.parent);
 }
