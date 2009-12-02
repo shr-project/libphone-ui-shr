@@ -85,6 +85,9 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 	evas_object_show(view->layout);
 
 	evas_object_resize(view->win, 480, 600);
+	view->show_cb = show_cb;
+	view->hide_cb = hide_cb;
+	view->destroy_cb = destroy_cb;
 	/* END of wtf */
 end:
 	return ret;
