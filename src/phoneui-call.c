@@ -47,39 +47,25 @@ instance_manager_add(int id, struct Window *win)
 struct Window *
 instance_manager_remove(int id)
 {
-	int i;
+	struct Window *win = NULL;
+	int i, j;
 	for (i = 0; i < instances_size; i++) {
 		if (instances[i].id == id) {
-			g_debug("instance_manager_remove: %d",
-				instances[i].win);
-			return (instances[i].win);
+			win = instances[i].win;
+			break;
 		}
 	}
-
-	// TODO: Free things
-
-	return NULL;
-}
-
-
-struct Window *
-instance_manager_remove_by_ecore_evas(Ecore_Evas * ee)
-{
-	int i;
-	for (i = 0; i < instances_size; i++) {
-		g_debug("foreach win: %d", instances[i].win->win);
-		if (ee ==
-		    ecore_evas_ecore_evas_get(evas_object_evas_get
-					      (instances[i].win->win))) {
-			g_debug("instance_manager_remove_by_ecore_evas: %d",
-				instances[i].win);
-			return (instances[i].win);
-		}
+	
+	for (j = i + 1 ; j < instances_size ; j++) {
+		instances[j - 1].id = instances[j].id;
+		instances[j - 1].win = instances[j].win;
+	}
+	if (win) {
+		instances_size--;
+		realloc(instances, instances_size);
 	}
 
-	// TODO: Free things
-
-	return NULL;
+	return win;
 }
 
 /* ADDED THE INSTANCE THING BACK JUST HERE AS i HAVE NO TIME TO REMOVE IT
