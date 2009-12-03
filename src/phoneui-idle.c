@@ -7,7 +7,9 @@ void
 phoneui_backend_idle_screen_show()
 {
 	if (!idle_screen_view_is_init()) {
-		idle_screen_view_init();
+		if (idle_screen_view_init()) {
+			return;
+		}
 	}
 	idle_screen_view_show();
 }

@@ -145,6 +145,14 @@ dialer_view_init()
 
 	view.number[0] = '\0';
 	view.length = 0;
+
+	return 0;
+}
+
+int
+dialer_view_is_init()
+{
+	return ui_utils_view_is_init(&view.parent);
 }
 
 void
@@ -170,9 +178,6 @@ dialer_view_deinit()
 void
 dialer_view_show()
 {
-	if (!ui_utils_view_is_init(&view.parent)) {
-		dialer_view_init();
-	}
 	evas_object_hide(view.hv);
 	ui_utils_view_show(&view.parent);
 }

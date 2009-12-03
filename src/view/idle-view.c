@@ -130,12 +130,19 @@ idle_screen_view_update(enum PhoneuiIdleScreenRefresh type)
 	}
 }
 
-void
+int
 idle_screen_view_init()
 {
 	struct Evas_Object *win;
-	ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Idle_Screen"),
+	int ret;
+
+	ret = ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Idle_Screen"),
 				NULL, NULL, _idle_destroy_cb);
+	if (ret) {
+		g_critical("Failed to init idle screen");
+		return ret;
+	}
+		
 	ui_utils_view_layout_set(&view.parent, IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
@@ -153,6 +160,7 @@ idle_screen_view_init()
 	edje_object_signal_callback_add(ui_utils_view_layout_get(&view.parent), "unlockScreen",
 					"slider", idle_screen_view_hide,
 					NULL);
+	return 0;
 }
 void
 idle_screen_view_deinit()

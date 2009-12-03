@@ -7,7 +7,7 @@ void idle_screen_view_show();
 void idle_screen_view_hide();
 
 int idle_screen_view_is_init();
-void idle_screen_view_init();
+int idle_screen_view_init();
 void idle_screen_view_deinit();
 
 void idle_screen_view_update(enum PhoneuiIdleScreenRefresh type);
