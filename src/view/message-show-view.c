@@ -233,11 +233,7 @@ message_common_name_callback(GHashTable *contact, void *_data)
 	}
 	
 	if (contact) {
-		GValue *tmp = g_hash_table_lookup(contact, "_Name");
-		if (tmp) {
-			data->name = g_value_get_string(tmp);
-			g_debug("got contact: \"%s\"", data->name);
-		}
+		data->name = phoneui_utils_contact_display_name_get(contact);
 	}
 
 	if (data->name) {

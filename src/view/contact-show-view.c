@@ -276,9 +276,7 @@ frame_show_show(void *_data)
 	g_hash_table_iter_init(&iter, data->properties);
 	while (g_hash_table_iter_next(&iter, &key, &value)) {
 
-		if (!strcmp(key, "Path")
-				|| !strcmp(key, "_Name")
-				|| !strcmp(key, "_Phone"))
+		if (!strcmp(key, "Path"))
 			continue;
 
 		g_debug("adding field %s='%s' to list", key,
@@ -756,9 +754,9 @@ contact_show_view_show(struct Window *win, void *_data)
 	else {
 		data->properties =
 			g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(data->properties, "_Name",
+		g_hash_table_insert(data->properties, "Name",
 				common_utils_new_gvalue_string(""));
-		g_hash_table_insert(data->properties, "_Phone",
+		g_hash_table_insert(data->properties, "Phone",
 				common_utils_new_gvalue_string(""));
 		data->path = NULL;
 	}

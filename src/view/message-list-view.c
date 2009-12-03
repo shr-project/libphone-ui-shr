@@ -362,11 +362,11 @@ _contact_lookup(GHashTable *contact, gpointer _pack)
 		goto end;
 	}
 
-	GValue *gval_tmp = g_hash_table_lookup(contact, "_Name");
-	if (gval_tmp) {
+	const char *tmp = phoneui_utils_contact_display_name_get(contact);
+	if (tmp) {
 		GHashTable *parameters = elm_genlist_item_data_get(pack->param);
 		g_hash_table_insert(parameters, "name",
-				strdup(g_value_get_string(gval_tmp)));
+				strdup(tmp));
 		elm_genlist_item_update(pack->param);
 	}
 	if (common_utils_object_get_ref(pack->data) == 1) {
