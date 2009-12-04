@@ -83,14 +83,15 @@ message_show_view_show(struct Window *win, void *_options)
 	data->win = win;
 
 	char *direction, *status, *tmp;
+	GValue *gtmp;
 	status = g_hash_table_lookup(options, "status");
 	direction = g_hash_table_lookup(options, "direction");
 	tmp = malloc(strlen(status) + strlen(direction) + 4);
 	sprintf(tmp, "%s (%s)", status, direction);
 
 	data->path = g_hash_table_lookup(options, "path");
-	data->name = g_hash_table_lookup(options, "name");
-	data->number = g_hash_table_lookup(options, "number");
+	data->name = phoneui_utils_contact_display_name_get(options);
+	data->number = phoneui_utils_contact_display_phone_get(options);
 	data->content = g_hash_table_lookup(options, "content");
 	data->status = tmp;
 	data->date = g_hash_table_lookup(options, "date");
@@ -157,11 +158,11 @@ message_show_view_answer_clicked(void *_data, Evas_Object * obj,
 	g_debug("message_show_view_answer_clicked()");
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "name", data->name);
-	g_hash_table_insert(options, "number", data->number);
+	g_hash_table_insert(options, "Name", data->name);
+	g_hash_table_insert(options, "Phone", data->number);
 
 	phoneui_messages_message_new(options);
-	g_hash_table_destroy(options);
+	//g_hash_table_destroy(options);
 }
 
 static void

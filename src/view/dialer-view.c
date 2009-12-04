@@ -238,7 +238,7 @@ _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 	g_hash_table_insert(options, "number", view.number);
 
 	phoneui_messages_message_new(options);
-	g_hash_table_destroy(options);
+	//g_hash_table_destroy(options);
 
 	dialer_view_hide();
 }

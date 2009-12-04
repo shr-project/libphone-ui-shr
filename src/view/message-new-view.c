@@ -1,8 +1,9 @@
 #include "views.h"
 
 #include <phoneui/phoneui-utils.h>
-
 #include <phone-utils.h>
+
+#include "util/common-utils.h"
 
 /* FIXME: HACKS FROM elm_priv.h that should be removed */
 #if 1
@@ -47,12 +48,10 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	g_debug("looking for %s", part);
 
 	if (!strcmp(part, "elm.text")) {
-		g_debug("---> %s", g_hash_table_lookup(parameters, "name"));
-		label = g_strdup(g_hash_table_lookup(parameters, "name"));
+		label = phoneui_utils_contact_display_name_get(parameters);
 	}
 	else if (!strcmp(part, "elm.text.sub")) {
-		g_debug("---> %s", g_hash_table_lookup(parameters, "number"));
-		label = g_strdup(g_hash_table_lookup(parameters, "number"));
+		label = phoneui_utils_contact_display_phone_get(parameters);
 	}
 
 	return (label);
@@ -64,7 +63,8 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 	GHashTable *parameters = (GHashTable *) data;
 	if (!strcmp(part, "elm.swallow.icon")) {
 		const char *photo_file;
-		photo_file = g_hash_table_lookup(parameters, "photo");
+		GValue *tmp = g_hash_table_lookup(parameters, "Photo");
+		photo_file = (tmp) ? g_value_get_string(tmp) : strdup(CONTACT_DEFAULT_PHOTO);
 		Evas_Object *photo = elm_icon_add(obj);
 		elm_icon_file_set(photo, photo_file, NULL);
 		evas_object_size_hint_aspect_set(photo,
@@ -170,32 +170,8 @@ message_new_view_show(struct Window *win, void *_options)
 	data->messages_sent = 0;
 	data->cdata = NULL;
 
-	if (options != NULL) {
-		g_debug("got some options...");
-		char *name = g_hash_table_lookup(options, "name");
-		char *number = g_hash_table_lookup(options, "number");
-		char *photo = g_hash_table_lookup(options, "photo");
-		if (!name) {
-			name = "Number";
-		}
-		if (!photo) {
-			photo = CONTACT_DEFAULT_PHOTO;
-		}
-
-		if (number) {
-			g_debug("--> adding %s=%s", name, number);
-			GHashTable *properties =
-				g_hash_table_new(g_str_hash, g_str_equal);
-
-			g_hash_table_insert(properties, strdup("name"),
-					    strdup(name));
-			g_hash_table_insert(properties, strdup("number"),
-					    strdup(number));
-			g_hash_table_insert(properties, strdup("photo"),
-					    strdup(photo));
-
-			g_ptr_array_add(data->recipients, properties);
-		}
+	if (options) {
+		g_ptr_array_add(data->recipients, options);
 	}
 
 
@@ -531,7 +507,7 @@ static void
 frame_recipient_process_recipient(gpointer _properties, gpointer _data)
 {
 	GHashTable *properties = (GHashTable *) _properties;
-	g_debug("adding recipient %s", g_hash_table_lookup(properties, "name"));
+	//g_debug("adding recipient %s", g_hash_table_lookup(properties, "name"));
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	elm_genlist_item_append(data->list_recipients, &itc, properties,
@@ -609,33 +585,35 @@ frame_contact_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->cdata->list);
-	GHashTable *itdata = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
-	if (itdata) {
-		const char *number = NULL;
-		const char *name = NULL;
-		const char *photo = NULL;
-		GValue *tmp = g_hash_table_lookup(itdata, "Phone");
-		/* as minimum we need a phone number from the contact ... */
-		if (!tmp)
+	if (properties) {
+		const char *photo;
+		char *str;
+		GValue *tmp;
+		str = phoneui_utils_contact_display_phone_get(properties);
+		if (!str) {
+			g_debug("contact needs a number to send a message ;)");
 			return;
-		number = g_value_get_string(tmp);
-		GHashTable *properties =
-			g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(properties, strdup("number"),
-				strdup(number));
-		/* name is optional... if not there take the number instead */
-		tmp = g_hash_table_lookup(itdata, "Name");
-		if (tmp)
-			name = g_value_get_string(tmp);
-		g_hash_table_insert(properties, strdup("name"),
-				strdup(name ? name : number));
+		}
+		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+		g_hash_table_insert(options, "Phone",
+				common_utils_new_gvalue_string(str));
+		free(str);
 
-		tmp = g_hash_table_lookup(itdata, "Photo");
-		if (tmp)
-			photo = g_value_get_string(tmp);
-		g_hash_table_insert(properties, strdup("photo"),
-				strdup(photo ? photo : CONTACT_DEFAULT_PHOTO));
+		str = phoneui_utils_contact_display_name_get(properties);
+		if (str) {
+			g_hash_table_insert(options, "Name",
+				common_utils_new_gvalue_string(str));
+			free(str);
+		}
+		tmp = g_hash_table_lookup(properties, "Photo");
+		if (tmp) {
+			tmp = common_utils_new_gvalue_string(g_value_get_string(tmp));
+			g_hash_table_insert(options, "Photo",
+				tmp);
+		}
+
 		g_ptr_array_add(data->recipients, properties);
 		data->mode = MODE_RECIPIENT;
 		window_frame_show(data->win, data, frame_recipient_show,
@@ -720,17 +698,17 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 	g_debug("frame_number_add_add_clicked()");
 
 	char *number;
-	number = g_strstrip(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry)));
-
+	number = g_strstrip(g_strdup(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry))));
+	
 	if (phone_utils_sms_is_valid_number(number)) {
 		GHashTable *properties =
-			g_hash_table_new_full(g_str_hash, g_str_equal, free, free);
-		g_hash_table_insert(properties, strdup("name"),
-				    strdup("Number"));
-		g_hash_table_insert(properties, strdup("number"),
-				    strdup(number));
-		g_hash_table_insert(properties, strdup("photo"),
-				strdup(CONTACT_NUMBER_PHOTO));
+			g_hash_table_new(g_str_hash, g_str_equal);
+		g_hash_table_insert(properties, "Name",
+				    common_utils_new_gvalue_string("Number"));
+		g_hash_table_insert(properties, "Phone",
+				    common_utils_new_gvalue_string(number));
+		g_hash_table_insert(properties, "Photo",
+				common_utils_new_gvalue_string(CONTACT_NUMBER_PHOTO));
 		g_ptr_array_add(data->recipients, properties);
 
 		data->mode = MODE_RECIPIENT;

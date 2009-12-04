@@ -53,13 +53,18 @@ static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
 	GHashTable *parameters = (GHashTable *) data;
+	GValue *tmp;
 	char *label = NULL;
 
 	//g_debug("getting label for %s", part);
 	if (!strcmp(part, "elm.text")) {
-		label = g_hash_table_lookup(parameters, "name");
-		if (!label) {
-			label = g_hash_table_lookup(parameters, "number");
+		tmp = g_hash_table_lookup(parameters, "Name");
+		if (tmp) {
+			label = g_value_get_string(tmp);
+		}
+		else {
+			tmp = g_hash_table_lookup(parameters, "Phone");
+			label = g_value_get_string(tmp);
 		}
 		return (g_strdup_printf
 			("%s %s", g_hash_table_lookup(parameters, "date"),
@@ -225,8 +230,8 @@ message_list_view_show_clicked(void *_data, Evas_Object * obj, void *event_info)
 			elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "number",
-				    g_hash_table_lookup(parameters, "number"));
+		g_hash_table_insert(options, "Phone",
+				    g_hash_table_lookup(parameters, "Phone"));
 		g_hash_table_insert(options, "content",
 				    g_hash_table_lookup(parameters, "content"));
 		g_hash_table_insert(options, "direction",
@@ -267,10 +272,10 @@ message_list_view_answer_clicked(void *_data, Evas_Object * obj,
 			elm_genlist_item_data_get(data->selected_row);
 
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "name",
-				    g_hash_table_lookup(parameters, "name"));
-		g_hash_table_insert(options, "number",
-				    g_hash_table_lookup(parameters, "number"));
+		g_hash_table_insert(options, "Name",
+				    g_hash_table_lookup(parameters, "Name"));
+		g_hash_table_insert(options, "Phone",
+				    g_hash_table_lookup(parameters, "Phone"));
 
 		phoneui_messages_message_new(options);
 	}
@@ -365,8 +370,8 @@ _contact_lookup(GHashTable *contact, gpointer _pack)
 	const char *tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
 		GHashTable *parameters = elm_genlist_item_data_get(pack->param);
-		g_hash_table_insert(parameters, "name",
-				strdup(tmp));
+		g_hash_table_insert(parameters, "Name",
+				common_utils_new_gvalue_string(tmp));
 		elm_genlist_item_update(pack->param);
 	}
 	if (common_utils_object_get_ref(pack->data) == 1) {
@@ -428,12 +433,13 @@ process_message(gpointer _entry, gpointer _data)
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
 		number = tmp;
-		_remove_tel(tmp);
+		tmp = common_utils_skip_prefix(tmp, "tel:");
 	}
 	else {
 		tmp = strdup("Missing sender");
 	}
-	g_hash_table_insert(parameters, "number", tmp);
+	g_hash_table_insert(parameters, "Phone", common_utils_new_gvalue_string(tmp));
+	
 
 	gval_tmp = g_hash_table_lookup(entry, "Content");
 	if (gval_tmp) {
@@ -465,6 +471,7 @@ process_message(gpointer _entry, gpointer _data)
 		pack->param = common_utils_object_ref(it);
 		phoneui_utils_contact_lookup(number, _contact_lookup, pack);
 	}
+	free(number);
 }
 
 
