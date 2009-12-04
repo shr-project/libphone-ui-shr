@@ -1,5 +1,6 @@
 #include "phoneui-quick-settings.h"
-#include "views/quick-settings-view.h"
+
+#include "view/quick-settings-view.h"
 
 void
 phoneui_backend_quick_settings_show()
