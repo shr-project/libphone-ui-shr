@@ -73,7 +73,4 @@ void contact_delete_view_hide(void *_data);
 void *ussd_view_show(struct Window *win, void *_options);
 void ussd_view_hide(void *_data);
 
-void *quick_settings_view_show(struct Window *win, void *_options);
-void quick_settings_view_hide(void *_data);
-
 #endif

@@ -45,5 +45,6 @@ shr_la_SOURCES = \
 	view/sim-auth-input-view.c \
 	util/common-utils.h util/common-utils.c \
 	view/ussd-view.c \
+	view/quick-settings-view.h \
 	view/quick-settings-view.c
 
