@@ -23,5 +23,7 @@ phoneui_backend_idle_screen_hide()
 void
 phoneui_backend_idle_screen_update(enum PhoneuiIdleScreenRefresh type)
 {
-	idle_screen_view_update(type);
+	if (idle_screen_view_is_init()) {
+		idle_screen_view_update(type);
+	}
 }
