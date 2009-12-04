@@ -158,8 +158,8 @@ message_show_view_answer_clicked(void *_data, Evas_Object * obj,
 	g_debug("message_show_view_answer_clicked()");
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "Name", data->name);
-	g_hash_table_insert(options, "Phone", data->number);
+	g_hash_table_insert(options, "Name", common_utils_new_gvalue_string(data->name));
+	g_hash_table_insert(options, "Phone", common_utils_new_gvalue_string(data->number));
 
 	phoneui_messages_message_new(options);
 	//g_hash_table_destroy(options);
