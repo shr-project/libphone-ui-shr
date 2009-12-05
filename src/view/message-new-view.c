@@ -47,8 +47,12 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	GHashTable *parameters = (GHashTable *) data;
 	g_debug("looking for %s", part);
 
+	/* Memory leak: */
 	if (!strcmp(part, "elm.text")) {
 		label = phoneui_utils_contact_display_name_get(parameters);
+		if (!label) {
+			return strdup("Number");
+		}
 	}
 	else if (!strcmp(part, "elm.text.sub")) {
 		label = phoneui_utils_contact_display_phone_get(parameters);
@@ -64,7 +68,7 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 	if (!strcmp(part, "elm.swallow.icon")) {
 		const char *photo_file;
 		GValue *tmp = g_hash_table_lookup(parameters, "Photo");
-		photo_file = (tmp) ? g_value_get_string(tmp) : strdup(CONTACT_DEFAULT_PHOTO);
+		photo_file = (tmp) ? g_value_get_string(tmp) : CONTACT_DEFAULT_PHOTO;
 		Evas_Object *photo = elm_icon_add(obj);
 		elm_icon_file_set(photo, photo_file, NULL);
 		evas_object_size_hint_aspect_set(photo,
