@@ -170,14 +170,9 @@ frame_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list);
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
-	if (properties != NULL) {
-		GValue *tmp = g_hash_table_lookup(properties, "Phone");
-		if (tmp) {
-			char *number =
-				common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
-			phoneui_utils_dial(number,
-					    NULL, NULL);
-		}
+	if (properties) {
+		const char *number = phoneui_utils_contact_display_phone_get(properties);
+		phoneui_utils_dial(number, NULL, NULL);
 	}
 }
 
@@ -205,28 +200,33 @@ frame_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	if (properties) {
 		const char *photo;
-		GValue *tmp = g_hash_table_lookup(properties, "Phone");
-		if (!tmp) {
+		char *str;
+		GValue *tmp;
+		str = phoneui_utils_contact_display_phone_get(properties);
+		if (!str) {
 			g_debug("contact needs a number to send a message ;)");
 			return;
 		}
 		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "number",
-				g_value_get_string(tmp));
+		g_hash_table_insert(options, "Phone",
+				common_utils_new_gvalue_string(str));
+		free(str);
 
-		tmp = g_hash_table_lookup(properties, "Name");
-		if (tmp) {
-			g_hash_table_insert(options, "name",
-				g_value_get_string(tmp));
+		str = phoneui_utils_contact_display_name_get(properties);
+		if (str) {
+			g_hash_table_insert(options, "Name",
+				common_utils_new_gvalue_string(str));
+			free(str);
 		}
 		tmp = g_hash_table_lookup(properties, "Photo");
 		if (tmp) {
-			g_hash_table_insert(options, "photo",
-				g_value_get_string(tmp));
+			str = g_value_get_string(tmp);
+			g_hash_table_insert(options, "Photo",
+				common_utils_new_gvalue_string(tmp));
 		}
 
 		phoneui_messages_message_new(options);
-		g_hash_table_destroy(options);
+		//g_hash_table_destroy(options);
 	}
 }
 

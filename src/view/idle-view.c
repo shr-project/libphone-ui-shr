@@ -71,7 +71,6 @@ idle_screen_view_update(enum PhoneuiIdleScreenRefresh type)
 		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_CALL);
 		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_GSM);
 		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_RESOURCES);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_TIME);
 		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_ALARM);
 		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_PROFILE);
 		break;
@@ -114,10 +113,10 @@ idle_screen_view_update(enum PhoneuiIdleScreenRefresh type)
 		_idle_screen_update_resources(0,RESOURCE_GPS);
 		break;
 
-	case PHONEUI_IDLE_SCREEN_REFRESH_TIME:
+/*	case PHONEUI_IDLE_SCREEN_REFRESH_TIME:
 		_idle_screen_update_time();
 		break;
-
+*/
 	case PHONEUI_IDLE_SCREEN_REFRESH_ALARM:
 		_idle_screen_update_alarm(1);
 		_idle_screen_update_alarm(0);

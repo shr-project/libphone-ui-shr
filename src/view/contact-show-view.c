@@ -101,13 +101,8 @@ static void
 frame_show_action_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct ContactViewData *data = (struct ContactViewData *) _data;
-	GValue *tmp = g_hash_table_lookup(data->properties, "Phone");
-	if (tmp) {
-		char *number =
-			common_utils_skip_prefix(g_value_get_string(tmp), "tel:");
-		phoneui_utils_dial(number,
-				    NULL, NULL);
-	}
+	const char *number = phoneui_utils_contact_display_phone_get(data->properties);
+	phoneui_utils_dial(number, NULL, NULL);
 	evas_object_hide(data->hv1);
 }
 
@@ -156,7 +151,36 @@ frame_show_action_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct ContactViewData *data = (struct ContactViewData *) _data;
 	evas_object_hide(data->hv1);
-	window_frame_show(data->win, data, frame_photo_show, frame_photo_hide);
+	if (data->properties) {
+		const char *photo;
+		char *str;
+		GValue *tmp;
+		str = phoneui_utils_contact_display_phone_get(data->properties);
+		if (!str) {
+			g_debug("contact needs a number to send a message ;)");
+			return;
+		}
+		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+		g_hash_table_insert(options, "Phone",
+				common_utils_new_gvalue_string(str));
+		free(str);
+
+		str = phoneui_utils_contact_display_name_get(data->properties);
+		if (str) {
+			g_hash_table_insert(options, "Name",
+				common_utils_new_gvalue_string(str));
+			free(str);
+		}
+		tmp = g_hash_table_lookup(data->properties, "Photo");
+		if (tmp) {
+			tmp = g_value_get_string(tmp);
+			g_hash_table_insert(options, "Photo",
+				common_utils_new_gvalue_string(tmp));
+		}
+
+		phoneui_messages_message_new(options);
+		//g_hash_table_destroy(options);
+	}
 }
 
 static void
