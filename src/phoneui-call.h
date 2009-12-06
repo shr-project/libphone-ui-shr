@@ -1,5 +1,5 @@
-#ifndef PHONEGUI_CALL_H
-#define PHONEGUI_CALL_H
+#ifndef PHONEUI_CALL_H
+#define PHONEUI_CALL_H
 
 void phoneui_backend_incoming_call_show(const int id, const int status,
 					 const char *number);

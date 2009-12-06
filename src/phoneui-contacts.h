@@ -1,5 +1,5 @@
-#ifndef _PHONEGUI_CONTACTS_H
-#define _PHONEGUI_CONTACTS_H
+#ifndef _PHONEUI_CONTACTS_H
+#define _PHONEUI_CONTACTS_H
 
 #include <glib.h>
 
