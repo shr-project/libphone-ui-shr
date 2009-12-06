@@ -169,7 +169,7 @@ static void
 message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
-	char *number = common_utils_skip_prefix(data->number, "tel:");
+	char *number = data->number;
 	g_debug("message_show_view_call_clicked()");
 	
 	phoneui_utils_dial(number, NULL, NULL);

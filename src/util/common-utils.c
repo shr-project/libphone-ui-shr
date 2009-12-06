@@ -8,16 +8,6 @@
 
 static GHashTable *ref_counter = NULL;
 
-char *
-common_utils_skip_prefix(char *string, const char *prefix)
-{
-	int prefix_len = strlen(prefix);
-	if (!strncmp(string, prefix, prefix_len)) {
-		string += prefix_len;
-	}
-	return string;
-}
-
 GValue *
 common_utils_new_gvalue_string(const char *value)
 {
@@ -57,23 +47,7 @@ common_utils_new_gvalue_boolean(int value)
 	return val;
 }
 
-char *
-common_utils_new_with_prefix(const char *_number, const char *prefix)
-{
-	char *number = NULL;
-	int prefix_len = strlen(prefix);
-	if (strncmp(_number, prefix, prefix_len)) {
-		number = malloc(strlen(_number) + prefix_len + 1);
-		if (!number) {
-			return NULL;
-		}
-		strcpy(number, prefix);
-		strcat(number, _number);
-	}
 
-
-	return number;
-}
 void *
 common_utils_object_ref(void *object)
 {

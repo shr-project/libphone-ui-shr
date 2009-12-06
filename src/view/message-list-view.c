@@ -338,16 +338,6 @@ retrieve_messagebook_callback(GError * error, GPtrArray * messages, void *_data)
 	g_ptr_array_foreach(data->messages, process_message, data);
 }
 
-void
-_remove_tel(char *number)
-{
-	if (!strncmp("tel:", number, 4)) {
-		char *tmp = strdup(number);
-		strcpy(number, &tmp[4]);
-		free(tmp);
-	}
-}
-
 struct _contact_lookup_pack {
 	struct MessageListViewData *data;
 	Elm_Genlist_Item *param;
@@ -433,7 +423,6 @@ process_message(gpointer _entry, gpointer _data)
 	if (gval_tmp) {
 		tmp = strdup(g_value_get_string(gval_tmp));
 		number = tmp;
-		tmp = common_utils_skip_prefix(tmp, "tel:");
 	}
 	else {
 		tmp = strdup("Missing sender");
