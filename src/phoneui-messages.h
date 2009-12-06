@@ -1,5 +1,5 @@
-#ifndef _PHONEGUI_MESSAGES_H
-#define _PHONEGUI_MESSAGES_H
+#ifndef _PHONEUI_MESSAGES_H
+#define _PHONEUI_MESSAGES_H
 #include <glib.h>
 
 void phoneui_backend_messages_show();
