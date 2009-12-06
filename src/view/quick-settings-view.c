@@ -48,7 +48,7 @@
 struct QuickSettingsViewData {
 	struct View parent;
 	char *profile_str;
-	Eina_Bool airplane_mode, network_gsm, network_wifi, network_gprs,
+	int airplane_mode, network_gsm, network_wifi, network_gprs,
 		network_usb, network_bluez, network_gps, auto_dim, auto_suspend;
 	Evas_Object *bg, *settings_box, *settings_area, *settings;
 };
@@ -60,112 +60,115 @@ static struct QuickSettingsViewData view;
 
 static void _quick_settings_destroy_cb(struct View *_view);
 
-static Eina_Bool
-phoneui_utils_network_gsm_get()
+typedef enum _phoneui_resource {
+	GSM,
+	WIFI,
+	GPRS,
+	BLUEZ,
+	GPS,
+	USB,
+	AIRPLANE,
+	AUTODIM,
+	AUTOSUSP
+} phoneui_resource;
+
+typedef enum _phoneui_resource_result {
+	PHONEUI_RES_OK,
+	PHONEUI_RES_E_FAILED,
+	PHONEUI_RES_E_DENIED
+} phoneui_resource_result;
+
+static int
+phoneui_utils_resource_state_get(phoneui_resource res)
 {
-	return(view.network_gsm);
+	switch(res) {
+		case GSM:	{ return(view.network_gsm);	}
+		case WIFI:	{ return(view.network_wifi);	}
+		case GPRS:	{ return(view.network_gprs);	}
+		case BLUEZ:	{ return(view.network_bluez);	}
+		case GPS:	{ return(view.network_gps);	}
+		case USB:	{ return(view.network_usb);	}
+		case AIRPLANE:	{ return(view.airplane_mode);	}
+		case AUTODIM:	{ return(view.auto_dim);	}
+		case AUTOSUSP:	{ return(view.auto_suspend);	}
+		default:	{ return(0);			}
+	}
 }
 
-static void
-phoneui_utils_network_gsm_set(Eina_Bool state)
+static phoneui_resource_result
+phoneui_utils_resource_state_set(phoneui_resource res, int state)
 {
-	view.network_gsm = state;
-}
+	phoneui_resource_result result = PHONEUI_RES_OK;
 
-static Eina_Bool
-phoneui_utils_network_wifi_get()
-{
-	return(view.network_wifi);
-}
+	switch(res) {
+		case GSM:
+		{
+			if(phoneui_utils_resource_state_get(AIRPLANE) && state)
+				result = PHONEUI_RES_E_DENIED;
+			else
+				view.network_gsm = state;
+			break;
+		}
+		case WIFI:
+		{
+			if(phoneui_utils_resource_state_get(AIRPLANE) && state)
+				result = PHONEUI_RES_E_DENIED;
+			else
+				view.network_wifi = state;
+			break;
+		}
+		case GPRS:
+		{
+			if(phoneui_utils_resource_state_get(AIRPLANE) && state)
+				result = PHONEUI_RES_E_DENIED;
+			else
+				view.network_gprs = state;
+			break;
+		}
+		case BLUEZ:
+		{
+			if(phoneui_utils_resource_state_get(AIRPLANE) && state)
+				result = PHONEUI_RES_E_DENIED;
+			else
+				view.network_bluez = state;
+			break;
+		}
+		case GPS:
+		{
+			if(phoneui_utils_resource_state_get(AIRPLANE) && state)
+				result = PHONEUI_RES_E_DENIED;
+			else
+				view.network_gps = state;
+			break;
+		}
+		case USB:
+		{
+			view.network_usb = state;
+			break;
+		}
+		case AIRPLANE:
+		{
+			view.airplane_mode = state;
+			break;
+		}
+		case AUTODIM:
+		{
+			view.auto_dim = state;
+			break;
+		}
+		case AUTOSUSP:
+		{
+			view.auto_suspend = state;
+			break;
+		}
+		default:
+		{
+			result = PHONEUI_RES_E_FAILED;
+			break;
+		}
+	}
 
-static void
-phoneui_utils_network_wifi_set(Eina_Bool state)
-{
-	view.network_wifi = state;
-}
-
-static Eina_Bool
-phoneui_utils_network_gprs_get()
-{
-	return(view.network_gprs);
-}
-
-static void
-phoneui_utils_network_gprs_set(Eina_Bool state)
-{
-	view.network_gprs = state;
-}
-
-static Eina_Bool
-phoneui_utils_network_bluez_get()
-{
-	return(view.network_bluez);
-}
-
-static void
-phoneui_utils_network_bluez_set(Eina_Bool state)
-{
-	view.network_bluez = state;
-}
-
-static Eina_Bool
-phoneui_utils_network_gps_get()
-{
-	return(view.network_gps);
-}
-
-static void
-phoneui_utils_network_gps_set(Eina_Bool state)
-{
-	view.network_gps = state;
-}
-
-static Eina_Bool
-phoneui_utils_network_usb_get()
-{
-	return(view.network_usb);
-}
-
-static void
-phoneui_utils_network_usb_set(Eina_Bool state)
-{
-	view.network_usb = state;
-}
-
-static Eina_Bool
-phoneui_utils_network_airplane_mode_get()
-{
-	return(view.airplane_mode);
-}
-
-static void
-phoneui_utils_network_airplane_mode_set(Eina_Bool state)
-{
-	view.airplane_mode = state;
-}
-
-static Eina_Bool
-phoneui_utils_autodim_get()
-{
-	return(view.auto_dim);
-}
-
-static void
-phoneui_utils_autodim_set(Eina_Bool state)
-{
-	view.auto_dim = state;
-}
-
-static Eina_Bool
-phoneui_utils_autosuspend_get()
-{
-	return(view.auto_suspend);
-}
-
-static void
-phoneui_utils_autosuspend_set(Eina_Bool state)
-{
-	view.auto_suspend = state;
+	return(result);
 }
 
 static char **
@@ -213,27 +216,27 @@ on_toggle_airplane_mode(void * data, Evas_Object *this_check, void *event_info)
 	if(elm_toggle_state_get(toggle)) {
 		check = evas_object_name_find(win_evas, "network_gsm");
 		if(check) elm_check_state_set(check, FALSE);
-		phoneui_utils_network_gsm_set(FALSE);
+		phoneui_utils_resource_state_set(GSM, 0);
 
 		check = evas_object_name_find(win_evas, "network_wifi");
 		if(check) elm_check_state_set(check, FALSE);
-		phoneui_utils_network_wifi_set(FALSE);
+		phoneui_utils_resource_state_set(WIFI, 0);
 
 		check = evas_object_name_find(win_evas, "network_gprs");
 		if(check) elm_check_state_set(check, FALSE);
-		phoneui_utils_network_gprs_set(FALSE);
+		phoneui_utils_resource_state_set(GPRS, 0);
 
 		check = evas_object_name_find(win_evas, "network_bluez");
 		if(check) elm_check_state_set(check, FALSE);
-		phoneui_utils_network_bluez_set(FALSE);
+		phoneui_utils_resource_state_set(BLUEZ, 0);
 
 		check = evas_object_name_find(win_evas, "network_gps");
 		if(check) elm_check_state_set(check, FALSE);
-		phoneui_utils_network_gps_set(FALSE);
+		phoneui_utils_resource_state_set(GPS, 0);
 
-		phoneui_utils_network_airplane_mode_set(TRUE);
+		phoneui_utils_resource_state_set(AIRPLANE, 1);
 	} else
-		phoneui_utils_network_airplane_mode_set(FALSE);
+		phoneui_utils_resource_state_set(AIRPLANE, 0);
 }
 
 static void
@@ -248,19 +251,19 @@ on_toggle_network_gsm(void *data, Evas_Object *this_check, void *event_info)
 	toggle = evas_object_name_find(win_evas, "network_gsm");
 
 	if(elm_toggle_state_get(toggle)) {
-		if(phoneui_utils_network_airplane_mode_get()) {
+		if(phoneui_utils_resource_state_get(AIRPLANE)) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
 			if(check) {
 				elm_toggle_state_set(check, FALSE);
 				on_toggle_airplane_mode(NULL, NULL, NULL);
 			}
-			phoneui_utils_network_airplane_mode_set(FALSE);
+			phoneui_utils_resource_state_set(AIRPLANE, 0);
 		}
 
-		phoneui_utils_network_gsm_set(TRUE);
+		phoneui_utils_resource_state_set(GSM, 1);
 		elm_entry_entry_set(entry, D_("Connecting GSM..."));
 	} else {
-		phoneui_utils_network_gsm_set(FALSE);
+		phoneui_utils_resource_state_set(GSM, 0);
 		elm_entry_entry_set(entry, D_("GSM is disconnected."));
 	}
 }
@@ -277,19 +280,19 @@ on_toggle_network_wifi(void *data, Evas_Object *this_check, void *event_info)
 	toggle = evas_object_name_find(win_evas, "network_wifi");
 
 	if(elm_toggle_state_get(toggle)) {
-		if(phoneui_utils_network_airplane_mode_get()) {
+		if(phoneui_utils_resource_state_get(AIRPLANE)) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
 			if(check) {
-				elm_toggle_state_set(check, FALSE);
+				elm_toggle_state_set(check, 0);
 				on_toggle_airplane_mode(NULL, NULL, NULL);
 			}
-			phoneui_utils_network_airplane_mode_set(FALSE);
+			phoneui_utils_resource_state_set(AIRPLANE, 0);
 		}
 
-		phoneui_utils_network_wifi_set(TRUE);
+		phoneui_utils_resource_state_set(WIFI, 1);
 		elm_entry_entry_set(entry, D_("Connecting..."));
 	} else {
-		phoneui_utils_network_wifi_set(FALSE);
+		phoneui_utils_resource_state_set(WIFI, 0);
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
 }
@@ -306,19 +309,19 @@ on_toggle_network_gprs(void *data, Evas_Object *this_check, void *event_info)
 	toggle = evas_object_name_find(win_evas, "network_gprs");
 
 	if(elm_toggle_state_get(toggle)) {
-		if(phoneui_utils_network_airplane_mode_get()) {
+		if(phoneui_utils_resource_state_get(AIRPLANE)) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
 			if(check) {
 				elm_toggle_state_set(check, FALSE);
 				on_toggle_airplane_mode(NULL, NULL, NULL);
 			}
-			phoneui_utils_network_airplane_mode_set(FALSE);
+			phoneui_utils_resource_state_set(AIRPLANE, 0);
 		}
 
-		phoneui_utils_network_gprs_set(TRUE);
+		phoneui_utils_resource_state_set(GPRS, 1);
 		elm_entry_entry_set(entry, D_("Connecting..."));
 	} else {
-		phoneui_utils_network_gprs_set(FALSE);
+		phoneui_utils_resource_state_set(GPRS, 0);
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
 }
@@ -335,19 +338,19 @@ on_toggle_network_bluez(void *data, Evas_Object *this_check, void *event_info)
 	toggle = evas_object_name_find(win_evas, "network_bluez");
 
 	if(elm_toggle_state_get(toggle)) {
-		if(phoneui_utils_network_airplane_mode_get()) {
+		if(phoneui_utils_resource_state_get(AIRPLANE)) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
 			if(check) {
 				elm_toggle_state_set(check, FALSE);
 				on_toggle_airplane_mode(NULL, NULL, NULL);
 			}
-			phoneui_utils_network_airplane_mode_set(FALSE);
+			phoneui_utils_resource_state_set(AIRPLANE, 0);
 		}
 
-		phoneui_utils_network_bluez_set(TRUE);
+		phoneui_utils_resource_state_set(BLUEZ, 1);
 		elm_entry_entry_set(entry, D_("Connecting..."));
 	} else {
-		phoneui_utils_network_bluez_set(FALSE);
+		phoneui_utils_resource_state_set(BLUEZ, 0);
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
 }
@@ -364,19 +367,19 @@ on_toggle_network_gps(void *data, Evas_Object *this_check, void *event_info)
 	toggle = evas_object_name_find(win_evas, "network_gps");
 
 	if(elm_toggle_state_get(toggle)) {
-		if(phoneui_utils_network_airplane_mode_get()) {
+		if(phoneui_utils_resource_state_get(AIRPLANE)) {
 			check = evas_object_name_find(win_evas, "airplane_mode");
 			if(check) {
 				elm_toggle_state_set(check, FALSE);
 				on_toggle_airplane_mode(NULL, NULL, NULL);
 			}
-			phoneui_utils_network_airplane_mode_set(FALSE);
+			phoneui_utils_resource_state_set(AIRPLANE, 0);
 		}
 
-		phoneui_utils_network_gps_set(TRUE);
+		phoneui_utils_resource_state_set(GPS, 1);
 		elm_entry_entry_set(entry, D_("Connecting..."));
 	} else {
-		phoneui_utils_network_gps_set(FALSE);
+		phoneui_utils_resource_state_set(GPS, 0);
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
 }
@@ -393,10 +396,10 @@ on_toggle_network_usb(void *data, Evas_Object *this_check, void *event_info)
 	toggle = evas_object_name_find(win_evas, "network_usb");
 
 	if(elm_toggle_state_get(toggle)) {
-		phoneui_utils_network_usb_set(TRUE);
+		phoneui_utils_resource_state_set(USB, 1);
 		elm_entry_entry_set(entry, D_("Connecting..."));
 	} else {
-		phoneui_utils_network_usb_set(FALSE);
+		phoneui_utils_resource_state_set(USB, 0);
 		elm_entry_entry_set(entry, D_("Disconnected."));
 	}
 }
@@ -444,10 +447,9 @@ on_toggle_autodim(void *data, Evas_Object *obj, void *event_info)
 	toggle = evas_object_name_find(win_evas, "auto_dim");
 
 	if(elm_toggle_state_get(toggle))
-		phoneui_utils_autodim_set(TRUE);
+		phoneui_utils_resource_state_set(AUTODIM, 1);
 	else
-		phoneui_utils_autodim_set(FALSE);
-
+		phoneui_utils_resource_state_set(AUTODIM, 0);
 }
 
 static void
@@ -462,9 +464,9 @@ on_toggle_autosuspend(void *data, Evas_Object *obj, void *event_info)
 	toggle = evas_object_name_find(win_evas, "auto_suspend");
 
 	if(elm_toggle_state_get(toggle))
-		phoneui_utils_autosuspend_set(TRUE);
+		phoneui_utils_resource_state_set(AUTOSUSP, 1);
 	else
-		phoneui_utils_autosuspend_set(FALSE);
+		phoneui_utils_resource_state_set(AUTOSUSP, 0);
 }
 
 void
@@ -527,7 +529,7 @@ on_phone_settings(void *data, Evas_Object *obj, void *event_info)
 						evas_object_size_hint_align_set(toggle, 0.5, 0);
 						elm_toggle_states_labels_set(toggle, D_("On"), D_("Off"));
 
-						if(phoneui_utils_network_airplane_mode_get())
+						if(phoneui_utils_resource_state_get(AIRPLANE))
 							elm_toggle_state_set(toggle, TRUE);
 						else
 							elm_toggle_state_set(toggle, FALSE);
@@ -587,7 +589,7 @@ on_phone_settings(void *data, Evas_Object *obj, void *event_info)
 						elm_toggle_label_set(toggle, D_("Auto-dimming:"));
 						elm_toggle_states_labels_set(toggle, D_("On"), D_("Off"));
 
-						if(phoneui_utils_autodim_get())
+						if(phoneui_utils_resource_state_get(AUTODIM))
 							elm_toggle_state_set(toggle, TRUE);
 						else
 							elm_toggle_state_set(toggle, FALSE);
@@ -607,7 +609,7 @@ on_phone_settings(void *data, Evas_Object *obj, void *event_info)
 						elm_toggle_label_set(toggle, D_("Auto-suspend:"));
 						elm_toggle_states_labels_set(toggle, D_("On"), D_("Off"));
 
-						if(phoneui_utils_autosuspend_get())
+						if(phoneui_utils_resource_state_get(AUTOSUSP))
 							elm_toggle_state_set(toggle, TRUE);
 						else
 							elm_toggle_state_set(toggle, FALSE);
@@ -695,6 +697,7 @@ on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 {
 	Evas_Object * win = ui_utils_view_window_get(&view.parent);
 	Evas_Object *netbox=NULL, *button=NULL, *check=NULL, *frame=NULL, *subframe=NULL, *networks=NULL, *icon=NULL, *entry=NULL, *table=NULL;
+	int airplane_mode = phoneui_utils_resource_state_get(AIRPLANE);
 
 	if(view.settings)
 		evas_object_del(view.settings);
@@ -731,13 +734,17 @@ on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 						evas_object_show(icon);
 						elm_check_icon_set(check, icon);
 
-						if(phoneui_utils_network_gsm_get())
+						if(phoneui_utils_resource_state_get(GSM))
 							elm_check_state_set(check, TRUE);
 						else
 							elm_check_state_set(check, FALSE);
 
-						evas_object_smart_callback_add(check, "changed", on_toggle_network_gsm, NULL);
-						evas_object_name_set(check, "network_gsm");
+						if(airplane_mode)
+							elm_object_disabled_set(check, TRUE);
+						else {
+							evas_object_smart_callback_add(check, "changed", on_toggle_network_gsm, NULL);
+							evas_object_name_set(check, "network_gsm");
+						}
 
 						evas_object_show(check);
 					}
@@ -774,13 +781,17 @@ on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 						evas_object_show(icon);
 						elm_check_icon_set(check, icon);
 
-						if(phoneui_utils_network_wifi_get())
+						if(phoneui_utils_resource_state_get(WIFI))
 							elm_check_state_set(check, TRUE);
 						else
 							elm_check_state_set(check, FALSE);
 
-						evas_object_smart_callback_add(check, "changed", on_toggle_network_wifi, NULL);
-						evas_object_name_set(check, "network_wifi");
+						if(airplane_mode)
+							elm_object_disabled_set(check, TRUE);
+						else {
+							evas_object_smart_callback_add(check, "changed", on_toggle_network_wifi, NULL);
+							evas_object_name_set(check, "network_wifi");
+						}
 
 						elm_box_pack_end(netbox, check);
 					}
@@ -817,13 +828,17 @@ on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 						evas_object_show(icon);
 						elm_check_icon_set(check, icon);
 
-						if(phoneui_utils_network_gprs_get())
+						if(phoneui_utils_resource_state_get(GPRS))
 							elm_check_state_set(check, TRUE);
 						else
 							elm_check_state_set(check, FALSE);
 
-						evas_object_smart_callback_add(check, "changed", on_toggle_network_gprs, NULL);
-						evas_object_name_set(check, "network_gprs");
+						if(airplane_mode)
+							elm_object_disabled_set(check, TRUE);
+						else {
+							evas_object_smart_callback_add(check, "changed", on_toggle_network_gprs, NULL);
+							evas_object_name_set(check, "network_gprs");
+						}
 
 						elm_box_pack_end(netbox, check);
 					}
@@ -860,7 +875,7 @@ on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 						evas_object_show(icon);
 						elm_check_icon_set(check, icon);
 
-						if(phoneui_utils_network_usb_get())
+						if(phoneui_utils_resource_state_get(USB))
 							elm_check_state_set(check, TRUE);
 						else
 							elm_check_state_set(check, FALSE);
@@ -903,13 +918,17 @@ on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 						evas_object_show(icon);
 						elm_check_icon_set(check, icon);
 
-						if(phoneui_utils_network_bluez_get())
+						if(phoneui_utils_resource_state_get(BLUEZ))
 							elm_check_state_set(check, TRUE);
 						else
 							elm_check_state_set(check, FALSE);
 
-						evas_object_smart_callback_add(check, "changed", on_toggle_network_bluez, NULL);
-						evas_object_name_set(check, "network_bluez");
+						if(airplane_mode)
+							elm_object_disabled_set(check, TRUE);
+						else {
+							evas_object_smart_callback_add(check, "changed", on_toggle_network_bluez, NULL);
+							evas_object_name_set(check, "network_bluez");
+						}
 
 						elm_box_pack_end(netbox, check);
 					}
@@ -946,13 +965,17 @@ on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 						evas_object_show(icon);
 						elm_check_icon_set(check, icon);
 
-						if(phoneui_utils_network_gps_get())
+						if(phoneui_utils_resource_state_get(GPS))
 							elm_check_state_set(check, TRUE);
 						else
 							elm_check_state_set(check, FALSE);
 
-						evas_object_smart_callback_add(check, "changed", on_toggle_network_gps, NULL);
-						evas_object_name_set(check, "network_gps");
+						if(airplane_mode)
+							elm_object_disabled_set(check, TRUE);
+						else {
+							evas_object_smart_callback_add(check, "changed", on_toggle_network_gps, NULL);
+							evas_object_name_set(check, "network_gps");
+						}
 
 						elm_box_pack_end(netbox, check);
 					}
