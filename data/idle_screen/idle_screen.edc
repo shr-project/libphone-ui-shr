@@ -274,12 +274,12 @@ part {                                                                         \
         }                                                                      \
     }
 
-	    RESOURCE("cpuResource", "cpu.png", "batteryPower", -25);
-	    RESOURCE("displayResource", "display.png", "cpuResource", -25);
-	    RESOURCE("bluetoothResource", "bluetooth.png", "displayResource", -17);
-	    RESOURCE("wifiResource", "wifi.png", "bluetoothResource", -25);
-	    RESOURCE("gpsResource", "gps.png", "wifiResource", -25);
-	    RESOURCE("alarm", "alarm.png", "gpsResource", -25);
+	    RESOURCE("CPU", "cpu.png", "batteryPower", -25);
+	    RESOURCE("Display", "display.png", "CPU", -25);
+	    RESOURCE("Bluetooth", "bluetooth.png", "Display", -17);
+	    RESOURCE("WiFi", "wifi.png", "Bluetooth", -25);
+	    RESOURCE("GPS", "gps.png", "WiFi", -25);
+	    RESOURCE("alarm", "alarm.png", "GPS", -25);
 
 ///////////////////////////////// CLOCK ////////////////////////////////////////
 
