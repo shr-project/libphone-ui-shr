@@ -40,9 +40,6 @@
 
 #include <config.h>
 
-#include <phoneui/phoneui-utils.h>
-
-
 #include "util/common-utils.h"
 #include "util/ui-utils.h"
 #include "views.h"
@@ -413,8 +410,7 @@ on_phone_profile_set(void *data, Evas_Object *profiles, void *event_info)
 	char *new_label = (char*)data;
 	char *message=NULL;
 
-	/* FIXME: handle callback */
-	phoneui_utils_sound_profile_set(new_label, NULL, NULL);
+	phoneui_utils_profile_set(new_label);
 
 	message=g_strdup_printf("Profiles (%s)", new_label);
 	elm_hoversel_label_set(profiles, message);
