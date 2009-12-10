@@ -265,8 +265,9 @@ frame_show_show(void *_data)
 		if (!strncmp(s, "file://", 7))
 			s += 7;
 	}
-	else
+	else {
 		s = CONTACT_DEFAULT_PHOTO;
+	}
 	data->photo = elm_icon_add(window_evas_object_get(data->win));
 	elm_icon_file_set(data->photo, s, NULL);
 	window_swallow(data->win, "photo", data->photo);
