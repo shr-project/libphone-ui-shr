@@ -12,17 +12,6 @@
 /*FIXME: no need to pass the screen handle all the time since we only allow
  * one idle screen at a time */
 
-enum IdleScreenCallState {
-	INCOMING,
-	ACTIVE,
-	RELEASED
-};
-
-#define RESOURCE_CPU 		"cpuResource"
-#define RESOURCE_DISPLAY	"displayResource"
-#define RESOURCE_BT		"bluetoothResource"
-#define RESOURCE_WIFI		"wifiResource"
-#define RESOURCE_GPS		"gpsResource"
 
 struct IdleScreenViewData {
 	struct View parent;
@@ -33,17 +22,9 @@ static struct IdleScreenViewData view;
 
 static void _idle_screen_show();
 static void _idle_screen_hide();
-static void _idle_screen_update_calls(int i);
-static void _idle_screen_update_messages(int i);
-static void _idle_screen_update_tasks(int i);
-static void _idle_screen_update_power(int i);
+static void _idle_screen_update_counter(const char *name,
+		const char *label_name, int count);
 static void _idle_screen_update_time();
-static void _idle_screen_update_gsm(int i, const char *provider);
-static void _idle_screen_update_resources(int i, const char *resource_name);
-static void _idle_screen_update_call(enum IdleScreenCallState state,
-					  const char *name, const char *number);
-static void _idle_screen_update_alarm(int i);
-static void _idle_screen_update_profile(const char *profile);
 static void _idle_destroy_cb(struct View *_view);
 
 void
@@ -56,77 +37,6 @@ void
 idle_screen_view_hide()
 {
 	ui_utils_view_hide(&view.parent);
-}
-
-void
-idle_screen_view_update(enum PhoneuiIdleScreenRefresh type)
-{
-	switch (type) {
-	case PHONEUI_IDLE_SCREEN_REFRESH_ALL:
-		idle_screen_view_update
-			(PHONEUI_IDLE_SCREEN_REFRESH_MISSED_CALLS);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_MESSAGES);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_TASKS);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_POWER);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_CALL);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_GSM);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_RESOURCES);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_ALARM);
-		idle_screen_view_update(PHONEUI_IDLE_SCREEN_REFRESH_PROFILE);
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_MISSED_CALLS:
-		_idle_screen_update_calls(3);
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_MESSAGES:
-		_idle_screen_update_messages(425);
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_TASKS:
-		_idle_screen_update_tasks(1);
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_POWER:
-		_idle_screen_update_power(10);
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_CALL:
-		/*_idle_screen_update_call(INCOMING,
-		 * "Mr. Anonymous", "+49123456789");
-		 * _idle_screen_update_call(ACTIVE,
-		 * "Mr. Anonymous", "+49123456789");
-		 * _idle_screen_update_call(RELEASED,
-		 * "Mr. Anonymous", "+49123456789");
-		 */
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_GSM:
-		_idle_screen_update_gsm(23, "Provider");
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_RESOURCES:
-		_idle_screen_update_resources(1,RESOURCE_CPU);
-		_idle_screen_update_resources(1,RESOURCE_DISPLAY);
-		_idle_screen_update_resources(1,RESOURCE_BT);
-		_idle_screen_update_resources(1,RESOURCE_WIFI);
-		_idle_screen_update_resources(0,RESOURCE_GPS);
-		break;
-
-/*	case PHONEUI_IDLE_SCREEN_REFRESH_TIME:
-		_idle_screen_update_time();
-		break;
-*/
-	case PHONEUI_IDLE_SCREEN_REFRESH_ALARM:
-		_idle_screen_update_alarm(1);
-		_idle_screen_update_alarm(0);
-		break;
-
-	case PHONEUI_IDLE_SCREEN_REFRESH_PROFILE:
-		_idle_screen_update_profile("Vibrate");
-		break;
-
-	}
 }
 
 int
@@ -161,6 +71,7 @@ idle_screen_view_init()
 					NULL);
 	return 0;
 }
+
 void
 idle_screen_view_deinit()
 {
@@ -173,6 +84,119 @@ idle_screen_view_is_init()
 {
 	return ui_utils_view_is_init(&view.parent);
 }
+
+void
+idle_screen_view_update_missed_calls(const int amount)
+{
+	_idle_screen_update_counter("missedCalls", "missedCallsLabel", amount);
+}
+
+void
+idle_screen_view_update_unfinished_tasks(const int amount)
+{
+	_idle_screen_update_counter("unfinishedTasks",
+					 "unfinishedTasksLabel", amount);
+}
+
+void
+idle_screen_view_update_unread_messages(const int amount)
+{
+	_idle_screen_update_counter("unreadMessages",
+					 "unreadMessagesLabel", amount);
+}
+
+void
+idle_screen_view_update_power(const int capacity)
+{
+	char buf[16];
+	snprintf(buf, 16, "%d", capacity);
+
+	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+				buf, "batteryPowerChange");
+}
+
+void
+idle_screen_view_update_call(enum PhoneuiCallState state, const char *name, const char *number)
+{
+	switch (state) {
+	case PHONEUI_CALL_STATE_INCOMING:
+		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
+					"activate_incomingCall");
+		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "Incoming Call:");
+		ui_utils_view_text_set(&view.parent, "incomingCallLine1", name);
+		ui_utils_view_text_set(&view.parent, "incomingCallLine2", number);
+		break;
+
+	case PHONEUI_CALL_STATE_ACTIVE:
+		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
+					"activate_incomingCall");
+		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "Active Call:");
+		ui_utils_view_text_set(&view.parent, "incomingCallLine1", name);
+		ui_utils_view_text_set(&view.parent, "incomingCallLine2", number);
+		break;
+
+	case PHONEUI_CALL_STATE_RELEASE:
+		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
+					"deactivate_incomingCall");
+		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "");
+		ui_utils_view_text_set(&view.parent, "incomingCallLine1", "");
+		ui_utils_view_text_set(&view.parent, "incomingCallLine2", "");
+		break;
+	}
+}
+
+void
+idle_screen_view_update_signal_strength(const int signal)
+{
+	char buf[16];
+	snprintf(buf, 16, "%d", signal);
+
+	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+				buf, "gsmSignalChange");
+}
+
+void
+idle_screen_view_update_provider(const char *provider)
+{
+	ui_utils_view_text_set(&view.parent, "gsmProvider", provider);
+}
+
+void
+idle_screen_view_update_resource(const char *resource, const int state)
+{
+	if (state) {
+		edje_edit_part_selected_state_set
+			(ui_utils_view_layout_get(&view.parent),
+			 resource, "active 0.0");
+	}
+	else {
+		edje_edit_part_selected_state_set
+			(ui_utils_view_layout_get(&view.parent),
+			 resource, "default 0.0");
+	}
+}
+
+void
+idle_screen_view_update_alarm(const int alarm)
+{
+	if (alarm > 0) {
+		edje_edit_part_selected_state_set
+			(ui_utils_view_layout_get(&view.parent),
+			 "alarm", "active 0.0");
+	}
+	else {
+		edje_edit_part_selected_state_set
+			(ui_utils_view_layout_get(&view.parent),
+			 "alarm", "default 0.0");
+	}
+}
+
+void
+idle_screen_view_update_profile(const char *profile)
+{
+	ui_utils_view_text_set(&view.parent, "profile", profile);
+}
+
 
 static void
 _idle_destroy_cb(struct View *_view)
@@ -201,37 +225,6 @@ _idle_screen_update_counter(const char *name, const char *label_name,
 }
 
 static void
-_idle_screen_update_calls(int i)
-{
-	_idle_screen_update_counter("missedCalls", "missedCallsLabel", i);
-}
-
-static void
-_idle_screen_update_messages(int i)
-{
-	_idle_screen_update_counter("unreadMessages",
-					 "unreadMessagesLabel", i);
-}
-
-static void
-_idle_screen_update_tasks(int i)
-{
-
-	_idle_screen_update_counter("unfinishedTasks",
-					 "unfinishedTasksLabel", i);
-}
-
-static void
-_idle_screen_update_power(int i)
-{
-	char buf[16];
-	snprintf(buf, 16, "%d", i);
-
-	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
-				buf, "batteryPowerChange");
-}
-
-static void
 _idle_screen_update_time()
 {
 	char date_str[16];
@@ -247,72 +240,3 @@ _idle_screen_update_time()
 	ui_utils_view_text_set(&view.parent, "date", date_str);
 }
 
-static void
-_idle_screen_update_gsm(int i, const char *provider)
-{
-	char buf[16];
-	snprintf(buf, 16, "%d", i);
-
-	ui_utils_view_text_set(&view.parent, "gsmProvider", provider);
-	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
-				buf, "gsmSignalChange");
-}
-
-static void
-_idle_screen_update_resources(int i, const char *resource_name)
-{
-	if (i > 0)
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(&view.parent),
-						  resource_name, "active 0.0");
-	else
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(&view.parent),
-						  resource_name, "default 0.0");
-}
-
-static void
-_idle_screen_update_call(enum IdleScreenCallState state, const char *name,
-			      const char *number)
-{
-	switch (state) {
-	case INCOMING:
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
-					"activate_incomingCall");
-		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "Incoming Call:");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine1", name);
-		ui_utils_view_text_set(&view.parent, "incomingCallLine2", number);
-		break;
-
-	case ACTIVE:
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
-					"activate_incomingCall");
-		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "Active Call:");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine1", name);
-		ui_utils_view_text_set(&view.parent, "incomingCallLine2", number);
-		break;
-
-	case RELEASED:
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
-					"deactivate_incomingCall");
-		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine1", "");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine2", "");
-		break;
-	}
-}
-
-static void
-_idle_screen_update_alarm(int i)
-{
-	if (i > 0)
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(&view.parent),
-						  "alarm", "active 0.0");
-	else
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(&view.parent),
-						  "alarm", "default 0.0");
-}
-
-static void
-_idle_screen_update_profile(const char *profile)
-{
-	ui_utils_view_text_set(&view.parent, "profile", profile);
-}
