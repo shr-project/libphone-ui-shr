@@ -25,7 +25,6 @@ static void _idle_screen_show();
 static void _idle_screen_hide();
 static void _idle_screen_update_counter(const char *name,
 		const char *label_name, int count);
-static void _idle_screen_update_time();
 static void _idle_destroy_cb(struct View *_view);
 
 void
@@ -52,7 +51,7 @@ idle_screen_view_init()
 		g_critical("Failed to init idle screen");
 		return ret;
 	}
-		
+
 	ui_utils_view_layout_set(&view.parent, IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
@@ -254,19 +253,4 @@ _idle_screen_update_counter(const char *name, const char *label_name,
 	ui_utils_view_text_set(&view.parent, label_name, buf);
 }
 
-static void
-_idle_screen_update_time()
-{
-	char date_str[16];
-	struct timeval tv;
-	struct tm ptime;
-	char *levelstr;
-
-	gettimeofday(&tv, NULL);
-	localtime_r(&tv.tv_sec, &ptime);
-/*FIXME take time format from locale */
-	strftime(date_str, 14, "%d.%m.%Y", &ptime);
-
-	ui_utils_view_text_set(&view.parent, "date", date_str);
-}
 
