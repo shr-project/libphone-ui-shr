@@ -52,6 +52,7 @@ collections {
 		script {
 			public clock_cb(val) {
 				new buf[11];
+				new date_buf[12];
 				new year, month, day, yearday, weekday, hour, minute;
 				new Float:second;
 				new Float:s;
@@ -72,7 +73,9 @@ collections {
 				else if ((hour >= 10) && (minute >= 10)) {
 					snprintf(buf, 10, "%i:%i", hour, minute);
 					}
+				snprintf(date_buf, 11, "%i.%i.%i", day, month, year);
 				set_text(PART:"time", buf);
+				set_text(PART:"date", date_buf);
 				}
 			}
 
