@@ -55,7 +55,7 @@ idle_screen_view_init()
 	ui_utils_view_layout_set(&view.parent, IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
-	edje_object_signal_emit(ui_utils_view_window_get(&view.parent),
+	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
 				"clock_init", "");
 
 	win = ui_utils_view_window_get(&view.parent);
