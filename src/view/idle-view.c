@@ -1,6 +1,7 @@
 #include <Edje_Edit.h>
 #include <Evas.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-info.h>
 #include <phoneui/phoneui.h>
 #include <glib.h>
 #include <time.h>
@@ -24,7 +25,6 @@ static void _idle_screen_show();
 static void _idle_screen_hide();
 static void _idle_screen_update_counter(const char *name,
 		const char *label_name, int count);
-static void _idle_screen_update_time();
 static void _idle_destroy_cb(struct View *_view);
 
 void
@@ -51,11 +51,11 @@ idle_screen_view_init()
 		g_critical("Failed to init idle screen");
 		return ret;
 	}
-		
+
 	ui_utils_view_layout_set(&view.parent, IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
-	edje_object_signal_emit(ui_utils_view_window_get(&view.parent),
+	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
 				"clock_init", "");
 
 	win = ui_utils_view_window_get(&view.parent);
@@ -69,6 +69,7 @@ idle_screen_view_init()
 	edje_object_signal_callback_add(ui_utils_view_layout_get(&view.parent), "unlockScreen",
 					"slider", idle_screen_view_hide,
 					NULL);
+	phoneui_info_trigger();
 	return 0;
 }
 
@@ -88,36 +89,50 @@ idle_screen_view_is_init()
 void
 idle_screen_view_update_missed_calls(const int amount)
 {
-	_idle_screen_update_counter("missedCalls", "missedCallsLabel", amount);
+	if (idle_screen_view_is_init()) {
+		g_debug("--- missed calls: %d", amount);
+		_idle_screen_update_counter("missedCalls", "missedCallsLabel", amount);
+	}
 }
 
 void
 idle_screen_view_update_unfinished_tasks(const int amount)
 {
-	_idle_screen_update_counter("unfinishedTasks",
-					 "unfinishedTasksLabel", amount);
+	if (idle_screen_view_is_init()) {
+		_idle_screen_update_counter("unfinishedTasks",
+						 "unfinishedTasksLabel", amount);
+	}
 }
 
 void
 idle_screen_view_update_unread_messages(const int amount)
 {
-	_idle_screen_update_counter("unreadMessages",
-					 "unreadMessagesLabel", amount);
+	if (idle_screen_view_is_init()) {
+		g_debug("--- unread messages: %d", amount);
+		_idle_screen_update_counter("unreadMessages",
+						 "unreadMessagesLabel", amount);
+	}
 }
 
 void
 idle_screen_view_update_power(const int capacity)
 {
-	char buf[16];
-	snprintf(buf, 16, "%d", capacity);
+	if (idle_screen_view_is_init()) {
+		g_debug("--- capacity: %d", capacity);
+		char buf[16];
+		snprintf(buf, 16, "%d", capacity);
 
-	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
-				buf, "batteryPowerChange");
+		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+					buf, "batteryPowerChange");
+	}
 }
 
 void
 idle_screen_view_update_call(enum PhoneuiCallState state, const char *name, const char *number)
 {
+	if (!idle_screen_view_is_init())
+		return;
+
 	switch (state) {
 	case PHONEUI_CALL_STATE_INCOMING:
 		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
@@ -148,53 +163,67 @@ idle_screen_view_update_call(enum PhoneuiCallState state, const char *name, cons
 void
 idle_screen_view_update_signal_strength(const int signal)
 {
-	char buf[16];
-	snprintf(buf, 16, "%d", signal);
+	if (idle_screen_view_is_init()) {
+		g_debug("--- signal strength: %d", signal);
+		char buf[16];
+		snprintf(buf, 16, "%d", signal);
 
-	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
-				buf, "gsmSignalChange");
+		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+					buf, "gsmSignalChange");
+	}
 }
 
 void
 idle_screen_view_update_provider(const char *provider)
 {
-	ui_utils_view_text_set(&view.parent, "gsmProvider", provider);
+	if (idle_screen_view_is_init()) {
+		g_debug("--- provider: %s", provider);
+		ui_utils_view_text_set(&view.parent, "gsmProvider", provider);
+	}
 }
 
 void
 idle_screen_view_update_resource(const char *resource, const int state)
 {
-	if (state) {
-		edje_edit_part_selected_state_set
-			(ui_utils_view_layout_get(&view.parent),
-			 resource, "active 0.0");
-	}
-	else {
-		edje_edit_part_selected_state_set
-			(ui_utils_view_layout_get(&view.parent),
-			 resource, "default 0.0");
+	if (idle_screen_view_is_init()) {
+		g_debug("--- resource: %s --> %s", resource, state ? "ON" : "OFF");
+		if (state) {
+			edje_edit_part_selected_state_set
+				(ui_utils_view_layout_get(&view.parent),
+				 resource, "active 0.0");
+		}
+		else {
+			edje_edit_part_selected_state_set
+				(ui_utils_view_layout_get(&view.parent),
+				 resource, "default 0.0");
+		}
 	}
 }
 
 void
 idle_screen_view_update_alarm(const int alarm)
 {
-	if (alarm > 0) {
-		edje_edit_part_selected_state_set
-			(ui_utils_view_layout_get(&view.parent),
-			 "alarm", "active 0.0");
-	}
-	else {
-		edje_edit_part_selected_state_set
-			(ui_utils_view_layout_get(&view.parent),
-			 "alarm", "default 0.0");
+	if (idle_screen_view_is_init()) {
+		if (alarm > 0) {
+			edje_edit_part_selected_state_set
+				(ui_utils_view_layout_get(&view.parent),
+				 "alarm", "active 0.0");
+		}
+		else {
+			edje_edit_part_selected_state_set
+				(ui_utils_view_layout_get(&view.parent),
+				 "alarm", "default 0.0");
+		}
 	}
 }
 
 void
 idle_screen_view_update_profile(const char *profile)
 {
-	ui_utils_view_text_set(&view.parent, "profile", profile);
+	if (idle_screen_view_is_init()) {
+		g_debug("--- profile: %s", profile);
+		ui_utils_view_text_set(&view.parent, "profile", profile);
+	}
 }
 
 
@@ -224,19 +253,4 @@ _idle_screen_update_counter(const char *name, const char *label_name,
 	ui_utils_view_text_set(&view.parent, label_name, buf);
 }
 
-static void
-_idle_screen_update_time()
-{
-	char date_str[16];
-	struct timeval tv;
-	struct tm ptime;
-	char *levelstr;
-
-	gettimeofday(&tv, NULL);
-	localtime_r(&tv.tv_sec, &ptime);
-/*FIXME take time format from locale */
-	strftime(date_str, 14, "%d.%m.%Y", &ptime);
-
-	ui_utils_view_text_set(&view.parent, "date", date_str);
-}
 
