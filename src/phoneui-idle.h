@@ -5,6 +5,7 @@
 
 void phoneui_backend_idle_screen_show();
 void phoneui_backend_idle_screen_hide();
+void phoneui_backend_idle_screen_toggle();
 void phoneui_backend_idle_screen_update_missed_calls(const int amount);
 void phoneui_backend_idle_screen_update_unfinished_tasks(const int amount);
 void phoneui_backend_idle_screen_update_unread_messages(const int amount);

@@ -39,6 +39,12 @@ idle_screen_view_hide()
 	ui_utils_view_hide(&view.parent);
 }
 
+void
+idle_screen_view_toggle()
+{
+	ui_utils_view_toggle(&view.parent);
+}
+
 int
 idle_screen_view_init()
 {
