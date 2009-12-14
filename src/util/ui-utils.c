@@ -89,7 +89,6 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 	view->show_cb = show_cb;
 	view->hide_cb = hide_cb;
 	view->destroy_cb = destroy_cb;
-	view->active = FALSE;
 	/* END of wtf */
 end:
 	return ret;
@@ -103,6 +102,12 @@ free_win:
 	goto end;
 }
 
+int
+ui_utils_view_is_visible(struct View *view)
+{
+	return evas_object_visible_get(view->win);
+}
+
 void
 ui_utils_view_show(struct View *view)
 {
@@ -112,7 +117,6 @@ ui_utils_view_show(struct View *view)
 		}
 		evas_object_show(view->win);
 		elm_win_activate(view->win);
-		view->active = TRUE;
 	}
 	else {
 		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
@@ -130,13 +134,12 @@ ui_utils_view_hide(struct View *view)
 		view->hide_cb(view);
 	}
 	evas_object_hide(view->win);
-	view->active = FALSE;
 }
 
 void
 ui_utils_view_toggle(struct View *view)
 {
-	if (view->active) {
+	if (ui_utils_view_is_visible(view)) {
 		ui_utils_view_hide(view);
 	}
 	else {
