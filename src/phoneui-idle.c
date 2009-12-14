@@ -23,7 +23,6 @@ phoneui_backend_idle_screen_hide()
 void
 phoneui_backend_idle_screen_toggle()
 {
-	/* FIXME: should also handle is active */
 	if (!idle_screen_view_is_init()) {
 		if (idle_screen_view_init()) {
 			return;
