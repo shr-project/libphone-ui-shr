@@ -7,8 +7,7 @@
 
 struct View {
 	Evas_Object *win, *background, *layout;
-	int active;
-
+	
 	void (*show_cb) (struct View *view);
 	void (*hide_cb) (struct View *view);
 
@@ -27,6 +26,9 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 
 int
 ui_utils_view_is_init(struct View *view);
+
+int
+ui_utils_view_is_visible(struct View *view);
 
 void
 ui_utils_view_show(struct View *view);
