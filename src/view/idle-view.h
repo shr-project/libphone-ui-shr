@@ -3,8 +3,8 @@
 #include <phoneui/phoneui.h>
 
 void idle_screen_view_show();
-
 void idle_screen_view_hide();
+void idle_screen_view_toggle();
 
 int idle_screen_view_is_init();
 int idle_screen_view_init();

@@ -7,6 +7,7 @@
 
 struct View {
 	Evas_Object *win, *background, *layout;
+	int active;
 
 	void (*show_cb) (struct View *view);
 	void (*hide_cb) (struct View *view);
@@ -32,6 +33,9 @@ ui_utils_view_show(struct View *view);
 
 void
 ui_utils_view_hide(struct View *view);
+
+void
+ui_utils_view_toggle(struct View *view);
 
 void
 ui_utils_view_layout_set(struct View *view, const char *file, const char *part);

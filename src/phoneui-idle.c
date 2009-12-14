@@ -21,6 +21,12 @@ phoneui_backend_idle_screen_hide()
 }
 
 void
+phoneui_backend_idle_screen_toggle()
+{
+	idle_screen_view_toggle();
+}
+
+void
 phoneui_backend_idle_screen_update_missed_calls(const int amount)
 {
 	idle_screen_view_update_missed_calls(amount);
