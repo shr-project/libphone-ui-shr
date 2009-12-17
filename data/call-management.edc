@@ -1,0 +1,255 @@
+
+group { name: "phoneui/call_management/incoming_call";
+	parts {
+		part { name: "photo";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.2 0.0;
+					offset: 0 5;
+				}
+				rel2 {
+					relative: 0.8 0.35;
+					offset: 0 0;
+				}
+			}
+		}
+		part { name: "name";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.35;
+					offset: 0 5;
+				}
+				rel2 {
+					relative: 1.0 0.5;
+				}
+				text {
+					font: "redensek:style=bold";
+					size: 24;
+					align: 0.5 0.5;
+				}
+			}
+		}
+		part { name: "number";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.5;
+					offset: 0 5;
+				}
+				rel2 {
+					relative: 1.0 0.65;
+					offset: 0 0;
+				}
+				text {
+					font: "redensek:style=bold";
+					size: 20;
+					align: 0.5 0.0;
+				}
+			}
+		}
+		part { name: "button_accept";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+		part { name: "button_release";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/call_management/incoming_call */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/call_management/active_call";
+	parts {
+		part { name: "photo";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1.relative: 0.3 0.0;
+				rel1.offset: 0 5;
+				rel2.relative: 0.7 0.3;
+			}
+		}
+		part { name: "name";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1.relative: 0.2 0.3;
+				rel1.offset: 0 5;
+				rel2.relative: 0.8 0.35;
+				text {
+					font: "redensek:style=bold";
+					size: 24;
+					align: 0.5 0.5;
+				}
+			}
+		}
+		part { name: "number";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1.relative: 0.2 0.35;
+				rel1.offset: 0 5;
+				rel2.relative: 0.8 0.4;
+				text {
+					font: "redensek:style=bold";
+					size: 20;
+					align: 0.5 0.5;
+				}
+			}
+		}
+		//part { name: "hangup_toggle";
+		//	type: SWALLOW;
+		//	mouse_events: 1;
+		//	description {
+		//		state: "default" 0.0;
+		//		align: 0.0 0.0;
+		//		rel1.relative: 0.1 0.25;
+		//		rel1.offset: 0 0;
+		//		rel2.relative: 0.3 0.70;
+		//		rel2.offset: 0 0;
+		//	}
+		//}
+		//part { name: "hangup_icon1";
+		//	mouse_events: 0;
+		//	description {
+		//		state: "default" 0.0;
+		//		image.normal: "call-start.png";
+		//		aspect: 1.0 1.0;
+		//		align: 0.5 0.0;
+		//		aspect_preference: HORIZONTAL;
+		//		max: 45 45;
+		//		rel1.to: "hangup_toggle";
+		//		rel1.relative: 0.0 0.0;
+		//		rel1.offset: 0 -50;
+		//	}
+		//}
+		//part { name: "hangup_icon2";
+		//	mouse_events: 0;
+		//	description {
+		//		state: "default" 0.0;
+		//		image.normal: "call-stop.png";
+		//		aspect: 1.0 1.0;
+		//		align: 0.5 1.0;
+		//		max: 45 45;
+		//		rel1.to: "hangup_toggle";
+		//		rel1.relative: 0.0 1.0;
+		//		rel1.offset: 0 5;
+		//	}
+		//}
+		part { name: "volume_slider";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				align: 0.5 1.0;
+				rel1.relative: 0.2 0.5;
+				rel2.relative: 0.8 0.57;
+			}
+		}
+		part { name: "mic_slider";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				align: 0.5 1.0;
+				rel1.relative: 0.2 0.57;
+				rel2.relative: 0.8 0.64;
+			}
+		}
+		part { name: "speaker_toggle";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				align: 1.0 0.5;
+				rel1.relative: 0.1 0.64;
+				rel2.relative: 0.9 0.72;
+			}
+		}
+		part { name: "mute_toggle";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				align: 1.0 0.5;
+				rel1.relative: 0.1 0.72;
+				rel2.relative: 0.9 0.8;
+				rel2.offset: 0 10;
+			}
+		}
+		part { name: "keypad";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.2;
+				}
+				rel2 {
+					relative: 1.0 0.84;
+				}
+			}
+		}
+		part { name: "button_release";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+		part { name: "button_dtmf";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/call_management/active_call */
+

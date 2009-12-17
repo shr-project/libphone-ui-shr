@@ -1,0 +1,1008 @@
+
+group { name: "elm/genlist/item/message/default";
+	alias: "elm/genlist/item_odd/message/default";
+	data.item: "stacking" "above";
+	data.item: "selectraise" "on";
+	data.item: "labels" "elm.text elm.text.sub";
+	data.item: "icons" "elm.swallow.icon elm.swallow.end";
+
+	parts {
+		part { name: "event";
+			type: RECT;
+			repeat_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+			}
+		}
+		part { name: "bg";
+			clip_to: "disclip";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_LIGHT_GRAY;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+			description { 
+				state: "selected" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: COLOR_ORANGE_SOLID;
+				
+			}
+		}
+		part { name: "seperator";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_DARK_GRAY;
+				rel1 {
+					to: "bg";
+					relative: 0.0 1.0;
+					offset: 0 -3;
+				}rel2 {
+					to: "bg";
+					relative: 1.0 1.0;
+					offset: 0 -2;
+				}
+				
+			}
+			
+		}
+		part { name: "elm.swallow.pad";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					relative: 0.0  0.0;
+					offset:   4    4;
+				}
+				rel2 {
+					relative: 0.0  1.0;
+					offset:   4   -5;
+				}
+			}
+		}
+		part { name: "elm.swallow.icon";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  0.0;
+					offset:   -1    4;
+				}
+				rel2 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  1.0;
+					offset:   -1   -5;
+				}
+			}
+		}
+		part { name: "elm.swallow.end";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 1.0 0.5;
+				aspect: 1.0 1.0;
+				aspect_preference: VERTICAL;
+				rel1 {
+					relative: 1.0  0.0;
+					offset:   -5    4;
+				}
+				rel2 {
+					relative: 1.0  1.0;
+					offset:   -5   -5;
+				}
+			}
+		}
+		part { name: "elm.text";
+			clip_to: "disclip";
+			type:           TEXT;
+			mouse_events:   0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					to_x:     "elm.swallow.icon";
+					relative: 1.0  0.0;
+					offset:   0 4;
+				}
+				rel2 {
+					to_x:     "elm.swallow.end";
+					relative: 0.0  0.5;
+					offset:   -1 -5;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 10;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "elm.text.sub";
+			clip_to: "disclip";
+			type:           TEXT;
+			mouse_events:   0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				//               min: 16 16;
+				rel1 {
+					to_x:     "elm.swallow.icon";
+					relative: 1.0  0.5;
+					offset:   0 4;
+				}
+				rel2 {
+					to_x:     "elm.swallow.end";
+					relative: 0.0  1.0;
+					offset:   -1 -5;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 9;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "disclip";
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				rel1.to: "bg";
+				rel2.to: "bg";
+			}
+			description { 
+				state: "disabled" 0.0;
+				inherit: "default" 0.0;
+				color: 255 255 255 64;
+			}
+		}
+	}
+
+	programs {
+		// signal: elm,state,%s,active
+		//   a "check" item named %s went active
+		// signal: elm,state,%s,passive
+		//   a "check" item named %s went passive
+		// default is passive
+
+		program {
+			name:    "go_active";
+			signal:  "elm,state,selected";
+			source:  "elm";
+			action:  STATE_SET "selected" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+			target:  "elm.text.sub";
+		}
+		program {
+			name:    "go_passive";
+			signal:  "elm,state,unselected";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+			target:  "elm.text.sub";
+			transition: LINEAR 0.1;
+		}
+		program {
+			name:    "go_disabled";
+			signal:  "elm,state,disabled";
+			source:  "elm";
+			action:  STATE_SET "disabled" 0.0;
+			target:  "disclip";
+		}
+		program {
+			name:    "go_enabled";
+			signal:  "elm,state,enabled";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "disclip";
+		}
+	}
+} /* elm/genlist/item/message/default */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/content_edit";
+	parts {
+
+		part { name: "characters_left";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.05 0.0;
+				}
+				rel2 {
+					relative: 0.95 0.07;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 18;
+					align: 1.0 0.5;
+				}
+			}
+		}
+
+		part { name: "entry";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.05 0.07;
+				}
+				rel2 {
+					relative: 0.95 0.8;
+				}
+			}
+		}
+
+		part { name: "button_close";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+
+		part { name: "button_continue";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+
+	}
+} /* phoneui/messages/content_edit */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/recipient_edit";
+	parts {
+
+		part { name: "title";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.1;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 22;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+		part { name: "list";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0 0.15;
+				}
+				rel2 {
+					relative: 0.6 0.75;
+				}
+			}
+		}
+
+		part { name: "button_contact_add";
+			type:   SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.6 0.15;
+				}
+				rel2 {
+					relative: 1 0.35;
+				}
+			}
+		}
+
+		part { name: "button_number_add";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.6 0.35;
+				}
+				rel2 {
+					relative: 1 0.55;
+				}
+			}
+		}
+
+		part { name: "button_delete";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.6 0.55;
+				}
+				rel2 {
+					relative: 1 0.75;
+				}
+			}
+		}
+
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+
+		part { name: "button_continue";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/messages/recipient_edit */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/recipient_contact_add";
+	parts {
+
+		part { name: "title";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.1;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 25;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+		part { name: "list";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.10;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+				}
+			}
+		}
+
+		part { name: "index";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				fixed: 1 1;
+				state: "default" 0.0;
+				rel1 {
+					to_y: "list";
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					to_y: "list";
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+
+		part { name: "button_add";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+
+	}
+} /* phoneui/messages/recipient_contact_add */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/recipient_number_add";
+	parts {
+
+		part { name: "title";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.1;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 25;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+		part { name: "entry";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.05 0.10;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 0.95 0.3;
+				}
+			}
+		}
+
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+
+		part { name: "button_add";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+	}
+} /* phoneui/messages/recipient_number_add */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/folders";
+	parts {
+
+		part { name: "title";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.1;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 25;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+		part { name: "list_swallow";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.10;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+				}
+			}
+		}
+
+		part { name: "button_new";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+
+		part { name: "button_show";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+
+	}
+} /* phoneui/messages/folders */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/list";
+	parts {
+		part { name: "list";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+				}
+			}
+		}
+		part { name: "button_new";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.33 1.0;
+				}
+			}
+		}
+		part { name: "button_options";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.33 0.85;
+				}
+				rel2 {
+					relative: 0.66 1.0;
+				}
+			}
+		}
+		part { name: "button_show";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.66 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/messages/list */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/show";
+	parts {
+		part { name: "label_number";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1.offset: 3 3;
+				rel2.relative: 1.0 0.075;
+				text {
+					text: "";
+					font: "redensek";
+					size: 20;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "text_number";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 90 90 255 255;
+				rel1.relative: 0.3 0.0;
+				rel1.offset: 0 3;
+				rel2.relative: 1.0 0.075;
+				text {
+					text: "";
+					font: "redensek";
+					size: 23;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "label_date";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1.relative: 0.0 0.075;
+				rel1.offset: 3 3;
+				rel2.relative: 1.0 0.15;
+				text {
+					text: "";
+					font: "redensek";
+					size: 20;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "text_date";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1.relative: 0.3 0.075;
+				rel1.offset: 0 3;
+				rel2.relative: 1.0 0.15;
+				text {
+					text: "Date";
+					font: "redensek";
+					size: 20;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "label_status";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1.relative: 0.0 0.15;
+				rel1.offset: 3 3;
+				rel2.relative: 1.0 0.2;
+				text {
+					text: "";
+					font: "redensek";
+					size: 20;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "text_status";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1.relative: 0.3 0.15;
+				rel1.offset: 0 3;
+				rel2.relative: 1.0 0.2;
+				text {
+					text: "STATUS";
+					font: "redensek";
+					size: 20;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "text_content";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1.relative: 0.0 0.2;
+				rel1.offset: 5 5;
+				rel2.relative: 1.0 0.85;
+			}
+		}
+		part { name: "button_close";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.33 1.0;
+				}
+			}
+		}
+		part { name: "button_options";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.33 0.85;
+				}
+				rel2 {
+					relative: 0.66 1.0;
+				}
+			}
+		}
+		part { name: "button_answer";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.66 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/messages/show */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/loading";
+	parts {
+
+	part {
+	name:   "text";
+	type,   TEXT;
+	mouse_events, 0;
+	description {
+	state, "default" 0.0;
+	color, 0 0 0 255;
+	rel1 {
+	relative, 0.0 0.0;
+	offset, 0 0;
+	}
+	rel2 {
+	relative, 1.0 1.0;
+	}
+	text {
+	text, "";
+	font, "redensek";
+	size, 25;
+	align, 0.5 0.5;
+	}
+	}
+	}
+
+	}
+} /* phoneui/messages/loading */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/delete";
+	parts {
+		part { name: "info";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+					offset: 0 0;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 20;
+					align: 0.5 0.5;
+				}
+			}
+		}
+		part { name: "button_yes";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+		part { name: "button_no";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/messages/delete */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/sending";
+	parts {
+		part { name: "text";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				color: 0 0 0 255;
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 25;
+					align: 0.5 0.5;
+				}
+			}
+		}
+	}
+} /* phoneui/messages/sending */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "deleting";
+	parts {
+		part { name: "text";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				color: 0 0 0 255;
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 25;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+	}
+} /* phoneui/messages/deleting */
+

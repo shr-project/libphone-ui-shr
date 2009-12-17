@@ -1,0 +1,338 @@
+
+group { name: "phoneui/phonelog/phonelog";
+	parts {
+		part { name: "toolbar";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1.relative: 0.0 0.0;
+				rel2.relative: 1.0 0.15;
+			}
+		}
+		part { name: "pager";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				fixed: 1 1;
+				state: "default" 0.0;
+				rel1.relative: 0.0 0.15;
+				rel2.relative: 1.0 1.0;
+			}
+		}
+	}
+} /* phoneui/phonelog/phonelog */
+
+
+group { name: "elm/genlist/item/phonelog/default";
+	alias: "elm/genlist/item_odd/phonelog/default";
+	data.item: "stacking" "above";
+	data.item: "selectraise" "on";
+	data.item: "labels" "elm.text elm.text.sub";
+	data.item: "icons" "elm.swallow.icon elm.swallow.end";
+
+	parts {
+		part {
+			name: "half";
+			clip_to: "disclip";
+			type: RECT;
+			mouse_events: 0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					to_x: "elm.swallow.icon";
+					relative: 1.0 0.0;
+				}
+				rel2 {
+					to_x: "elm.swallow.end";
+					relative: 0.0 1.0;
+				}
+			}
+		}
+
+		part { name: "event";
+			type: RECT;
+			repeat_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+			}
+		}
+		part { name: "bg";
+			clip_to: "disclip";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_LIGHT_GRAY;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+			description { 
+				state: "selected" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: COLOR_ORANGE_SOLID;
+				
+			}
+		}
+		part { name: "seperator";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_DARK_GRAY;
+				rel1 {
+					to: "bg";
+					relative: 0.0 1.0;
+					offset: 0 -3;
+				}rel2 {
+					to: "bg";
+					relative: 1.0 1.0;
+					offset: 0 -2;
+				}
+				
+			}
+			
+		}
+		part { name: "elm.swallow.pad";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					relative: 0.0  0.0;
+					offset:   4    4;
+				}
+				rel2 {
+					relative: 0.0  1.0;
+					offset:   4   -5;
+				}
+			}
+		}
+		part { name: "elm.swallow.icon";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  0.0;
+					offset:   -1    4;
+				}
+				rel2 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  1.0;
+					offset:   -1   -5;
+				}
+			}
+		}
+		part { name: "elm.swallow.end";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 1.0 0.5;
+				aspect: 1.0 1.0;
+				aspect_preference: VERTICAL;
+				rel1 {
+					relative: 1.0  0.0;
+					offset:   -5    4;
+				}
+				rel2 {
+					relative: 1.0  1.0;
+					offset:   -5   -5;
+				}
+			}
+		}
+
+		part { name: "elm.text";
+			clip_to: "disclip";
+			type: TEXT;
+			mouse_events: 0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					to_x: "half";
+					relative: 0.0  0.0;
+					offset:   0 4;
+				}
+				rel2 {
+					to_x:     "half";
+					relative: 0.5  0.5;
+					offset:   -1 -5;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 10;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "elm.text.2";
+			clip_to: "disclip";
+			type: TEXT;
+			mouse_events: 0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					to_x: "half";
+					relative: 0.5  0.0;
+					offset:   0 4;
+				}
+				rel2 {
+					to_x:     "half";
+					relative: 1.0  0.5;
+					offset:   -1 -5;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 10;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "elm.text.sub";
+			clip_to: "disclip";
+			type: TEXT;
+			mouse_events: 0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				//               min: 16 16;
+				rel1 {
+					to_x: "half";
+					relative: 0.0  0.5;
+					offset:   0 4;
+				}
+				rel2 {
+					to_x: "half";
+					relative: 0.5  1.0;
+					offset:   -1 -5;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 9;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "elm.text.sub.2";
+			clip_to: "disclip";
+			type: TEXT;
+			mouse_events: 0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				//               min: 16 16;
+				rel1 {
+					to_x: "half";
+					relative: 0.5  0.5;
+					offset:   0 4;
+				}
+				rel2 {
+					to_x: "half";
+					relative: 1.0  1.0;
+					offset:   -1 -5;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 9;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "disclip";
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				rel1.to: "bg";
+				rel2.to: "bg";
+			}
+			description { 
+				state: "disabled" 0.0;
+				inherit: "default" 0.0;
+				color: 255 255 255 64;
+			}
+		}
+	}
+
+	programs {
+		// signal: elm,state,%s,active
+		//   a "check" item named %s went active
+		// signal: elm,state,%s,passive
+		//   a "check" item named %s went passive
+		// default is passive
+
+		program {
+			name:    "go_active";
+			signal:  "elm,state,selected";
+			source:  "elm";
+			action:  STATE_SET "selected" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+			target:  "elm.text.2";
+			target:  "elm.text.sub";
+			target:  "elm.text.sub.2";
+		}
+		program {
+			name:    "go_passive";
+			signal:  "elm,state,unselected";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+			target:  "elm.text.2";
+			target:  "elm.text.sub";
+			target:  "elm.text.sub.2";
+			transition: LINEAR 0.1;
+		}
+		program {
+			name:    "go_disabled";
+			signal:  "elm,state,disabled";
+			source:  "elm";
+			action:  STATE_SET "disabled" 0.0;
+			target:  "disclip";
+		}
+		program {
+			name:    "go_enabled";
+			signal:  "elm,state,enabled";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "disclip";
+		}
+	}
+} /* elm/genlist/item/phonelog/default */
+
+

@@ -1,0 +1,937 @@
+
+group { name: "elm/genlist/item/contact/default";
+	alias: "elm/genlist/item_odd/contact/default";
+	data.item: "stacking" "above";
+	data.item: "selectraise" "on";
+	data.item: "labels" "elm.text elm.text.sub";
+	data.item: "icons" "elm.swallow.icon elm.swallow.end";
+	//data.item: "treesize" "20";
+	// data.item: "states" "";
+
+	parts {
+		part { name: "event";
+			type: RECT;
+			repeat_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+			}
+		}
+		part { name: "bg";
+			clip_to: "disclip";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_LIGHT_GRAY;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+			description { 
+				state: "selected" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: COLOR_ORANGE_SOLID;
+				
+			}
+		}
+		part { name: "seperator";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_DARK_GRAY;
+				rel1 {
+					to: "bg";
+					relative: 0.0 1.0;
+					offset: 0 -3;
+				}rel2 {
+					to: "bg";
+					relative: 1.0 1.0;
+					offset: 0 -2;
+				}
+				
+			}
+			
+		}
+		part { name: "elm.swallow.pad";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					relative: 0.0  0.0;
+					offset:   4    4;
+				}
+				rel2 {
+					relative: 0.0  1.0;
+					offset:   4   -5;
+				}
+			}
+		}
+		part { name: "elm.swallow.icon";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  0.0;
+					offset:   -1    4;
+				}
+				rel2 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  1.0;
+					offset:   -1   -5;
+				}
+			}
+		}
+		part { name: "elm.swallow.end";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 1.0 0.5;
+				aspect: 1.0 1.0;
+				aspect_preference: VERTICAL;
+				rel1 {
+					relative: 1.0  0.0;
+					offset:   -5    4;
+				}
+				rel2 {
+					relative: 1.0  1.0;
+					offset:   -5   -5;
+				}
+			}
+		}
+		part { name: "elm.text";
+			clip_to: "disclip";
+			type:           TEXT;
+			mouse_events:   0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				//min: 16 16;
+				rel1 {
+					relative: 0.2  0.0;
+				}
+				rel2 {
+					relative: 1.0  1.0;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek:style=bold";
+					size: 10;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.0;
+				}
+			}
+		}
+		part { name: "elm.text.sub";
+			clip_to: "disclip";
+			type:           TEXT;
+			mouse_events:   0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					//to_x: "elm.swallow.icon";
+					relative: 0.2  0.5;
+				}
+				rel2 {
+					//to_x: "elm.swallow.end";
+					relative: 1.0  1.0;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 9;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part { name: "disclip";
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				rel1.to: "bg";
+				rel2.to: "bg";
+			}
+			description { 
+				state: "disabled" 0.0;
+				inherit: "default" 0.0;
+				color: 255 255 255 64;
+			}
+		}
+	}
+	programs {
+		// signal: elm,state,%s,active
+		//   a "check" item named %s went active
+		// signal: elm,state,%s,passive
+		//   a "check" item named %s went passive
+		// default is passive
+		program {
+			name:    "go_active";
+			signal:  "elm,state,selected";
+			source:  "elm";
+			action:  STATE_SET "selected" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+			target:  "elm.text.sub";
+		}
+		program {
+			name:    "go_passive";
+			signal:  "elm,state,unselected";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+			target:  "elm.text.sub";
+			transition: LINEAR 0.1;
+		}
+		program {
+			name:    "go_disabled";
+			signal:  "elm,state,disabled";
+			source:  "elm";
+			action:  STATE_SET "disabled" 0.0;
+			target:  "disclip";
+		}
+		program {
+			name:    "go_enabled";
+			signal:  "elm,state,enabled";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "disclip";
+		}
+	}
+} /* elm/genlist/item/contact/default */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "elm/genlist/item/contactfield/default";		
+	alias: "elm/genlist/item_odd/contactfield/default";
+	data.item: "stacking" "above";
+	data.item: "selectraise" "on";
+	data.item: "labels" "elm.text";
+	data.item: "icons" "elm.swallow.icon";
+
+	parts {
+		part {
+			name: "event";
+			type: RECT;
+			repeat_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+			}
+		}
+		part { 
+			name: "bg";
+			clip_to: "disclip";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_LIGHT_GRAY;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+			description { 
+				state: "selected" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: COLOR_ORANGE_SOLID;
+				
+			}
+		}
+		part { 
+			name: "seperator";
+			clip_to: "disclip";
+			mouse_events: 0;
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_DARK_GRAY;
+				rel1 {
+					to: "bg";
+					relative: 0.0 1.0;
+					offset: 0 -3;
+				}rel2 {
+					to: "bg";
+					relative: 1.0 1.0;
+					offset: 0 -2;
+				}
+				
+			}
+			
+		}
+
+		part { 
+			name: "elm.swallow.pad";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					relative: 0.0  0.0;
+					offset:   4    4;
+				}
+				rel2 {
+					relative: 0.0  1.0;
+					offset:   4   -5;
+				}
+			}
+		}
+
+		part { 
+			name: "elm.swallow.icon";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description { 
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  0.0;
+					offset:   -1    4;
+				}
+				rel2 {
+					to_x: "elm.swallow.pad";
+					relative: 1.0  1.0;
+					offset:   -1   -5;
+				}
+			}
+		}
+
+		part { 
+			name: "elm.text";
+			clip_to: "disclip";
+			type:           TEXT;
+			mouse_events:   0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.3  0.0;
+				}
+				rel2 {
+					relative: 1.0  1.0;
+				}
+				color: 0 0 0 255;
+				color3: 0 0 0 0;
+				text {
+					font: "redensek";
+					size: 10;
+					elipsis: 0.0;
+					min: 0 1;
+					align: 0.0 0.0;
+				}
+			}
+		}
+
+		part { 
+			name: "disclip";
+			type: RECT;
+			description { 
+				state: "default" 0.0;
+				rel1.to: "bg";
+				rel2.to: "bg";
+			}
+			description { 
+				state: "disabled" 0.0;
+				inherit: "default" 0.0;
+				color: 255 255 255 64;
+			}
+		}
+	}
+	programs {
+		// signal: elm,state,%s,active
+		//   a "check" item named %s went active
+		// signal: elm,state,%s,passive
+		//   a "check" item named %s went passive
+		// default is passive
+		program {
+			name:    "go_active";
+			signal:  "elm,state,selected";
+			source:  "elm";
+			action:  STATE_SET "selected" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+		}
+		program {
+			name:    "go_passive";
+			signal:  "elm,state,unselected";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "bg";
+			target:  "elm.text";
+			transition: LINEAR 0.1;
+		}
+		program {
+			name:    "go_disabled";
+			signal:  "elm,state,disabled";
+			source:  "elm";
+			action:  STATE_SET "disabled" 0.0;
+			target:  "disclip";
+		}
+		program {
+			name:    "go_enabled";
+			signal:  "elm,state,enabled";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "disclip";
+		}
+	}
+} /* elm/genlist/item/contactfield/default */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/list";
+	parts {
+		part { name: "list";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+					offset: 0 0;
+				}
+			}
+		}
+		part { name: "index";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				fixed: 1 1;
+				state: "default" 0.0;
+				rel1 {
+					to_y: "list";
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					to_y: "list";
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+		}
+		part { name: "button_new";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.33 1.0;
+				}
+			}
+		}
+		part { name: "button_call";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.33 0.85;
+				}
+				rel2 {
+					relative: 0.66 1.0;
+				}
+			}
+		}
+		part { name: "button_options";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.66 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/contacts/list */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/show";
+
+	parts {
+		part { name: "photo";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 10 10;
+				}
+				rel2 {
+					relative: 0.3 0.3;
+				}
+				color: 255 0 0 100;
+			}
+		}
+		part { name: "name";
+			type: TEXT;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.3 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.2;
+				}
+				text {
+					font: "redensek:style=bold";
+					size: 24;
+					align: 0.5 0.5;
+				}
+			}
+		}
+		part { name: "number";
+			type: TEXT;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.3 0.2;
+				}
+				rel2 {
+					relative: 1.0 0.3;
+				}
+				text {
+					font: "redensek:style=bold";
+					size: 20;
+					align: 0.5 0.0;
+				}
+			}
+		}
+		part { name: "fields";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.3;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+				}
+			}
+		}
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events, 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.66 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+		part { name: "button_edit";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.33 0.85;
+				}
+				rel2 {
+					relative: 0.66 1.0;
+				}
+			}
+		}
+		part { name: "button_actions";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.33 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/contacts/show */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/edit_photo";
+
+	parts {
+		part { name: "photo";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 0.3 0.3;
+				}
+			}
+		}
+		part { name: "file";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.3 0.0;
+					offset: 5 10;
+				}
+				rel2 {
+					relative: 1.0 0.3;
+				}
+			}
+		}
+		part { name: "selector";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.3;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+				}
+			}
+		}
+		part { name: "button_select";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.33 1.0;
+				}
+			}
+		}
+		part { name: "button_remove";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.33 0.85;
+				}
+				rel2 {
+					relative: 0.66 1.0;
+				}
+			}
+		}
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.66 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/contacts/edit_photo */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/loading";
+	
+	parts {
+		part { name: "text";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				max: 0 0;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+
+	}
+} /* phoneui/contacts/loading */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/options";
+
+	parts {
+		part { name: "Name";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative, 0.0 0.1;
+					offset, 0 0;
+				}
+				rel2 {
+					relative, 1.0 0.2;
+					offset, 0 0;
+				}
+			}
+		}
+		part { name: "Phone";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.2;
+				}
+				rel2 {
+					relative: 1.0 0.3;
+				}
+			}
+		}
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+		part { name: "button_call";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+		part { name: "button_modify";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.7;
+				}
+				rel2 {
+					relative: 0.5 0.85;
+				}
+			}
+		}
+
+		part { name: "button_delete";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.7;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+				}
+			}
+		}
+	}
+} /* phoneui/contacts/options */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/edit";
+
+	parts {
+		part { name: "label_name";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.1 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.1;
+				}
+			}
+		}
+		part { name: "entry_name";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.1 0.1;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 0.9 0.4;
+					offset: 0 0;
+				}
+			}
+		}
+		part {
+			name: "label_number";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.1 0.4;
+				}
+				rel2 {
+					relative: 1.0 0.5;
+				}
+			}
+		}
+		part { name: "entry_number";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.1 0.5;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 0.9 0.8;
+					offset: 0 0;
+				}
+			}
+		}
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+		part { name: "button_save";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/contacts/edit */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/delete";
+	parts {
+		part { name: "info";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				max: 0 0;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+					offset: 0 0;
+				}
+			}
+		}
+		part { name: "button_no";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+		part { name: "button_yes";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/contacts/delete */
+

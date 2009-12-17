@@ -1,0 +1,27 @@
+
+#define STOCK_ICON(icon_file, icon_name)            \
+images {                                            \
+   image: icon_file COMP;                           \
+}                                                   \
+group {                                             \
+   name: icon_name;                                 \
+    parts {                                         \
+        part { name: "icon";                        \
+            description { state: "default" 0.0;     \
+            image.normal: icon_file;                \
+            }                                       \
+        }                                           \
+    }                                               \
+}                                                   \
+
+
+STOCK_ICON("edit-undo.png", "icon/edit-undo")
+STOCK_ICON("contact.png", "icon/contact")
+STOCK_ICON("number-icon.png", "icon/number")
+STOCK_ICON("call-start.png", "icon/call-start")
+STOCK_ICON("call-stop.png", "icon/call-stop")
+STOCK_ICON("pl-in.png", "icon/phonelog-incoming")
+STOCK_ICON("pl-out.png", "icon/phonelog-outgoing")
+STOCK_ICON("pl-missed.png", "icon/phonelog-missed")
+STOCK_ICON("pl-all.png", "icon/phonelog-all")
+

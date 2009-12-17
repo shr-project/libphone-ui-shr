@@ -1,0 +1,287 @@
+
+group { name: "phoneui/notification/sim_auth_message";
+	parts {
+		part { name: "text";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 30;
+					align: 0.5 0.5;
+				}
+			}
+		}
+	}
+} /* phoneui/notification/sim_auth_message */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/notification/sim_auth_input";
+	parts {
+
+		part { name: "instruction";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.1;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 25;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+		part { name: "input_text";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.1;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.2;
+					offset: 0 0;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 50;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+		part { name: "keypad";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.21;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+				}
+			}
+		}
+
+		part { name: "button_delete";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+
+		part { name: "button_ok";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/notification/sim_auth_input */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/notification/dialog";
+	parts {
+
+		part { name: "title";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				max: 0 0;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					relative: 1.0 0.2;
+				}
+			}
+		}
+
+		part { name: "content";
+			type: TEXTBLOCK;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.05 0.3;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 0.95 1.0;
+					offset: 0 0;
+				}
+				text {
+					style: "content_style";
+				}
+			}
+		}
+
+		part { name: "button_close";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+
+	}
+} /* phoneui/notification/dialog */
+
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/notification/close";
+	parts {
+
+		part { name: "information";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				max: 0 0;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+					offset: 0 0;
+				}
+			}
+		}
+
+		part { name: "button_no";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+		}
+
+		part { name: "button_yes";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.5 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+
+	}
+} /* phoneui/notification/close */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/notification/ussd";
+	parts {
+
+		part { name: "mode";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 0.15;
+					offset: 0 0;
+				}
+				text {
+					text: "";
+					font: "redensek";
+					size: 25;
+					align: 0.5 0.5;
+				}
+			}
+		}
+
+		part { name: "message";
+			type: TEXTBLOCK;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.15;
+					offset: 5 5;
+				}
+				rel2 {
+					relative: 1.0 0.85;
+					offset: 5 5;
+				}
+				text {
+					style: "content_style";
+				}
+			}
+		}
+
+		part { name: "button_close";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					relative: 0.0 0.85;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+		}
+	}
+} /* phoneui/notification/ussd */
