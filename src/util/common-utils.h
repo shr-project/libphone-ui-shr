@@ -18,6 +18,9 @@ common_utils_new_gvalue_int(int value);
 GValue *
 common_utils_new_gvalue_boolean(int value);
 
+GValue *
+common_utils_new_gvalue_pointer(gpointer value);
+
 void *
 common_utils_object_ref(void *object);
 

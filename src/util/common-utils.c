@@ -57,6 +57,19 @@ common_utils_new_gvalue_boolean(int value)
 	return val;
 }
 
+GValue *
+common_utils_new_gvalue_pointer(gpointer value)
+{
+	GValue *val = calloc(1, sizeof(GValue));
+	if (!val) {
+		return NULL;
+	}
+	g_value_init(val, G_TYPE_POINTER);
+	g_value_set_pointer(val, value);
+
+	return val;
+}
+
 char *
 common_utils_new_with_prefix(const char *_number, const char *prefix)
 {
