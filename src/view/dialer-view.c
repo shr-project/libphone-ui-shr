@@ -47,7 +47,7 @@ dialer_view_init()
 				NULL, NULL, _dialer_destroy_cb);
 
 	if (ret) {
-		g_critical("Faild to init dialer view");
+		g_critical("Failed to init dialer view");
 		return ret;
 	}
 
