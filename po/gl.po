@@ -1,11 +1,13 @@
+# This file is put in the public domain.
+#
 #: src/view/sim-auth-input-view.c:279
 # David Garabana Barro <david@garabana.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: libphone-ui-shr\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-12-01 21:15+0200\n"
-"PO-Revision-Date: 2009-12-19 14:06+0100\n"
+"PO-Revision-Date: 2009-12-19 13:58+0100\n"
 "Last-Translator: David Garabana Barro <david@garabana.com>\n"
 "Language-Team: Galician <>\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +20,7 @@ msgstr ""
 #: src/view/contact-show-view.c:338 src/view/dialer-view.c:136
 #: src/view/message-show-view.c:335
 msgid "Call"
-msgstr "Llamar"
+msgstr "Chamar"
 
 #: src/phoneui-contacts.c:22 src/view/dialer-view.c:314
 msgid "Contacts"
@@ -30,7 +32,7 @@ msgstr "Contacto"
 
 #: src/phoneui-contacts.c:69 src/view/contact-list-view.c:159
 msgid "New Contact"
-msgstr "Contacto nuevo"
+msgstr "Novo contacto"
 
 #: src/phoneui-dialer.c:22
 msgid "Dialer"
@@ -42,15 +44,15 @@ msgstr "Información"
 
 #: src/phoneui-incoming-message.c:12
 msgid "New Message"
-msgstr "Mensaje nuevo"
+msgstr "Nova Mensaxe"
 
 #: src/phoneui-messages.c:23
 msgid "Messages"
-msgstr "Mensajes"
+msgstr "Mensaxes"
 
 #: src/phoneui-messages.c:32
 msgid "Message"
-msgstr "Mensaje"
+msgstr "Mensaxe"
 
 #: src/phoneui-sim-auth.c:20
 msgid "SIM Auth"
@@ -58,11 +60,11 @@ msgstr "Identificación SIM"
 
 #: src/phoneui-ussd.c:12
 msgid "Service Data"
-msgstr "Datos del servicio"
+msgstr "Datos do servizo"
 
 #: src/view/call-active-view.c:137 src/view/call-common.c:106
 msgid "Speaker"
-msgstr "Altavoz"
+msgstr "Altofalante"
 
 #: src/view/call-active-view.c:148
 msgid "Mute"
@@ -70,7 +72,7 @@ msgstr "Silenciar"
 
 #: src/view/call-active-view.c:158
 msgid "Volume"
-msgstr "Volúmen"
+msgstr "Volume"
 
 #: src/view/call-active-view.c:171
 msgid "Mic"
@@ -86,7 +88,7 @@ msgstr "Teclado"
 
 #: src/view/call-active-view.c:263
 msgid "Hide Keypad"
-msgstr "Ocultar"
+msgstr "Agochar"
 
 #: src/view/call-common.c:98
 msgid "Handset"
@@ -98,15 +100,15 @@ msgstr "Descolgar"
 
 #: src/view/call-incoming-view.c:48
 msgid "Accept"
-msgstr "Responder"
+msgstr "Coller"
 
 #: src/view/call-incoming-view.c:60
 msgid "Reject"
-msgstr "Rechazar"
+msgstr "Rexeitar"
 
 #: src/view/contact-delete-view.c:89 src/view/message-delete-view.c:106
 msgid "Do you really want to delete it?"
-msgstr "¿Está seguro de que quiere eliminarlo?"
+msgstr "Está certo de que quere borrar o contacto?"
 
 #: src/view/contact-delete-view.c:94 src/view/contact-list-view.c:313
 #: src/view/contact-show-view.c:622 src/view/message-delete-view.c:109
@@ -118,16 +120,16 @@ msgstr "Sí"
 #: src/view/contact-show-view.c:626 src/view/message-delete-view.c:116
 #: src/view/message-new-view.c:771
 msgid "No"
-msgstr "No"
+msgstr "Non"
 
 #: src/view/contact-list-view.c:80 src/view/message-list-view.c:105
 msgid "New"
-msgstr "Nuevo"
+msgstr "Novo"
 
 #: src/view/contact-list-view.c:94 src/view/message-list-view.c:115
 #: src/view/message-show-view.c:312
 msgid "Options"
-msgstr "Opciones"
+msgstr "Opcións"
 
 #: src/view/contact-list-view.c:112 src/view/contact-show-view.c:358
 msgid "SMS"
@@ -135,7 +137,7 @@ msgstr "SMS"
 
 #: src/view/contact-list-view.c:120 src/view/message-list-view.c:149
 msgid "Show"
-msgstr "Mostrar"
+msgstr "Amosar"
 
 #: src/view/contact-list-view.c:128 src/view/message-list-view.c:138
 #: src/view/message-show-view.c:327 src/view/sim-auth-input-view.c:375
@@ -145,29 +147,29 @@ msgstr "Borrar"
 #: src/view/contact-list-view.c:230 src/view/dialer-view.c:242
 #: src/view/message-list-view.c:212 src/view/message-show-view.c:163
 msgid "Compose SMS"
-msgstr "Escribir SMS"
+msgstr "Redactar unha mensaxe"
 
 #: src/view/contact-list-view.c:255
 msgid "Show Contact"
-msgstr "Mostrar el contacto"
+msgstr "Amosar contacto"
 
 #: src/view/contact-list-view.c:324
 msgid "Really delete this contact?"
-msgstr "¿Borrar este contacto?"
+msgstr "Borrar o contacto?"
 
 #: src/view/contact-show-view.c:298 src/view/dialer-view.c:122
 #: src/view/dialog-view.c:49 src/view/message-new-view.c:235
 #: src/view/message-show-view.c:301 src/view/ussd-view.c:71
 msgid "Close"
-msgstr "Cerrar"
+msgstr "Pechar"
 
 #: src/view/contact-show-view.c:305
 msgid "Add Field"
-msgstr "Añadir campo"
+msgstr "Engadir campo"
 
 #: src/view/contact-show-view.c:312
 msgid "Actions"
-msgstr "Acciones"
+msgstr "Accións"
 
 #: src/view/contact-show-view.c:448 src/view/contact-show-view.c:455
 #: src/view/contact-show-view.c:462 src/view/contact-show-view.c:658
@@ -178,7 +180,7 @@ msgstr "Atrás"
 
 #: src/view/contact-show-view.c:632
 msgid "Really discard all changes?"
-msgstr "¿Descartar los cambios?"
+msgstr "Descartar tódolos cambios?"
 
 #: src/view/contact-show-view.c:655
 msgid "Edit Field"
@@ -186,7 +188,7 @@ msgstr "Editar campo"
 
 #: src/view/contact-show-view.c:665 src/view/dialer-view.c:160
 msgid "Save"
-msgstr "Guardar"
+msgstr "Gardar"
 
 #: src/view/contact-show-view.c:672
 msgid "Field: "
@@ -198,11 +200,11 @@ msgstr "Valor: "
 
 #: src/view/dialer-view.c:95
 msgid "Click to open contactlist."
-msgstr " Pulse para abrir la lista de contactos."
+msgstr " Prema para abrir a lista de contactos"
 
 #: src/view/dialer-view.c:129
 msgid "More"
-msgstr "Más"
+msgstr "Máis"
 
 #: src/view/dialer-view.c:168
 msgid "Send SMS"
@@ -213,44 +215,42 @@ msgid ""
 "Your storage is full. Please delete some messages or you are not going to "
 "receive messages anymore!"
 msgstr ""
-"La memoria de mensajes SMS está llena. No podrá recibir mensajes hasta "
-"que "
-"no libere espacio."
+"A memoria de mensaxes SMS está chea. Ten que liberar espacio para poder "
+"receber mensaxes novas"
 
 #: src/view/dialog-view.c:44
 msgid "GSM is not available, because no SIM card is present."
 msgstr ""
-"La tarjeta SIM no está insertada o es incorrecta. La telefonía GSM no "
-"estará "
-"disponible."
+"Non se inseriu a tarxeta SIM ou é incorrecta. Non vai estar dispoñible a "
+"telefonía GSM."
 
 #: src/view/dialog-view.c:46
 msgid "Unknown message."
-msgstr "Mensaje desconocido."
+msgstr "Mensaxe descoñecida."
 
 #: src/view/message-delete-view.c:173
 msgid "Deleting.."
-msgstr "Borrando.."
+msgstr "A borrar.."
 
 #: src/view/message-list-view.c:102
 msgid "Inbox"
-msgstr "Bandeja de entrada"
+msgstr "Caixa de entrada"
 
 #: src/view/message-list-view.c:130 src/view/message-show-view.c:355
 msgid "Answer"
-msgstr "Responder"
+msgstr "Respostar"
 
 #: src/view/message-list-view.c:250
 msgid "Show Message"
-msgstr "Mostrar el mensaje"
+msgstr "Amosar a mensaxe"
 
 #: src/view/message-list-view.c:278
 msgid "SMS Answer"
-msgstr "Respuesta al SMS"
+msgstr "Resposta ao SMS"
 
 #: src/view/message-list-view.c:310 src/view/message-show-view.c:193
 msgid "Delete Message"
-msgstr "Borrar el mensaje"
+msgstr "Borrar a mensaxe"
 
 #: src/view/message-new-view.c:242
 msgid "Continue"
@@ -259,11 +259,11 @@ msgstr "Continuar"
 #: src/view/message-new-view.c:321 src/view/message-new-view.c:352
 #, c-format
 msgid "%d characters left [%d]"
-msgstr "Disponibles %d caracteres [%d]"
+msgstr "Dispoñibles %d caracteres [%d]"
 
 #: src/view/message-new-view.c:374
 msgid "Define Recipients"
-msgstr "Escoja destinatarios"
+msgstr "Escolla de destinatarios"
 
 #: src/view/message-new-view.c:384
 msgid "Send"
@@ -271,33 +271,31 @@ msgstr "Enviar"
 
 #: src/view/message-new-view.c:391 src/view/message-show-view.c:343
 msgid "Add Contact"
-msgstr "Añadir contacto"
+msgstr "Engadir contacto"
 
 #: src/view/message-new-view.c:399
 msgid "Add Number"
-msgstr "Añadir número"
+msgstr "Engadir número"
 
 #: src/view/message-new-view.c:407
 msgid "Remove"
-msgstr "Suprimir"
+msgstr "Borrar"
 
 #: src/view/message-new-view.c:558
 msgid "Add a Contact"
-msgstr "Añadir un contacto"
+msgstr "Engadir un contacto"
 
 #: src/view/message-new-view.c:568 src/view/message-new-view.c:670
 msgid "Add"
-msgstr "Añadir"
+msgstr "Engadir"
 
 #: src/view/message-new-view.c:660
 msgid "Add a Number"
-msgstr "Añadir un número"
+msgstr "Engadir un número"
 
 #: src/view/message-new-view.c:759
 msgid "Do you really want to quit?"
-msgstr ""
-"Si sale ahora, perderá todos los cambios.<br>¿Está seguro de que quiere "
-"salir?"
+msgstr "Se sae agora perderá tódolos cambios.<br>Seguro que quere saír?"
 
 #: src/view/message-new-view.c:823
 msgid "Sending.."
@@ -309,7 +307,7 @@ msgstr "De:"
 
 #: src/view/message-show-view.c:279
 msgid "Date:"
-msgstr "Fecha:"
+msgstr "Data:"
 
 #: src/view/message-show-view.c:280
 msgid "Status:"
@@ -317,19 +315,19 @@ msgstr "Estado:"
 
 #: src/view/sim-auth-input-view.c:71
 msgid "Please enter your PIN"
-msgstr "Introduzca el PIN"
+msgstr "Introduza o PIN"
 
 #: src/view/sim-auth-input-view.c:76
 msgid "Please enter your PIN2"
-msgstr "Introduzca el PIN2"
+msgstr "Introduza o PIN2"
 
 #: src/view/sim-auth-input-view.c:81
 msgid "Please enter your PUK"
-msgstr "Introduzca el PUK"
+msgstr "Introduza o PUK"
 
 #: src/view/sim-auth-input-view.c:86
 msgid "Please enter your PUK2"
-msgstr "Introduzca el PUK2"
+msgstr "Introduza o PUK2"
 
 #: src/view/sim-auth-input-view.c:90 src/view/sim-auth-input-view.c:382
 msgid "OK"
@@ -337,7 +335,7 @@ msgstr "Aceptar"
 
 #: src/view/sim-auth-input-view.c:97
 msgid "Unknown error"
-msgstr "Error desconocido"
+msgstr "Erro descoñecido."
 
 #: src/view/sim-auth-input-view.c:182
 msgid "PIN correct"
@@ -345,7 +343,7 @@ msgstr "PIN correcto"
 
 #: src/view/sim-auth-input-view.c:187
 msgid "Failed"
-msgstr "Falló"
+msgstr "Fallou"
 
 #: src/view/sim-auth-input-view.c:228 src/view/sim-auth-input-view.c:286
 #: src/view/sim-auth-input-view.c:418
@@ -358,19 +356,19 @@ msgstr "PIN incorrecto"
 
 #: src/view/sim-auth-input-view.c:246
 msgid "Enter a NEW PIN"
-msgstr "Introduzca el nuevo PIN"
+msgstr "Introduza o novo PIN"
 
 #: src/view/sim-auth-input-view.c:254
 msgid "Confirm your NEW PIN"
-msgstr "Confirme el nuevo PIN"
+msgstr "Confirme o novo PIN"
 
 #: src/view/sim-auth-input-view.c:263
 msgid "PIN must be 4-8 chars long"
-msgstr "El PIN debe tener de 4 a 8 caracteres"
+msgstr "O PIN debe ter de 4 a 8 caracteres"
 
 #: src/view/sim-auth-input-view.c:271
 msgid "PIN confirmation wrong"
-msgstr "Los PIN no son iguales"
+msgstr "Os PIN non son iguais"
 
 #: src/view/ussd-view.c:67
 msgid "Data:"
@@ -408,48 +406,6 @@ msgstr "TUV"
 msgid "XYZ"
 msgstr "WXYZ"
 
-#~ msgid "Edit"
-#~ msgstr "Editar"
-
-#~ msgid "Edit Contact"
-#~ msgstr "Editar contacto"
-
-#~ msgid "Delete Contact"
-#~ msgstr "Borrar contacto"
-
-#~ msgid "Incoming call"
-#~ msgstr "Llamada entrante"
-
-#~ msgid "New PIN saved"
-#~ msgstr "Se ha guardado el nuevo PIN"
-
-#~ msgid "PUK wrong"
-#~ msgstr "PUK incorrecto"
-
-#~ msgid "Active call"
-#~ msgstr "Llamada activa"
-
-#~ msgid "Loading.."
-#~ msgstr "Cargando.."
-
-#~ msgid "Folders"
-#~ msgstr "Carpetas"
-
-#~ msgid "%d messages"
-#~ msgstr "%d mensajes"
-
-#~ msgid "Number: "
-#~ msgstr "Número: "
-
-#~ msgid "Loading... "
-#~ msgstr "Cargando... "
-
-#~ msgid "No Speaker"
-#~ msgstr "No Altavoz"
-
-#~ msgid "Show Keypad"
-#~ msgstr "Mostrar el Teclado Numérico"
-
 #~ msgid "Modify"
 #~ msgstr "Modificar"
 
@@ -460,5 +416,55 @@ msgstr "WXYZ"
 #~ "Your storage is full. Before adding new contacts, you have to delete some "
 #~ "old ones."
 #~ msgstr ""
-#~ "Almacenamiento lleno. Antes de añadir nuevos mensajes debes eliminar "
-#~ "algún contacto antiguo."
+#~ "A memoria está chea. Para engadir novos contactos, ten que borrar algún "
+#~ "contacto antigo."
+
+#, fuzzy
+#~ msgid "No Speaker"
+#~ msgstr "Altofalante"
+
+#, fuzzy
+#~ msgid "Show Keypad"
+#~ msgstr "Teclado"
+
+#~ msgid "Edit Contact"
+#~ msgstr "Editar contacto"
+
+#~ msgid "Number: "
+#~ msgstr "Número: "
+
+#~ msgid "Loading... "
+#~ msgstr "Cargando... "
+
+#~ msgid "Active call"
+#~ msgstr "Chamada activa"
+
+#~ msgid "Incoming call"
+#~ msgstr "Chamada entrante"
+
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
+#~ msgid "Delete Contact"
+#~ msgstr "Borrar contacto"
+
+#~ msgid "Loading.."
+#~ msgstr "Cargando.."
+
+#~ msgid "Folders"
+#~ msgstr "Cartafois"
+
+#~ msgid "%d messages"
+#~ msgstr "%d mensaxes"
+
+#~ msgid "New PIN saved"
+#~ msgstr "Gardouse o novo PIN"
+
+#~ msgid "PUK wrong"
+#~ msgstr "PUK incorrecto"
+
+#~ msgid "Ringtone"
+#~ msgstr "Ton"
+
+#~ msgid "Silent"
+#~ msgstr "Silenciar"
