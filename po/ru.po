@@ -9,18 +9,21 @@ msgstr ""
 "Project-Id-Version: libframework-phoneui-efl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-12-01 21:15+0200\n"
-"PO-Revision-Date: 2009-04-08 00:42+0300\n"
-"Last-Translator: Maksim 'max_posedon' Melnikau <maxposedon@gmail.com>\n"
+"PO-Revision-Date: 2009-12-29 17:06+0300\n"
+"Last-Translator: Vladimir Berezenko <qmaster@rambler.ru>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
 
 #: src/phoneui-call.c:132 src/view/contact-list-view.c:87
 #: src/view/contact-show-view.c:338 src/view/dialer-view.c:136
 #: src/view/message-show-view.c:335
 msgid "Call"
-msgstr "Звонит"
+msgstr "Вызвать"
 
 #: src/phoneui-contacts.c:22 src/view/dialer-view.c:314
 msgid "Contacts"
@@ -29,7 +32,7 @@ msgstr "Контакты"
 #: src/phoneui-contacts.c:46
 #, fuzzy
 msgid "Contact"
-msgstr "Контакты"
+msgstr "Контакт"
 
 #: src/phoneui-contacts.c:69 src/view/contact-list-view.c:159
 msgid "New Contact"
@@ -37,7 +40,7 @@ msgstr "Новый Контакт"
 
 #: src/phoneui-dialer.c:22
 msgid "Dialer"
-msgstr "Звонить"
+msgstr "Номеронабиратель"
 
 #: src/phoneui-dialog.c:11
 msgid "Information"
@@ -45,7 +48,7 @@ msgstr "Информация"
 
 #: src/phoneui-incoming-message.c:12
 msgid "New Message"
-msgstr "Новое сообщение"
+msgstr "Новое Cообщение"
 
 #: src/phoneui-messages.c:23
 msgid "Messages"
@@ -54,11 +57,11 @@ msgstr "Сообщения"
 #: src/phoneui-messages.c:32
 #, fuzzy
 msgid "Message"
-msgstr "Сообщения"
+msgstr "Сообщение"
 
 #: src/phoneui-sim-auth.c:20
 msgid "SIM Auth"
-msgstr "Авторизация SIM"
+msgstr "SIM-Авторизация"
 
 #: src/phoneui-ussd.c:12
 msgid "Service Data"
@@ -70,15 +73,15 @@ msgstr "Спикер"
 
 #: src/view/call-active-view.c:148
 msgid "Mute"
-msgstr ""
+msgstr "Откл.звук"
 
 #: src/view/call-active-view.c:158
 msgid "Volume"
-msgstr ""
+msgstr "Громкость"
 
 #: src/view/call-active-view.c:171
 msgid "Mic"
-msgstr ""
+msgstr "Микрофон"
 
 #: src/view/call-active-view.c:182 src/view/call-common.c:169
 msgid "Release"
@@ -94,11 +97,11 @@ msgstr "Спрятать Клавиатуру"
 
 #: src/view/call-common.c:98
 msgid "Handset"
-msgstr ""
+msgstr "Телефон"
 
 #: src/view/call-common.c:147
 msgid "Pickup"
-msgstr ""
+msgstr "Принять"
 
 #: src/view/call-incoming-view.c:48
 msgid "Accept"
@@ -106,7 +109,7 @@ msgstr "Принять"
 
 #: src/view/call-incoming-view.c:60
 msgid "Reject"
-msgstr ""
+msgstr "Отказать"
 
 #: src/view/contact-delete-view.c:89 src/view/message-delete-view.c:106
 msgid "Do you really want to delete it?"
@@ -154,11 +157,11 @@ msgstr "Написать SMS"
 #: src/view/contact-list-view.c:255
 #, fuzzy
 msgid "Show Contact"
-msgstr "Новый Контакт"
+msgstr "Показать Контакт"
 
 #: src/view/contact-list-view.c:324
 msgid "Really delete this contact?"
-msgstr ""
+msgstr "Удалить данный контакт?"
 
 #: src/view/contact-show-view.c:298 src/view/dialer-view.c:122
 #: src/view/dialog-view.c:49 src/view/message-new-view.c:235
@@ -168,7 +171,7 @@ msgstr "Закрыть"
 
 #: src/view/contact-show-view.c:305
 msgid "Add Field"
-msgstr ""
+msgstr "Добавить Поле"
 
 #: src/view/contact-show-view.c:312
 #, fuzzy
@@ -184,11 +187,11 @@ msgstr "Назад"
 
 #: src/view/contact-show-view.c:632
 msgid "Really discard all changes?"
-msgstr ""
+msgstr "Отменить все изменения?"
 
 #: src/view/contact-show-view.c:655
 msgid "Edit Field"
-msgstr ""
+msgstr "Редактировать Поле"
 
 #: src/view/contact-show-view.c:665 src/view/dialer-view.c:160
 msgid "Save"
@@ -196,16 +199,16 @@ msgstr "Сохранить"
 
 #: src/view/contact-show-view.c:672
 msgid "Field: "
-msgstr ""
+msgstr "Поле: "
 
 #: src/view/contact-show-view.c:690
 #, fuzzy
 msgid "Value: "
-msgstr "Имя:"
+msgstr "Значение: "
 
 #: src/view/dialer-view.c:95
 msgid "Click to open contactlist."
-msgstr "Нажмите для открытия списка контактов"
+msgstr "Нажмите для открытия списка контактов."
 
 #: src/view/dialer-view.c:129
 msgid "More"
@@ -220,16 +223,16 @@ msgid ""
 "Your storage is full. Please delete some messages or you are not going to "
 "receive messages anymore!"
 msgstr ""
-"Нет места. Пожалуйста удалите старые сообщения, иначе вы не будите получать "
+"Нет места. Пожалуйста удалите старые сообщения, иначе вы не будете получать "
 "новые!"
 
 #: src/view/dialog-view.c:44
 msgid "GSM is not available, because no SIM card is present."
-msgstr "GSM не доступен, поскольку отсутствует SIM-ка."
+msgstr "GSM не доступен, поскольку отсутствует SIM-карта."
 
 #: src/view/dialog-view.c:46
 msgid "Unknown message."
-msgstr "Неизвестное сообщение"
+msgstr "Неизвестное сообщение."
 
 #: src/view/message-delete-view.c:173
 msgid "Deleting.."
@@ -253,7 +256,7 @@ msgstr "Ответить на SMS"
 
 #: src/view/message-list-view.c:310 src/view/message-show-view.c:193
 msgid "Delete Message"
-msgstr "Удалить сообщение"
+msgstr "Удалить Сообщение"
 
 #: src/view/message-new-view.c:242
 msgid "Continue"
@@ -323,7 +326,7 @@ msgstr "Пожалуйста введите новый PIN"
 #: src/view/sim-auth-input-view.c:76
 #, fuzzy
 msgid "Please enter your PIN2"
-msgstr "Пожалуйста введите новый PIN"
+msgstr "Пожалуйста введите новый PIN2"
 
 #: src/view/sim-auth-input-view.c:81
 msgid "Please enter your PUK"
@@ -332,7 +335,7 @@ msgstr "Пожалуйста введите PUK"
 #: src/view/sim-auth-input-view.c:86
 #, fuzzy
 msgid "Please enter your PUK2"
-msgstr "Пожалуйста введите PUK"
+msgstr "Пожалуйста введите PUK2"
 
 #: src/view/sim-auth-input-view.c:90 src/view/sim-auth-input-view.c:382
 msgid "OK"
@@ -341,7 +344,7 @@ msgstr "OK"
 #: src/view/sim-auth-input-view.c:97
 #, fuzzy
 msgid "Unknown error"
-msgstr "Неизвестное сообщение"
+msgstr "Неизвестная ошибка"
 
 #: src/view/sim-auth-input-view.c:182
 msgid "PIN correct"
@@ -349,12 +352,12 @@ msgstr "PIN введен верно"
 
 #: src/view/sim-auth-input-view.c:187
 msgid "Failed"
-msgstr ""
+msgstr "Ошибка"
 
 #: src/view/sim-auth-input-view.c:228 src/view/sim-auth-input-view.c:286
 #: src/view/sim-auth-input-view.c:418
 msgid "Checking"
-msgstr "Проверка"
+msgstr "Проверяется"
 
 #: src/view/sim-auth-input-view.c:237
 msgid "PIN wrong"
@@ -362,11 +365,11 @@ msgstr "PIN введен неверно"
 
 #: src/view/sim-auth-input-view.c:246
 msgid "Enter a NEW PIN"
-msgstr "Введите новый PIN"
+msgstr "Введите НОВЫЙ PIN"
 
 #: src/view/sim-auth-input-view.c:254
 msgid "Confirm your NEW PIN"
-msgstr "Подтвердите новый PIN"
+msgstr "Подтвердите НОВЫЙ PIN"
 
 #: src/view/sim-auth-input-view.c:263
 msgid "PIN must be 4-8 chars long"
