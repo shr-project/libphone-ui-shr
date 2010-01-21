@@ -1,12 +1,6 @@
 #include "views.h"
 #include "common-utils.h"
 
-/* FIXME: HACKS FROM elm_priv.h that should be removed */
-#if 1
-void         elm_widget_scale_set(Evas_Object *obj, double scale);
-#endif
-
-
 
 struct ContactFieldData {
 	char *name;
@@ -284,7 +278,7 @@ frame_show_show(void *_data)
 				ELM_SCROLLER_POLICY_AUTO);
 	elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(data->list, 0.0, 0.0);
-	elm_widget_scale_set(data->list, 1.0);
+	elm_object_scale_set(data->list, 1.0);
 
 	itc.item_style = "contactfield";
 	itc.func.label_get = gl_field_label_get;
