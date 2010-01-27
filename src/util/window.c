@@ -44,7 +44,7 @@ window_init(struct Window *win)
 
 	elm_win_title_set(win->win, win->title);
 	elm_win_autodel_set(win->win, 1);	// Disable it?
-	evas_object_smart_callback_add(win->win, "delete-request",
+	evas_object_smart_callback_add(win->win, "delete,request",
 				       _window_delete_callback, win);
 
 	// Background
@@ -118,7 +118,7 @@ window_delete_callback_set(struct Window *win,
 		g_warning("Tried to set cb to NULL (%s:%d)", __FUNCTION__, __LINE__);
 		return;
 	}
-	evas_object_smart_callback_add(win->win, "delete-request", cb, win);
+	evas_object_smart_callback_add(win->win, "delete,request", cb, win);
 }
 
 void
