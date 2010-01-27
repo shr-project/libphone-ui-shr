@@ -1,9 +1,10 @@
+
+#include <glib.h>
+#include <phoneui/phoneui-utils.h>
 #include "phoneui-call.h"
 #include "call-common.h"
-#include <glib.h>
 #include "window.h"
 #include "views.h"
-
 
 /* HACK UNTIL WE REMOVE THIS INSTANCE THING COMPLETELY*/
 #include <Ecore_Evas.h>
@@ -55,7 +56,7 @@ instance_manager_remove(int id)
 			break;
 		}
 	}
-	
+
 	for (j = i + 1 ; j < instances_size ; j++) {
 		instances[j - 1].id = instances[j].id;
 		instances[j - 1].win = instances[j].win;
@@ -82,7 +83,7 @@ struct Call {
 
 static void _show(const int id, const int status, const char *number, int type);
 static void _hide(const int id);
-static void _delete(void *data, Evas_Object * win, void *event_info);
+static void _delete(void *_data, Evas_Object * win, void *event_info);
 
 
 void
@@ -116,9 +117,8 @@ static void
 _show(const int id, const int status, const char *number, int type)
 {
 	struct Window *win = window_new(D_("Call"));
-	window_delete_callback_set(win, _delete);
 	instance_manager_add(id, win);
-	
+
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(id));
 	g_hash_table_insert(options, "status", GINT_TO_POINTER(status));
@@ -127,6 +127,7 @@ _show(const int id, const int status, const char *number, int type)
 			GINT_TO_POINTER(CALL_NUMBER_NUMBER));
 
 	window_init(win);
+	window_delete_callback_set(win, _delete);
 	if (type == CALL_INCOMING) {
 		window_view_show(win, options, call_incoming_view_show,
 				 call_incoming_view_hide, NULL);
@@ -158,9 +159,11 @@ _hide(const int id)
 }
 
 static void
-_delete(void *data, Evas_Object * win, void *event_info)
+_delete(void *_data, Evas_Object * win, void *event_info)
 {
+ 	struct CallActiveViewData *data;
 	g_debug("call_delete(), release call!");
-	//ogsmd_call_release(call_id, NULL, NULL);
-	//window_destroy(win, NULL);
+
+ 	data = ((struct Window *)_data)->view_data;
+ 	phoneui_utils_call_release(data->parent.id, NULL, NULL);
 }
