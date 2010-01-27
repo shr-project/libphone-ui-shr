@@ -65,6 +65,9 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	evas_object_show(data->bt_reject);
 	evas_object_show(ic);
 
+	/* make the window uncloseable - replace that with some nice elm_
+	when implemented in elementary */
+	ecore_x_icccm_hints_set(elm_win_xwindow_get(win->win), 0, 0, 0, 0, 0, 0, 0);
 	window_show(win);
 
 	return data;
@@ -100,6 +103,10 @@ call_button_accept_clicked(void *_data, Evas_Object * obj,
 		(struct CallIncomingViewData *)_data;
 	g_debug("accept_clicked(call_id=%d)", data->parent.id);
 	phoneui_utils_call_activate(data->parent.id, NULL, NULL);
+
+	/* call to enable closing of the win again */
+	ecore_x_icccm_hints_set(
+		elm_win_xwindow_get(data->parent.win->win), 1, 0, 0, 0, 0, 0, 0);
 
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "id", GINT_TO_POINTER(data->parent.id));
