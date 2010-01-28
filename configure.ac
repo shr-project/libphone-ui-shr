@@ -55,8 +55,6 @@ AC_OUTPUT([
 Makefile
 data/Makefile
 src/Makefile
-src/phoneui-shr.h
-src/view/views.h
 po/Makefile.in
 ])
 
