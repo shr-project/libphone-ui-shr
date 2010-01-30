@@ -5,6 +5,7 @@
 #include <Evas.h>
 #include <glib.h>
 
+#define VIEW_PTR(x) ((struct View *) &(x))
 struct View {
 	Evas_Object *win, *background, *layout;
 	
