@@ -30,19 +30,19 @@ static void _idle_destroy_cb(struct View *_view);
 void
 idle_screen_view_show()
 {
-	ui_utils_view_show(&view.parent);
+	ui_utils_view_show(VIEW_PTR(view));
 }
 
 void
 idle_screen_view_hide()
 {
-	ui_utils_view_hide(&view.parent);
+	ui_utils_view_hide(VIEW_PTR(view));
 }
 
 void
 idle_screen_view_toggle()
 {
-	ui_utils_view_toggle(&view.parent);
+	ui_utils_view_toggle(VIEW_PTR(view));
 }
 
 int
@@ -51,28 +51,28 @@ idle_screen_view_init()
 	struct Evas_Object *win;
 	int ret;
 
-	ret = ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Idle_Screen"),
+	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
 				NULL, NULL, _idle_destroy_cb);
 	if (ret) {
 		g_critical("Failed to init idle screen");
 		return ret;
 	}
 
-	ui_utils_view_layout_set(&view.parent, IDLE_SCREEN_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(view), IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
-	edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"clock_init", "");
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 
 	elm_win_fullscreen_set(win, 1);
 	view.wallpaper = elm_icon_add(win);
 	elm_icon_file_set(view.wallpaper, IDLE_SCREEN_WALLPAPER, NULL);
-	ui_utils_view_swallow(&view.parent, "background", view.wallpaper);
+	ui_utils_view_swallow(VIEW_PTR(view), "background", view.wallpaper);
 	evas_object_show(view.wallpaper);
 
-	edje_object_signal_callback_add(ui_utils_view_layout_get(&view.parent), "unlockScreen",
+	edje_object_signal_callback_add(ui_utils_view_layout_get(VIEW_PTR(view)), "unlockScreen",
 					"slider", idle_screen_view_hide,
 					NULL);
 	phoneui_info_trigger();
@@ -83,13 +83,13 @@ void
 idle_screen_view_deinit()
 {
 	evas_object_del(view.wallpaper);
-	ui_utils_view_deinit(&view.parent);
+	ui_utils_view_deinit(VIEW_PTR(view));
 }
 
 int
 idle_screen_view_is_init()
 {
-	return ui_utils_view_is_init(&view.parent);
+	return ui_utils_view_is_init(VIEW_PTR(view));
 }
 
 void
@@ -128,7 +128,7 @@ idle_screen_view_update_power(const int capacity)
 		char buf[16];
 		snprintf(buf, 16, "%d", capacity);
 
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 					buf, "batteryPowerChange");
 	}
 }
@@ -141,27 +141,27 @@ idle_screen_view_update_call(enum PhoneuiCallState state, const char *name, cons
 
 	switch (state) {
 	case PHONEUI_CALL_STATE_INCOMING:
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)), "",
 					"activate_incomingCall");
-		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "Incoming Call:");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine1", name);
-		ui_utils_view_text_set(&view.parent, "incomingCallLine2", number);
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallHeading", "Incoming Call:");
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine1", name);
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine2", number);
 		break;
 
 	case PHONEUI_CALL_STATE_ACTIVE:
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)), "",
 					"activate_incomingCall");
-		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "Active Call:");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine1", name);
-		ui_utils_view_text_set(&view.parent, "incomingCallLine2", number);
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallHeading", "Active Call:");
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine1", name);
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine2", number);
 		break;
 
 	case PHONEUI_CALL_STATE_RELEASE:
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent), "",
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)), "",
 					"deactivate_incomingCall");
-		ui_utils_view_text_set(&view.parent, "incomingCallHeading", "");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine1", "");
-		ui_utils_view_text_set(&view.parent, "incomingCallLine2", "");
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallHeading", "");
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine1", "");
+		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine2", "");
 		break;
 	}
 }
@@ -174,7 +174,7 @@ idle_screen_view_update_signal_strength(const int signal)
 		char buf[16];
 		snprintf(buf, 16, "%d", signal);
 
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 					buf, "gsmSignalChange");
 	}
 }
@@ -184,7 +184,7 @@ idle_screen_view_update_provider(const char *provider)
 {
 	if (idle_screen_view_is_init()) {
 		g_debug("--- provider: %s", provider);
-		ui_utils_view_text_set(&view.parent, "gsmProvider", provider);
+		ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", provider);
 	}
 }
 
@@ -195,12 +195,12 @@ idle_screen_view_update_resource(const char *resource, const int state)
 		g_debug("--- resource: %s --> %s", resource, state ? "ON" : "OFF");
 		if (state) {
 			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(&view.parent),
+				(ui_utils_view_layout_get(VIEW_PTR(view)),
 				 resource, "active 0.0");
 		}
 		else {
 			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(&view.parent),
+				(ui_utils_view_layout_get(VIEW_PTR(view)),
 				 resource, "default 0.0");
 		}
 	}
@@ -212,12 +212,12 @@ idle_screen_view_update_alarm(const int alarm)
 	if (idle_screen_view_is_init()) {
 		if (alarm > 0) {
 			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(&view.parent),
+				(ui_utils_view_layout_get(VIEW_PTR(view)),
 				 "alarm", "active 0.0");
 		}
 		else {
 			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(&view.parent),
+				(ui_utils_view_layout_get(VIEW_PTR(view)),
 				 "alarm", "default 0.0");
 		}
 	}
@@ -228,7 +228,7 @@ idle_screen_view_update_profile(const char *profile)
 {
 	if (idle_screen_view_is_init()) {
 		g_debug("--- profile: %s", profile);
-		ui_utils_view_text_set(&view.parent, "profile", profile);
+		ui_utils_view_text_set(VIEW_PTR(view), "profile", profile);
 	}
 }
 
@@ -249,14 +249,14 @@ _idle_screen_update_counter(const char *name, const char *label_name,
 	snprintf(buf, 16, "%d", count);
 
 	if (count > 0) {
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(&view.parent),
+		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
 						  name, "active 0.0");
 	}
 	else {
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(&view.parent),
+		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
 						  name, "default 0.0");
 	}
-	ui_utils_view_text_set(&view.parent, label_name, buf);
+	ui_utils_view_text_set(VIEW_PTR(view), label_name, buf);
 }
 
 

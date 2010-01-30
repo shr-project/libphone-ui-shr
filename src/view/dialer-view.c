@@ -43,7 +43,7 @@ dialer_view_init()
 	g_debug("Initializing the dialer screen");
 	Evas_Object *win;
 	int ret;
-	ret = ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Dialer"),
+	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Dialer"),
 				NULL, NULL, _dialer_destroy_cb);
 
 	if (ret) {
@@ -51,20 +51,20 @@ dialer_view_init()
 		return ret;
 	}
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	
-	ui_utils_view_layout_set(&view.parent, DEFAULT_THEME, "phoneui/dialer/dialer");
+	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME, "phoneui/dialer/dialer");
 
 	view.text_number = elm_label_add(win);
 	elm_label_label_set(view.text_number, "");
 	evas_object_size_hint_align_set(view.text_number, 0.0, 0.5);
-	ui_utils_view_swallow(&view.parent, "text_number", view.text_number);
+	ui_utils_view_swallow(VIEW_PTR(view), "text_number", view.text_number);
 	evas_object_show(view.text_number);
 
 	view.text_number_info = elm_label_add(win);
 	elm_label_label_set(view.text_number_info,
 			    D_("Click to open contactlist."));
-	ui_utils_view_swallow(&view.parent, "text_number_info", view.text_number_info);
+	ui_utils_view_swallow(VIEW_PTR(view), "text_number_info", view.text_number_info);
 	evas_object_show(view.text_number_info);
 
 	view.delete_text_icon = elm_icon_add(win);
@@ -77,7 +77,7 @@ dialer_view_init()
 	evas_object_smart_callback_add(view.delete_text_button, "clicked",
 				       _dialer_delete_clicked_cb, NULL);
 
-	ui_utils_view_swallow(&view.parent, "button_delete", view.delete_text_button);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_delete", view.delete_text_button);
 	evas_object_show(view.delete_text_button);
 	evas_object_show(view.delete_text_icon);
 
@@ -86,31 +86,31 @@ dialer_view_init()
 		(Evas_Object *) elm_keypad_add(win);
 	evas_object_smart_callback_add(view.keypad, "clicked",
 				       _dialer_keypad_clicked_cb, NULL);
-	ui_utils_view_swallow(&view.parent, "keypad", view.keypad);
+	ui_utils_view_swallow(VIEW_PTR(view), "keypad", view.keypad);
 	evas_object_show(view.keypad);
 
 	view.bt_exit = elm_button_add(win);
 	elm_button_label_set(view.bt_exit, D_("Close"));
 	evas_object_smart_callback_add(view.bt_exit, "clicked",
 				       _dialer_exit_clicked_cb, NULL);
-	ui_utils_view_swallow(&view.parent, "button_exit", view.bt_exit);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_exit", view.bt_exit);
 	evas_object_show(view.bt_exit);
 
 	view.bt_options = elm_button_add(win);
 	elm_button_label_set(view.bt_options, D_("More"));
 	evas_object_smart_callback_add(view.bt_options, "clicked",
 				       _dialer_options_clicked_cb, NULL);
-	ui_utils_view_swallow(&view.parent, "button_options", view.bt_options);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_options", view.bt_options);
 	evas_object_show(view.bt_options);
 
 	view.bt_call = elm_button_add(win);
 	elm_button_label_set(view.bt_call, D_("Call"));
 	evas_object_smart_callback_add(view.bt_call, "clicked",
 				       _dialer_call_clicked_cb, NULL);
-	ui_utils_view_swallow(&view.parent, "button_call", view.bt_call);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_call", view.bt_call);
 	evas_object_show(view.bt_call);
 
-	edje_object_signal_callback_add(ui_utils_view_layout_get(&view.parent), "click",
+	edje_object_signal_callback_add(ui_utils_view_layout_get(VIEW_PTR(view)), "click",
 					"number",
 					_dialer_number_clicked_cb,
 					NULL);
@@ -152,13 +152,13 @@ dialer_view_init()
 int
 dialer_view_is_init()
 {
-	return ui_utils_view_is_init(&view.parent);
+	return ui_utils_view_is_init(VIEW_PTR(view));
 }
 
 void
 dialer_view_deinit()
 {
-	ui_utils_view_deinit(&view.parent);
+	ui_utils_view_deinit(VIEW_PTR(view));
 
 	evas_object_smart_callback_del(view.keypad, "clicked",
 				       _dialer_keypad_clicked_cb);
@@ -179,14 +179,14 @@ void
 dialer_view_show()
 {
 	evas_object_hide(view.hv);
-	ui_utils_view_show(&view.parent);
+	ui_utils_view_show(VIEW_PTR(view));
 }
 
 void
 dialer_view_hide()
 {
 	_dialer_number_clear();
-	ui_utils_view_hide(&view.parent);	
+	ui_utils_view_hide(VIEW_PTR(view));	
 }
 
 
@@ -324,11 +324,11 @@ _dialer_number_update()
 
 	elm_label_label_set(view.text_number, number);
 	if (length == 0) {
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 					"number_empty", "elm");
 	}
 	else {
-		edje_object_signal_emit(ui_utils_view_layout_get(&view.parent),
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 					"number_available", "elm");
 	}
 }

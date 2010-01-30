@@ -209,7 +209,7 @@ on_toggle_airplane_mode(void * data, Evas_Object *this_check, void *event_info)
 	Evas_Object *win=NULL, *check=NULL, *toggle=NULL;
 	Evas *win_evas=NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 	toggle = evas_object_name_find(win_evas, "airplane_mode");
 
@@ -245,7 +245,7 @@ on_toggle_network_gsm(void *data, Evas_Object *this_check, void *event_info)
 	Evas_Object *win=NULL, *check=NULL, *entry=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 	entry = evas_object_name_find(win_evas, "network_gsm_status");
 	toggle = evas_object_name_find(win_evas, "network_gsm");
@@ -274,7 +274,7 @@ on_toggle_network_wifi(void *data, Evas_Object *this_check, void *event_info)
 	Evas_Object *win=NULL, *check=NULL, *entry=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 	entry = evas_object_name_find(win_evas, "network_wifi_status");
 	toggle = evas_object_name_find(win_evas, "network_wifi");
@@ -303,7 +303,7 @@ on_toggle_network_gprs(void *data, Evas_Object *this_check, void *event_info)
 	Evas_Object *win=NULL, *check=NULL, *entry=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 	entry = evas_object_name_find(win_evas, "network_gprs_status");
 	toggle = evas_object_name_find(win_evas, "network_gprs");
@@ -332,7 +332,7 @@ on_toggle_network_bluez(void *data, Evas_Object *this_check, void *event_info)
 	Evas_Object *win=NULL, *check=NULL, *entry=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 	entry = evas_object_name_find(win_evas, "network_bluez_status");
 	toggle = evas_object_name_find(win_evas, "network_bluez");
@@ -361,7 +361,7 @@ on_toggle_network_gps(void *data, Evas_Object *this_check, void *event_info)
 	Evas_Object *win=NULL, *check=NULL, *entry=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 	entry = evas_object_name_find(win_evas, "network_gps_status");
 	toggle = evas_object_name_find(win_evas, "network_gps");
@@ -390,7 +390,7 @@ on_toggle_network_usb(void *data, Evas_Object *this_check, void *event_info)
 	Evas_Object *win=NULL, *check=NULL, *entry=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 	entry = evas_object_name_find(win_evas, "network_usb_status");
 	toggle = evas_object_name_find(win_evas, "network_usb");
@@ -441,7 +441,7 @@ on_toggle_autodim(void *data, Evas_Object *obj, void *event_info)
 	Evas_Object *win=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 
 	toggle = evas_object_name_find(win_evas, "auto_dim");
@@ -458,7 +458,7 @@ on_toggle_autosuspend(void *data, Evas_Object *obj, void *event_info)
 	Evas_Object *win=NULL, *toggle=NULL;
 	Evas *win_evas = NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 
 	toggle = evas_object_name_find(win_evas, "auto_suspend");
@@ -490,7 +490,7 @@ on_phone_settings(void *data, Evas_Object *obj, void *event_info)
 {
 	Evas_Object *win=NULL, *box=NULL, *netbox=NULL, *profiles=NULL, *buttons=NULL, *button=NULL, *toggle=NULL, *frame=NULL, *label=NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 
 	if(view.settings)
 		evas_object_del(view.settings);
@@ -679,7 +679,7 @@ on_settings_gprs_apply(void *data, Evas_Object *obj, void *event_info)
 	Evas *win_evas = NULL;
 	const char *apn=NULL, *user=NULL, *password=NULL;
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	win_evas = evas_object_evas_get(win);
 
 	entry = evas_object_name_find(win_evas, "entry_apn");
@@ -695,7 +695,7 @@ on_settings_gprs_apply(void *data, Evas_Object *obj, void *event_info)
 static void
 on_connectivity_settings(void *data, Evas_Object *obj, void *event_info)
 {
-	Evas_Object * win = ui_utils_view_window_get(&view.parent);
+	Evas_Object * win = ui_utils_view_window_get(VIEW_PTR(view));
 	Evas_Object *netbox=NULL, *button=NULL, *check=NULL, *frame=NULL, *subframe=NULL, *networks=NULL, *icon=NULL, *entry=NULL, *table=NULL;
 	int airplane_mode = phoneui_utils_resource_state_get(AIRPLANE);
 
@@ -1098,7 +1098,7 @@ quick_settings_view_init()
         int ret=0;
 
 	g_debug("Initializing the quick settings screen");
-        ret = ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Quick settings"),
+        ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Quick settings"),
                                 NULL, NULL, _quick_settings_destroy_cb);
 
 	view.profile_str = NULL;
@@ -1109,7 +1109,7 @@ quick_settings_view_init()
 		return ret;
 	}
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 
 	view.bg = elm_bg_add(win);
 	evas_object_size_hint_weight_set(view.bg, 1.0, 1.0);
@@ -1155,7 +1155,7 @@ quick_settings_view_init()
 void
 quick_settings_view_deinit()
 {
-        ui_utils_view_deinit(&view.parent);
+        ui_utils_view_deinit(VIEW_PTR(view));
 
         evas_object_del(view.bg);
         evas_object_del(view.settings);
@@ -1166,19 +1166,19 @@ quick_settings_view_deinit()
 int
 quick_settings_view_is_init()
 {
-        return ui_utils_view_is_init(&view.parent);
+        return ui_utils_view_is_init(VIEW_PTR(view));
 }
 
 void
 quick_settings_view_show()
 {
-        ui_utils_view_show(&view.parent);
+        ui_utils_view_show(VIEW_PTR(view));
 }
 
 void
 quick_settings_view_hide()
 {
-        ui_utils_view_hide(&view.parent);
+        ui_utils_view_hide(VIEW_PTR(view));
 }
 
 
