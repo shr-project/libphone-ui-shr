@@ -50,10 +50,10 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 		ret = 1;
 		goto end;
 	}
-	
+
 	elm_win_title_set(view->win, title);
 	/*FIXME: use the specific function in this file */
-	evas_object_smart_callback_add(view->win, "delete-request",
+	evas_object_smart_callback_add(view->win, "delete,request",
 				      (Evas_Smart_Cb) _view_delete_callback, view);
 
 
@@ -63,7 +63,7 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 		elm_theme_overlay_add(phoneui_theme);
 	}
 
-	
+
 	/* Background */
 	view->background = elm_bg_add(view->win);
 	if (!view->background) {
