@@ -464,7 +464,7 @@ _inwin_list_cancel_cb(void *data, Evas_Object *obj, void *event_info)
 
 Evas_Object *
 ui_utils_view_inwin_list(struct View *view, GList *list,
-	void (*callback) (char *, void *), void *userdata)
+	void (*callback) (const char *, void *), void *userdata)
 {
 	Evas_Object *win, *btn, *box;
 	GList *l;
@@ -518,7 +518,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 }
 
 struct _field_select_pack {
-	void (*callback)(char *, void *);
+	void (*callback)(const char *, void *);
 	void *data;
 	struct View *view;
 };
@@ -540,7 +540,7 @@ _field_select_cb(GHashTable *fields, gpointer data)
 
 void
 ui_utils_contacts_field_select(struct View *view,
-			void (*callback)(char *, void *), void *data)
+			void (*callback)(const char *, void *), void *data)
 {
 	struct _field_select_pack *pack =
 		malloc(sizeof(struct _field_select_pack));
