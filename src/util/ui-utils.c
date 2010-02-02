@@ -571,3 +571,14 @@ ui_utils_view_is_init(struct View *view)
 	return (view->win);
 }
 
+char *
+ui_utils_entry_utf8_get(Evas_Object *entry)
+{
+	if (!entry)
+		return NULL;
+	/* this allocates a new char * */
+	char *s = elm_entry_markup_to_utf8(elm_entry_entry_get(entry));
+	if (s)
+		return g_strstrip(s);
+	return NULL;
+}

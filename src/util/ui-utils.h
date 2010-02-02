@@ -89,4 +89,6 @@ void
 ui_utils_contacts_field_select(struct View *view,
 			void (*callback)(char *, void *), void *data);
 
+char *
+ui_utils_entry_utf8_get(Evas_Object *entry);
 #endif
