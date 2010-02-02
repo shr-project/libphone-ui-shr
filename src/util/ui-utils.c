@@ -18,19 +18,19 @@ struct View *
 ui_utils_view_new(const char *title)
 {
 	struct View *view;
-	
+
 	view = calloc(1, sizeof(struct View));
 	if (!view) {
 		g_critical("Failed to allocate memory (%s:%d)", __FUNCTION__, __LINE__);
 		return NULL;
 	}
-	
+
 	return view;
 }
 
 int
 ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
-			void *(*show_cb) (struct View *view),
+			void (*show_cb) (struct View *view),
 		 	void (*hide_cb) (struct View *view),
 		 	void (*destroy_cb)(struct View *view))
 {

@@ -27,7 +27,7 @@ ui_utils_view_new(const char *title);
 
 int
 ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
-			void *(*show_cb) (struct View *view),
+			void (*show_cb) (struct View *view),
 		 	void (*hide_cb) (struct View *view),
 		 	void (*destroy_cb)(struct View *view));
 
