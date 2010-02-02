@@ -297,7 +297,257 @@ ui_utils_view_inwin_dialog(struct View *view, const char *label, GList *buttons,
 	return (inwin);
 }
 
+struct _dialog_pack {
+	void (*callback)(int, void *);
+	void *data;
+	Evas_Object *inwin;
+};
 
+static void
+_inwin_dialog_cancel_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	struct _dialog_pack *pack = (struct _dialog_pack *)data;
+	if (pack->callback)
+		pack->callback(DIALOG_CANCEL, pack->data);
+	evas_object_del(pack->inwin);
+}
+
+static void
+_inwin_dialog_no_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	struct _dialog_pack *pack = (struct _dialog_pack *)data;
+	if (pack->callback)
+		pack->callback(DIALOG_NO, pack->data);
+	evas_object_del(pack->inwin);
+}
+
+static void
+_inwin_dialog_yes_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	struct _dialog_pack *pack = (struct _dialog_pack *)data;
+	if (pack->callback)
+		pack->callback(DIALOG_YES, pack->data);
+	evas_object_del(pack->inwin);
+}
+
+static void
+_inwin_dialog_ok_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	struct _dialog_pack *pack = (struct _dialog_pack *)data;
+	if (pack->callback)
+		pack->callback(DIALOG_OK, pack->data);
+	evas_object_del(pack->inwin);
+}
+
+void
+ui_utils_dialog(struct View *view, const char *label, int buttonflags,
+		      void (*callback)(int, void *), void *data)
+{
+	Evas_Object *win, *box, *box2, *lbl, *btn;
+	struct _dialog_pack *pack = malloc(sizeof(struct _dialog_pack));
+	win = ui_utils_view_window_get(view);
+	pack->callback = callback;
+	pack->data = data;
+	pack->inwin = elm_win_inwin_add(win);
+	box = elm_box_add(win);
+	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND,
+					 EVAS_HINT_EXPAND);
+	lbl = elm_label_add(win);
+	elm_label_label_set(lbl, label);
+	evas_object_size_hint_align_set(lbl, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	evas_object_show(lbl);
+	elm_box_pack_end(box, lbl);
+
+	box2 = elm_box_add(win);
+	elm_box_horizontal_set(box2, EINA_TRUE);
+	elm_box_homogenous_set(box2, EINA_TRUE);
+	evas_object_size_hint_align_set(box2, EVAS_HINT_FILL, 0);
+
+	/* ok - yes - no - cancel */
+	if (buttonflags & DIALOG_OK) {
+		btn = elm_button_add(win);
+		elm_button_label_set(btn, D_("Ok"));
+		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
+		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
+		evas_object_smart_callback_add(btn, "clicked",
+					_inwin_dialog_ok_cb, pack);
+		evas_object_show(btn);
+		elm_box_pack_end(box2, btn);
+	}
+	if (buttonflags & DIALOG_YES) {
+		btn = elm_button_add(win);
+		elm_button_label_set(btn, D_("Yes"));
+		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
+		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
+		evas_object_smart_callback_add(btn, "clicked",
+					_inwin_dialog_yes_cb, pack);
+		evas_object_show(btn);
+		elm_box_pack_end(box2, btn);
+	}
+	if (buttonflags & DIALOG_NO) {
+		btn = elm_button_add(win);
+		elm_button_label_set(btn, D_("No"));
+		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
+		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
+		evas_object_smart_callback_add(btn, "clicked",
+					_inwin_dialog_no_cb, pack);
+		evas_object_show(btn);
+		elm_box_pack_end(box2, btn);
+	}
+	if (buttonflags & DIALOG_CANCEL) {
+		btn = elm_button_add(win);
+		elm_button_label_set(btn, D_("Cancel"));
+		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
+		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
+		evas_object_smart_callback_add(btn, "clicked",
+					_inwin_dialog_cancel_cb, pack);
+		evas_object_show(btn);
+		elm_box_pack_end(box2, btn);
+	}
+	evas_object_show(box2);
+	elm_box_pack_end(box, box2);
+
+	elm_win_resize_object_add(win, box);
+ 	evas_object_show(box);
+	elm_win_inwin_content_set(pack->inwin, box);
+
+	elm_win_inwin_activate(pack->inwin);
+}
+
+
+struct _inwin_list_pack {
+	void (*callback)(const char *, void *);
+	void *data;
+	Evas_Object *inwin;
+	Evas_Object *list;
+};
+
+static gboolean
+_inwin_list_destruct(gpointer data)
+{
+	struct _inwin_list_pack *pack = (struct _inwin_list_pack *)data;
+	evas_object_del(pack->inwin);
+	free (pack);
+	return FALSE;
+}
+
+static void
+_inwin_list_selected_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	char *sel = NULL;
+	struct _inwin_list_pack *pack = (struct _inwin_list_pack *)data;
+	g_debug("Get the selected one");
+	Elm_List_Item *it = elm_list_selected_item_get(obj);
+	g_debug("Got item [%X]", it);
+	if (it) {
+		sel = strdup(elm_list_item_label_get(it));
+		g_debug("Which is '%s'", sel);
+	}
+	if (pack->callback) {
+		pack->callback(sel, pack->data);
+	}
+	g_timeout_add(0, _inwin_list_destruct, pack);
+}
+
+static void
+_inwin_list_cancel_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	struct _inwin_list_pack *pack = (struct _inwin_list_pack *)data;
+	g_debug("Cancelled selection");
+	if (pack->callback) {
+		pack->callback(NULL, pack->data);
+	}
+	g_timeout_add(0, _inwin_list_destruct, pack);
+}
+
+Evas_Object *
+ui_utils_view_inwin_list(struct View *view, GList *list,
+	void (*callback) (char *, void *), void *userdata)
+{
+	Evas_Object *win, *btn, *box;
+	GList *l;
+
+	struct _inwin_list_pack *pack = malloc(sizeof(struct _inwin_list_pack));
+	pack->callback = callback;
+	pack->data = userdata;
+	win = ui_utils_view_window_get(view);
+	pack->inwin = elm_win_inwin_add(win);
+
+	box = elm_box_add(win);
+// 	elm_box_homogenous_set(box, EINA_TRUE);
+	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND,
+					 EVAS_HINT_EXPAND);
+
+	pack->list = elm_list_add(win);
+ 	elm_win_resize_object_add(win, pack->list);
+	evas_object_size_hint_align_set(pack->list, EVAS_HINT_FILL,
+					EVAS_HINT_FILL);
+	evas_object_size_hint_weight_set(pack->list, EVAS_HINT_EXPAND,
+					 EVAS_HINT_EXPAND);
+// 	evas_object_size_hint_align_set(pack->list, 0.5, 0.5);
+	elm_list_horizontal_mode_set(pack->list, ELM_LIST_COMPRESS);
+	for (l = g_list_first(list); l; l = g_list_next(l)) {
+		elm_list_item_append(pack->list, strdup(l->data),
+				     NULL, NULL, NULL, NULL);
+	}
+	evas_object_smart_callback_add(pack->list, "selected",
+				       _inwin_list_selected_cb, pack);
+	elm_list_go(pack->list);
+	evas_object_show(pack->list);
+
+ 	elm_box_pack_end(box, pack->list);
+
+	btn = elm_button_add(win);
+	elm_button_label_set(btn, D_("Cancel"));
+	evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
+	evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
+	evas_object_smart_callback_add(btn, "clicked",
+				       _inwin_list_cancel_cb, pack);
+	evas_object_show(btn);
+	elm_box_pack_end(box, btn);
+
+	elm_win_resize_object_add(win, box);
+ 	evas_object_show(box);
+	elm_win_inwin_content_set(pack->inwin, box);
+
+	elm_win_inwin_activate(pack->inwin);
+
+	return pack->inwin;
+}
+
+struct _field_select_pack {
+	void (*callback)(char *, void *);
+	void *data;
+	struct View *view;
+};
+
+static void
+_field_select_cb(GHashTable *fields, gpointer data)
+{
+	struct _field_select_pack *pack = (struct _field_select_pack *)data;
+	if (!fields) {
+		g_warning("No fields for contacts?");
+		// TODO: show a user visible message
+		return;
+	}
+
+	ui_utils_view_inwin_list(pack->view, g_hash_table_get_keys(fields),
+				 pack->callback, pack->data);
+	free(pack);
+}
+
+void
+ui_utils_contacts_field_select(struct View *view,
+			void (*callback)(char *, void *), void *data)
+{
+	struct _field_select_pack *pack =
+		malloc(sizeof(struct _field_select_pack));
+	pack->callback = callback;
+	pack->data = data;
+	pack->view = view;
+	phoneui_utils_contacts_fields_get(_field_select_cb, pack);
+}
 
 static void
 _view_delete_callback(struct View *view, Evas_Object * win, void *event_info)
@@ -305,13 +555,14 @@ _view_delete_callback(struct View *view, Evas_Object * win, void *event_info)
 	/* This commented out means you have to specifcally delete the window
 	 * ui_utils_view_deinit(view);
 	 */
+	g_debug("_view_delete_callback");
 	if (view->destroy_cb) {
 		view->destroy_cb(view);
 	}
 	else {
-		g_warning("Pontential leak, not freeing a view");
+		g_warning("Potential leak, not freeing a view");
 	}
-		
+
 }
 
 int

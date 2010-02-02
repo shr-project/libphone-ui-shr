@@ -8,13 +8,19 @@
 #define VIEW_PTR(x) ((struct View *) &(x))
 struct View {
 	Evas_Object *win, *background, *layout;
-	
+
 	void (*show_cb) (struct View *view);
 	void (*hide_cb) (struct View *view);
 
 	void (*destroy_cb)(struct View *view);
 };
 
+enum {
+	DIALOG_OK = 1,
+	DIALOG_YES = 2,
+	DIALOG_NO = 4,
+	DIALOG_CANCEL = 8
+};
 
 struct View *
 ui_utils_view_new(const char *title);
@@ -70,7 +76,17 @@ ui_utils_view_deinit(struct View *view);
 Evas_Object *
 ui_utils_view_inwin_dialog(struct View *view, const char *label, GList *buttons,
 		    		void *data);
+void
+ui_utils_dialog(struct View *view, const char *label, int buttonflags,
+		      void (*callback)(int, void *), void *data);
 
+Evas_Object *
+ui_utils_view_inwin_list(struct View *view, GList *list,
+			 void (*callback)(char *, void *),
+			 void *data);
 
+void
+ui_utils_contacts_field_select(struct View *view,
+			void (*callback)(char *, void *), void *data);
 
 #endif
