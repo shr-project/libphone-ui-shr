@@ -1,15 +1,19 @@
+
 #include <Elementary.h>
 #include <Evas.h>
 
 #include "ui-utils.h"
+#include "views.h"
 
 /* FIXME: hackish, remove */
 #include "phoneui-shr.h"
 
-struct InwinButton {
-	char *label;
-	void (*callback) (void *, Evas_Object *, void *);
-};
+/* already defined in window.h - reactivate
+when that beast got finally removed */
+// struct InwinButton {
+// 	char *label;
+// 	void (*callback) (void *, Evas_Object *, void *);
+// };
 
 static void
 _view_delete_callback(struct View *view, Evas_Object * win, void *event_info);
