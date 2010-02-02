@@ -85,6 +85,7 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 	elm_win_resize_object_add(view->win, view->layout);
 	evas_object_show(view->layout);
 
+	/* FIXME: Hack, I don't like this, should be changed to MAX if possible */
 	evas_object_resize(view->win, 480, 600);
 	view->show_cb = show_cb;
 	view->hide_cb = hide_cb;
