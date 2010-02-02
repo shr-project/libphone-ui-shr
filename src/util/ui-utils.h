@@ -82,12 +82,12 @@ ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 
 Evas_Object *
 ui_utils_view_inwin_list(struct View *view, GList *list,
-			 void (*callback)(char *, void *),
+			 void (*callback)(const char *, void *),
 			 void *data);
 
 void
 ui_utils_contacts_field_select(struct View *view,
-			void (*callback)(char *, void *), void *data);
+			void (*callback)(const char *, void *), void *data);
 
 char *
 ui_utils_entry_utf8_get(Evas_Object *entry);
