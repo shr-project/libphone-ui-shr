@@ -481,6 +481,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 					 EVAS_HINT_EXPAND);
 
 	pack->list = elm_list_add(win);
+	elm_object_style_set(pack->list, "fieldlist");
  	elm_win_resize_object_add(win, pack->list);
 	evas_object_size_hint_align_set(pack->list, EVAS_HINT_FILL,
 					EVAS_HINT_FILL);
@@ -492,6 +493,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 		elm_list_item_append(pack->list, strdup(l->data),
 				     NULL, NULL, NULL, NULL);
 	}
+	g_list_free(list);
 	evas_object_smart_callback_add(pack->list, "selected",
 				       _inwin_list_selected_cb, pack);
 	elm_list_go(pack->list);
