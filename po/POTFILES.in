@@ -14,7 +14,7 @@ src/view/call-common.c
 src/view/call-incoming-view.c
 src/view/contact-delete-view.c
 src/view/contact-list-view.c
-src/view/contact-show-view.c
+src/view/contact-view.c
 src/view/dialer-view.c
 src/view/dialog-view.c
 src/view/message-delete-view.c

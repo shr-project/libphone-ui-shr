@@ -248,10 +248,11 @@ frame_list_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
 	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
 
 	if (properties != NULL) {
-		struct Window *win = window_new(D_("Show Contact"));
-		window_init(win);
-		window_view_show(win, properties, contact_show_view_show,
-				 contact_show_view_hide, NULL);
+		GValue *tmp;
+		tmp = g_hash_table_lookup(properties, "Path");
+		if (tmp) {
+			phoneui_contacts_contact_show(g_value_get_string(tmp));
+		}
 	}
 }
 

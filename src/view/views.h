@@ -64,9 +64,6 @@ void *contact_list_view_show(struct Window *win, void *_options);
 void contact_list_view_hide(void *_data);
 void contact_list_view_refresh(struct Window *win);
 
-void *contact_show_view_show(struct Window *win, void *_options);
-void contact_show_view_hide(void *_data);
-
 void *contact_delete_view_show(struct Window *win, void *_options);
 void contact_delete_view_hide(void *_data);
 

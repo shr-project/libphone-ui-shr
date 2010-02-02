@@ -1,10 +1,17 @@
-#include "phoneui-contacts.h"
+
 #include <glib.h>
-#include "window.h"
-#include "views.h"
+#include <phoneui/phoneui-utils.h>
+#include "phoneui-contacts.h"
+#include "util/ui-utils.h"
+#include "view/contact-view.h"
+
+// TODO: remove when the list is converted too :P
+#include "util/window.h"
+#include "view/views.h"
 
 
 static struct Window *list = NULL;
+
 
 static void
 _exit_cb()
@@ -36,24 +43,33 @@ phoneui_backend_contacts_refresh()
 }
 
 static void
-_contact_get_cb(GError *error, GHashTable *content, gpointer data)
+_contact_get_cb(GHashTable *content, gpointer data)
 {
-	if (error) {
-		g_warning("could not get contact content");
-		g_error_free(error);
+	char *path = (char *)data;
+
+	if (!content) {
+		g_warning("Failed aquiring data for contact %s", path);
+		// TODO: show some message dialog showing it did not work
+		free (path);
 		return;
 	}
-	struct Window *win = window_new(D_("Contact"));
-	window_init(win);
-	window_view_show(win, content, contact_show_view_show,
-			contact_show_view_hide, NULL);
+
+	if (contact_view_init(path, content))
+		return;
+	contact_view_show(path);
 }
 
 
 void
 phoneui_backend_contacts_contact_show(const char *contact_path)
 {
-	phoneui_utils_contact_get(contact_path, _contact_get_cb, NULL);
+	g_debug("showing contact %s", contact_path);
+	if (!contact_view_is_init(contact_path)) {
+		phoneui_utils_contact_get(contact_path, _contact_get_cb,
+				  strdup(contact_path));
+		return;
+	}
+	contact_view_show(contact_path);
 }
 
 
@@ -61,11 +77,12 @@ void
 phoneui_backend_contacts_contact_new(GHashTable *options)
 {
 	g_debug("phoneui_backend_contacts_contact_new()");
-
-	struct Window *win = window_new(D_("New Contact"));
-	window_init(win);
-	window_view_show(win, options, contact_show_view_show,
-			 contact_show_view_hide, NULL);
+	if (!contact_view_is_init("")) {
+		if (contact_view_init(strdup(""), options)) {
+			return;
+		}
+	}
+	contact_view_show("");
 }
 
 
