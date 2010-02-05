@@ -196,7 +196,7 @@ ui_utils_view_delete_callback_set(struct View *view,
 		g_critical("Tried to set cb to NULL (%s:%d)", __FUNCTION__, __LINE__);
 		return;
 	}
-	evas_object_smart_callback_add(view->win, "delete-request", (Evas_Smart_Cb) cb, view);
+	evas_object_smart_callback_add(view->win, "delete,request", (Evas_Smart_Cb) cb, view);
 }
 
 void
