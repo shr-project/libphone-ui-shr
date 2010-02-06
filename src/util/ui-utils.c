@@ -303,6 +303,7 @@ struct _dialog_pack {
 	Evas_Object *inwin;
 };
 
+/*FIXME: clean all the _dialog_pack */
 static void
 _inwin_dialog_cancel_cb(void *data, Evas_Object *obj, void *event_info)
 {
