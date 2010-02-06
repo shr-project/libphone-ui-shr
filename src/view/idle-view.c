@@ -25,7 +25,15 @@ static void _idle_screen_show();
 static void _idle_screen_hide();
 static void _idle_screen_update_counter(const char *name,
 		const char *label_name, int count);
-static void _idle_destroy_cb(struct View *_view);
+
+static void
+_delete_cb(struct View *view, Evas_Object * win, void *event_info)
+{
+        (void) view;
+        (void) win;
+        (void) event_info;
+        idle_screen_view_hide();
+}
 
 void
 idle_screen_view_show()
@@ -52,12 +60,12 @@ idle_screen_view_init()
 	int ret;
 
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
-				NULL, NULL, _idle_destroy_cb);
+				NULL, NULL, NULL);
 	if (ret) {
 		g_critical("Failed to init idle screen");
 		return ret;
 	}
-
+	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
@@ -232,14 +240,6 @@ idle_screen_view_update_profile(const char *profile)
 	}
 }
 
-
-static void
-_idle_destroy_cb(struct View *_view)
-{
-	struct DialerViewData *view = (struct DialerViewData *) _view;
-	idle_screen_view_hide();
-	
-}
 
 static void
 _idle_screen_update_counter(const char *name, const char *label_name,

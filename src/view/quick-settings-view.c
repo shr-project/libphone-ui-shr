@@ -58,7 +58,7 @@ static struct QuickSettingsViewData view;
 //GConfClient *conf_client = NULL;
 //GConfEngine *conf_engine = NULL;
 
-static void _quick_settings_destroy_cb(struct View *_view);
+static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 
 typedef enum _phoneui_resource {
 	GSM,
@@ -1099,8 +1099,8 @@ quick_settings_view_init()
 
 	g_debug("Initializing the quick settings screen");
         ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Quick settings"),
-                                NULL, NULL, _quick_settings_destroy_cb);
-
+                                NULL, NULL, NULL);
+	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	view.profile_str = NULL;
 	view.profile_str = phoneui_utils_profile_get();
 
@@ -1183,10 +1183,11 @@ quick_settings_view_hide()
 
 
 static void
-_quick_settings_destroy_cb(struct View *_view)
+_delete_cb(struct View *view, Evas_Object * win, void *event_info)
 {
-        struct QuickSettingsViewData *view = (struct QuickSettingsViewData *) _view;
+        (void) view;
+        (void) win;
+        (void) event_info;
         quick_settings_view_hide();
-
 }
 

@@ -26,7 +26,6 @@ static struct DialerViewData view;
 
 static void _dialer_number_update();
 static int _dialer_number_clear();
-static void _dialer_destroy_cb(struct View *_view);
 static void _dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info);
 static void _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info);
@@ -36,6 +35,7 @@ static void _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_i
 static void _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_call_initiated_cb(GError *error, int call_id, void *userdata);
+static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 
 int
 dialer_view_init()
@@ -44,7 +44,7 @@ dialer_view_init()
 	Evas_Object *win;
 	int ret;
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Dialer"),
-				NULL, NULL, _dialer_destroy_cb);
+				NULL, NULL, NULL);
 
 	if (ret) {
 		g_critical("Failed to init dialer view");
@@ -52,6 +52,7 @@ dialer_view_init()
 	}
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
+	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	
 	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME, "phoneui/dialer/dialer");
 
@@ -191,11 +192,12 @@ dialer_view_hide()
 
 
 static void
-_dialer_destroy_cb(struct View *_view)
+_delete_cb(struct View *view, Evas_Object * win, void *event_info)
 {
-	struct DialerViewData *view = (struct DialerViewData *) _view;
+	(void)win;
+	(void)event_info;
+	(void)view;
 	dialer_view_hide();
-	
 }
 
 static void
