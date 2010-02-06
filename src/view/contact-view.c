@@ -98,8 +98,8 @@ contact_view_init(char *path, GHashTable *properties)
 	elm_theme_extension_add(DEFAULT_THEME);
 
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
-	evas_object_smart_callback_add(win, "delete,request",
-				      (Evas_Smart_Cb) _delete_cb, view);
+	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);
+
 	ui_utils_view_layout_set(VIEW_PTR(*view), DEFAULT_THEME,
 				 "phoneui/contacts/view");
 
@@ -767,6 +767,7 @@ _destroy_cb(struct View *_view)
 	if (view->properties)
 		g_hash_table_destroy(view->properties);
 	g_hash_table_remove(contactviews, view->path);
+
 	g_debug("_destroy_cb DONE");
 }
 

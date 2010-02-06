@@ -15,8 +15,6 @@ when that beast got finally removed */
 // 	void (*callback) (void *, Evas_Object *, void *);
 // };
 
-static void
-_view_delete_callback(struct View *view, Evas_Object * win, void *event_info);
 
 struct View *
 ui_utils_view_new(const char *title)
@@ -56,12 +54,7 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 	}
 
 	elm_win_title_set(view->win, title);
-	/*FIXME: use the specific function in this file */
-	evas_object_smart_callback_add(view->win, "delete,request",
-				      (Evas_Smart_Cb) _view_delete_callback, view);
 
-
-	/*FIXME: check what the heck is this and probably fix it */
 	elm_win_autodel_set(view->win, 0);
 	if (phoneui_theme) {
 		elm_theme_overlay_add(phoneui_theme);
@@ -239,13 +232,12 @@ ui_utils_view_deinit(struct View *view)
 		g_critical("struct View is NULL (%s:%d)", __FUNCTION__, __LINE__);
 		return;
 	}
-/*FIXME: read in todo */
-#if 0
+
 	g_debug("Calling view destroy callback");
 	if (view->destroy_cb)
 		view->destroy_cb(view);
 	g_debug("View destroy callback DONE");
-#endif
+
 	ui_utils_view_hide(view);
  	evas_object_del(view->layout);
 	evas_object_del(view->background);
@@ -557,22 +549,6 @@ ui_utils_contacts_field_select(struct View *view,
 	pack->data = data;
 	pack->view = view;
 	phoneui_utils_contacts_fields_get(_field_select_cb, pack);
-}
-
-static void
-_view_delete_callback(struct View *view, Evas_Object * win, void *event_info)
-{
-	/* This commented out means you have to specifcally delete the window
-	 * ui_utils_view_deinit(view);
-	 */
-	g_debug("_view_delete_callback");
-	if (view->destroy_cb) {
-		view->destroy_cb(view);
-	}
-	else {
-		g_warning("Potential leak, not freeing a view");
-	}
-
 }
 
 int

@@ -1,5 +1,3 @@
-# FIXME: Make the destroy function in ui-utils be called *only* on destroy, not as delete callbacks as they are called now 
-
 * Sim Auth
   * Vibration when wrong PIN or PUK was entered
  * Incoming Call
