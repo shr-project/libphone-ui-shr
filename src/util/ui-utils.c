@@ -239,17 +239,17 @@ ui_utils_view_deinit(struct View *view)
 		g_critical("struct View is NULL (%s:%d)", __FUNCTION__, __LINE__);
 		return;
 	}
-
+/*FIXME: read in todo */
+#if 0
 	g_debug("Calling view destroy callback");
 	if (view->destroy_cb)
 		view->destroy_cb(view);
 	g_debug("View destroy callback DONE");
+#endif
 	ui_utils_view_hide(view);
  	evas_object_del(view->layout);
 	evas_object_del(view->background);
 	evas_object_del(view->win);
-
-
 
 	/* This is enough to mark it's empty. */
 	view->win = NULL;
