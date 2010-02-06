@@ -71,7 +71,7 @@ contact_view_init(char *path, GHashTable *properties)
 		free(path);
 		return 1;
 	}
-
+	
 	ret = ui_utils_view_init(VIEW_PTR(*view), ELM_WIN_BASIC, D_("Contact"),
 				 NULL, NULL, _destroy_cb);
 	if (ret) {
@@ -87,7 +87,7 @@ contact_view_init(char *path, GHashTable *properties)
 	/* cache the views to open only one view per contact */
 	if (contactviews == NULL) {
 		contactviews = g_hash_table_new_full(g_str_hash, g_str_equal,
-						     free, free);
+						     free, NULL);
 	}
 	g_hash_table_insert(contactviews, path, view);
 
@@ -756,6 +756,7 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 	(void)event_info;
 	g_debug("_delete_cb");
 	contact_view_deinit((struct ContactViewData *)view);
+	free(view);
 	g_debug("_delete_cb DONE");
 }
 
