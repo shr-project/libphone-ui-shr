@@ -82,8 +82,8 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 	elm_win_resize_object_add(view->win, view->layout);
 	evas_object_show(view->layout);
 
-	// TODO: use fullscreen ?
-	evas_object_resize(view->win, 480, 600);
+	elm_win_maximized_set(view->win, EINA_TRUE);
+
 	view->show_cb = show_cb;
 	view->hide_cb = hide_cb;
 	view->destroy_cb = destroy_cb;
