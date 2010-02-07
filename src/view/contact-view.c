@@ -464,7 +464,14 @@ _contact_cancel_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	struct ContactViewData *view = (struct ContactViewData *)_data;
 	_set_modify(view, 0);
-	_load_fields(view);
+	if (*view->path) {
+		_load_fields(view);
+		return;
+	}
+
+	/* for new contacts cancel means closing the view */
+	contact_view_deinit(view);
+	free(view);
 }
 
 static void
