@@ -189,6 +189,10 @@ contact_view_init(char *path, GHashTable *properties)
 	_load_photo(view);
 	_load_fields(view);
 
+	/* show save and cancel buttons when this is a new one */
+	if (!*view->path)
+		_set_modify(view, 1);
+
 	return 0;
 }
 
@@ -740,8 +744,15 @@ _add_field(struct ContactViewData *view,
 	fd->value_label = NULL;
 	fd->value_entry = NULL;
 	fd->view = view;
-	fd->dirty = 0;
-	fd->isnew = 0;
+	/* if this is a new contact we have to mark the field as dirty and new */
+	if (*view->path) {
+		fd->dirty = 0;
+		fd->isnew = 0;
+	}
+	else {
+		fd->dirty = 1;
+		fd->isnew = 1;
+	}
 
 	elm_genlist_item_append(view->fields, &itc, fd, NULL,
 			ELM_GENLIST_ITEM_NONE, NULL, NULL);
