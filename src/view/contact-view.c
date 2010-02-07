@@ -509,7 +509,6 @@ _add_cb(GError *error, char *path, gpointer data)
 	}
 	else {
 		view->path = path;
-		g_hash_table_destroy(view->properties);
 		phoneui_utils_contact_get(view->path, _load_cb, view);
 		_set_modify(view, 0);
 	}
