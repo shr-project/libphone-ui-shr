@@ -21,6 +21,7 @@ static void _list_message_clicked(void *data, Evas_Object *obj, void *event_info
 static void _list_edit_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_delete_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType type);
+static void _hide_cb(struct View *view);
 static void _delete_cb(void *data, Evas_Object *obj, void *event_info);
 
 int
@@ -32,7 +33,7 @@ contact_list_view_init()
 	g_debug("Initializing the contact list view");
 
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Contacts"),
-				 NULL, NULL, NULL);
+				 NULL, _hide_cb, NULL);
 	if (ret) {
 		g_critical("Failed to init the contact list view");
 		return ret;
@@ -311,6 +312,13 @@ _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType typ
 		_remove_contact(path);
 		break;
 	}
+}
+
+static void
+_hide_cb(struct View *view)
+{
+	elm_genlist_item_bring_in(elm_genlist_first_item_get(
+		((struct ContactListViewData *)view)->list));
 }
 
 static void

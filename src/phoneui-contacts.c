@@ -3,43 +3,19 @@
 #include <phoneui/phoneui-utils.h>
 #include "phoneui-contacts.h"
 #include "util/ui-utils.h"
+#include "view/contact-list-view.h"
 #include "view/contact-view.h"
-
-// TODO: remove when the list is converted too :P
-#include "util/window.h"
 #include "view/views.h"
-
-
-static struct Window *list = NULL;
-
-
-static void
-_exit_cb()
-{
-	list = NULL;
-}
 
 void
 phoneui_backend_contacts_show()
 {
-	if (list) {
-		window_show(list);
-		return;
+	if (!contact_list_view_is_init()) {
+		if (contact_list_view_init()) {
+			return;
+		}
 	}
-	struct Window *list = window_new(D_("Contacts"));
-	window_init(list);
-	window_view_show(list, NULL, contact_list_view_show,
-			 contact_list_view_hide, _exit_cb);
-}
-
-void
-phoneui_backend_contacts_refresh()
-{
-	g_debug("phoneui_backend_contacts_refresh()");
-	if (list) {
-		g_debug("refreshing list of contacts");
-		contact_list_view_refresh(list);
-	}
+	contact_list_view_show();
 }
 
 static void
