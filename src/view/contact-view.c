@@ -586,6 +586,7 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 			common_utils_new_gvalue_string(""));
 	}
 	g_debug("Set field %s to '%s'", fd->name, fd->value);
+	g_hash_table_remove(view->properties, fd->name);
 	g_hash_table_insert(view->properties, strdup(fd->name),
 			common_utils_new_gvalue_string(fd->value));
 }
