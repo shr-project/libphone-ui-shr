@@ -71,7 +71,7 @@ contact_view_init(char *path, GHashTable *properties)
 		free(path);
 		return 1;
 	}
-	
+
 	ret = ui_utils_view_init(VIEW_PTR(*view), ELM_WIN_BASIC, D_("Contact"),
 				 NULL, NULL, _destroy_cb);
 	if (ret) {
@@ -393,6 +393,8 @@ _change_field_cb(char *field, void *data)
 	if (field) {
 		g_debug("Changing field: before=%s, new=%s, old=%s",
 			fd->name, field, fd->oldname);
+		/* remember the old name of the field to be able to
+		rename (aka delete) it */
 		if (!fd->oldname && !fd->isnew) {
 			fd->oldname = fd->name;
 		}
@@ -655,8 +657,7 @@ _load_name(struct ContactViewData *view)
 	char *s = NULL;
 	g_debug("Loading name");
 	if (view->properties) {
-		s = phoneui_utils_contact_display_name_get
-							(view->properties);
+		s = phoneui_utils_contact_display_name_get(view->properties);
 	}
 	if (s) {
 		g_debug("Found name '%s'", s);
