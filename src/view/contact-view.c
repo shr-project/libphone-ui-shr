@@ -32,7 +32,7 @@ static void _load_name(struct ContactViewData *view);
 static void _load_number(struct ContactViewData *view);
 static void _load_photo(struct ContactViewData *view);
 static void _load_fields(struct ContactViewData *view);
-static struct ContactFieldData *_add_field(struct ContactViewData *view, const char *key, const char *value);
+static Elm_Genlist_Item *_add_field(struct ContactViewData *view, const char *key, const char *value, int isnew);
 
 static Evas_Object *gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part);
 static void gl_field_del(const void *_data, Evas_Object * obj);
@@ -723,8 +723,13 @@ _load_fields(struct ContactViewData *view)
 {
 	GHashTableIter iter;
 	gpointer key, value;
+	int isnew = 0;
 
 	g_debug("Loading field list");
+
+	/* mark all fields as new when the contact is new */
+	if (!*view->path)
+		isnew = 1;
 
 	elm_genlist_clear(view->fields);
 	if (view->properties) {
@@ -732,14 +737,14 @@ _load_fields(struct ContactViewData *view)
 		while (g_hash_table_iter_next(&iter, &key, &value)) {
 			if (!strcmp(key, "Path"))
 				continue;
-			_add_field(view, key, g_value_get_string(value));
+			_add_field(view, key, g_value_get_string(value), isnew);
 		}
 	}
 }
 
-static struct ContactFieldData *
+static Elm_Genlist_Item *
 _add_field(struct ContactViewData *view,
-	   const char *key, const char *value)
+	   const char *key, const char *value, int isnew)
 {
 	g_debug("Adding field <%s> with value '%s' to list", key, value);
 	struct ContactFieldData *fd =
@@ -756,19 +761,11 @@ _add_field(struct ContactViewData *view,
 	fd->value_label = NULL;
 	fd->value_entry = NULL;
 	fd->view = view;
-	/* if this is a new contact we have to mark the field as dirty and new */
-	if (*view->path) {
-		fd->dirty = 0;
-		fd->isnew = 0;
-	}
-	else {
-		fd->dirty = 1;
-		fd->isnew = 1;
-	}
+	fd->dirty = 0;
+	fd->isnew = isnew;
 
-	elm_genlist_item_append(view->fields, &itc, fd, NULL,
+	return elm_genlist_item_append(view->fields, &itc, fd, NULL,
 			ELM_GENLIST_ITEM_NONE, NULL, NULL);
-	return fd;
 }
 
 
