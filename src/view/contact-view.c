@@ -288,17 +288,19 @@ _add_field_cb(const char *field, void *data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
 	if (field) {
-		struct ContactFieldData *fd = _add_field(view, field, "");
-		fd->isnew = 1;
-// 		_set_modify(view, 1);
+		Elm_Genlist_Item *it = _add_field(view, field, "", 1);
+		elm_genlist_item_bring_in(it);
 	}
 }
 
 static void
 _contact_add_field_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	GList *keys = NULL;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
-	ui_utils_contacts_field_select(VIEW_PTR(*view), _add_field_cb, view);
+	if (view->properties)
+		keys = g_hash_table_get_keys(view->properties);
+	ui_utils_contacts_field_select(VIEW_PTR(*view), keys, _add_field_cb, view);
 }
 
 static void
@@ -409,8 +411,11 @@ _change_field_cb(char *field, void *data)
 static void
 _field_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	GList *filter = NULL;
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
-	ui_utils_contacts_field_select(VIEW_PTR(*fd->view),
+	if (fd->view->properties)
+		filter = g_hash_table_get_keys(fd->view->properties);
+	ui_utils_contacts_field_select(VIEW_PTR(*fd->view), filter,
 				     _change_field_cb, fd);
 }
 

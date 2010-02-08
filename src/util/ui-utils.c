@@ -523,25 +523,34 @@ struct _field_select_pack {
 	void (*callback)(const char *, void *);
 	void *data;
 	struct View *view;
+	GList *filter;
 };
 
 static void
 _field_select_cb(GHashTable *fields, gpointer data)
 {
+	GList *keys, *k, *kk;
 	struct _field_select_pack *pack = (struct _field_select_pack *)data;
 	if (!fields) {
 		g_warning("No fields for contacts?");
 		// TODO: show a user visible message
 		return;
 	}
-
-	ui_utils_view_inwin_list(pack->view, g_hash_table_get_keys(fields),
-				 pack->callback, pack->data);
+	keys = g_hash_table_get_keys(fields);
+	keys = g_list_sort(keys, strcmp);
+	for (k = g_list_first(pack->filter); k; k = k->next) {
+		for (kk = g_list_first(keys); kk; kk = kk->next) {
+			if (!strcmp(k->data, kk->data)) {
+				keys = g_list_remove(keys, kk->data);
+			}
+		}
+	}
+	ui_utils_view_inwin_list(pack->view, keys, pack->callback, pack->data);
 	free(pack);
 }
 
 void
-ui_utils_contacts_field_select(struct View *view,
+ui_utils_contacts_field_select(struct View *view, GList *filter,
 			void (*callback)(const char *, void *), void *data)
 {
 	struct _field_select_pack *pack =
@@ -549,6 +558,7 @@ ui_utils_contacts_field_select(struct View *view,
 	pack->callback = callback;
 	pack->data = data;
 	pack->view = view;
+	pack->filter = filter;
 	phoneui_utils_contacts_fields_get(_field_select_cb, pack);
 }
 
