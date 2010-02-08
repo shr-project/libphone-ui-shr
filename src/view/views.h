@@ -60,10 +60,6 @@ struct CallIncomingViewData *call_incoming_view_show(struct Window *win,
 						     GHashTable * options);
 void call_active_view_hide(struct CallActiveViewData *data);
 
-void *contact_list_view_show(struct Window *win, void *_options);
-void contact_list_view_hide(void *_data);
-void contact_list_view_refresh(struct Window *win);
-
 void *contact_delete_view_show(struct Window *win, void *_options);
 void contact_delete_view_hide(void *_data);
 

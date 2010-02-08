@@ -529,7 +529,8 @@ frame_contact_add_show(void *_data)
 	struct Window *win = data->win;
 
 	data->cdata = calloc(1, sizeof(struct ContactListViewData));
-	data->cdata->win = data->win;
+	// FIXME: this is ugly
+	data->cdata->view.win = data->win;
 
 	g_debug("frame_contact_add_show()");
 
