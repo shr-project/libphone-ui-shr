@@ -40,7 +40,7 @@ static void _dialer_call_initiated_cb(GError *error, int call_id, void *userdata
 int
 dialer_view_init()
 {
-	g_debug("Initializing the dialer screen");
+	g_debug("Initializing the dialer view");
 	Evas_Object *win;
 	int ret;
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Dialer"),
@@ -52,7 +52,6 @@ dialer_view_init()
 	}
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
-	
 	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME, "phoneui/dialer/dialer");
 
 	view.text_number = elm_label_add(win);
@@ -186,7 +185,7 @@ void
 dialer_view_hide()
 {
 	_dialer_number_clear();
-	ui_utils_view_hide(VIEW_PTR(view));	
+	ui_utils_view_hide(VIEW_PTR(view));
 }
 
 
@@ -218,7 +217,7 @@ _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 			common_utils_new_gvalue_string(view.number));
 	phoneui_contacts_contact_new(contact);
 	g_hash_table_destroy(contact);
-	
+
 	dialer_view_hide();
 }
 
