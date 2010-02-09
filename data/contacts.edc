@@ -354,7 +354,7 @@ group { name: "elm/genlist/item/contactfield/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
 	data.item: "labels" "";
-	data.item: "icons" "elm.swallow.field_label elm.swallow.field_button elm.swallow.value_label elm.swallow.value_entry";
+	data.item: "icons" "elm.swallow.field_label elm.swallow.field_button elm.swallow.value_label elm.swallow.value_entry elm.swallow.button_delfield";
 
 	parts {
 		part {
@@ -522,8 +522,25 @@ group { name: "elm/genlist/item/contactfield/default";
 					relative: 0.3  0.0;
 				}
 				rel2 {
-					relative: 1.0  1.0;
+					relative: 0.85  1.0;
 				}
+			}
+			description {
+				state: "selected" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+			}
+		}
+
+		part { name: "elm.swallow.button_delfield";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description {
+				state: "default" 0.0;
+				visible: 0;
+				fixed: 1 0;
+				rel1.relative: 0.85 0.0;
+				rel2.relative: 1.0 1.0;
 			}
 			description {
 				state: "selected" 0.0;
@@ -563,6 +580,7 @@ group { name: "elm/genlist/item/contactfield/default";
 			target:  "elm.swallow.value_entry";
 			target:  "elm.swallow.field_label";
 			target:  "elm.swallow.field_button";
+			target:  "elm.swallow.button_delfield";
 		}
 		program {
 			name:    "go_passive";
@@ -574,6 +592,7 @@ group { name: "elm/genlist/item/contactfield/default";
 			target:  "elm.swallow.value_entry";
 			target:  "elm.swallow.field_label";
 			target:  "elm.swallow.field_button";
+			target:  "elm.swallow.button_delfield";
 			transition: LINEAR 0.1;
 		}
 		program {

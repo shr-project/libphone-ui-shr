@@ -27,6 +27,7 @@ static void _contact_save_clicked(void *_data, Evas_Object *obj, void *event_inf
 static void _contact_cancel_clicked(void *_data, Evas_Object *obj, void *event_info);
 
 static void _field_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _value_changed(void *_data, Evas_Object *obj, void *event_info);
 static void _load_name(struct ContactViewData *view);
 static void _load_number(struct ContactViewData *view);
@@ -421,6 +422,21 @@ _field_clicked(void *_data, Evas_Object *obj, void *event_info)
 				     _change_field_cb, fd);
 }
 
+static
+_field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
+{
+	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
+	if (!fd->value || !*fd->value)
+		return;
+	elm_label_label_set(fd->value_label, "");
+	elm_entry_entry_set(fd->value_entry, "");
+	if (fd->value)
+		free (fd->value);
+	fd->value = strdup("");
+	fd->dirty = 1;
+	_set_modify(fd->view, 1);
+}
+
 static void
 _value_changed(void *_data, Evas_Object *obj, void *event_info)
 {
@@ -630,6 +646,13 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 					       fd);
 		fd->value_entry = entry;
 		return entry;
+	}
+	else if (strcmp(part, "elm.swallow.button_delfield") == 0) {
+		Evas_Object *ico = elm_icon_add(obj);
+		elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
+		evas_object_smart_callback_add(ico, "clicked",
+					       _field_remove_clicked, fd);
+		return ico;
 	}
 	return NULL;
 }
