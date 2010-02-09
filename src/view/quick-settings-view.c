@@ -1071,6 +1071,8 @@ quick_settings_view_init()
 	elm_box_pack_end(view.settings_box, view.settings_area);
 
 	evas_object_show(view.settings_box);
+
+	return 0;
 }
 
 void
