@@ -18,28 +18,17 @@
  *
  */
 
-#include <signal.h>
-#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 //#include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <linux/input.h>
-
+#include <glib.h>
 #include <Elementary.h>
 
-#include <glib.h>
-#include <glib/gprintf.h>
 
 // #include <gconf/gconf-client.h>
 
-#include <time.h>
-
-#include <config.h>
-
-#include "util/common-utils.h"
-#include "util/ui-utils.h"
+#include "common-utils.h"
+#include "ui-utils.h"
 #include "views.h"
 #include "quick-settings-view.h"
 
