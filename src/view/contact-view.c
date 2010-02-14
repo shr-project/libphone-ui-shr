@@ -297,11 +297,8 @@ _add_field_cb(const char *field, void *data)
 static void
 _contact_add_field_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	GList *keys = NULL;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
-	if (view->properties)
-		keys = g_hash_table_get_keys(view->properties);
-	ui_utils_contacts_field_select(VIEW_PTR(*view), keys, _add_field_cb, view);
+	ui_utils_contacts_field_select(VIEW_PTR(*view), _add_field_cb, view);
 }
 
 static void
@@ -416,15 +413,14 @@ _field_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	GList *filter = NULL;
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
-	if (fd->view->properties)
-		filter = g_hash_table_get_keys(fd->view->properties);
-	ui_utils_contacts_field_select(VIEW_PTR(*fd->view), filter,
-				     _change_field_cb, fd);
+	ui_utils_contacts_field_select(VIEW_PTR(*fd->view),
+				       _change_field_cb, fd);
 }
 
 static
 _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	g_debug("_field_remove_clicked");
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
 	if (!fd->value || !*fd->value)
 		return;

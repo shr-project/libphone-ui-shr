@@ -86,7 +86,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 			 void *data);
 
 void
-ui_utils_contacts_field_select(struct View *view, GList *filter,
+ui_utils_contacts_field_select(struct View *view,
 			void (*callback)(const char *, void *), void *data);
 
 char *
