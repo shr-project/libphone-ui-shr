@@ -60,6 +60,19 @@ common_utils_new_gvalue_pointer(gpointer value)
 	return val;
 }
 
+GValue *
+common_utils_new_gvalue_boxed(gpointer value)
+{
+	GValue *val = calloc(1, sizeof(GValue));
+	if (!val) {
+		return NULL;
+	}
+	g_value_init(val, G_TYPE_BOXED);
+	g_value_set_object(val, value);
+
+	return val;
+}
+
 void *
 common_utils_object_ref(void *object)
 {
@@ -67,7 +80,7 @@ common_utils_object_ref(void *object)
 	int count;
 	if (!ref_counter) {
 		ref_counter = g_hash_table_new_full(g_direct_hash, g_direct_equal,
-					NULL, NULL); 
+					NULL, NULL);
 	}
 	ret = g_hash_table_lookup(ref_counter, object);
 	if (ret) {
@@ -86,7 +99,7 @@ common_utils_object_unref(void *object)
 {
 	void *ret;
 	int count;
-	
+
 	ret = g_hash_table_lookup(ref_counter, object);
 	if (!ret) {
 		return -1;
