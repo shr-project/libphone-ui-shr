@@ -17,6 +17,7 @@ struct ContactFieldData {
 	char *name;
 	char *value;
 	char *oldname;
+	char *oldvalue;
 	Evas_Object *field_label, *field_button, *value_label, *value_entry;
 	struct ContactViewData *view;
 	int dirty;
