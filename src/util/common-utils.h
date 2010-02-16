@@ -16,7 +16,7 @@ GValue *
 common_utils_new_gvalue_pointer(gpointer value);
 
 GValue *
-common_utils_new_gvalue_boxed(gpointer value);
+common_utils_new_gvalue_boxed(GType type, gpointer value);
 
 void *
 common_utils_object_ref(void *object);

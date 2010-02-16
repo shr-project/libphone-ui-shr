@@ -61,14 +61,14 @@ common_utils_new_gvalue_pointer(gpointer value)
 }
 
 GValue *
-common_utils_new_gvalue_boxed(gpointer value)
+common_utils_new_gvalue_boxed(GType type, gpointer value)
 {
 	GValue *val = calloc(1, sizeof(GValue));
 	if (!val) {
 		return NULL;
 	}
-	g_value_init(val, G_TYPE_BOXED);
-	g_value_set_object(val, value);
+	g_value_init(val, type);
+	g_value_set_boxed_take_ownership(val, value);
 
 	return val;
 }
