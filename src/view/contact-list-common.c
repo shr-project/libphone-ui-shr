@@ -212,14 +212,71 @@ contact_list_item_add(struct ContactListViewData *view,
 				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
 
-static void
-_process_entry(void *_entry, void *_data)
+void
+contact_list_fill_index(struct ContactListViewData *view)
 {
 	/* FIXME: limit to 13 indexes - BAD, gotta find a way to calculate
 	 * this, furthermore, should probably choose the best indexes better */
 	static int limit = 13;
+	Evas_Object *win;
+	Elm_Genlist_Item *it, *current_index_item;
+	GHashTable *entry;
+	char *idx, *current_index = NULL;
+	char *name;
+	int contact_count;
+	int index_count;
+	int new_index;
+
+	win = ui_utils_view_window_get(VIEW_PTR(*view));
+	if (view->index) {
+		evas_object_del(view->index);
+	}
+	view->index = elm_index_add(win);
+	elm_win_resize_object_add(win, view->index);
+	//evas_object_size_hint_weight_set(data->index, 1.0, 1.0);
+	//elm_win_resize_object_add(window_evas_object_get(data->win), data->index);
+// 	ui_utils_view_swallow(VIEW_PTR(*data), "index", data->index);
+	evas_object_show(view->index);
+	evas_object_smart_callback_add(view->index, "delay,changed",
+				       gl_index_changed2, NULL);
+	evas_object_smart_callback_add(view->index, "changed", gl_index_changed,
+				       NULL);
+	evas_object_smart_callback_add(view->index, "selected",
+				       gl_index_selected, NULL);
+	index_count = view->contact_count / limit;
+	it = elm_genlist_first_item_get(view->list);
+	while (it) {
+		entry = (GHashTable *)elm_genlist_item_data_get(it);
+		name = phoneui_utils_contact_display_name_get(entry);
+		idx = _new_get_index(name);
+
+		if (!current_index || strcmp(idx, current_index)) {
+			if (current_index) {
+				free(current_index);
+			}
+			current_index = idx;
+			current_index_item = it;
+			new_index = 1;
+		}
+		else {
+			new_index = 0;
+			free(idx);
+		}
+		if (index_count < 1 && new_index) {
+			g_debug("Adding index %s", current_index);
+			elm_index_item_append(view->index, current_index,
+						current_index_item);
+			index_count = view->contact_count / limit;
+		}
+		index_count--;
+		it = elm_genlist_item_next_get(it);
+	}
+}
+
+static void
+_process_entry(void *_entry, void *_data)
+{
 	Elm_Genlist_Item *it;
-	char *idx;
 	GHashTable *entry = (GHashTable *)_entry;
 	struct ContactListViewData *data = (struct ContactListViewData *) _data;
 	it = contact_list_item_add(data, entry, 0);
@@ -227,55 +284,18 @@ _process_entry(void *_entry, void *_data)
 		g_warning("Failed adding a contact to the list");
 		return;
 	}
-	GValue *tmp = g_hash_table_lookup(entry, "Name");
-	const char *name;
-	if (tmp) {
-		name = g_value_get_string(tmp);
-	}
-	else {
-		name = "";
-	}
-	if (!name || !*name) {
-		return;
-	}
 
-	/* if we only started, count how many indexes we should pass
-	 * before entering a new one */
-	if (!data->current_index) {
-		data->index_count = data->contact_count / limit;
-		data->new_index = 0;
+	data->contact_current++;
+	if (data->contact_count == data->contact_current) {
+		contact_list_fill_index(data);
 	}
-
-	idx = _new_get_index(name);
-	if (!data->current_index || strcmp(idx, data->current_index)) {
-		if (data->current_index) {
-			free(data->current_index);
-		}
-		data->current_index = idx;
-		data->current_index_item = it;
-		data->new_index = 1;
-	}
-	else {
-		free(idx);
-	}
-	if (data->index_count < 1 && data->new_index) {
-		g_debug("Adding index %s", data->current_index);
-		elm_index_item_append(data->index, data->current_index,
-					data->current_index_item);
-		data->index_count = data->contact_count / limit;
-		data->new_index = 0;
-	}
-	data->index_count--;
 }
 
 void
 contact_list_fill(struct ContactListViewData *data)
 {
 	g_debug("contact_list_fill()");
-	data->current_index = NULL;
-	data->current_index_item = NULL;
-	data->contact_count = 0;
-	data->index_count = 0;
+	data->contact_current = 0;
 	phoneui_utils_contacts_get(&data->contact_count, _process_entry, data);
 }
 
@@ -296,15 +316,4 @@ contact_list_add(struct ContactListViewData *data)
 	itc.func.del = gl_del;
 	evas_object_show(data->list);
 
-	data->index = elm_index_add(win);
-	//evas_object_size_hint_weight_set(data->index, 1.0, 1.0);
-	//elm_win_resize_object_add(window_evas_object_get(data->win), data->index);
-	ui_utils_view_swallow(VIEW_PTR(*data), "index", data->index);
-	evas_object_show(data->index);
-	evas_object_smart_callback_add(data->index, "delay,changed",
-				       gl_index_changed2, NULL);
-	evas_object_smart_callback_add(data->index, "changed", gl_index_changed,
-				       NULL);
-	evas_object_smart_callback_add(data->index, "selected",
-				       gl_index_selected, NULL);
 }

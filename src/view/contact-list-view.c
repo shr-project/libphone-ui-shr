@@ -312,6 +312,7 @@ _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType typ
 		_remove_contact(path);
 		break;
 	}
+	contact_list_fill_index(&view);
 }
 
 static void

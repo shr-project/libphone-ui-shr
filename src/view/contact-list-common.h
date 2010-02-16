@@ -11,13 +11,10 @@ struct ContactListViewData {
 	Evas_Object *bx, *hv;
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
-	char *current_index;
-	Elm_Genlist_Item *current_index_item;
-	int contact_count;
-	int index_count;
-	int new_index;
+	int contact_count, contact_current;
 };
 
+void contact_list_fill_index(struct ContactListViewData *data);
 void contact_list_fill(struct ContactListViewData *data);
 Evas_Object *contact_list_add(struct ContactListViewData *data);
 Elm_Genlist_Item *contact_list_item_add(struct ContactListViewData *data, GHashTable *entry, int sortin);
