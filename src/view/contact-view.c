@@ -93,7 +93,10 @@ contact_view_init(char *path, GHashTable *properties)
 	g_hash_table_insert(contactviews, path, view);
 
 	view->path = path;
-	view->properties = properties;
+	if (properties)
+		view->properties = g_hash_table_ref(properties);
+	else
+		view->properties = NULL;
 	view->have_unsaved_changes = 0;
 
 	elm_theme_extension_add(DEFAULT_THEME);
@@ -428,8 +431,14 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 		return;
 	elm_label_label_set(fd->value_label, "");
 	elm_entry_entry_set(fd->value_entry, "");
-	if (fd->value)
-		free (fd->value);
+	if (fd->value) {
+		if (!fd->oldvalue) {
+			fd->oldvalue = fd->value;
+		}
+		else {
+			free (fd->value);
+		}
+	}
 	fd->value = strdup("");
 	fd->dirty = 1;
 	_set_modify(fd->view, 1);
@@ -451,7 +460,7 @@ _value_changed(void *_data, Evas_Object *obj, void *event_info)
 			if (!fd->oldvalue) {
 				fd->oldvalue = fd->value;
 			}
-			else {
+			else if (fd->value) {
 				free(fd->value);
 			}
 			elm_label_label_set(fd->value_label, s);
@@ -560,11 +569,12 @@ _load_cb(GHashTable *content, gpointer data)
 	/* cleanup up the old data of the contact */
 	if (view->properties) {
 		g_debug("Removing old properties for contact");
-		g_hash_table_destroy(view->properties);
+		g_hash_table_unref(view->properties);
 	}
-	view->properties = content;
+	view->properties = g_hash_table_ref(content);
 	_load_name(view);
 	_load_number(view);
+	_load_photo(view);
 	_load_fields(view);
 }
 
@@ -630,10 +640,11 @@ _remove_value_from_field(GHashTable *props, char *fld, char *val)
 		g_debug("Comparing %s with %s", val, vl[i]);
 		if (strcmp(val, vl[i]) == 0) {
 			g_debug("This is it... removing");
+			free(vl[i]);
 			break;
 		}
 	}
-	/* and remove it by moving the others one up */
+	/* and remove it by moving the others one up (including NULL) */
 	for (; vl[i]; i++) {
 		vl[i] = vl[i+1];
 	}
@@ -673,10 +684,10 @@ _add_value_to_field(GHashTable *props, char *fld, char *val)
 		char **vl = (char **)g_value_get_boxed(tmp);
 		vlnew = calloc(g_strv_length(vl)+1, sizeof(char *));
 		for (i = 0; vl[i]; i++) {
-			vlnew[i] = vl[i];
+			vlnew[i] = strdup(vl[i]);
 		}
 		vlnew[i] = NULL;
-		free(vl);
+		g_hash_table_remove(props, fld);
 	}
 	else {
 		g_warning("Field %s holds no string and is not boxed?!", fld);
@@ -685,12 +696,12 @@ _add_value_to_field(GHashTable *props, char *fld, char *val)
 
 	/* we have made sure that i points to the currently last (NULL) element
 	of the list and that there is still room for another one !!! */
-	g_debug("Appending value for field %s to the list", fld);
+	g_debug("Appending value '%s' for field %s to the list", val, fld);
 	vlnew[i] = val;
 	vlnew[i+1] = NULL;
 
 	g_hash_table_insert(props, fld,
-			    common_utils_new_gvalue_boxed(vlnew));
+			    common_utils_new_gvalue_boxed(G_TYPE_STRV, vlnew));
 }
 
 static void
@@ -701,23 +712,39 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 	/* for new contacts we might have to create the properties hashtable */
 	if (view->properties == NULL) {
 		g_debug("No properties hashtable yet... creating");
+		// FIXME: who will free that stuff ???
 		view->properties = g_hash_table_new_full(g_str_hash,
-						g_str_equal, free, free);
+						g_str_equal, NULL, NULL);
 	}
-	else if (fd->oldvalue) {
-		/* if this field changed just value and did not change field
-		or is new, then we have to remove the old value first...
-		if field changed too from the old field */
-		if (!fd->oldname && !fd->isnew) {
-			_remove_value_from_field(view->properties,
-						fd->name, fd->oldvalue);
+	else {
+		if (fd->oldvalue) {
+			/* if this field changed just value and did not change field
+			or is new, then we have to remove the old value first... */
+			if (!fd->oldname && !fd->isnew) {
+				g_debug("Removing old value as field did not change and it's not new");
+				_remove_value_from_field(view->properties,
+							fd->name, fd->oldvalue);
+			}
+			else if (fd->oldname) {
+				/* if field _and_ value changed remove the
+				old value from the old field */
+				g_debug("Removing old value from old field");
+				_remove_value_from_field(view->properties,
+						fd->oldname, fd->oldvalue);
+			}
 		}
 		else if (fd->oldname) {
+			/* if the _only_ the field changed, remove
+			the value from the old one */
+			g_debug("Removing the value from old field");
 			_remove_value_from_field(view->properties,
-						fd->oldname, fd->oldvalue);
+						fd->oldname, fd->value);
 		}
 	}
-	_add_value_to_field(view->properties, fd->name, fd->value);
+	/* only add non-empty values */
+	if (fd->value && *fd->value) {
+		_add_value_to_field(view->properties, fd->name, fd->value);
+	}
 }
 
 /* genlist callbacks */
@@ -760,7 +787,8 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 	}
 	else if (strcmp(part, "elm.swallow.button_delfield") == 0) {
 		Evas_Object *ico = elm_icon_add(obj);
-		elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
+		elm_icon_standard_set(ico, "delete");
+// 		elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
 		evas_object_smart_callback_add(ico, "clicked",
 					       _field_remove_clicked, fd);
 		return ico;
