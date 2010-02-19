@@ -2,7 +2,6 @@
 #include <glib.h>
 #include <phoneui/phoneui-utils.h>
 #include "phoneui-contacts.h"
-#include "util/ui-utils.h"
 #include "view/contact-list-view.h"
 #include "view/contact-view.h"
 #include "view/views.h"
