@@ -69,6 +69,9 @@ contact_view_init(char *path, GHashTable *properties)
 	view = malloc(sizeof(struct ContactViewData));
 	if (!view) {
 		g_critical("Failed to allocate contact view for '%s'", path);
+		if (properties) {
+			g_hash_table_unref(properties);
+		}
 		free(path);
 		return 1;
 	}
@@ -78,7 +81,7 @@ contact_view_init(char *path, GHashTable *properties)
 	if (ret) {
 		g_critical("Failed to init contact view for '%s'", path);
 		if (properties) {
-			g_hash_table_destroy(properties);
+			g_hash_table_unref(properties);
 		}
 		free(view);
 		free(path);
