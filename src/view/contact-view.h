@@ -1,6 +1,6 @@
 #ifndef _CONTACT_VIEW_H
 #define _CONTACT_VIEW_H
-
+#include "ui-utils.h"
 
 struct ContactViewData {
 	struct View parent;

@@ -903,7 +903,7 @@ _load_fields(struct ContactViewData *view)
 		while (g_hash_table_iter_next(&iter, &_key, &_val)) {
 			const char *key = (const char *)_key;
 			const GValue *val = (const GValue *) _val;
-			if (!strcmp(key, "Path"))
+			if (!strcmp(key, "Path") || !strcmp(key, "EntryId"))
 				continue;
 			if (G_VALUE_HOLDS_BOXED(val)) {
 				g_debug("value is boxed!!!");
