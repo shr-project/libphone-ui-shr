@@ -566,7 +566,11 @@ ui_utils_entry_utf8_get(Evas_Object *entry)
 		return NULL;
 	/* this allocates a new char * */
 	char *s = elm_entry_markup_to_utf8(elm_entry_entry_get(entry));
-	if (s)
+	if (s) {
 		return g_strstrip(s);
-	return NULL;
+	}
+	else {
+		/* Get around the buggy elm_entry_markup_to_utf8 */
+		return strdup("");
+	}
 }

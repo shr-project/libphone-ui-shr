@@ -434,17 +434,7 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 		return;
 	elm_label_label_set(fd->value_label, "");
 	elm_entry_entry_set(fd->value_entry, "");
-	if (fd->value) {
-		if (!fd->oldvalue) {
-			fd->oldvalue = fd->value;
-		}
-		else {
-			free (fd->value);
-		}
-	}
-	fd->value = strdup("");
-	fd->dirty = 1;
-	_set_modify(fd->view, 1);
+	/*_value_changed will be called and everything will be handled, no need to worry about anything */
 }
 
 static void
@@ -711,6 +701,7 @@ static void
 _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 {
 	GValue *tmp;
+	int should_update = 0;
 
 	/* for new contacts we might have to create the properties hashtable */
 	if (view->properties == NULL) {
@@ -718,6 +709,7 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 		// FIXME: who will free that stuff ???
 		view->properties = g_hash_table_new_full(g_str_hash,
 						g_str_equal, NULL, NULL);
+		should_update = 1; /* really? */
 	}
 	else {
 		if (fd->oldvalue) {
@@ -727,6 +719,7 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 				g_debug("Removing old value as field did not change and it's not new");
 				_remove_value_from_field(view->properties,
 							fd->name, fd->oldvalue);
+				should_update = 1;
 			}
 			else if (fd->oldname) {
 				/* if field _and_ value changed remove the
@@ -734,6 +727,7 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 				g_debug("Removing old value from old field");
 				_remove_value_from_field(view->properties,
 						fd->oldname, fd->oldvalue);
+				should_update = 1;
 			}
 		}
 		else if (fd->oldname) {
@@ -742,10 +736,11 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 			g_debug("Removing the value from old field");
 			_remove_value_from_field(view->properties,
 						fd->oldname, fd->value);
+			should_update = 1;
 		}
 	}
-	/* only add non-empty values */
-	if (fd->value && *fd->value) {
+	/* only add fields that changed/new */
+	if (fd->value && (should_update || fd->isnew)) {
 		_add_value_to_field(view->properties, fd->name, fd->value);
 	}
 }
