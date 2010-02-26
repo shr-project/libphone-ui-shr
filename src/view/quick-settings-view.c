@@ -121,6 +121,9 @@ quick_settings_view_init()
 	phoneui_utils_sound_profile_get(_profile_get_cb, NULL);
 	
 	elm_layout_sizing_eval(view.parent.layout);
+
+	/*FIXME: until we implement it*/
+	elm_object_disabled_set(view.airplane_slide, 1);
 	return 0;
 }
 
@@ -254,10 +257,10 @@ _dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	int state = elm_toggle_state_get(obj);
 	/*FIXME: Add error handling */
 	if (state) {
-		phoneui_utils_resources_set_resource_policy("CPU", "enabled", NULL, NULL);	
+		phoneui_utils_resources_set_resource_policy("Display", "enabled", NULL, NULL);	
 	}
 	else {
-		phoneui_utils_resources_set_resource_policy("CPU", "auto", NULL, NULL);
+		phoneui_utils_resources_set_resource_policy("Display", "auto", NULL, NULL);
 	}
 }
 static void
@@ -268,9 +271,9 @@ _suspend_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	int state = elm_toggle_state_get(obj);
 	/*FIXME: Add error handling */
 	if (state) {
-		phoneui_utils_resources_set_resource_policy("Display", "enabled", NULL, NULL);
+		phoneui_utils_resources_set_resource_policy("CPU", "enabled", NULL, NULL);
 	}
 	else {
-		phoneui_utils_resources_set_resource_policy("Display", "auto", NULL, NULL);
+		phoneui_utils_resources_set_resource_policy("CPU", "auto", NULL, NULL);
 	}
 }

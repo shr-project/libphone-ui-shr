@@ -228,8 +228,9 @@ group { name: "phoneui/settings/quick-settings";
 				text {
 					text: "Auto-dimming:";
 					font: "redensek";
-					size: 10;
-					align: 0.5 0.5;
+					size: 20;
+					fit: 1 1;
+					align: 0.0 0.5;
 				}
 			}
 		}
@@ -273,8 +274,9 @@ group { name: "phoneui/settings/quick-settings";
 				text {
 					text: "Auto-suspend:";
 					font: "redensek";
-					size: 10;
-					align: 0.5 0.5;
+					size: 20;
+					fit: 1 1;
+					align: 0.0 0.5;
 				}
 			}
 		}
