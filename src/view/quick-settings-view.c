@@ -185,12 +185,9 @@ _profiles_list_cb(GError *error, char **list, gpointer userdata)
 
 	elm_hoversel_hover_begin(view.profiles_combo);
 	for (profile = *list ; profile ; profile = *(++list)) {
-		printf("Addinsg %s\n", profile);
 		elm_hoversel_item_add(view.profiles_combo, profile, NULL,
 			ELM_ICON_NONE, NULL, NULL);
-		free(profile);
 	}
-	free(list);
 }
 
 static void
