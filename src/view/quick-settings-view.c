@@ -25,6 +25,8 @@
 #include <Elementary.h>
 
 #include <glib.h>
+#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-sound.h>
 
 #include "util/common-utils.h"
 #include "util/ui-utils.h"
@@ -42,6 +44,14 @@ static struct QuickSettingsViewData view;
 
 
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
+static void _profiles_list_cb(GError *error, char **list, gpointer userdata);
+static void _profile_get_cb(GError *error, char *profile, gpointer userdata);
+static void _profile_selected_cb(void *data, Evas_Object *obj, void *event_info);
+static void _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info);
+static void _button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info);
+static void _button_suspend_clicked_cb(void *data, Evas_Object *obj, void *event_info);
+
+
 int
 quick_settings_view_init()
 {
@@ -74,23 +84,33 @@ quick_settings_view_init()
 
 	view.profiles_combo = elm_hoversel_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "profiles-frame-profiles-combo", view.profiles_combo);
+	elm_hoversel_hover_parent_set(view.profiles_combo, win);
 	evas_object_show(view.profiles_combo);
+	evas_object_smart_callback_add(view.profiles_combo, "selected", _profile_selected_cb, NULL);
 
 	view.button_lock = elm_button_add(win);
 	elm_button_label_set(view.button_lock, D_("Lock"));
 	ui_utils_view_swallow(VIEW_PTR(view), "power-frame-lock-button", view.button_lock);
+	evas_object_smart_callback_add(view.button_lock, "clicked",
+				       _button_lock_clicked_cb, NULL);
 	evas_object_show(view.button_lock);
 
 	view.button_suspend = elm_button_add(win);
-	elm_button_label_set(view.button_suspend, D_("suspend"));
+	elm_button_label_set(view.button_suspend, D_("Suspend"));
 	ui_utils_view_swallow(VIEW_PTR(view), "power-frame-suspend-button", view.button_suspend);
+	evas_object_smart_callback_add(view.button_suspend, "clicked",
+				       _button_suspend_clicked_cb, NULL);
 	evas_object_show(view.button_suspend);
 
 	view.button_shutdown = elm_button_add(win);
-	elm_button_label_set(view.button_shutdown, D_("shutdown"));
+	elm_button_label_set(view.button_shutdown, D_("Shutdown"));
 	ui_utils_view_swallow(VIEW_PTR(view), "power-frame-shutdown-button", view.button_shutdown);
+	evas_object_smart_callback_add(view.button_shutdown, "clicked",
+				       _button_shutdown_clicked_cb, NULL);
 	evas_object_show(view.button_shutdown);
 	
+	phoneui_utils_sound_profile_list(_profiles_list_cb, NULL);
+	phoneui_utils_sound_profile_get(_profile_get_cb, NULL);
 	
 	elm_layout_sizing_eval(view.parent.layout);
 #if 0
@@ -215,3 +235,81 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
         (void) event_info;
         quick_settings_view_hide();
 }
+
+static void
+_profile_selected_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	const char *profile;
+	profile = elm_hoversel_item_label_get(event_info);
+	/*FIXME: add a callback to handle errors - setting hoversel label should
+	 * also be done in signal callback, should probably add a rollback if failed here*/
+	elm_hoversel_label_set(view.profiles_combo, profile);
+	phoneui_utils_sound_profile_set(profile, NULL, NULL);
+}
+
+static void
+_profiles_list_cb(GError *error, char **list, gpointer userdata)
+{
+	/*FIXME: I should probably free this list, but how?, CHECK DBUS*/
+	(void) userdata;
+	char *profile;
+	Elm_Hoversel_Item *item;
+
+	if (error || !list) {
+		g_warning("Failed to retrieve profiles list");
+		return;
+	}
+
+	elm_hoversel_hover_begin(view.profiles_combo);
+	for (profile = *list ; profile ; profile = *(++list)) {
+		printf("Addinsg %s\n", profile);
+		elm_hoversel_item_add(view.profiles_combo, profile, NULL,
+			ELM_ICON_NONE, NULL, NULL);
+		free(profile);
+	}
+	free(list);
+}
+
+static void
+_profile_get_cb(GError *error, char *profile, gpointer userdata)
+{
+	/*FIXME: I should probably free this profile, but how?, CHECK DBUS*/
+	(void) userdata;
+
+	if (error) {
+		g_warning("Failed to retrieve active profile");
+		return;
+	}
+	elm_hoversel_label_set(view.profiles_combo, profile);
+}
+
+static void
+_button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) data;
+	(void) event_info;
+	(void) obj;
+	/*FIXME: Add error handling */
+	//phoneui_utils_usage_lock(NULL, NULL);
+}
+
+static void
+_button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) data;
+	(void) event_info;
+	(void) obj;
+	/*FIXME: Add error handling */
+	phoneui_utils_usage_shutdown(NULL, NULL);
+}
+
+static void
+_button_suspend_clicked_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) data;
+	(void) event_info;
+	(void) obj;
+	/*FIXME: Add error handling */
+	phoneui_utils_usage_suspend(NULL, NULL);
+}
+
