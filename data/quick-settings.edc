@@ -240,6 +240,7 @@ group { name: "phoneui/settings/quick-settings";
 			description {
 				state, "default" 0.0;
 				color, 0 0 0 0;
+				fixed, 1 1;
 				rel1 {
 					relative, 1.0 0.0;
 					offset, 5 5;
@@ -284,6 +285,7 @@ group { name: "phoneui/settings/quick-settings";
 			description {
 				state, "default" 0.0;
 				color, 0 0 0 0;
+				fixed, 1 1;
 				rel1 {
 					relative, 1.0 0.0;
 					offset, 5 5;
