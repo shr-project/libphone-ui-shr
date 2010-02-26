@@ -316,3 +316,4 @@ contact_list_add(struct ContactListViewData *data)
 	evas_object_show(data->list);
 
 }
+
