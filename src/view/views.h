@@ -23,7 +23,6 @@
 #define DEFAULT_THEME DATADIR"/libphone-ui-shr/default.edj"
 #define IDLE_SCREEN_THEME DATADIR"/libphone-ui-shr/idle_screen.edj"
 
-#define IDLE_SCREEN_WALLPAPER DATADIR"/libphone-ui-shr/idle_screen_wallpaper.png"
 #define DELETE_TEXT_ICON DATADIR"/libphone-ui-shr/edit-undo.png"
 #define CONTACT_DEFAULT_PHOTO DATADIR"/libphone-ui-shr/contact.png"
 #define CONTACT_NUMBER_PHOTO DATADIR"/libphone-ui-shr/number-icon.png"
