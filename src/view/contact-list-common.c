@@ -272,8 +272,7 @@ contact_list_add(struct ContactListViewData *data)
 	evas_object_show(data->list);
 
 	data->index = elm_index_add(window_evas_object_get(data->win));
-	//evas_object_size_hint_weight_set(data->index, 1.0, 1.0);
-	//elm_win_resize_object_add(window_evas_object_get(data->win), data->index);
+	
 	window_swallow(data->win, "index", data->index);
 	evas_object_show(data->index);
 	evas_object_smart_callback_add(data->index, "delay,changed",
@@ -283,3 +282,4 @@ contact_list_add(struct ContactListViewData *data)
 	evas_object_smart_callback_add(data->index, "selected",
 				       gl_index_selected, NULL);
 }
+

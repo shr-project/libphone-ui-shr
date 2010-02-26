@@ -50,6 +50,9 @@ static void _profile_selected_cb(void *data, Evas_Object *obj, void *event_info)
 static void _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_suspend_clicked_cb(void *data, Evas_Object *obj, void *event_info);
+static void _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info);
+static void _dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_info);
+static void _suspend_slide_changed_cb(void *data, Evas_Object *obj, void *event_info);
 
 
 int
@@ -72,14 +75,20 @@ quick_settings_view_init()
 
 	view.airplane_slide = elm_toggle_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "profiles-frame-airplane-slide", view.airplane_slide);
+	evas_object_smart_callback_add(view.airplane_slide, "changed",
+				       _airplane_slide_changed_cb, NULL);
 	evas_object_show(view.airplane_slide);
 
 	view.dimming_slide = elm_toggle_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "power-frame-auto-frame-dimming-slide", view.dimming_slide);
+	evas_object_smart_callback_add(view.dimming_slide, "changed",
+				       _dimming_slide_changed_cb, NULL);
 	evas_object_show(view.dimming_slide);
 
 	view.suspend_slide = elm_toggle_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "power-frame-auto-frame-suspend-slide", view.suspend_slide);
+	evas_object_smart_callback_add(view.suspend_slide, "changed",
+				       _suspend_slide_changed_cb, NULL);
 	evas_object_show(view.suspend_slide);
 
 	view.profiles_combo = elm_hoversel_add(win);
@@ -227,3 +236,45 @@ _button_suspend_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	phoneui_utils_usage_suspend(NULL, NULL);
 }
 
+static void
+_airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) data;
+	(void) event_info;
+	int state = elm_toggle_state_get(obj);
+	if (state) {
+		
+	}
+	else {
+		
+	}
+}
+
+static void
+_dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) data;
+	(void) event_info;
+	int state = elm_toggle_state_get(obj);
+	/*FIXME: Add error handling */
+	if (state) {
+		phoneui_utils_resources_set_resource_policy("CPU", "enabled", NULL, NULL);	
+	}
+	else {
+		phoneui_utils_resources_set_resource_policy("CPU", "auto", NULL, NULL);
+	}
+}
+static void
+_suspend_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) data;
+	(void) event_info;
+	int state = elm_toggle_state_get(obj);
+	/*FIXME: Add error handling */
+	if (state) {
+		phoneui_utils_resources_set_resource_policy("Display", "enabled", NULL, NULL);
+	}
+	else {
+		phoneui_utils_resources_set_resource_policy("Display", "auto", NULL, NULL);
+	}
+}
