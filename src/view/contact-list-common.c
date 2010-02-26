@@ -78,7 +78,7 @@ gl_index_changed(void *data, Evas_Object * obj, void *event_info)
 {
 }
 
-static void
+	static void
 gl_index_changed2(void *data, Evas_Object * obj, void *event_info)
 {
 	elm_genlist_item_top_bring_in(event_info);
@@ -233,9 +233,8 @@ contact_list_fill_index(struct ContactListViewData *view)
 	}
 	view->index = elm_index_add(win);
 	elm_win_resize_object_add(win, view->index);
-	//evas_object_size_hint_weight_set(data->index, 1.0, 1.0);
-	//elm_win_resize_object_add(window_evas_object_get(data->win), data->index);
-// 	ui_utils_view_swallow(VIEW_PTR(*data), "index", data->index);
+ 	ui_utils_view_swallow(VIEW_PTR(*view), "index", view->index);
+	evas_object_size_hint_weight_set(view->index, 1.0, 0.0);
 	evas_object_show(view->index);
 	evas_object_smart_callback_add(view->index, "delay,changed",
 				       gl_index_changed2, NULL);
