@@ -81,6 +81,19 @@ collections {
 
 	parts {
 		part {
+			name: "background-color";
+			type: RECT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color, 40 40 40 255;
+				rel1 { relative: 0.0 0.0; }
+				rel2 { relative: 1.0 1.0; }
+				}
+			}
+
+
+		part {
 			name: "background";
 			type: SWALLOW;
 			mouse_events: 0;
