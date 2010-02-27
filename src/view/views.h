@@ -12,8 +12,6 @@
 #include "call-common.h"
 #include "contact-list-common.h"
 
-/* MOVE to a better place */
-#define LTR_STRING "\xE2\x80\x8E"
 
 #define D_(String) dgettext(PACKAGE, String)
 
