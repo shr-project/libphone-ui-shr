@@ -133,8 +133,8 @@ group { name: "elm/genlist/item/contact/default";
 				color: 0 0 0 255;
 				color3: 0 0 0 0;
 				text {
-					font: "redensek:style=bold";
-					size: 10;
+					font: "content";
+					size: 9;
 					elipsis: 0.0;
 					min: 0 1;
 					align: 0.0 0.0;
@@ -159,7 +159,7 @@ group { name: "elm/genlist/item/contact/default";
 				color: 0 0 0 255;
 				color3: 0 0 0 0;
 				text {
-					font: "redensek";
+					font: "content";
 					size: 9;
 					elipsis: 0.0;
 					min: 0 1;
@@ -314,8 +314,8 @@ group { name: "elm/list/item/fieldlist";
 					offset:   -1 -5;
 				}
 				text {
-					font: "Sans";
-					size: 10;
+					font: "content";
+					size: 9;
 					min: 1 1;
 					align: 0.0 0.5;
 				}
