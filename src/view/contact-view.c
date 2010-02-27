@@ -47,6 +47,8 @@ static void _add_cb(GError *error, char *path, gpointer data);
 static int _changes_to_properties(struct ContactViewData *view, int dry_run);
 static void _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd);
 static void _load_cb(GHashTable *content, gpointer data);
+static void _field_selected_cb(void *userdata, Evas_Object *obj, void *event_info);
+static void _field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info);
 
 int
 contact_view_init(char *path, GHashTable *properties)
@@ -128,6 +130,10 @@ contact_view_init(char *path, GHashTable *properties)
 	itc.func.icon_get = gl_field_icon_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_field_del;
+	evas_object_smart_callback_add(view->fields, "selected",
+		       _field_selected_cb, NULL);
+	evas_object_smart_callback_add(view->fields, "unselected",
+		       _field_unselected_cb, NULL);
 
 	evas_object_show(view->fields);
 
@@ -410,7 +416,6 @@ _change_field_cb(char *field, void *data)
 		}
 		fd->name = field;
 		elm_button_label_set(fd->field_button, field);
-		elm_label_label_set(fd->field_label, field);
 		fd->dirty = 1;
 		_set_modify(fd->view, 1);
 	}
@@ -432,7 +437,6 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
 	if (!fd->value || !*fd->value)
 		return;
-	elm_label_label_set(fd->value_label, "");
 	elm_entry_entry_set(fd->value_entry, "");
 	/*_value_changed will be called and everything will be handled, no need to worry about anything */
 }
@@ -456,7 +460,6 @@ _value_changed(void *_data, Evas_Object *obj, void *event_info)
 			else if (fd->value) {
 				free(fd->value);
 			}
-			elm_label_label_set(fd->value_label, s);
 			fd->value = s; // s is a freshly allocated string - no strdup needed
 			fd->dirty = 1;
 			_set_modify(fd->view, 1);
@@ -752,14 +755,7 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 {
 	g_debug("gl_field_icon_get (part=%s)", part);
 	struct ContactFieldData *fd = (struct ContactFieldData *) _data;
-	if (strcmp(part, "elm.swallow.field_label") == 0) {
-		Evas_Object *lbl = elm_label_add(obj);
-// 		evas_object_size_hint_align_set(obj, 1.0, 0.0);
-		elm_label_label_set(lbl, fd->name);
-		fd->field_label = lbl;
-		return lbl;
-	}
-	else if (strcmp(part, "elm.swallow.field_button") == 0) {
+	if (strcmp(part, "elm.swallow.field_button") == 0) {
 		Evas_Object *btn = elm_button_add(obj);
 		elm_button_label_set(btn, fd->name);
 		evas_object_smart_callback_add(btn, "clicked",
@@ -767,20 +763,18 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 		fd->field_button = btn;
 		return btn;
 	}
-	else if (strcmp(part, "elm.swallow.value_label") == 0) {
-		Evas_Object *lbl = elm_label_add(obj);
-		elm_label_label_set(lbl, fd->value);
-		fd->value_label = lbl;
-		return lbl;
-	}
 	else if (strcmp(part, "elm.swallow.value_entry") == 0) {
 		Evas_Object *entry = elm_entry_add(obj);
 		elm_entry_entry_set(entry, fd->value);
-		evas_object_size_hint_align_set(entry, EVAS_HINT_FILL,
-						EVAS_HINT_FILL);
+		evas_object_size_hint_align_set(entry, 0.5,
+						0.5);
+		evas_object_size_hint_align_set(entry, 0.5,
+						0.5);
 		evas_object_smart_callback_add(entry, "changed", _value_changed,
 					       fd);
 		fd->value_entry = entry;
+		/* Should be EINA_FALSE but for some reason doesn't work */
+		elm_entry_editable_set(fd->value_entry, EINA_TRUE);
 		return entry;
 	}
 	else if (strcmp(part, "elm.swallow.button_delfield") == 0) {
@@ -937,9 +931,7 @@ _add_field(struct ContactViewData *view,
 	fd->value = strdup(value);
 	fd->oldname = NULL;
 	fd->oldvalue = NULL;
-	fd->field_label = NULL;
 	fd->field_button = NULL;
-	fd->value_label = NULL;
 	fd->value_entry = NULL;
 	fd->view = view;
 	fd->dirty = 0;
@@ -973,3 +965,21 @@ _destroy_cb(struct View *_view)
 	g_debug("_destroy_cb DONE");
 }
 
+static void
+_field_selected_cb(void *userdata, Evas_Object *obj, void *event_info)
+{
+	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
+	(void) obj;
+	(void) event_info;
+	elm_entry_editable_set(fd->value_entry, EINA_TRUE);	
+}
+
+static void
+_field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info)
+{
+	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
+	(void) obj;
+	(void) event_info;
+	/* Should be EINA_FALSE but for some reason doesn't work */
+	elm_entry_editable_set(fd->value_entry, EINA_TRUE);	
+}
