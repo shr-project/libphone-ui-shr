@@ -51,7 +51,7 @@ int phonelog_view_init()
 	//char buf[PATH_MAX];
 
 	ret = ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Phonelog"),
-			NULL, NULL, _phonelog_destroy_cb, NULL);
+			NULL, NULL, _phonelog_destroy_cb);
 
 	if (ret) {
 		g_critical("Failed to init phonelog view");
