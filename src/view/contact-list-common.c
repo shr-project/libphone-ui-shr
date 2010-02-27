@@ -229,10 +229,11 @@ void
 contact_list_fill_index(struct ContactListViewData *view)
 {
 	/* FIXME: limit to 13 indexes - BAD, gotta find a way to calculate
-	 * this, furthermore, should probably choose the best indexes better */
+	 * this, furthermore, should probably choose the best indexes better
+	 * current_index_item - may be used uninitialized, verify */
 	static int limit = 13;
 	Evas_Object *win;
-	Elm_Genlist_Item *it, *current_index_item;
+	Elm_Genlist_Item *it, *current_index_item = NULL;
 	GHashTable *entry;
 	char *idx, *current_index = NULL;
 	char *name;
