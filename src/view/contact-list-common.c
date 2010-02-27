@@ -10,6 +10,7 @@ static Elm_Genlist_Item_Class itc;
 static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) obj;
 	GHashTable *parameters = (GHashTable *) data;
 	char *s = NULL;
 
@@ -63,6 +64,9 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 static Eina_Bool
 gl_state_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) obj;
+	(void) data;
+	(void) part;
 	return (0);
 }
 
@@ -70,17 +74,24 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part)
 static void
 gl_del(const void *data, Evas_Object * obj)
 {
+	(void) obj;
+	(void) data;
 }
 
 
 static void
 gl_index_changed(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 }
 
 	static void
 gl_index_changed2(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
 	elm_genlist_item_top_bring_in(event_info);
 }
 
@@ -88,6 +99,8 @@ gl_index_changed2(void *data, Evas_Object * obj, void *event_info)
 static void
 gl_index_selected(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
 	elm_genlist_item_top_bring_in(event_info);
 }
 
@@ -167,7 +180,7 @@ _new_get_index(const char *_string)
 	int i;
 
 	i = 0;
-	utf8_get_next(_string, &i);
+	utf8_get_next((const unsigned char *) _string, &i);
 
 	string = malloc(i + 1);
 	if (!string) {
@@ -223,7 +236,6 @@ contact_list_fill_index(struct ContactListViewData *view)
 	GHashTable *entry;
 	char *idx, *current_index = NULL;
 	char *name;
-	int contact_count;
 	int index_count;
 	int new_index;
 
@@ -299,7 +311,7 @@ contact_list_fill(struct ContactListViewData *data)
 }
 
 
-Evas_Object *
+void
 contact_list_add(struct ContactListViewData *data)
 {
 	Evas_Object *win = ui_utils_view_window_get(VIEW_PTR(*data));

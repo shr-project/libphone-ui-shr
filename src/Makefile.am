@@ -4,7 +4,7 @@ AM_CFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/
 	      -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" \
 	      -DLOCALEDIR=\"$(localedir)\" -DG_LOG_DOMAIN=\"libphone-ui-shr\" \
 	      @E_CFLAGS@ @LIBPHONEUI_CFLAGS@ \
-	      @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3 -Werror-implicit-function-declaration
+	      @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3 -Wall -Wextra -Werror
 
 pkgdir		= $(libdir)/phoneui/modules
 pkg_LTLIBRARIES	= shr.la

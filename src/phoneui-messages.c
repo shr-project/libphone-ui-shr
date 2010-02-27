@@ -14,6 +14,8 @@ _exit_cb()
 void
 phoneui_backend_messages_show(int argc, char **argv)
 {
+	(void) argc;
+	(void) argv;
 	g_debug("phoneui_backend_messages_show()");
 	if (message_list) {
 		window_show(message_list);
@@ -29,6 +31,7 @@ phoneui_backend_messages_show(int argc, char **argv)
 void
 phoneui_backend_messages_message_show(const char *path)
 {
+	(void) path;
 	struct Window *win = window_new(D_("Message"));
 	window_init(win);
 	window_view_show(win, NULL, message_show_view_show,

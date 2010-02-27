@@ -55,8 +55,6 @@ static void
   my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 
 static void
-  name_callback(GError * error, char *name, gpointer _data);
-static void
   retrieve_callback(GHashTable * properties, gpointer _data);
 
 
@@ -69,11 +67,11 @@ message_show_view_show(struct Window *win, void *_options)
 	GHashTable *options = (GHashTable *) _options;
 	if (!win) {
 		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
-		return;
+		return NULL;
 	}
 	if (!options) {
 		g_critical("Passed NULL options (%s:%d)", __FUNCTION__, __LINE__);
-		return;
+		return NULL;
 	}
 
 	g_debug("message_show_view_show()");
@@ -83,7 +81,7 @@ message_show_view_show(struct Window *win, void *_options)
 	data->win = win;
 
 	char *direction, *status, *tmp;
-	GValue *gtmp;
+
 	status = g_hash_table_lookup(options, "status");
 	direction = g_hash_table_lookup(options, "direction");
 	tmp = malloc(strlen(status) + strlen(direction) + 4);
@@ -115,7 +113,6 @@ void
 message_show_view_hide(void *_data)
 {
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
-	struct Window *win = data->win;
 
 	g_debug("message_show_view_hide()");
 
@@ -142,6 +139,8 @@ static void
 message_show_view_close_clicked(void *_data, Evas_Object * obj,
 				void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_close_clicked()");
@@ -153,6 +152,8 @@ static void
 message_show_view_answer_clicked(void *_data, Evas_Object * obj,
 				 void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_answer_clicked()");
@@ -168,6 +169,8 @@ message_show_view_answer_clicked(void *_data, Evas_Object * obj,
 static void
 message_show_view_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 	char *number = data->number;
 	g_debug("message_show_view_call_clicked()");
@@ -179,6 +182,8 @@ static void
 message_show_view_delete_clicked(void *_data, Evas_Object * obj,
 				 void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_delete_clicked()");
@@ -211,6 +216,8 @@ message_show_view_delete_callback(void *_data)
 static void
 my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	Evas_Object *hv = (Evas_Object *) _data;
 
 	g_debug("my_hover_bt_1()");
@@ -338,7 +345,7 @@ retrieve_callback(GHashTable * properties, gpointer _data)
 	elm_button_label_set(data->hbt3, D_("Add Contact"));
 	evas_object_size_hint_min_set(data->hbt3, 140, 80);
 	evas_object_smart_callback_add(data->hbt3, "clicked",
-				       message_show_view_new_contact_clicked,
+				       (Evas_Smart_Cb) message_show_view_new_contact_clicked,
 				       data);
 	evas_object_show(data->hbt3);
 	elm_box_pack_end(data->bx, data->hbt3);
@@ -361,6 +368,8 @@ static void
 message_show_view_new_contact_clicked(struct MessageShowViewData *data,
 				      Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	/*FIXME should free this hashtable*/
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "Phone",

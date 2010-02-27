@@ -203,18 +203,27 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 static void
 _dialer_options_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	evas_object_show(view.hv);
 }
 
 static void
 _dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	dialer_view_hide();
 }
 
 static void
 _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	g_hash_table_insert(contact, "Phone",
 			common_utils_new_gvalue_string(view.number));
@@ -227,6 +236,8 @@ _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 static void
 _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	if (*view.number) {
 		phoneui_utils_dial(view.number, _dialer_call_initiated_cb,
 					    data);
@@ -236,6 +247,9 @@ _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 static void
 _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "Phone", common_utils_new_gvalue_string(view.number));
 
@@ -248,6 +262,8 @@ _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 static void
 _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
 	char input = ((char *) event_info)[0];
 
 	if (view.length < 64) {
@@ -259,8 +275,11 @@ _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info)
+_dialer_delete_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	int length = view.length;
 
 	if (length) {
@@ -272,9 +291,13 @@ _dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info)
 
 
 static void
-_dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission,
+_dialer_number_clicked_cb(void *data, Evas_Object * obj, const char *emission,
 			    const char *source)
 {
+	(void) data;
+	(void) obj;
+	(void) emission;
+	(void) source;
 	if (!*view.number) {
 		phoneui_contacts_show();
 		dialer_view_hide();
@@ -349,6 +372,10 @@ _dialer_number_clear()
 static void
 _dialer_call_initiated_cb(GError * error, int call_id, void *userdata)
 {
+	(void) userdata;
+	(void) call_id;
+	(void) error;
+	/*FIXME: Handle errors */
 	dialer_view_hide();
 }
 

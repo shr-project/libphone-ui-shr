@@ -54,9 +54,8 @@ int
 contact_view_init(char *path, GHashTable *properties)
 {
 	struct ContactViewData *view;
-	Evas_Object *win, *box1, *box2, *btn;
+	Evas_Object *win;
 	int ret;
-	char *s;
 
 	/* path MUST always be set! For new contacts to ""
 	and it will be freed by destroying the contactviews
@@ -251,7 +250,7 @@ contact_view_show(const char *path)
 	view = (struct ContactViewData *)
 			g_hash_table_lookup(contactviews, path);
 	if (view) {
-		g_debug("found view [%X] for contact %s", view, path);
+		g_debug("found view [%X] for contact %s", (int) view, path);
 		ui_utils_view_show(VIEW_PTR(*view));
 	}
 	else {
@@ -291,6 +290,8 @@ _contact_delete_confirm_cb(int result, void *data)
 static void
 _contact_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
 
 	ui_utils_dialog(VIEW_PTR(*view), D_("Really delete this contact?"),
@@ -310,6 +311,8 @@ _add_field_cb(const char *field, void *data)
 static void
 _contact_add_field_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
 	ui_utils_contacts_field_select(VIEW_PTR(*view), _add_field_cb, view);
 }
@@ -317,6 +320,8 @@ _contact_add_field_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 _contact_photo_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view;
 	g_debug("you clicked on the photo :-)");
 	view = _data;
@@ -325,6 +330,8 @@ _contact_photo_clicked(void *_data, Evas_Object *obj, void *event_info)
 static void
 _contact_photo_back_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view;
 	view = _data;
 	// TODO
@@ -333,6 +340,8 @@ _contact_photo_back_clicked(void *_data, Evas_Object *obj, void *event_info)
 static void
 _contact_photo_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view;
 	view = _data;
 	// TODO: ask for confirmation
@@ -347,6 +356,8 @@ _contact_photo_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 static void
 _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
         if (view->properties == NULL)
 		return;
@@ -360,6 +371,8 @@ _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 _contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	const char *photo;
 	char *str;
 	GValue *tmp;
@@ -398,7 +411,7 @@ _contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_change_field_cb(char *field, void *data)
+_change_field_cb(const char *field, void *data)
 {
 	g_debug("_change_field_cb");
 	struct ContactFieldData *fd = (struct ContactFieldData *)data;
@@ -414,7 +427,8 @@ _change_field_cb(char *field, void *data)
 		else if (fd->name) {
 			free(fd->name);
 		}
-		fd->name = field;
+		/*FIXME: BAD: */
+		fd->name = (char *) field;
 		elm_button_label_set(fd->field_button, field);
 		fd->dirty = 1;
 		_set_modify(fd->view, 1);
@@ -424,15 +438,18 @@ _change_field_cb(char *field, void *data)
 static void
 _field_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
-	GList *filter = NULL;
+	(void) obj;
+	(void) event_info;
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
 	ui_utils_contacts_field_select(VIEW_PTR(*fd->view),
 				       _change_field_cb, fd);
 }
 
-static
+static void
 _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	g_debug("_field_remove_clicked");
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
 	if (!fd->value || !*fd->value)
@@ -444,6 +461,7 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 static void
 _value_changed(void *_data, Evas_Object *obj, void *event_info)
 {
+	(void) event_info;
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
 	g_debug("_value_changed");
 	char *s = ui_utils_entry_utf8_get(obj);
@@ -471,6 +489,8 @@ _value_changed(void *_data, Evas_Object *obj, void *event_info)
 static void
 _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
 
 	if (!_changes_to_properties(view, 0)) {
@@ -494,6 +514,8 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 static void
 _contact_cancel_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
 	_set_modify(view, 0);
 	if (*view->path) {
@@ -703,7 +725,6 @@ _add_value_to_field(GHashTable *props, char *fld, char *val)
 static void
 _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 {
-	GValue *tmp;
 	int should_update = 0;
 
 	/* for new contacts we might have to create the properties hashtable */
@@ -791,6 +812,7 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 static void
 gl_field_del(const void *_data, Evas_Object * obj)
 {
+	(void) obj;
 	g_debug("gl_field_del");
 	struct ContactFieldData *fd = (struct ContactFieldData *) _data;
 	if (fd) {
@@ -966,20 +988,20 @@ _destroy_cb(struct View *_view)
 }
 
 static void
-_field_selected_cb(void *userdata, Evas_Object *obj, void *event_info)
+_field_selected_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
 	(void) obj;
-	(void) event_info;
+	(void) data;
 	elm_entry_editable_set(fd->value_entry, EINA_TRUE);	
 }
 
 static void
-_field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info)
+_field_unselected_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
 	(void) obj;
-	(void) event_info;
+	(void) data;
 	/* Should be EINA_FALSE but for some reason doesn't work */
 	elm_entry_editable_set(fd->value_entry, EINA_TRUE);	
 }

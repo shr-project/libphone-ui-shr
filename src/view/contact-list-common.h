@@ -16,7 +16,7 @@ struct ContactListViewData {
 
 void contact_list_fill_index(struct ContactListViewData *data);
 void contact_list_fill(struct ContactListViewData *data);
-Evas_Object *contact_list_add(struct ContactListViewData *data);
+void contact_list_add(struct ContactListViewData *data);
 Elm_Genlist_Item *contact_list_item_add(struct ContactListViewData *data, GHashTable *entry, int sortin);
 
 

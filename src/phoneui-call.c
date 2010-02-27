@@ -7,6 +7,7 @@
 #include "views.h"
 
 /* HACK UNTIL WE REMOVE THIS INSTANCE THING COMPLETELY*/
+#include <Evas.h>
 #include <Ecore_Evas.h>
 
 
@@ -24,7 +25,7 @@ void
 instance_manager_add(int id, struct Window *win)
 {
 	g_debug("instance_manager_add: id=%d, window=%d", id,
-		win);
+		(int) win);
 	instances_size++;
 	if (instances_size == 1) {
 		instances = malloc(sizeof(struct Instance));
@@ -37,7 +38,7 @@ instance_manager_add(int id, struct Window *win)
 		g_debug("realloc'ed");
 	}
 
-	g_debug("add window: %d", win->win);
+	g_debug("add window: %d", (int) win->win);
 
 	instances[instances_size - 1].id = id;
 	instances[instances_size - 1].win = win;
@@ -63,7 +64,8 @@ instance_manager_remove(int id)
 	}
 	if (win) {
 		instances_size--;
-		realloc(instances, instances_size);
+		/*FIXME: handle if can't allocate */
+		instances = realloc(instances, instances_size);
 	}
 
 	return win;
@@ -129,12 +131,12 @@ _show(const int id, const int status, const char *number, int type)
 	window_init(win);
 	window_delete_callback_set(win, _delete);
 	if (type == CALL_INCOMING) {
-		window_view_show(win, options, call_incoming_view_show,
-				 call_incoming_view_hide, NULL);
+		window_view_show(win, options, (void * (*)(struct Window *, void *)) call_incoming_view_show,
+				 (void (*)(void *)) call_incoming_view_hide, NULL);
 	}
 	else if (type == CALL_ACTIVE) {
-		window_view_show(win, options, call_active_view_show,
-				 call_active_view_hide, NULL);
+		window_view_show(win, options,(void * (*)(struct Window *, void *)) call_active_view_show,
+				 (void (*)(void *)) call_active_view_hide, NULL);
 	}
 	else {
 		g_critical("Unknown call type: %d", type);
@@ -161,6 +163,8 @@ _hide(const int id)
 static void
 _delete(void *_data, Evas_Object * win, void *event_info)
 {
+	(void) win;
+	(void) event_info;
  	struct CallActiveViewData *data;
 	g_debug("call_delete(), release call!");
 

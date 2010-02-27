@@ -98,7 +98,7 @@ common_utils_object_ref(void *object)
 	else {
 		count = 1;
 	}
-	g_hash_table_replace(ref_counter, object, count);
+	g_hash_table_replace(ref_counter, object, GINT_TO_POINTER(count));
 	return object;
 }
 
@@ -119,7 +119,7 @@ common_utils_object_unref(void *object)
 		return 0;
 	}
 	else {
-		g_hash_table_replace(ref_counter, object, count - 1);
+		g_hash_table_replace(ref_counter, object, GINT_TO_POINTER(count - 1));
 	}
 	return count;
 }

@@ -34,7 +34,7 @@ struct MessageNewViewData {
 
 	struct ContactListViewData *cdata;
 
-	int messages_sent;
+	unsigned int messages_sent;
 };
 
 static Elm_Genlist_Item_Class itc;
@@ -43,6 +43,7 @@ static Elm_Genlist_Item_Class itc;
 static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) obj;
 	const char *label = NULL;
 	GHashTable *parameters = (GHashTable *) data;
 	g_debug("looking for %s", part);
@@ -57,8 +58,8 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	else if (!strcmp(part, "elm.text.sub")) {
 		label = phoneui_utils_contact_display_phone_get(parameters);
 	}
-
-	return (label);
+	/*FIXME: leaks? */
+	return strdup(label);
 }
 
 static Evas_Object *
@@ -116,9 +117,6 @@ frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
 				 void *event_info);
 static void
   frame_recipient_process_recipient(gpointer _properties, gpointer _data);
-static void
-frame_recipient_send_callback(GError * error, int transaction_index,
-			      const char *timestamp, void *data);
 
 static void
   frame_contact_add_show(void *_data);
@@ -262,6 +260,8 @@ frame_content_hide(void *_data)
 static void
 frame_content_close_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_content_close_clicked()");
@@ -272,6 +272,8 @@ frame_content_close_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_content_continue_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_content_continue_clicked()");
@@ -284,6 +286,7 @@ frame_content_continue_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 	char *content;
 	int limit;		/* the limit of the sms */
@@ -411,7 +414,6 @@ static void
 frame_recipient_hide(void *_data)
 {
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-	struct Window *win = data->win;
 
 	g_debug("frame_recipient_hide()");
 
@@ -426,6 +428,8 @@ frame_recipient_hide(void *_data)
 static void
 frame_recipient_back_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_recipient_back_clicked()");
@@ -439,6 +443,8 @@ static void
 frame_recipient_contact_add_clicked(void *_data, Evas_Object * obj,
 				    void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_recipient_contact_add_clicked()");
@@ -452,6 +458,8 @@ static void
 frame_recipient_number_add_clicked(void *_data, Evas_Object * obj,
 				   void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_recipient_number_add_clicked()");
@@ -464,13 +472,15 @@ frame_recipient_number_add_clicked(void *_data, Evas_Object * obj,
 static void
 frame_recipient_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_recipient_delete_clicked()");
 
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list_recipients);
 	if (it) {
-		GHashTable *parameters = elm_genlist_item_data_get(it);
+		GHashTable *parameters = (GHashTable *) elm_genlist_item_data_get(it);
 		g_ptr_array_remove(data->recipients, parameters);
 		elm_genlist_item_del(it);
 	}
@@ -480,6 +490,8 @@ static void
 frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
 				 void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_recipient_continue_clicked()");
@@ -493,19 +505,6 @@ frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
 		window_destroy(data->win, NULL);
 	}
 }
-
-static void
-frame_recipient_send_callback(GError * error, int transaction_index,
-			      const char *timestamp, void *_data)
-{
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-	data->messages_sent++;
-	if (data->messages_sent == data->recipients->len) {
-		sleep(1);
-		window_destroy(data->win, NULL);
-	}
-}
-
 
 static void
 frame_recipient_process_recipient(gpointer _properties, gpointer _data)
@@ -530,7 +529,7 @@ frame_contact_add_show(void *_data)
 
 	data->cdata = calloc(1, sizeof(struct ContactListViewData));
 	// FIXME: this is ugly
-	data->cdata->view.win = data->win;
+	data->cdata->view.win = win->win;
 
 	g_debug("frame_contact_add_show()");
 
@@ -574,6 +573,8 @@ frame_contact_add_hide(void *_data)
 static void
 frame_contact_add_back_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_contact_add_back_clicked()");
@@ -586,14 +587,15 @@ frame_contact_add_back_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_contact_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	g_debug("frame_contact_add_add_clicked()");
 
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->cdata->list);
-	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 
 	if (properties) {
-		const char *photo;
 		char *str;
 		GValue *tmp;
 		str = phoneui_utils_contact_display_phone_get(properties);
@@ -686,6 +688,8 @@ frame_number_add_hide(void *_data)
 static void
 frame_number_add_back_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_number_add_back_clicked()");
@@ -698,6 +702,8 @@ frame_number_add_back_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_number_add_add_clicked()");
@@ -773,6 +779,8 @@ frame_close_hide(void *_data)
 static void
 frame_close_yes_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_close_yes_clicked()");
@@ -783,6 +791,8 @@ frame_close_yes_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_close_no_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
 	g_debug("frame_close_no_clicked()");
@@ -809,5 +819,6 @@ frame_sending_show(void *_data)
 static void
 frame_sending_hide(void *data)
 {
+	(void) data;
 	g_debug("frame_sending_hide()");
 }

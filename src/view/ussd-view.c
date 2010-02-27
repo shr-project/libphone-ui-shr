@@ -30,7 +30,7 @@ ussd_view_show(struct Window *win, void *_options)
 
 	if (!options) {
 		g_critical("'options' is NULL (%s:%d)", __FUNCTION__, __LINE__);
-		return;
+		return NULL;
 	}
 
 	struct UssdViewData *data = calloc(1, sizeof(struct UssdViewData));
@@ -86,7 +86,6 @@ static void
 frame_ussd_hide(void *_data)
 {
 	struct UssdViewData *data = (struct UssdViewData *) _data;
-	struct Window *win = data->win;
 
 	evas_object_del(data->bt_close);
 
@@ -100,6 +99,8 @@ frame_ussd_hide(void *_data)
 static void
 frame_ussd_close_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct UssdViewData *data = (struct UssdViewData *) _data;
 	window_destroy(data->win, NULL);
 }

@@ -41,8 +41,6 @@ retrieve_messagebook_callback(GError * error, GPtrArray * messages,
 static void
   process_message(gpointer _message, gpointer _data);
 
-static
-gint compare_messages(gconstpointer _a, gconstpointer _b);
 static void
   message_list_view_message_deleted(void *_data);
 
@@ -52,9 +50,10 @@ static void
 static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) obj;
 	GHashTable *parameters = (GHashTable *) data;
 	GValue *tmp;
-	char *label = NULL;
+	const char *label = NULL;
 
 	//g_debug("getting label for %s", part);
 	if (!strcmp(part, "elm.text")) {
@@ -67,7 +66,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 			label = g_value_get_string(tmp);
 		}
 		return (g_strdup_printf
-			("%s %s", g_hash_table_lookup(parameters, "date"),
+			("%s %s", (const char *) g_hash_table_lookup(parameters, "date"),
 			 label));
 	}
 	else if (!strcmp(part, "elm.text.sub"))
@@ -79,6 +78,9 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 static Evas_Object *
 gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) data;
+	(void) obj;
+	(void) part;
 	return (NULL);
 }
 
@@ -86,17 +88,23 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 static Eina_Bool
 gl_state_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) data;
+	(void) obj;
+	(void) part;
 	return (EINA_FALSE);
 }
 
 static void
 gl_del(const void *data, Evas_Object * obj)
 {
+	(void) data;
+	(void) obj;
 }
 
 void *
 message_list_view_show(struct Window *win, void *_options)
 {
+	(void) _options;
 	g_debug("message_list_view_show()");
 
 	struct MessageListViewData *data =
@@ -185,7 +193,6 @@ void
 message_list_view_hide(void *_data)
 {
 	struct MessageListViewData *data = (struct MessageListViewData *) _data;
-	struct Window *win = data->win;
 
 	g_debug("hiding the message list");
 
@@ -210,8 +217,11 @@ message_list_view_hide(void *_data)
 /* --- evas callbacks ------------------------------------------------------- */
 
 static void
-message_list_view_new_clicked(void *_data, Evas_Object * obj, void *event_info)
+message_list_view_new_clicked(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	g_debug("message_list_view_new_clicked()");
 
 	phoneui_messages_message_new(NULL);
@@ -220,6 +230,8 @@ message_list_view_new_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 message_list_view_show_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	g_debug("message_list_view_show_clicked()");
@@ -260,6 +272,8 @@ static void
 message_list_view_answer_clicked(void *_data, Evas_Object * obj,
 				 void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	g_debug("message_list_view_answer_clicked()");
@@ -285,6 +299,8 @@ static void
 message_list_view_delete_clicked(void *_data, Evas_Object * obj,
 				 void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
 	g_debug("message_list_view_delete_clicked()");
@@ -316,6 +332,8 @@ message_list_view_delete_clicked(void *_data, Evas_Object * obj,
 static void
 my_hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	Evas_Object *hv = (Evas_Object *) _data;
 	evas_object_show(hv);
 }
@@ -329,7 +347,7 @@ retrieve_messagebook_callback(GError * error, GPtrArray * messages, void *_data)
 {
 	struct MessageListViewData *data = (struct MessageListViewData *) _data;
 
-	g_debug("retrieve messagebook callback(error=%d)", error);
+	g_debug("retrieve messagebook callback(error=%d)", (int) error);
 
 	data->messages = messages;
 	//g_ptr_array_foreach(data->messages, add_integer_timestamp_to_message, NULL);
@@ -359,7 +377,7 @@ _contact_lookup(GHashTable *contact, gpointer _pack)
 
 	const char *tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
-		GHashTable *parameters = elm_genlist_item_data_get(pack->param);
+		GHashTable *parameters = (GHashTable *) elm_genlist_item_data_get(pack->param);
 		g_hash_table_insert(parameters, "Name",
 				common_utils_new_gvalue_string(tmp));
 		elm_genlist_item_update(pack->param);
@@ -469,25 +487,6 @@ process_message(gpointer _entry, gpointer _data)
 
 
 /* --- helper functions ----------------------------------------------------- */
-
-static gint
-compare_messages(gconstpointer _a, gconstpointer _b)
-{
-	GValueArray **a = (GValueArray **) _a;
-	GValueArray **b = (GValueArray **) _b;
-	GHashTable *h1 = g_value_get_boxed(g_value_array_get_nth(*a, 4));
-	GHashTable *h2 = g_value_get_boxed(g_value_array_get_nth(*b, 4));
-
-	long la = g_value_get_long(g_hash_table_lookup(h1, "timestamp_int"));
-	long lb = g_value_get_long(g_hash_table_lookup(h2, "timestamp_int"));
-
-	if (la > lb)
-		return -1;
-	else if (la < lb)
-		return 1;
-	else
-		return 0;
-}
 
 static void
 message_list_view_message_deleted(void *_data)

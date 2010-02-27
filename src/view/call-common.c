@@ -19,7 +19,7 @@ _call_activate_callback(GError * error, struct CallActiveViewData *win)
 		call_common_window_to_active(win);
 	}
 	else {
-		g_prefix_error(error, " activating call failed (id=%d)",
+		g_prefix_error(&error, " activating call failed (id=%d)",
 			       win->parent.id);
 		g_error_free(error);
 	}
@@ -31,8 +31,9 @@ call_common_activate_call(struct CallActiveViewData *win)
 	g_debug("%s:%d attempting to set last call as active (id=%d)", __FILE__,
 		__LINE__, win->parent.id);
 #if 0
-	phongeui_call_activate(win->parent.id, _call_activate_callback, win);
+	phoneui_utils_call_activate(win->parent.id, _call_activate_callback, win);
 #else
+	(void) _call_activate_callback;
 	phoneui_utils_call_activate(win->parent.id, NULL, NULL);
 	call_common_window_to_active(win);
 #endif
@@ -50,7 +51,8 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 	if (contact) {
 		g_debug("call_common_contact_callback... got a contact");
 		GValue *tmp;
-		char *s;
+		const char *s;
+		char *s2;
 
 		tmp = g_hash_table_lookup(contact, "Photo");
 		if (tmp) {
@@ -63,10 +65,10 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 		}
 		data->photo = g_strdup(s);
 
-		s = phoneui_utils_contact_display_name_get(contact);
-		if (s) {
-			window_text_set(data->win, "name", s);
-			data->name = s;
+		s2 = phoneui_utils_contact_display_name_get(contact);
+		if (s2) {
+			window_text_set(data->win, "name", s2);
+			data->name = s2;
 		}
 		else {
 			data->name = strdup(CONTACT_NAME_UNDEFINED_STRING);
@@ -135,7 +137,7 @@ call_common_window_new_active(int id)
 		id);
 
 	if (active_calls_list) {
-		g_queue_foreach(active_calls_list, _foreach_new_active,
+		g_queue_foreach(active_calls_list, (GFunc) _foreach_new_active,
 				(void *) id);
 	}
 }
@@ -193,9 +195,10 @@ call_common_set_sound_state(enum SoundState state)
 	phoneui_utils_sound_state_set(state);
 	if (active_calls_list) {
 		g_queue_foreach(active_calls_list,
-				call_common_window_update_state,
+				(GFunc) call_common_window_update_state,
 				(void *) state);
 	}
+	return 0;
 }
 
 int
@@ -203,7 +206,7 @@ call_common_active_call_add(struct CallActiveViewData *win)
 {
 	/* if it's not the first call, update all the windows */
 	if (active_calls_list) {
-		g_queue_foreach(active_calls_list, _foreach_new_active,
+		g_queue_foreach(active_calls_list, (GFunc) _foreach_new_active,
 				(void *) -1);
 	}
 	/*init */
@@ -232,8 +235,9 @@ call_common_active_call_remove(int id)
 {
 	struct CallActiveViewData *win = NULL;
 	if (active_calls_list) {
-		GList *link = g_queue_find_custom(active_calls_list, id,
-						  _queue_find_by_id);
+		/*FIXME: cast id - bad */
+		GList *link = g_queue_find_custom(active_calls_list, (void *) id,
+						(GCompareFunc)  _queue_find_by_id);
 		win = g_queue_peek_nth(active_calls_list,
 				       g_queue_link_index(active_calls_list,
 							  link));
@@ -272,6 +276,8 @@ void
 call_button_keypad_clicked(void *data, Evas_Object * obj,
 			   void *event_info)
 {
+	(void) data;
+	(void) obj;
 	char string[2];
 	string[0] = ((char *) event_info)[0];
 	string[1] = '\0';

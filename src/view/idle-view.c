@@ -1,4 +1,5 @@
 #include <Edje_Edit.h>
+#include <Elementary.h>
 #include <Evas.h>
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-info.h>
@@ -21,8 +22,6 @@ struct IdleScreenViewData {
 /* No need to pass the active window everywhere, as we don't allow multiple windows. */
 static struct IdleScreenViewData view;
 
-static void _idle_screen_show();
-static void _idle_screen_hide();
 static void _idle_screen_update_counter(const char *name,
 		const char *label_name, int count);
 
@@ -56,7 +55,7 @@ idle_screen_view_toggle()
 int
 idle_screen_view_init()
 {
-	struct Evas_Object *win;
+	Evas_Object *win;
 	int ret;
 
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
@@ -168,6 +167,10 @@ idle_screen_view_update_call(enum PhoneuiCallState state, const char *name, cons
 		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallHeading", "");
 		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine1", "");
 		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine2", "");
+		break;
+	case PHONEUI_CALL_STATE_HELD:
+	case PHONEUI_CALL_STATE_OUTGOING:
+		/*FIXME: implement */
 		break;
 	}
 }

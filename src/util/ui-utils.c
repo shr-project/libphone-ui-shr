@@ -19,6 +19,7 @@ when that beast got finally removed */
 struct View *
 ui_utils_view_new(const char *title)
 {
+	(void) title;
 	struct View *view;
 
 	view = calloc(1, sizeof(struct View));
@@ -162,7 +163,7 @@ ui_utils_view_layout_get(struct View *view)
 {
 	if (!view) {
 		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
-		return;
+		return NULL;
 	}
 	return elm_layout_edje_get(view->layout);
 }
@@ -172,7 +173,7 @@ ui_utils_view_window_get(struct View *view)
 {
 	if (!view) {
 		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
-		return;
+		return NULL;
 	}
 	return view->win;
 }
@@ -308,6 +309,8 @@ struct _dialog_pack {
 static void
 _inwin_dialog_cancel_cb(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct _dialog_pack *pack = (struct _dialog_pack *)data;
 	if (pack->callback)
 		pack->callback(DIALOG_CANCEL, pack->data);
@@ -317,6 +320,8 @@ _inwin_dialog_cancel_cb(void *data, Evas_Object *obj, void *event_info)
 static void
 _inwin_dialog_no_cb(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct _dialog_pack *pack = (struct _dialog_pack *)data;
 	if (pack->callback)
 		pack->callback(DIALOG_NO, pack->data);
@@ -326,6 +331,8 @@ _inwin_dialog_no_cb(void *data, Evas_Object *obj, void *event_info)
 static void
 _inwin_dialog_yes_cb(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct _dialog_pack *pack = (struct _dialog_pack *)data;
 	if (pack->callback)
 		pack->callback(DIALOG_YES, pack->data);
@@ -335,6 +342,8 @@ _inwin_dialog_yes_cb(void *data, Evas_Object *obj, void *event_info)
 static void
 _inwin_dialog_ok_cb(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct _dialog_pack *pack = (struct _dialog_pack *)data;
 	if (pack->callback)
 		pack->callback(DIALOG_OK, pack->data);
@@ -437,11 +446,12 @@ _inwin_list_destruct(gpointer data)
 static void
 _inwin_list_selected_cb(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) event_info;
 	char *sel = NULL;
 	struct _inwin_list_pack *pack = (struct _inwin_list_pack *)data;
 	g_debug("Get the selected one");
 	Elm_List_Item *it = elm_list_selected_item_get(obj);
-	g_debug("Got item [%X]", it);
+	g_debug("Got item [%X]", (int) it);
 	if (it) {
 		sel = strdup(elm_list_item_label_get(it));
 		g_debug("Which is '%s'", sel);
@@ -455,6 +465,8 @@ _inwin_list_selected_cb(void *data, Evas_Object *obj, void *event_info)
 static void
 _inwin_list_cancel_cb(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct _inwin_list_pack *pack = (struct _inwin_list_pack *)data;
 	g_debug("Cancelled selection");
 	if (pack->callback) {
@@ -529,7 +541,7 @@ struct _field_select_pack {
 static void
 _field_select_cb(GHashTable *fields, gpointer data)
 {
-	GList *keys, *k, *kk;
+	GList *keys;
 	struct _field_select_pack *pack = (struct _field_select_pack *)data;
 	if (!fields) {
 		g_warning("No fields for contacts?");
@@ -537,7 +549,7 @@ _field_select_cb(GHashTable *fields, gpointer data)
 		return;
 	}
 	keys = g_hash_table_get_keys(fields);
-	keys = g_list_sort(keys, strcmp);
+	keys = g_list_sort(keys, (GCompareFunc) strcmp);
 	ui_utils_view_inwin_list(pack->view, keys, pack->callback, pack->data);
 	free(pack);
 }
@@ -557,7 +569,7 @@ ui_utils_contacts_field_select(struct View *view,
 int
 ui_utils_view_is_init(struct View *view)
 {
-	return (view->win);
+	return (view->win) ? 1 : 0;
 }
 
 char *

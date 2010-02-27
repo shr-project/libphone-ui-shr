@@ -22,8 +22,6 @@ struct _Widget_Data {
 
 static void  _del_hook(Evas_Object * obj);
 static void _sizing_eval(Evas_Object * obj);
-static void _changed_size_hints(void *data, Evas * e, Evas_Object * obj, void *event_info);
-static void _sub_del(void *data, Evas_Object * obj, void *event_info);
 static void _signal_clicked(void *data, Evas_Object * o, const char *emission,
 		const char *source);
 static void _zero_mouse_down(void *data, Evas_Object * o, const char *emission,
@@ -52,45 +50,23 @@ _sizing_eval(Evas_Object * obj)
 }
 
 static void
-_changed_size_hints(void *data, Evas * e, Evas_Object * obj, void *event_info)
-{
-	return;			// TODO: Confirm this line
-
-	//Widget_Data *wd = elm_widget_data_get(data);
-	//if (obj != wd->icon) return;
-	//edje_object_part_swallow(wd->widget, "elm.swallow.content", obj);
-	//_sizing_eval(data);
-}
-
-/*
-   static void _sub_del(void *data, Evas_Object *obj, void *event_info)
-   {
-   Widget_Data *wd = elm_widget_data_get(obj);
-   Evas_Object *sub = event_info;
-   if (sub == wd->icon)
-   {
-   edje_object_signal_emit(wd->keypad, "elm,state,icon,hidden", "elm");
-   evas_object_event_callback_del
-   (sub, EVAS_CALLBACK_CHANGED_SIZE_HINTS, _changed_size_hints);
-   wd->icon = NULL;
-   _sizing_eval(obj);
-   }
-
-   }
-   */
-
-static void
 _signal_clicked(void *data, Evas_Object * o, const char *emission,
 		const char *source)
 {
+	(void) o;
+	(void) source;
 	Widget_Data *wd = elm_widget_data_get(data);
-	evas_object_smart_callback_call(wd->widget, "clicked", emission);
+	/* FIXME: may leak */
+	evas_object_smart_callback_call(wd->widget, "clicked", strdup(emission));
 }
 
 static void
 _zero_mouse_down(void *data, Evas_Object * o, const char *emission,
 		 const char *source)
 {
+	(void) o;
+	(void) emission;
+	(void) source;
 	Widget_Data *wd = elm_widget_data_get(data);
 	if (wd->plus_timer == NULL)
 		wd->plus_timer = ecore_timer_add(0.5, _plus_trigered, data);
@@ -100,6 +76,9 @@ static void
 _zero_mouse_up(void *data, Evas_Object * o, const char *emission,
 	       const char *source)
 {
+	(void) o;
+	(void) emission;
+	(void) source;
 	Widget_Data *wd = elm_widget_data_get(data);
 
 	if (wd->plus_timer != NULL) {
@@ -132,7 +111,7 @@ elm_keypad_add(Evas_Object * parent)
 	elm_widget_del_hook_set(wd->widget, _del_hook);
 
 	wd->keypad = edje_object_add(e);
-	g_debug("keypad evas object: %d", wd->keypad);
+	g_debug("keypad evas object: %d", (int) wd->keypad);
 	edje_object_file_set(wd->keypad, DEFAULT_THEME, "phoneui/keypad");
 	edje_object_signal_callback_add(wd->keypad, "*", "input",
 					_signal_clicked, wd->widget);

@@ -46,7 +46,6 @@ int phonelog_view_init()
 {
 	g_debug("Initializing the phonelog screen");
 	Evas_Object *win, *icon;
-	Elm_Toolbar_Item *item;
 	int ret;
 	//char buf[PATH_MAX];
 
@@ -116,7 +115,8 @@ int phonelog_view_init()
 	view.calls = g_ptr_array_new();
 
 	g_debug("querying calls...");
-	phoneui_utils_calls_get(&view.count, _get_callback, NULL);
+	/*FIXME: Why did I have to cast? */
+	phoneui_utils_calls_get(&view.count, (void (*)(void *, void *))_get_callback, NULL);
 
 	return 0;
 }
@@ -146,15 +146,17 @@ void phonelog_view_new_call(char *path)
 
 
 static void
-_phonelog_destroy_cb(struct View *_view)
+_phonelog_destroy_cb(struct View *view)
 {
-	struct PhonelogViewData *view = (struct PhonelogViewData *)_view;
+	(void) view;
 	phonelog_view_hide();
 }
 
 static void _toolbar_changed(void *data, Evas_Object *obj, void *event_info)
 {
-	g_debug("promoting %d to top", data);
+	(void) obj;
+	(void) event_info;
+	g_debug("promoting %d to top", (int) data);
 	elm_pager_content_promote(view.pager, data);
 }
 
@@ -178,7 +180,7 @@ _add_entry(GHashTable *entry)
 
 	val = g_hash_table_lookup(entry, "Direction");
 	if (val) {
-		char *dir = g_value_get_string(val);
+		const char *dir = g_value_get_string(val);
 		if (!strcmp(dir, "in")) {
 			received = 1;
 		}
@@ -273,8 +275,8 @@ _contact_lookup(GHashTable *contact, GHashTable *entry)
 static void
 _get_callback(GHashTable *entry, gpointer data)
 {
+	(void) data;
 	GValue *val;
-	Elm_Genlist_Item *it;
 
 	g_ptr_array_add(view.calls, entry);
 
@@ -283,7 +285,7 @@ _get_callback(GHashTable *entry, gpointer data)
 		_add_entry(entry);
 		phoneui_utils_contact_lookup(
 				g_value_get_string(val),
-				_contact_lookup, entry);
+				(void (*)(GHashTable *, void *)) _contact_lookup, entry);
 	}
 	else {
 		g_message("ignoring call without Peer attribute");
@@ -294,8 +296,8 @@ _get_callback(GHashTable *entry, gpointer data)
 static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) obj;
 	GHashTable *entry = (GHashTable *) data;
-	char *s = NULL;
 	GValue *val;
 
 	g_debug("gl_label_get: %s", part);
@@ -318,7 +320,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	if (!strcmp(part, "elm.text.2")) {
 		val = g_hash_table_lookup(entry, "Timestamp");
 		if (val) {
-			int timestamp = g_value_get_int(val);
+			time_t timestamp = g_value_get_int(val);
 			char datestr[35];
 			strftime(datestr, 31, "%d.%m.%Y %H:%M" LTR_STRING, localtime(&timestamp));
 			return strdup(datestr);
@@ -350,32 +352,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 static Evas_Object *
 gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 {
-	//GHashTable *entry = (GHashTable *) data;
-	//if (!strcmp(part, "elm.swallow.icon")) {
-	//	const char *icon;
-	//	GValue *tmp = g_hash_table_lookup(entry, "Direction");
-	//	if (tmp) {
-	//		if (!strcmp("in", g_value_get_string(tmp))) {
-	//			tmp = g_hash_table_lookup(entry, "Answered");
-	//			if (tmp && g_value_get_int(tmp)) {
-	//				icon = "icon/phonelog-incoming";
-	//			}
-	//			else {
-	//				icon = "icon/phonelog-missed";
-	//			}
-	//		}
-	//		else {
-	//			icon = "icon/phonelog-outgoing";
-	//		}
-	//	}
-	//	Evas_Object *ico = elm_icon_add(obj);
-	//	elm_icon_file_set(ico, DEFAULT_THEME, icon);
-	//	elm_icon_no_scale_set(ico, EINA_TRUE);
-	//	//evas_object_size_hint_aspect_set(ico,
-	//	//				 EVAS_ASPECT_CONTROL_VERTICAL,
-	//	//				 1, 1);
-	//	return (ico);
-	//}
+	(void) data;
 	if (!strcmp(part,"elm.swallow.end")) {
 		Evas_Object *btn = elm_button_add(obj);
 		elm_button_label_set(btn, "Action");
@@ -387,6 +364,8 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 static Eina_Bool
 gl_state_get(const void *data, Evas_Object * obj, const char *part)
 {
+	(void) obj;
+	(void) part;
 	GHashTable *entry = (GHashTable *) data;
 	GValue *tmp = g_hash_table_lookup(entry, "Direction");
 	if (tmp && g_value_get_int(tmp))
@@ -397,6 +376,7 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part)
 static void
 gl_del(const void *data, Evas_Object * obj)
 {
+	(void) obj;
 	if (data)
 		g_hash_table_destroy((GHashTable *)data);
 }

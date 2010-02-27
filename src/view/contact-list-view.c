@@ -22,7 +22,7 @@ static void _list_edit_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_delete_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType type);
 static void _hide_cb(struct View *view);
-static void _delete_cb(void *data, Evas_Object *obj, void *event_info);
+static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
 
 int
 contact_list_view_init()
@@ -136,16 +136,22 @@ contact_list_view_hide()
 
 
 static void
-_list_new_clicked(void *_data, Evas_Object * obj, void *event_info)
+_list_new_clicked(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	phoneui_contacts_contact_new(NULL);
 }
 
 static void
-_list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
+_list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(view.list);
-	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
 		// TODO: show a list of numbers to select if there's more than one
 		const char *number = phoneui_utils_contact_display_phone_get(properties);
@@ -154,22 +160,26 @@ _list_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_list_options_clicked(void *_data, Evas_Object * obj, void *event_info)
+_list_options_clicked(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	evas_object_show(view.hv);
 }
 
 static void
-_list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
+_list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	evas_object_hide(view.hv);
 
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(view.list);
-	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		const char *photo;
 		char *str;
-		GValue *tmp;
 		str = phoneui_utils_contact_display_phone_get(properties);
 		if (!str) {
 			g_debug("contact needs a number to send a message ;)");
@@ -186,11 +196,11 @@ _list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 				common_utils_new_gvalue_string(str));
 			free(str);
 		}
-		tmp = g_hash_table_lookup(properties, "Photo");
-		if (tmp) {
-			str = g_value_get_string(tmp);
+		/*FIXME: make sure it works */
+		str = g_hash_table_lookup(properties, "Photo");
+		if (str) {
 			g_hash_table_insert(options, "Photo",
-				common_utils_new_gvalue_string(tmp));
+				common_utils_new_gvalue_string(str));
 		}
 
 		phoneui_messages_message_new(options);
@@ -199,18 +209,20 @@ _list_message_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_list_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
+_list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 {
-	Elm_Genlist_Item *it;
+	(void) data;
+	(void) obj;
+	const Elm_Genlist_Item *it;
 
 	evas_object_hide(view.hv);
 	if (event_info) {
-		it = (Elm_Genlist_Item *)event_info;
+		it = (Elm_Genlist_Item *) event_info;
 	}
 	else {
 		it = elm_genlist_selected_item_get(view.list);
 	}
-	GHashTable *properties = it ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties != NULL) {
 		GValue *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -228,10 +240,10 @@ _contact_delete_confirm_cb(int result, void *data)
 		return;
 
 	Elm_Genlist_Item *it = (Elm_Genlist_Item *)data;
-	GHashTable *properties = (it) ? elm_genlist_item_data_get(it) : NULL;
+	GHashTable *properties = (it) ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
 
-		char *path = g_value_get_string(
+		const char *path = g_value_get_string(
 				g_hash_table_lookup(properties, "Path"));
 		// TODO: use a callback to show success/failure
 		phoneui_utils_contact_delete(path, NULL, NULL);
@@ -239,8 +251,11 @@ _contact_delete_confirm_cb(int result, void *data)
 }
 
 static void
-_list_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
+_list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	evas_object_hide(view.hv);
 
 	Elm_Genlist_Item *it = elm_genlist_selected_item_get(view.list);
@@ -254,6 +269,7 @@ _list_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 _add_contact_cb(GHashTable *properties, gpointer data)
 {
+	(void) data;
 	if (!properties) {
 		g_warning("Failed adding a contact");
 		return;
@@ -319,9 +335,9 @@ _hide_cb(struct View *view)
 }
 
 static void
-_delete_cb(void *data, Evas_Object *obj, void *event_info)
+_delete_cb(struct View *view, Evas_Object *obj, void *event_info)
 {
-	(void)data;
+	(void)view;
 	(void)obj;
 	(void)event_info;
 	contact_list_view_hide();
