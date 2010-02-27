@@ -135,10 +135,6 @@ contact_list_view_hide()
 
 
 
-
-
-
-
 static void
 _list_new_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
