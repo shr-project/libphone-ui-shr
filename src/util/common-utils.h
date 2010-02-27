@@ -3,6 +3,8 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#define LTR_STRING "\xE2\x80\x8E"
+
 GValue *
 common_utils_new_gvalue_string(const char *value);
 
@@ -35,5 +37,11 @@ int
 common_utils_is_pin(const char *string);
 int
 common_utils_is_puk(const char *string);
+
+char *
+common_utils_string_strip_newline(char *string);
+
+char *
+common_utils_timestamp_to_date(long timestamp);
 
 #endif

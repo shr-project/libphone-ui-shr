@@ -179,3 +179,23 @@ common_utils_is_puk(const char *string)
 	return 1;
 }
 
+char *
+common_utils_string_strip_newline(char *string)
+{
+	char *p;
+
+	for (p = string; *p; p++) {
+		if (*p == '\n' || *p == '\t') {
+			*p = ' ';
+		}
+	}
+	return string;
+}
+
+char *
+common_utils_timestamp_to_date(long timestamp)
+{
+	char *ret = malloc(35);
+	strftime(ret, 31, "%d.%m.%Y %H:%M" LTR_STRING, localtime(&timestamp));
+	return ret;
+}
