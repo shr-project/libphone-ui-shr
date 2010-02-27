@@ -2,6 +2,7 @@
  * vim:ts=4
  * 
  * Copyright © 2009 Rui Miguel Silva Seabra <rms@1407.org>
+ * Copyright © 2010 Tom 'TAsn' Hacohen <tom@stosb.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,10 +45,8 @@ struct QuickSettingsViewData {
 
 static struct QuickSettingsViewData view;
 
-
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _profiles_list_cb(GError *error, char **list, gpointer userdata);
-static void _profile_get_cb(GError *error, char *profile, gpointer userdata);
 static void _profile_selected_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info);
@@ -124,14 +123,13 @@ quick_settings_view_init()
 	evas_object_show(view.button_shutdown);
 	
 	phoneui_utils_sound_profile_list(_profiles_list_cb, NULL);
-	phoneui_utils_sound_profile_get(_profile_get_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("CPU", _cpu_get_policy_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("Display", _display_get_policy_cb, NULL);
 
 	elm_layout_sizing_eval(view.parent.layout);
 
 	/*Register to all signals*/
-	phoneui_info_register_profile_changes(_profile_changed_signal_cb, NULL);
+	phoneui_info_register_and_request_profile_changes(_profile_changed_signal_cb, NULL);
 	phoneui_info_register_resource_changes(_resource_changed_signal_cb, NULL);
 
 	/*FIXME: until we implement it*/
@@ -207,19 +205,8 @@ _profiles_list_cb(GError *error, char **list, gpointer userdata)
 static void
 _profile_changed_signal_cb(void *userdata, const char *profile)
 {
-	_profile_get_cb(NULL, profile, userdata);
-}
-
-static void
-_profile_get_cb(GError *error, char *profile, gpointer userdata)
-{
 	/*FIXME: I should probably free this profile, but how?, CHECK DBUS*/
 	(void) userdata;
-
-	if (error) {
-		g_warning("Failed to retrieve active profile");
-		return;
-	}
 	elm_hoversel_label_set(view.profiles_combo, profile);
 }
 
