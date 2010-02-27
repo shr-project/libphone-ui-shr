@@ -73,6 +73,14 @@ common_utils_new_gvalue_boxed(GType type, gpointer value)
 	return val;
 }
 
+void
+common_utils_gvalue_free(gpointer val)
+{
+	GValue *value = (GValue *)val;
+	g_value_unset(value);
+	g_free(value);
+}
+
 void *
 common_utils_object_ref(void *object)
 {
