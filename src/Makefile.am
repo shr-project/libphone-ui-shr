@@ -22,6 +22,7 @@ shr_la_SOURCES = \
 	phoneui-contacts.h phoneui-contacts.c \
 	phoneui-ussd.h phoneui-ussd.c \
 	phoneui-quick-settings.h phoneui-quick-settings.c \
+	phoneui-phonelog.h phoneui-phonelog.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	util/window.h util/window.c \
 	util/ui-utils.h util/ui-utils.c \
@@ -46,5 +47,7 @@ shr_la_SOURCES = \
 	util/common-utils.h util/common-utils.c \
 	view/ussd-view.c \
 	view/quick-settings-view.h \
-	view/quick-settings-view.c
+	view/quick-settings-view.c \
+	view/phonelog-view.h \
+	view/phonelog-view.c
 
