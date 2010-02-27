@@ -17,7 +17,6 @@ shr_la_SOURCES = \
 	phoneui-idle.h phoneui-idle.c \
 	phoneui-dialog.h phoneui-dialog.c \
 	phoneui-messages.h phoneui-messages.c \
-	phoneui-incoming-message.h phoneui-incoming-message.c \
 	phoneui-sim-auth.h phoneui-sim-auth.c \
 	phoneui-call.h phoneui-call.c \
 	phoneui-contacts.h phoneui-contacts.c \
