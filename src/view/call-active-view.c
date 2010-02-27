@@ -25,7 +25,7 @@ _speaker_toggle_change(void *data, Evas_Object *obj, void *event_info)
 	if (elm_toggle_state_get(obj))
 		call_common_set_sound_state(SOUND_STATE_SPEAKER);
 	else
-		call_common_set_sound_state(SOUND_STATE_HANDSET);
+		call_common_set_sound_state(SOUND_STATE_INIT);
 }
 
 static void
@@ -236,7 +236,7 @@ call_button_sound_state_clicked(struct CallActiveViewData *data,
 	g_debug("sound_state_clicked(id=%d,state=%d)", data->parent.id, state);
 
 	if (state == SOUND_STATE_SPEAKER) {
-		call_common_set_sound_state(SOUND_STATE_HANDSET);
+		call_common_set_sound_state(SOUND_STATE_INIT);
 	}
 	else if (state == SOUND_STATE_HANDSET) {
 		call_common_set_sound_state(SOUND_STATE_SPEAKER);
