@@ -1,5 +1,7 @@
 #ifndef _CONTACT_VIEW_H
 #define _CONTACT_VIEW_H
+
+#include <glib.h>
 #include "ui-utils.h"
 
 struct ContactViewData {
