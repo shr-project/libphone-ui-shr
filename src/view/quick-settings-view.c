@@ -129,10 +129,9 @@ quick_settings_view_init()
 	elm_layout_sizing_eval(view.parent.layout);
 
 	/*Register to all signals*/
-	phoneui_info_register_profile_changes(_profile_changed_signal_cb, NULL);
-	/*FIXME Why did I have to cast? */
-	phoneui_info_register_resource_changes((void (*)(void *, const char *, gboolean,  GHashTable *))
-				_resource_changed_signal_cb, NULL);
+	phoneui_info_register_and_request_profile_changes(_profile_changed_signal_cb, NULL);
+	/*FIXME: Fix this cast issue */
+	phoneui_info_register_resource_changes((void (*)(void *, const char *, gboolean,  GHashTable *)) _resource_changed_signal_cb, NULL);
 
 	/*FIXME: until we implement it*/
 	elm_object_disabled_set(view.airplane_slide, 1);
@@ -208,8 +207,8 @@ _profiles_list_cb(GError *error, char **list, gpointer userdata)
 static void
 _profile_changed_signal_cb(void *userdata, const char *profile)
 {
+	/*FIXME: I should probably free this profile, but how?, CHECK DBUS*/
 	(void) userdata;
-
 	elm_hoversel_label_set(view.profiles_combo, profile);
 }
 
