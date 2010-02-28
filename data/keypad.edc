@@ -1,15 +1,15 @@
 group { name: "phoneui/keypad";
 	parts {
-		part { name: "border_top";
+		part { name: "background";
 			type: RECT;
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0 0;
+					relative: 0.0 0.0;
 				}
 				rel2 {
-					relative: 1 0.01;
+					relative: 1.0 1.0;
 				}
 				color: 100 100 100 255;
 			}
