@@ -174,7 +174,7 @@ message_list_view_show(struct Window *win, void *_options)
 	//evas_object_size_hint_weight_set(data->list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_show(data->list);
 
-	phoneui_utils_messages_get(NULL, retrieve_messagebook_callback, data);
+	phoneui_utils_messages_get(retrieve_messagebook_callback, data);
 
 	window_show(win);
 
