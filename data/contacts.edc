@@ -440,8 +440,14 @@ group { name: "elm/genlist/item/contactfield/default";
 				visible: 1;
 				fixed: 1 1;
 				align: 1 0;
-				rel1.relative: 0.0 0.1;
-				rel2.relative: 1.0 0.9;
+				rel1 {
+					to: "elm.swallow.button_delfield";
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					to: "elm.swallow.button_delfield";
+					relative: 1.0 1.0;
+				}
 			}
 			description {
 				state: "edit" 0.0;
@@ -632,7 +638,7 @@ group { name: "phoneui/contacts/view";
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0.0 0.25;
+					relative: 0.0 0.26;
 				}
 				rel2 {
 					relative: 1.0 1.0;

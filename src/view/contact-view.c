@@ -114,7 +114,7 @@ contact_view_init(char *path, GHashTable *properties)
 				_contact_photo_clicked, view);
 	ui_utils_view_swallow(VIEW_PTR(*view), "photo", view->photo);
 	evas_object_show(view->photo);
-	
+
 	view->pager = elm_pager_add(win);
 	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 
@@ -129,8 +129,8 @@ contact_view_init(char *path, GHashTable *properties)
 	evas_object_size_hint_align_set(view->fields, 0.0, 0.0);
 	elm_object_scale_set(view->fields, 1.0);
 	elm_layout_content_set(view->pager_layout, "fields", view->fields);
-	
-	
+
+
 	itc.item_style = "contactfield";
 	itc.func.label_get = NULL;
 	itc.func.icon_get = gl_field_icon_get;
@@ -911,8 +911,6 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 //	      	elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
      		evas_object_smart_callback_add(ico, "clicked",
 					      _field_edit_clicked, fd);
-		evas_object_size_hint_min_set(ico, 32, 32);
-		evas_object_size_hint_max_set(ico, 32, 32);
 		fd->slide_buttons = ico;
 		return ico;
 	}
