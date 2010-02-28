@@ -115,14 +115,23 @@ contact_view_init(char *path, GHashTable *properties)
 				_contact_photo_clicked, view);
 	ui_utils_view_swallow(VIEW_PTR(*view), "photo", view->photo);
 	evas_object_show(view->photo);
+	
+	view->pager = elm_pager_add(win);
+	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 
+	view->pager_layout = elm_layout_add(view->pager);
+	elm_layout_file_set(view->pager_layout, DEFAULT_THEME, "phoneui/contacts/fieldedit");
+	elm_pager_content_push(view->pager, view->pager_layout);
+	
 	view->fields = elm_genlist_add(win);
 	elm_scroller_policy_set(view->fields, ELM_SCROLLER_POLICY_OFF,
 				ELM_SCROLLER_POLICY_AUTO);
 	elm_genlist_horizontal_mode_set(view->fields, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(view->fields, 0.0, 0.0);
 	elm_object_scale_set(view->fields, 1.0);
-	ui_utils_view_swallow(VIEW_PTR(*view), "fields", view->fields);
+	elm_layout_content_set(view->pager_layout, "fields", view->fields);
+	
+	
 	itc.item_style = "contactfield";
 	itc.func.label_get = NULL;
 	itc.func.icon_get = gl_field_icon_get;
@@ -139,21 +148,21 @@ l contacts.edc emits*/
 	elm_button_label_set(view->btn_save, D_("Save"));
 	evas_object_smart_callback_add(view->btn_save, "clicked",
 				       _contact_save_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_save", view->btn_save);
+	elm_layout_content_set(view->pager_layout, "button_save", view->btn_save);
 	evas_object_show(view->btn_save);
 
 	view->btn_cancel = elm_button_add(win);
 	elm_button_label_set(view->btn_cancel, D_("Cancel"));
 	evas_object_smart_callback_add(view->btn_cancel, "clicked",
 				       _contact_cancel_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_cancel", view->btn_cancel);
+	elm_layout_content_set(view->pager_layout, "button_cancel", view->btn_cancel);
 	evas_object_show(view->btn_cancel);
 
 	view->btn_photo_remove = elm_button_add(win);
 	elm_button_label_set(view->btn_photo_remove, D_("Remove"));
 	evas_object_smart_callback_add(view->btn_photo_remove, "clicked",
 				       _contact_photo_remove_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_photo_remove",
+	elm_layout_content_set(view->pager_layout, "button_photo_remove",
 			      view->btn_photo_remove);
 	evas_object_show(view->btn_photo_remove);
 
@@ -161,7 +170,7 @@ l contacts.edc emits*/
 	elm_button_label_set(view->btn_photo_back, D_("Back"));
 	evas_object_smart_callback_add(view->btn_photo_back, "clicked",
 				       _contact_photo_back_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_photo_back",
+	elm_layout_content_set(view->pager_layout, "button_photo_back",
 			      view->btn_photo_back);
 	evas_object_show(view->btn_photo_back);
 
@@ -169,14 +178,14 @@ l contacts.edc emits*/
 	elm_button_label_set(view->btn_call, D_("Call"));
 	evas_object_smart_callback_add(view->btn_call, "clicked",
 				       _contact_call_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_call", view->btn_call);
+	elm_layout_content_set(view->pager_layout, "button_call", view->btn_call);
 	evas_object_show(view->btn_call);
 
 	view->btn_sms = elm_button_add(win);
 	elm_button_label_set(view->btn_sms, D_("SMS"));
 	evas_object_smart_callback_add(view->btn_sms, "clicked",
 				       _contact_sms_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_sms", view->btn_sms);
+	elm_layout_content_set(view->pager_layout, "button_sms", view->btn_sms);
 	evas_object_show(view->btn_sms);
 
 	view->btn_delete = elm_button_add(win);
@@ -184,7 +193,7 @@ l contacts.edc emits*/
 	evas_object_smart_callback_add(view->btn_delete, "clicked",
 				       _contact_delete_clicked, view);
 	evas_object_show(view->btn_delete);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_delete",
+	elm_layout_content_set(view->pager_layout, "button_delete",
 			      view->btn_delete);
 
 	view->btn_addfield = elm_button_add(win);
@@ -192,7 +201,7 @@ l contacts.edc emits*/
 	evas_object_smart_callback_add(view->btn_addfield, "clicked",
 				       _contact_add_field_clicked, view);
 	evas_object_show(view->btn_addfield);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_addfield",
+	elm_layout_content_set(view->pager_layout, "button_addfield",
 			      view->btn_addfield);
 
 	_load_name(view);
@@ -321,9 +330,9 @@ _contact_photo_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
-	struct ContactViewData *view;
-	g_debug("you clicked on the photo :-)");
-	view = _data;
+	struct ContactViewData *view = _data;
+	(void) view;
+	
 }
 
 static void
@@ -536,12 +545,12 @@ _set_modify(struct ContactViewData *view, int dirty)
 	view->have_unsaved_changes = dirty;
 	if (dirty) {
 		edje_object_signal_emit(
-			ui_utils_view_layout_get(VIEW_PTR(*view)),
+			elm_layout_edje_get(view->pager_layout),
 					"elm,state,dirty", "");
 	}
 	else {
 		edje_object_signal_emit(
-			ui_utils_view_layout_get(VIEW_PTR(*view)),
+			elm_layout_edje_get(view->pager_layout),
 					"elm,state,default", "");
 	}
 }

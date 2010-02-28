@@ -6,6 +6,7 @@
 
 struct ContactViewData {
 	struct View parent;
+	Evas_Object *pager, *pager_layout;
 	Evas_Object *fields, *name, *number, *photo;
 	Evas_Object *btn_call, *btn_sms, *btn_delete, *btn_addfield;
 	Evas_Object *btn_photo_back, *btn_photo_remove;
