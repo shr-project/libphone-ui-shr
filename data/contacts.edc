@@ -675,11 +675,6 @@ group { name: "phoneui/contacts/fieldedit";
 				state: "dirty" 0.0;
 				inherit: "default" 0.0;
 			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
 		}
 		part { name: "button_call";
 			type: SWALLOW;
@@ -691,11 +686,6 @@ group { name: "phoneui/contacts/fieldedit";
 			}
 			description {
 				state: "dirty" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
-			description {
-				state: "photo" 0.0;
 				inherit: "default" 0.0;
 				visible: 0;
 			}
@@ -713,11 +703,6 @@ group { name: "phoneui/contacts/fieldedit";
 				inherit: "default" 0.0;
 				visible: 0;
 			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
 		}
 		part { name: "button_delete";
 			type: SWALLOW;
@@ -729,11 +714,6 @@ group { name: "phoneui/contacts/fieldedit";
 			}
 			description {
 				state: "dirty" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
-			description {
-				state: "photo" 0.0;
 				inherit: "default" 0.0;
 				visible: 0;
 			}
@@ -752,10 +732,6 @@ group { name: "phoneui/contacts/fieldedit";
 				inherit: "default" 0.0;
 				visible: 1;
 			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
-			}
 		}
 		part { name: "button_cancel";
 			type: SWALLOW;
@@ -770,10 +746,6 @@ group { name: "phoneui/contacts/fieldedit";
 				state: "dirty" 0.0;
 				inherit: "default" 0.0;
 				visible: 1;
-			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
 			}
 		}
 	}
@@ -795,18 +767,6 @@ group { name: "phoneui/contacts/fieldedit";
 			signal:  "elm,state,dirty";
 			source:  "";
 			action:  STATE_SET "dirty" 0.0;
-			target:  "button_delete";
-			target:  "button_call";
-			target:  "button_sms";
-			target:  "button_cancel";
-			target:  "button_save";
-			target:  "fields";
-		}
-		program {
-			name:    "go_photo";
-			signal:  "elm,state,photo";
-			source:  "";
-			action:  STATE_SET "photo" 0.0;
 			target:  "button_delete";
 			target:  "button_call";
 			target:  "button_sms";
