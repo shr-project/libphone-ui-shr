@@ -47,7 +47,6 @@ static void _add_cb(GError *error, char *path, gpointer data);
 static int _changes_to_properties(struct ContactViewData *view, int dry_run);
 static void _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd);
 static void _load_cb(GHashTable *content, gpointer data);
-static void _field_selected_cb(void *userdata, Evas_Object *obj, void *event_info);
 static void _field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info);
 
 int
@@ -131,8 +130,6 @@ contact_view_init(char *path, GHashTable *properties)
 	itc.func.del = gl_field_del;
 	/*FIXME: Shouldn't be these signals,but the start_edit or whatever signa
 l contacts.edc emits*/
-	evas_object_smart_callback_add(view->fields, "selected",
-		       _field_selected_cb, NULL);
 	evas_object_smart_callback_add(view->fields, "unselected",
 		       _field_unselected_cb, NULL);
 
@@ -779,6 +776,7 @@ _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
        (void) event_info;
        struct ContactFieldData *fd = (struct ContactFieldData *) data;
        edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
+       elm_entry_editable_set(fd->value_entry, EINA_TRUE);
 }
 
 
@@ -806,8 +804,7 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 		evas_object_smart_callback_add(entry, "changed", _value_changed,
 					       fd);
 		fd->value_entry = entry;
-		/* Should be EINA_FALSE but for some reason doesn't work */
-		elm_entry_editable_set(fd->value_entry, EINA_TRUE);
+		elm_entry_editable_set(fd->value_entry, EINA_FALSE);
 		return entry;
 	}
 	else if (strcmp(part, "elm.swallow.button_delfield") == 0) {
@@ -1012,20 +1009,10 @@ _destroy_cb(struct View *_view)
 }
 
 static void
-_field_selected_cb(void *data, Evas_Object *obj, void *event_info)
-{
-	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
-	(void) obj;
-	(void) data;
-	elm_entry_editable_set(fd->value_entry, EINA_TRUE);	
-}
-
-static void
 _field_unselected_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
 	(void) obj;
 	(void) data;
-	/* Should be EINA_FALSE but for some reason doesn't work */
-	elm_entry_editable_set(fd->value_entry, EINA_TRUE);	
+	elm_entry_editable_set(fd->value_entry, EINA_FALSE);	
 }
