@@ -782,8 +782,6 @@ group { name: "phoneui/contacts/fieldedit";
 			target:  "button_sms";
 			target:  "button_cancel";
 			target:  "button_save";
-			//target:  "button_back";
-			//target:  "button_remove";
 			target:  "fields";
 		}
 		program {
@@ -796,8 +794,6 @@ group { name: "phoneui/contacts/fieldedit";
 			target:  "button_sms";
 			target:  "button_cancel";
 			target:  "button_save";
-			//target:  "button_back";
-			//target:  "button_remove";
 			target:  "fields";
 		}
 		program {
@@ -810,64 +806,36 @@ group { name: "phoneui/contacts/fieldedit";
 			target:  "button_sms";
 			target:  "button_cancel";
 			target:  "button_save";
-			//target:  "button_back";
-			//target:  "button_remove";
 			target:  "fields";
 		}
 	}
 } /* phoneui/contacts/view */
 
 ///////////////////////////////////////////////////////////////////////////////
-group { name: "phoneui/contacts/edit_photo";
+group { name: "phoneui/contacts/edit_field";
 
 	parts {
-		part { name: "photo";
+		part { name: "main";
 			type: SWALLOW;
-			mouse_events: 0;
+			mouse_events: 1;
 			description {
 				state: "default" 0.0;
 				rel1 {
 					relative: 0.0 0.0;
 				}
 				rel2 {
-					relative: 0.3 0.3;
-				}
-			}
-		}
-		part { name: "file";
-			type: TEXT;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.3 0.0;
-					offset: 5 10;
-				}
-				rel2 {
-					relative: 1.0 0.3;
-				}
-			}
-		}
-		part { name: "selector";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.3;
-				}
-				rel2 {
 					relative: 1.0 0.85;
 				}
 			}
 		}
-		part { name: "button_select";
+		part { name: "button_back";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0.0 0.85;
+					to: "main";
+					relative: 0.0 1.0;
 				}
 				rel2 {
 					relative: 0.33 1.0;
@@ -880,20 +848,22 @@ group { name: "phoneui/contacts/edit_photo";
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0.33 0.85;
+					to: "main";
+					relative: 0.33 1.0;
 				}
 				rel2 {
 					relative: 0.66 1.0;
 				}
 			}
 		}
-		part { name: "button_back";
+		part { name: "button_save";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0.66 0.85;
+					to: "main";
+					relative: 0.66 1.0;
 				}
 				rel2 {
 					relative: 1.0 1.0;

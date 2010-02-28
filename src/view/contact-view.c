@@ -46,6 +46,7 @@ static int _changes_to_properties(struct ContactViewData *view, int dry_run);
 static void _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd);
 static void _load_cb(GHashTable *content, gpointer data);
 static void _field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info);
+static Evas_Object *_start_file_selector(Evas_Object *parent, struct ContactFieldData *fd, const char *path);
 
 int
 contact_view_init(char *path, GHashTable *properties)
@@ -322,18 +323,18 @@ _file_selector_done_cb(void *data, Evas_Object *obj, void *event_info)
 	elm_pager_content_pop(fd->view->pager);
 }
 
-static void
-_start_file_selector(struct ContactFieldData *fd, const char *path)
+static Evas_Object *
+_start_file_selector(Evas_Object *parent, struct ContactFieldData *fd, const char *path)
 {
 	Evas_Object *content;
 	/*layout = elm_layout_add(view->pager);
 	elm_layout_file_set(view->pager_layout, DEFAULT_THEME, "phoneui/contacts/fileselect");
 	*/
 	
-	content = elm_fileselector_add(fd->view->pager);
+	content = elm_fileselector_add(parent);
 	elm_fileselector_is_save_set(content, EINA_FALSE);
 	elm_fileselector_expandable_set(content, EINA_FALSE);
-	
+	elm_fileselector_buttons_ok_cancel_set(content, EINA_FALSE);
 	elm_fileselector_path_set(content, path);
 	
 	evas_object_size_hint_weight_set(content, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -341,8 +342,7 @@ _start_file_selector(struct ContactFieldData *fd, const char *path)
 	evas_object_show(content); 
 
 	evas_object_smart_callback_add(content, "done", _file_selector_done_cb, fd);
-
-	elm_pager_content_push(fd->view->pager, content);
+	return content;
 }
 
 static void
@@ -770,6 +770,77 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 		_add_value_to_field(view->properties, fd->name, fd->value);
 	}
 }
+static void
+_field_edit_button_back_clicked_cb(void *data, Evas_Object *obj, void *event_info)
+{
+       (void) obj;
+       (void) event_info;
+       struct ContactFieldData *fd = data;
+       elm_pager_content_pop(fd->view->pager);
+}
+
+static void
+_field_edit_button_remove_clicked_cb(void *data, Evas_Object *obj, void *event_info)
+{
+       (void) obj;
+       (void) event_info;
+       struct ContactFieldData *fd = data;
+       elm_pager_content_pop(fd->view->pager);
+       elm_entry_entry_set(fd->value_entry, "");
+}
+
+static void
+_field_edit_add_edit_page(struct ContactFieldData *fd, Evas_Object *content,
+		void (*save_cb) (void *, Evas_Object *, void *))
+{
+	Evas_Object *layout;
+	Evas_Object *btn_back, *btn_remove, *btn_save;
+
+	layout = elm_layout_add(fd->view->pager);
+	elm_layout_file_set(layout, DEFAULT_THEME, "phoneui/contacts/edit_field");
+	/*Used for callbacks*/
+	fd->edit_widget = content;
+	elm_layout_content_set(layout, "main", content);
+	
+	btn_save = elm_button_add(fd->view->pager);
+	
+	elm_button_label_set(btn_save, D_("Save"));
+	evas_object_smart_callback_add(btn_save, "clicked",
+				       save_cb, fd);
+	elm_layout_content_set(layout, "button_save", btn_save);
+	evas_object_show(btn_save);
+
+	btn_back = elm_button_add(fd->view->pager);
+	elm_button_label_set(btn_back, D_("Back"));
+	evas_object_smart_callback_add(btn_back, "clicked",
+				       _field_edit_button_back_clicked_cb, fd);
+	elm_layout_content_set(layout, "button_back", btn_back);
+	evas_object_show(btn_back);
+
+	btn_remove = elm_button_add(fd->view->pager);
+	elm_button_label_set(btn_remove, D_("Remove"));
+	evas_object_smart_callback_add(btn_remove, "clicked",
+				       _field_edit_button_remove_clicked_cb, fd);
+	elm_layout_content_set(layout, "button_remove", btn_remove);
+	evas_object_show(btn_remove);
+	
+	elm_pager_content_push(fd->view->pager, layout);
+}
+
+static void
+_field_edit_fileselector_save_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	const char *selected;
+	struct ContactFieldData *fd = data;
+	elm_pager_content_pop(fd->view->pager);
+	selected = elm_fileselector_selected_get(fd->edit_widget);
+	if (selected) {
+		elm_entry_entry_set(fd->value_entry, selected);
+	}
+	
+}
 
 /* genlist callbacks */
 static void
@@ -780,7 +851,9 @@ _field_edit_clicked_type_cb(GError *error, char *type, gpointer data)
 		/* don't return */
 	}
 	else if (!strcmp(type, "photo")) {
-		_start_file_selector(fd, getenv("HOME"));
+		Evas_Object *content;
+		content = _start_file_selector(fd->view->pager, fd, getenv("HOME"));
+		_field_edit_add_edit_page(fd, content, _field_edit_fileselector_save_cb);
 		return;
 	}
 	edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
