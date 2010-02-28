@@ -466,6 +466,21 @@ group { name: "elm/genlist/item/contactfield/default";
 				visible: 1;
 			}
 		}
+		part { name: "elm.swallow.button_actions";
+			type: SWALLOW;
+			description {
+				state: "default" 0.0;
+				visible: 1;
+				fixed: 1 0;
+				rel1.relative: 0.85 0.0;
+				rel2.relative: 1.0 1.0;
+			}
+			description {
+				state: "selected" 0.0;
+				inherit: "default" 0.0;
+				visible: 0;
+			}
+		}
 	}
 	programs {
 		// signal: elm,state,%s,active
@@ -480,6 +495,7 @@ group { name: "elm/genlist/item/contactfield/default";
 			action:  STATE_SET "selected" 0.0;
 			target:  "bg";
 			target:  "elm.swallow.button_delfield";
+			target:  "elm.swallow.button_actions";
 		}
 		program {
 			name:    "go_passive";
@@ -488,6 +504,7 @@ group { name: "elm/genlist/item/contactfield/default";
 			action:  STATE_SET "default" 0.0;
 			target:  "bg";
 			target:  "elm.swallow.button_delfield";
+			target:  "elm.swallow.button_actions";
 			transition: LINEAR 0.1;
 		}
 	}
