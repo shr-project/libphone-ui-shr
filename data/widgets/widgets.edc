@@ -1,0 +1,266 @@
+images {
+	image: "contacts_slide_call.png" COMP;
+	image: "contacts_slide_message.png" COMP;
+	image: "contacts_slide_open.png" COMP;
+}
+
+collections {
+	group { name: "zoomed_icon";
+		min: 64 64;
+		parts {	  
+			part { name: "bg";
+				type: RECT;
+				description { state: "default" 0;
+					color: 255 255 255 0;
+					min: 32 32;
+					rel1 {
+						relative: 0 0;
+					}
+					rel2 {
+						relative: 1 1;
+					}
+				}
+				description { state: "zoomed" 0;
+					color: 255 255 255 255;
+					min: 256 256;
+					rel1.offset: 386 0;
+				}
+
+				}
+			part { name: "base";
+				type: SWALLOW;
+				mouse_events: 1;
+				description { state: "default" 0;
+					min: 32 32;
+					rel1 {
+						relative: 0 0;
+					}
+					rel2 {
+						relative: 1 1;
+					}
+				}
+				description { state: "zoomed" 0;
+					min: 256 256;
+					rel1.offset: 386 0;
+				}
+			}
+		}
+		programs {
+			program { name: "zoom";
+				signal: "mouse,down,1";
+				source: "base";
+				action: STATE_SET "zoomed" 0.0;
+				target: "bg";
+				target: "base";
+				transition: DECELERATE 0.5;
+			}
+			program { name: "return";
+				signal: "mouse,up,1";
+				source: "base";
+				action: STATE_SET "default" 0.0;
+				target: "bg";
+				target: "base";
+				transition: ACCELERATE 0.5;
+			}
+
+		}
+	}
+	group { name: "contacts_slide_buttons";
+		min: 80 64;
+		max: 80 64;
+		parts {
+/*			part { name: "base";
+				type: RECT;
+				mouse_events: 0;
+				description { state: "default" 0;
+					color: 255 255 255 0;
+					rel1 {
+						relative: 0 0;
+					}
+					rel2 {
+						relative: 1 1;
+					}
+				}
+			}
+*/
+			part { name: "clipper";
+				type: RECT;
+				mouse_events: 1;
+				scale: 0;
+				description { state: "default" 0.0;
+/*					aspect: 0.0 1.0;
+					aspect_preference: HORIZONTAL;
+*/
+					min: 208 64;
+					max: 208 64;
+					rel1 {
+						relative: -2 0;
+					}
+					rel2 {
+						relative: 1 1;
+					}
+					align: 1.0 0.5;
+					color: 255 255 255 255;
+				}
+			}
+
+			part { name: "call";
+				type: IMAGE;
+				clip_to: "clipper";
+				mouse_events: 1;
+				repeat_events: 0;
+				scale: 0;
+				dragable {
+					confine: "clipper";
+					x: 1 1 0;
+					y: 0 0 0;
+				}
+				description { state: "default" 0;
+					color: 255 255 255 150;
+					min: 64 64;
+					max: 64 64;
+//					fixed: 1 1;
+					rel1.relative: 0.0 0.0;
+					rel2.relative: 1.0 1.0;
+					rel1.offset: 8 0;
+					rel2.offset: 8 0;
+					image {
+						normal: "contacts_slide_call.png";
+					}
+				}
+				description { state: "expanded" 0;
+				  inherit: "default" 0;
+				  color: 255 255 255 200;
+				}
+				description { state: "hover" 0;
+				  inherit: "default" 0;
+				  color: 255 255 255 255;
+				}
+			}
+			part { name: "message";
+				type: IMAGE;
+				repeat_events: 0;
+				clip_to: "clipper";
+				description { state: "default" 0;
+					fixed: 1 1;
+					color: 255 255 255 200;
+					rel1 {
+						relative: 1 0;
+						to: "call";
+						offset: 8 0;
+					}
+					rel2 {
+						relative: 2 1;
+						to: "call";
+						offset: 8 0;
+					}
+					image {
+						normal: "contacts_slide_message.png";
+						middle: DEFAULT;
+					}
+				}
+				description { state: "hover" 0;
+				  inherit: "default" 0;
+				  color: 255 255 255 255;
+				}
+			}
+			part { name: "open";
+				type: IMAGE;
+				clip_to: "clipper";
+				repeat_events: 0;
+				description { state: "default" 0;
+					color: 255 255 255 200;
+					rel1 {
+						relative: 2 0;
+						to: "call";
+						offset: 8 0;
+					}
+					rel2 {
+						relative: 3 1;
+						to: "call";
+						offset: 8 0;
+					}
+					image {
+						normal: "contacts_slide_open.png";
+						middle: DEFAULT;
+					}
+				}
+				description { state: "hover" 0;
+				  inherit: "default" 0;
+				  color: 255 255 255 255;
+				}
+			}
+		}
+		programs {
+			program { name:	"drag_end";
+				signal: "mouse,up,1";
+				source: "call";
+				script {
+					new Float:dx, Float:dy;
+					get_drag(PART:"call", dx, dy);
+					if (dx > 0.4)
+					  {
+						  emit("hide", "call")
+					  }
+					else
+					  {
+						  emit("expand", "call")
+					  }
+				}
+			}
+			program { name: "firsthover";
+				signal: "mouse,down,1";
+				source: "call";
+				action: STATE_SET "hover" 0.0;
+				target: "call";
+			}
+
+			program { name: "secondhover";
+				signal: "mouse,down,1";
+				source: "message";
+				action: STATE_SET "hover" 0.0;
+				target: "message";
+			}
+			program { name: "secondnormal";
+				signal: "mouse,up,1";
+				source: "message";
+				action: STATE_SET "default" 0.0;
+				target: "message";
+			}
+
+			program { name: "thirdhover";
+				signal: "mouse,down,1";
+				source: "open";
+				action: STATE_SET "hover" 0.0;
+				target: "open";
+			}
+			program { name: "thirdnormal";
+				signal: "mouse,up,1";
+				source: "open";
+				action: STATE_SET "default" 0.0;
+				target: "open";
+			}
+
+
+			program { name: "hide";
+				signal: "hide";
+				source: "*";
+				script {
+					set_drag(PART:"call", 0.95, 0.0);
+					set_state(PART:"call", "default", 0.0);
+					emit("return", "contacts_slide_buttons")
+				}
+			}
+			program { name: "expand";
+				signal: "expand";
+				source: "*";
+				script {
+					set_drag(PART:"call", 0.0, 0.0);
+					set_state(PART:"call", "expanded", 0.0);
+					emit("expanded", "contacts_slide_buttons")
+				}
+			}
+		}
+	}
+}
+

@@ -354,7 +354,7 @@ group { name: "elm/genlist/item/contactfield/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
 	data.item: "labels" "";
-	data.item: "icons" "elm.swallow.field_button elm.swallow.value_entry elm.swallow.button_delfield";
+	data.item: "icons" "elm.swallow.field_button elm.swallow.value_entry elm.swallow.button_delfield elm.swallow.button_actions";
 
 	parts {
 		part {
@@ -456,9 +456,9 @@ group { name: "elm/genlist/item/contactfield/default";
 			description {
 				state: "default" 0.0;
 				visible: 0;
-				fixed: 1 0;
-				rel1.relative: 0.85 0.0;
-				rel2.relative: 1.0 1.0;
+				fixed: 1 1;
+				rel1.relative: 0.85 0.1;
+				rel2.relative: 1.0 0.9;
 			}
 			description {
 				state: "edit" 0.0;
@@ -471,9 +471,9 @@ group { name: "elm/genlist/item/contactfield/default";
 			description {
 				state: "default" 0.0;
 				visible: 1;
-				fixed: 1 0;
-				rel1.relative: 0.85 0.0;
-				rel2.relative: 1.0 1.0;
+				fixed: 1 1;
+				rel1.relative: 0.0 0.1;
+				rel2.relative: 1.0 0.9;
 			}
 			description {
 				state: "edit" 0.0;
@@ -505,19 +505,17 @@ group { name: "elm/genlist/item/contactfield/default";
 		}
 		program {
 			name:	"start_edit";
-			signal:  "elm,state,selected";
+			signal:  "start_edit";
 			source:  "elm";
 			action:  STATE_SET "edit" 0.0;
-			target:  "bg";
 			target:  "elm.swallow.button_delfield";
 			target:  "elm.swallow.button_actions";
 		}
 		program {
-			name:    "stop edit";
+			name:    "stop_edit";
 			signal:  "elm,state,unselected";
 			source:  "elm";
 			action:  STATE_SET "default" 0.0;
-			target:  "bg";
 			target:  "elm.swallow.button_delfield";
 			target:  "elm.swallow.button_actions";
 			transition: LINEAR 0.1;

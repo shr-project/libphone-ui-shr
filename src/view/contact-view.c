@@ -771,10 +771,53 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 
 /* genlist callbacks */
 
+static void
+_contact_field_slide_clicked_cb(void *data, Evas_Object * obj, const char *emission,
+			    const char *source)
+{
+	(void) emission;
+	(void) obj;
+	struct ContactFieldData *fd = (struct ContactFieldData *) data;
+	if (!strcmp(source, "call")) {
+		phoneui_utils_dial(fd->value, NULL, NULL);
+	}
+	else if (!strcmp(source, "message")) {
+		char *str;
+		const char *photo;
+		/*FIXME: make sure fd->view exists */
+		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+		g_hash_table_insert(options, "Phone",
+					common_utils_new_gvalue_string(fd->value));
+
+		str = phoneui_utils_contact_display_name_get(fd->view->properties);
+		if (str) {
+			g_hash_table_insert(options, "Name",
+					common_utils_new_gvalue_string(str));
+			free(str);
+		}
+		
+		photo = g_hash_table_lookup(fd->view->properties, "Photo");
+		if (photo) {
+			g_hash_table_insert(options, "Photo",
+					common_utils_new_gvalue_string(photo));
+		
+		}
+
+		phoneui_messages_message_new(options);
+		/*FIXME: free options? */
+	}
+	else if (!strcmp(source, "open")) {
+		Evas_Object *edje = elm_layout_edje_get(fd->slide_buttons);
+		edje_object_signal_emit(edje, "expand", "elm");
+		edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
+	}
+}
+
 static Evas_Object *
 gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 {
 	g_debug("gl_field_icon_get (part=%s)", part);
+	/*FIXME: is this really the correct way to allocate? maybe check if already allocated? */
 	struct ContactFieldData *fd = (struct ContactFieldData *) _data;
 	if (strcmp(part, "elm.swallow.field_button") == 0) {
 		Evas_Object *btn = elm_button_add(obj);
@@ -805,6 +848,17 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 		evas_object_smart_callback_add(ico, "clicked",
 					       _field_remove_clicked, fd);
 		return ico;
+	}
+	else if (strcmp(part, "elm.swallow.button_actions") == 0) {
+		Evas_Object *layout = elm_layout_add(obj);
+		Evas_Object *edje;
+		elm_layout_file_set(layout, WIDGETS_EDJE, "contacts_slide_buttons");
+		edje = elm_layout_edje_get(layout);
+		edje_object_signal_callback_add(edje, "mouse,clicked,1", "*",
+					_contact_field_slide_clicked_cb, fd);
+		edje_object_signal_emit(edje, "hide", "contacts_slide_buttons");
+		fd->slide_buttons = layout;
+		return layout;
 	}
 	return NULL;
 }
@@ -955,12 +1009,13 @@ _add_field(struct ContactViewData *view,
 	fd->oldvalue = NULL;
 	fd->field_button = NULL;
 	fd->value_entry = NULL;
+	fd->slide_buttons = NULL;
 	fd->view = view;
 	fd->dirty = 0;
 	fd->isnew = isnew;
-
-	return elm_genlist_item_append(view->fields, &itc, fd, NULL,
+	fd->item = elm_genlist_item_append(view->fields, &itc, fd, NULL,
 			ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	return fd->item;
 }
 
 
