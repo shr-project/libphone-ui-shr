@@ -66,8 +66,8 @@ collections {
 		}
 	}
 	group { name: "contacts_slide_buttons";
-		min: 80 64;
-		max: 80 64;
+		min: 40 32;
+		max: 40 32;
 		parts {
 /*			part { name: "base";
 				type: RECT;
@@ -91,8 +91,8 @@ collections {
 /*					aspect: 0.0 1.0;
 					aspect_preference: HORIZONTAL;
 */
-					min: 208 64;
-					max: 208 64;
+					min: 104 32;
+					max: 104 32;
 					rel1 {
 						relative: -2 0;
 					}
@@ -117,8 +117,8 @@ collections {
 				}
 				description { state: "default" 0;
 					color: 255 255 255 150;
-					min: 64 64;
-					max: 64 64;
+					min: 32 32;
+					max: 32 32;
 //					fixed: 1 1;
 					rel1.relative: 0.0 0.0;
 					rel2.relative: 1.0 1.0;
