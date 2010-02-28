@@ -16,12 +16,11 @@ struct ContactViewData {
 };
 
 struct ContactFieldData {
-	char *type;
 	char *name;
 	char *value;
 	char *oldname;
 	char *oldvalue;
-	Evas_Object *field_button, *value_entry, *action_buttons;
+	Evas_Object *field_button, *value_entry, *slide_buttons;
 	Elm_Genlist_Item *item;
 	struct ContactViewData *view;
 	int dirty;

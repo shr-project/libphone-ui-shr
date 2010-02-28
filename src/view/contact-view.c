@@ -33,7 +33,7 @@ static void _load_name(struct ContactViewData *view);
 static void _load_number(struct ContactViewData *view);
 static void _load_photo(struct ContactViewData *view);
 static void _load_fields(struct ContactViewData *view);
-static void _add_field(struct ContactViewData *view, const char *key, const char *value, int isnew);
+static Elm_Genlist_Item *_add_field(struct ContactViewData *view, const char *key, const char *value, int isnew);
 
 static Evas_Object *gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part);
 static void gl_field_del(const void *_data, Evas_Object * obj);
@@ -129,7 +129,6 @@ contact_view_init(char *path, GHashTable *properties)
 	itc.func.icon_get = gl_field_icon_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_field_del;
-	/*FIXME: Shouldn't be these signals,but the start_edit or whatever signal contacts.edc emits*/
 	evas_object_smart_callback_add(view->fields, "selected",
 		       _field_selected_cb, NULL);
 	evas_object_smart_callback_add(view->fields, "unselected",
@@ -304,7 +303,8 @@ _add_field_cb(const char *field, void *data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
 	if (field) {
-		_add_field(view, field, "", 1);
+		Elm_Genlist_Item *it = _add_field(view, field, "", 1);
+		elm_genlist_item_bring_in(it);
 	}
 }
 
@@ -770,14 +770,6 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 }
 
 /* genlist callbacks */
-static void
-_field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct ContactFieldData *fd = (struct ContactFieldData *) data;
-	edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
-}
 
 static void
 _contact_field_slide_clicked_cb(void *data, Evas_Object * obj, const char *emission,
@@ -815,7 +807,7 @@ _contact_field_slide_clicked_cb(void *data, Evas_Object * obj, const char *emiss
 		/*FIXME: free options? */
 	}
 	else if (!strcmp(source, "open")) {
-		Evas_Object *edje = elm_layout_edje_get(fd->action_buttons);
+		Evas_Object *edje = elm_layout_edje_get(fd->slide_buttons);
 		edje_object_signal_emit(edje, "expand", "elm");
 		edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
 	}
@@ -858,28 +850,15 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 		return ico;
 	}
 	else if (strcmp(part, "elm.swallow.button_actions") == 0) {
-		if (fd->type && !strcmp(fd->type, "phonenumber")) {
-			Evas_Object *layout = elm_layout_add(obj);
-			Evas_Object *edje;
-			elm_layout_file_set(layout, WIDGETS_EDJE, "contacts_slide_buttons");
-			edje = elm_layout_edje_get(layout);
-			edje_object_signal_callback_add(edje, "mouse,clicked,1", "*",
-						_contact_field_slide_clicked_cb, fd);
-			edje_object_signal_emit(edje, "hide", "contacts_slide_buttons");
-			fd->action_buttons = layout;
-			return layout;
-		}
-		else {
-			Evas_Object *ico = elm_icon_add(obj);
-			elm_icon_standard_set(ico, "edit");
-//	 		elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
-			evas_object_smart_callback_add(ico, "clicked",
-						       _field_edit_clicked, fd);
-			evas_object_size_hint_min_set(ico, 32, 32);
-			evas_object_size_hint_max_set(ico, 32, 32);
-			fd->action_buttons = ico;
-			return ico;
-		}
+		Evas_Object *layout = elm_layout_add(obj);
+		Evas_Object *edje;
+		elm_layout_file_set(layout, WIDGETS_EDJE, "contacts_slide_buttons");
+		edje = elm_layout_edje_get(layout);
+		edje_object_signal_callback_add(edje, "mouse,clicked,1", "*",
+					_contact_field_slide_clicked_cb, fd);
+		edje_object_signal_emit(edje, "hide", "contacts_slide_buttons");
+		fd->slide_buttons = layout;
+		return layout;
 	}
 	return NULL;
 }
@@ -1013,66 +992,30 @@ _load_fields(struct ContactViewData *view)
 	g_debug("Adding fields done");
 }
 
-struct _add_field_pack {
-	struct ContactViewData *view;
-	const char *name;
-	const char *value;
-	int isnew;
-};
-
-static void
-_add_field_type_cb(GError *error, char *type, gpointer data)
+static Elm_Genlist_Item *
+_add_field(struct ContactViewData *view,
+	   const char *key, const char *value, int isnew)
 {
-	if (error) {
-		/*FIXME: verify allocation */
-		type = strdup("generic");
-	}
-	struct _add_field_pack *pack = (struct _add_field_pack *) data;
+	g_debug("Adding field <%s> with value '%s' to list", key, value);
 	struct ContactFieldData *fd =
 		malloc(sizeof(struct ContactFieldData));
 	if (fd == NULL) {
 		g_critical("Failed allocating field data!");
-		return;
+		return NULL;
 	}
-	fd->name = strdup(pack->name);
-	fd->value = strdup(pack->value);
+	fd->name = strdup(key);
+	fd->value = strdup(value);
 	fd->oldname = NULL;
 	fd->oldvalue = NULL;
 	fd->field_button = NULL;
 	fd->value_entry = NULL;
-	fd->action_buttons = NULL;
-	fd->view = pack->view;
+	fd->slide_buttons = NULL;
+	fd->view = view;
 	fd->dirty = 0;
-	fd->isnew = pack->isnew;
-	fd->type = strdup(type);
-	if (fd->isnew) {
-		fd->item = elm_genlist_item_prepend(pack->view->fields, &itc, fd, NULL,
-				ELM_GENLIST_ITEM_NONE, NULL, NULL);
-	}
-	else {
-		fd->item = elm_genlist_item_append(pack->view->fields, &itc, fd, NULL,
-				ELM_GENLIST_ITEM_NONE, NULL, NULL);
-	}
-	elm_genlist_item_bring_in(fd->item);
-	free(data);
-	/*FIXME: free type */
-}
-	
-static void
-_add_field(struct ContactViewData *view,
-	   const char *key, const char *value, int isnew)
-{
-	struct _add_field_pack *pack;
-	/*FIXME: check success*/
-	pack = malloc(sizeof (*pack));
-	pack->view = view;
-	pack->name = key;
-	pack->value = value;
-	pack->isnew = isnew;
-	g_debug("Adding field <%s> with value '%s' to list", key, value);
-	phoneui_utils_contacts_field_type_get(key, _add_field_type_cb, pack);
-	
-
+	fd->isnew = isnew;
+	fd->item = elm_genlist_item_append(view->fields, &itc, fd, NULL,
+			ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	return fd->item;
 }
 
 
