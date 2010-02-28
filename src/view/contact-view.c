@@ -1,5 +1,6 @@
 
 #include <glib.h>
+#include <stdlib.h>
 #include <Evas.h>
 #include <Elementary.h>
 #include <phoneui/phoneui.h>
@@ -19,9 +20,6 @@ static void _contact_add_field_clicked(void *_data, Evas_Object * obj, void *eve
 static void _contact_photo_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info);
-
-static void _contact_photo_back_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void _contact_photo_remove_clicked(void *_data, Evas_Object *obj, void *event_info);
 
 static void _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _contact_cancel_clicked(void *_data, Evas_Object *obj, void *event_info);
@@ -157,22 +155,6 @@ l contacts.edc emits*/
 				       _contact_cancel_clicked, view);
 	elm_layout_content_set(view->pager_layout, "button_cancel", view->btn_cancel);
 	evas_object_show(view->btn_cancel);
-
-	view->btn_photo_remove = elm_button_add(win);
-	elm_button_label_set(view->btn_photo_remove, D_("Remove"));
-	evas_object_smart_callback_add(view->btn_photo_remove, "clicked",
-				       _contact_photo_remove_clicked, view);
-	elm_layout_content_set(view->pager_layout, "button_photo_remove",
-			      view->btn_photo_remove);
-	evas_object_show(view->btn_photo_remove);
-
-	view->btn_photo_back = elm_button_add(win);
-	elm_button_label_set(view->btn_photo_back, D_("Back"));
-	evas_object_smart_callback_add(view->btn_photo_back, "clicked",
-				       _contact_photo_back_clicked, view);
-	elm_layout_content_set(view->pager_layout, "button_photo_back",
-			      view->btn_photo_back);
-	evas_object_show(view->btn_photo_back);
 
 	view->btn_call = elm_button_add(win);
 	elm_button_label_set(view->btn_call, D_("Call"));
@@ -326,39 +308,51 @@ _contact_add_field_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
+_file_selector_done_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	struct ContactFieldData *fd = data;
+	const char *selected = event_info;
+
+	if (selected) {
+		elm_entry_entry_set(fd->value_entry, selected);
+	}
+
+	elm_pager_content_pop(fd->view->pager);
+}
+
+static void
+_start_file_selector(struct ContactFieldData *fd, const char *path)
+{
+	Evas_Object *content;
+	/*layout = elm_layout_add(view->pager);
+	elm_layout_file_set(view->pager_layout, DEFAULT_THEME, "phoneui/contacts/fileselect");
+	*/
+	
+	content = elm_fileselector_add(fd->view->pager);
+	elm_fileselector_is_save_set(content, EINA_FALSE);
+	elm_fileselector_expandable_set(content, EINA_FALSE);
+	
+	elm_fileselector_path_set(content, path);
+	
+	evas_object_size_hint_weight_set(content, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(content, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	evas_object_show(content); 
+
+	evas_object_smart_callback_add(content, "done", _file_selector_done_cb, fd);
+
+	elm_pager_content_push(fd->view->pager, content);
+}
+
+static void
 _contact_photo_clicked(void *_data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
 	struct ContactViewData *view = _data;
 	(void) view;
-	
-}
-
-static void
-_contact_photo_back_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct ContactViewData *view;
-	view = _data;
-	// TODO
-}
-
-static void
-_contact_photo_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct ContactViewData *view;
-	view = _data;
-	// TODO: ask for confirmation
-	// TODO: actually save it
-	if (view->properties) {
-		// TODO: mark that somehow as dirty
-		g_hash_table_remove(view->properties, "Photo");
-	}
-	_load_photo(view);
+	//_start_file_selector(view, getenv("HOME"));
 }
 
 static void
@@ -779,13 +773,27 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 
 /* genlist callbacks */
 static void
+_field_edit_clicked_type_cb(GError *error, char *type, gpointer data)
+{
+	struct ContactFieldData *fd = data;
+	if (error || !type) {
+		/* don't return */
+	}
+	else if (!strcmp(type, "photo")) {
+		_start_file_selector(fd, getenv("HOME"));
+		return;
+	}
+	edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
+	elm_entry_editable_set(fd->value_entry, EINA_TRUE);
+}
+
+static void
 _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 {
        (void) obj;
        (void) event_info;
-       struct ContactFieldData *fd = (struct ContactFieldData *) data;
-       edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
-       elm_entry_editable_set(fd->value_entry, EINA_TRUE);
+       struct ContactFieldData *fd = data;
+       phoneui_utils_contacts_field_type_get(fd->name, _field_edit_clicked_type_cb, fd);
 }
 
 
