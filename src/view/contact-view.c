@@ -123,12 +123,14 @@ contact_view_init(char *path, GHashTable *properties)
 	elm_genlist_horizontal_mode_set(view->fields, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(view->fields, 0.0, 0.0);
 	elm_object_scale_set(view->fields, 1.0);
-        ui_utils_view_swallow(VIEW_PTR(*view), "fields", view->fields);
+	ui_utils_view_swallow(VIEW_PTR(*view), "fields", view->fields);
 	itc.item_style = "contactfield";
 	itc.func.label_get = NULL;
 	itc.func.icon_get = gl_field_icon_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_field_del;
+	/*FIXME: Shouldn't be these signals,but the start_edit or whatever signa
+l contacts.edc emits*/
 	evas_object_smart_callback_add(view->fields, "selected",
 		       _field_selected_cb, NULL);
 	evas_object_smart_callback_add(view->fields, "unselected",
@@ -147,7 +149,7 @@ contact_view_init(char *path, GHashTable *properties)
 	elm_button_label_set(view->btn_cancel, D_("Cancel"));
 	evas_object_smart_callback_add(view->btn_cancel, "clicked",
 				       _contact_cancel_clicked, view);
-        ui_utils_view_swallow(VIEW_PTR(*view), "button_cancel", view->btn_cancel);
+	ui_utils_view_swallow(VIEW_PTR(*view), "button_cancel", view->btn_cancel);
 	evas_object_show(view->btn_cancel);
 
 	view->btn_photo_remove = elm_button_add(win);
@@ -359,7 +361,7 @@ _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
-        if (view->properties == NULL)
+	if (view->properties == NULL)
 		return;
 
 	// TODO: show an inwin to select the number if there is more than one
@@ -770,48 +772,15 @@ _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
 }
 
 /* genlist callbacks */
-
 static void
-_contact_field_slide_clicked_cb(void *data, Evas_Object * obj, const char *emission,
-			    const char *source)
+_field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 {
-	(void) emission;
-	(void) obj;
-	struct ContactFieldData *fd = (struct ContactFieldData *) data;
-	if (!strcmp(source, "call")) {
-		phoneui_utils_dial(fd->value, NULL, NULL);
-	}
-	else if (!strcmp(source, "message")) {
-		char *str;
-		const char *photo;
-		/*FIXME: make sure fd->view exists */
-		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "Phone",
-					common_utils_new_gvalue_string(fd->value));
-
-		str = phoneui_utils_contact_display_name_get(fd->view->properties);
-		if (str) {
-			g_hash_table_insert(options, "Name",
-					common_utils_new_gvalue_string(str));
-			free(str);
-		}
-		
-		photo = g_hash_table_lookup(fd->view->properties, "Photo");
-		if (photo) {
-			g_hash_table_insert(options, "Photo",
-					common_utils_new_gvalue_string(photo));
-		
-		}
-
-		phoneui_messages_message_new(options);
-		/*FIXME: free options? */
-	}
-	else if (!strcmp(source, "open")) {
-		Evas_Object *edje = elm_layout_edje_get(fd->slide_buttons);
-		edje_object_signal_emit(edje, "expand", "elm");
-		edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
-	}
+       (void) obj;
+       (void) event_info;
+       struct ContactFieldData *fd = (struct ContactFieldData *) data;
+       edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
 }
+
 
 static Evas_Object *
 gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
@@ -850,15 +819,15 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 		return ico;
 	}
 	else if (strcmp(part, "elm.swallow.button_actions") == 0) {
-		Evas_Object *layout = elm_layout_add(obj);
-		Evas_Object *edje;
-		elm_layout_file_set(layout, WIDGETS_EDJE, "contacts_slide_buttons");
-		edje = elm_layout_edje_get(layout);
-		edje_object_signal_callback_add(edje, "mouse,clicked,1", "*",
-					_contact_field_slide_clicked_cb, fd);
-		edje_object_signal_emit(edje, "hide", "contacts_slide_buttons");
-		fd->slide_buttons = layout;
-		return layout;
+		Evas_Object *ico = elm_icon_add(obj);
+		elm_icon_standard_set(ico, "edit");
+//	      	elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
+     		evas_object_smart_callback_add(ico, "clicked",
+					      _field_edit_clicked, fd);
+		evas_object_size_hint_min_set(ico, 32, 32);
+		evas_object_size_hint_max_set(ico, 32, 32);
+		fd->slide_buttons = ico;
+		return ico;
 	}
 	return NULL;
 }
