@@ -486,9 +486,21 @@ group { name: "elm/genlist/item/contactfield/default";
 			target:  "elm.swallow.button_actions";
 		}
 		program {
-			name:    "stop_edit";
+			name:	"edit_stopped";
 			signal:  "elm,state,unselected";
 			source:  "elm";
+			script {
+				new st[6];
+				new Float:vl;
+				get_state(PART:"elm.swallow.button_actions", st, 5, vl);
+				if (!strcmp(st, "edit"))
+					emit("stopped_editing", "elm/genlist/item/contactfield/default")
+			}
+		}
+		program {
+			name:    "stop_edit";
+			signal:  "stopped_editing";
+			source:  "elm/genlist/item/contactfield/default";
 			action:  STATE_SET "default" 0.0;
 			target:  "elm.swallow.button_delfield";
 			target:  "elm.swallow.button_actions";

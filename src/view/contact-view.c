@@ -1,5 +1,6 @@
 
 #include <glib.h>
+#include <glib-object.h>
 #include <stdlib.h>
 #include <Evas.h>
 #include <Elementary.h>
@@ -26,7 +27,7 @@ static void _contact_cancel_clicked(void *_data, Evas_Object *obj, void *event_i
 
 static void _field_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info);
-static void _value_changed(void *_data, Evas_Object *obj, void *event_info);
+static void _change_value(struct ContactFieldData *fd, const char *value);
 static void _load_name(struct ContactViewData *view);
 static void _load_number(struct ContactViewData *view);
 static void _load_photo(struct ContactViewData *view);
@@ -42,8 +43,6 @@ static void _destroy_cb(struct View *_view);
 static void _set_modify(struct ContactViewData *view, int dirty);
 static void _update_cb(GError *error, gpointer data);
 static void _add_cb(GError *error, char *path, gpointer data);
-static int _changes_to_properties(struct ContactViewData *view, int dry_run);
-static void _update_one_field(struct ContactViewData *view, struct ContactFieldData *fd);
 static void _load_cb(GHashTable *content, gpointer data);
 static void _field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info);
 static Evas_Object *_start_file_selector(Evas_Object *parent, struct ContactFieldData *fd, const char *path);
@@ -99,7 +98,7 @@ contact_view_init(char *path, GHashTable *properties)
 		view->properties = g_hash_table_ref(properties);
 	else
 		view->properties = NULL;
-	view->have_unsaved_changes = 0;
+	view->changes = NULL;
 
 	elm_theme_extension_add(DEFAULT_THEME);
 
@@ -251,6 +250,82 @@ contact_view_show(const char *path)
 }
 
 static void
+_update_changes_of_field(struct ContactViewData *view, const char *field, const char *old_value, const char *new_value)
+{
+	/*FIXME: make generic so it'll be good for all the field types */
+	char **value;
+	if (!view->changes) {
+		view->changes = g_hash_table_new_full(g_str_hash, g_str_equal, free, (void (*) (void *)) g_strfreev);
+	}
+	
+	value = g_hash_table_lookup(view->changes, field);
+	if (!value) {
+		GValue *prop;
+		/* If we haven't already changed this field, we should first check the
+		 * the property hash to keep the values of the same field */
+		prop = g_hash_table_lookup(view->properties, field);
+		if (!prop) {
+			/* New field */
+			value = calloc(1, sizeof(char *));
+			value[0] = NULL;
+		}
+		else {
+			if (G_VALUE_HOLDS_STRING(prop)) {
+				value = calloc(2, sizeof(char *));
+				value[0] = strdup(g_value_get_string(prop));
+				value[1] = NULL;
+			}
+			else if (G_VALUE_HOLDS_BOXED(prop)) {
+				value = g_strdupv((char **) g_value_get_boxed(prop));
+			}
+			else {
+				g_debug("We don't handle gvalues that are not boxed/strings yet");
+				return;
+			}
+		}
+	}
+	else {
+		value = g_strdupv(value); /*Copy it to our own, the old one will be erased by the hash table */
+	}
+	
+	char **cur;
+	
+	
+	/* try to find the value we want to remove */
+	for (cur = value ; *cur ; cur++) {
+		if (!strcmp(old_value, *cur)) {	
+			break;
+		}
+	}
+
+	/* If we found what we wanted to remove, replace */
+	if (*cur) {
+		free(*cur);
+		/*If we need to replace, just allocate, otherwise remove that field from list */
+		if (strcmp(new_value, "")) {
+			*cur = strdup(new_value);
+		}
+		else {
+			/* We removed a field, we should reallocate -1 */
+			for ( ; *cur ; cur++) {
+				*cur = *(cur + 1);
+			}
+			value = realloc(value, g_strv_length(value) + 1);
+		}
+	}
+	else { /* We need to add another one */
+		/* We added a field, we should reallocate +1 */
+		int size = g_strv_length(value) + 2;
+		value = realloc(value, size); /*One for the NULL as well */
+		value[size - 2] = strdup(new_value);
+		value[size - 1] = NULL;
+	}
+
+	/* This also removes the old value */
+	g_hash_table_replace(view->changes, strdup(field), value);
+}
+
+static void
 _contact_delete_cb(GError *error, gpointer data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
@@ -317,6 +392,7 @@ _file_selector_done_cb(void *data, Evas_Object *obj, void *event_info)
 
 	if (selected) {
 		elm_entry_entry_set(fd->value_entry, selected);
+		_change_value(fd, selected);
 	}
 
 	elm_pager_content_pop(fd->view->pager);
@@ -431,21 +507,10 @@ _change_field_cb(const char *field, void *data)
 	g_debug("_change_field_cb");
 	struct ContactFieldData *fd = (struct ContactFieldData *)data;
 	if (field) {
-		g_debug("Changing field: before=%s, new=%s, old=%s",
-			fd->name, field, fd->oldname);
-		/* remember the old name of the field to be able to
-		rename (aka delete) it */
-		if (!fd->oldname && !fd->isnew) {
-			fd->oldname = fd->name;
-		}
-		/* we MUST NOT free name when it is needed as oldname */
-		else if (fd->name) {
-			free(fd->name);
-		}
-		/*FIXME: BAD: */
-		fd->name = (char *) field;
+		_update_changes_of_field(fd->view, fd->name, fd->value, "");
+		_update_changes_of_field(fd->view, field, "", fd->value);
+		fd->name = strdup(field);
 		elm_button_label_set(fd->field_button, field);
-		fd->dirty = 1;
 		_set_modify(fd->view, 1);
 		phoneui_utils_contacts_field_type_get(fd->name, _change_field_type_cb, fd);
 	}
@@ -468,38 +533,48 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	g_debug("_field_remove_clicked");
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
-	if (!fd->value || !*fd->value)
-		return;
-	elm_entry_entry_set(fd->value_entry, "");
-	/*_value_changed will be called and everything will be handled, no need to worry about anything */
+	elm_genlist_item_del(fd->item);
+	_change_value(fd, "");
 }
 
 static void
-_value_changed(void *_data, Evas_Object *obj, void *event_info)
+_change_value(struct ContactFieldData *fd, const char *value)
 {
-	(void) event_info;
-	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
 	g_debug("_value_changed");
-	char *s = ui_utils_entry_utf8_get(obj);
-	g_debug("Changed the value of field %s to '%s'", fd->name, s);
-	if (s) {
-		/* we have to check if it actually really changed, because elm_button_add
-		sends changed signals for non-user changes too */
-		if (!fd->value || strcmp(fd->value, s)) {
-			/* remember the original value of that field to be
-			able to update it properly on save */
-			if (!fd->oldvalue) {
-				fd->oldvalue = fd->value;
-			}
-			else if (fd->value) {
-				free(fd->value);
-			}
-			fd->value = s; // s is a freshly allocated string - no strdup needed
-			fd->dirty = 1;
-			_set_modify(fd->view, 1);
+	if (value) {
+		_update_changes_of_field(fd->view, fd->name, fd->value, value);
+		if (fd->value) {
+			free(fd->value);
 		}
-		// TODO: correctly check if it got changed back to its original
+		fd->value = strdup(value);
 	}
+	else {
+		g_error("Got NULL from edit field %s", fd->name);
+	}
+}
+
+static void
+_sanitize_changes_hash_foreach(void *key, void *value, void *data)
+{
+	GHashTable *target = data;
+	char **tmp = value;
+	GValue *gval;
+	if (!*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
+		gval = common_utils_new_gvalue_string(value);
+	}
+	else {
+		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, value);
+	}
+	g_hash_table_insert(target, key, gval);
+}
+
+static GHashTable *
+_sanitize_changes_hash(GHashTable *source)
+{
+	GHashTable *target;
+	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
+	g_hash_table_foreach(source, _sanitize_changes_hash_foreach,target);
+	return target;
 }
 
 static void
@@ -508,23 +583,25 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
+	GHashTable *formatted_changes;
 
-	if (!_changes_to_properties(view, 0)) {
+	if (!view->changes) {
 		/* should not happen ? */
-		g_message("No changes found ?");
-		_set_modify(view, 0);
+		g_warning("No changes found ?");
 		return;
 	}
 
+	formatted_changes = _sanitize_changes_hash(view->changes);
 	if (*view->path) {
 		g_debug("Updating contact '%s'", view->path);
-		phoneui_utils_contact_update(view->path, view->properties,
+		phoneui_utils_contact_update(view->path, formatted_changes,
 					     _update_cb, view);
 	}
 	else {
 		g_debug("Saving a new contact");
-		phoneui_utils_contact_add(view->properties, _add_cb, view);
+		phoneui_utils_contact_add(formatted_changes, _add_cb, view);
 	}
+	g_hash_table_unref(formatted_changes);
 }
 
 static void
@@ -547,10 +624,7 @@ _contact_cancel_clicked(void *_data, Evas_Object *obj, void *event_info)
 static void
 _set_modify(struct ContactViewData *view, int dirty)
 {
-	if (view->have_unsaved_changes == dirty)
-		return;
 	g_debug("modify is %s now", dirty ? "ON" : "OFF");
-	view->have_unsaved_changes = dirty;
 	if (dirty) {
 		edje_object_signal_emit(
 			elm_layout_edje_get(view->pager_layout),
@@ -602,8 +676,11 @@ _load_cb(GHashTable *content, gpointer data)
 	}
 	/* cleanup up the old data of the contact */
 	if (view->properties) {
-		g_debug("Removing old properties for contact");
 		g_hash_table_unref(view->properties);
+	}
+	if (view->changes) {
+		g_hash_table_destroy(view->changes);
+		view->changes = NULL;
 	}
 	view->properties = g_hash_table_ref(content);
 	_load_name(view);
@@ -613,177 +690,6 @@ _load_cb(GHashTable *content, gpointer data)
 }
 
 
-static int
-_changes_to_properties(struct ContactViewData *view, int dry_run)
-{
-	Elm_Genlist_Item *it;
-	struct ContactFieldData *fd;
-	int have_changes = 0;
-
-	g_debug("Checking dirtyness of fields");
-	it = elm_genlist_first_item_get(view->fields);
-	while (it) {
-		fd = (struct ContactFieldData *)elm_genlist_item_data_get(it);
-		if (fd->dirty) {
-			g_debug("found dirty field %s", fd->name);
-			have_changes = 1;
-			if (!dry_run) {
-				_update_one_field(view, fd);
-			}
-		}
-		it = elm_genlist_item_next_get(it);
-	}
-	g_debug("Done - there were %s changes", have_changes ? "some" : "NO");
-
-	return have_changes;
-}
-
-static void
-_remove_value_from_field(GHashTable *props, char *fld, char *val)
-{
-	GValue *tmp;
-	char **vl;
-	int i;
-
-	if (!props || !fld || !val) {
-		g_debug("One of props, fld or val is missing");
-		return;
-	}
-
-	tmp = g_hash_table_lookup(props, fld);
-	if (!tmp) {
-		g_debug("No field found - nothing to remove");
-		return;
-	}
-
-	if (G_VALUE_HOLDS_STRING(tmp)) {
-		/* the value is string - remove it */
-		g_debug("Field %s is holds a string - removing it", fld);
-		g_hash_table_remove(props, fld);
-		return;
-	}
-
-	if (!G_VALUE_HOLDS_BOXED(tmp)) {
-		g_warning("Field %s holds no string and is not boxed?!", fld);
-		return;
-	}
-
-	vl = (char **)g_value_get_boxed(tmp);
-	/* try to find the value we want to remove */
-	for (i = 0; vl[i]; i++) {
-		g_debug("Comparing %s with %s", val, vl[i]);
-		if (strcmp(val, vl[i]) == 0) {
-			g_debug("This is it... removing");
-			free(vl[i]);
-			break;
-		}
-	}
-	/* and remove it by moving the others one up (including NULL) */
-	for (; vl[i]; i++) {
-		vl[i] = vl[i+1];
-	}
-}
-
-static void
-_add_value_to_field(GHashTable *props, char *fld, char *val)
-{
-	GValue *tmp;
-	int i;
-	char **vlnew = NULL;
-
-	if (!props || !fld || !val) {
-		g_debug("One of props, fld or val is missing");
-		return;
-	}
-
-	tmp = g_hash_table_lookup(props, fld);
-	if (!tmp) {
-		g_debug("No field found - just adding value as new string");
-		g_hash_table_insert(props, fld,
-				    common_utils_new_gvalue_string(val));
-		return;
-	}
-
-	if (G_VALUE_HOLDS_STRING(tmp)) {
-		/* the value is string - have to change it to a list */
-		g_debug("Field %s holds a string - converting to list", fld);
-		vlnew = calloc(3, sizeof(char *));
-		vlnew[0] = strdup(g_value_get_string(tmp));
-		vlnew[1] = NULL;
-		i = 1;
-		g_hash_table_remove(props, fld);
-	}
-	else if (G_VALUE_HOLDS_BOXED(tmp)) {
-		g_debug("Field %s holds boxed", fld);
-		char **vl = (char **)g_value_get_boxed(tmp);
-		vlnew = calloc(g_strv_length(vl)+1, sizeof(char *));
-		for (i = 0; vl[i]; i++) {
-			vlnew[i] = strdup(vl[i]);
-		}
-		vlnew[i] = NULL;
-		g_hash_table_remove(props, fld);
-	}
-	else {
-		g_warning("Field %s holds no string and is not boxed?!", fld);
-		return;
-	}
-
-	/* we have made sure that i points to the currently last (NULL) element
-	of the list and that there is still room for another one !!! */
-	g_debug("Appending value '%s' for field %s to the list", val, fld);
-	vlnew[i] = val;
-	vlnew[i+1] = NULL;
-
-	g_hash_table_insert(props, fld,
-			    common_utils_new_gvalue_boxed(G_TYPE_STRV, vlnew));
-}
-
-static void
-_update_one_field(struct ContactViewData *view, struct ContactFieldData *fd)
-{
-	int should_update = 0;
-
-	/* for new contacts we might have to create the properties hashtable */
-	if (view->properties == NULL) {
-		g_debug("No properties hashtable yet... creating");
-		// FIXME: who will free that stuff ???
-		view->properties = g_hash_table_new_full(g_str_hash,
-						g_str_equal, NULL, NULL);
-		should_update = 1; /* really? */
-	}
-	else {
-		if (fd->oldvalue) {
-			/* if this field changed just value and did not change field
-			or is new, then we have to remove the old value first... */
-			if (!fd->oldname && !fd->isnew) {
-				g_debug("Removing old value as field did not change and it's not new");
-				_remove_value_from_field(view->properties,
-							fd->name, fd->oldvalue);
-				should_update = 1;
-			}
-			else if (fd->oldname) {
-				/* if field _and_ value changed remove the
-				old value from the old field */
-				g_debug("Removing old value from old field");
-				_remove_value_from_field(view->properties,
-						fd->oldname, fd->oldvalue);
-				should_update = 1;
-			}
-		}
-		else if (fd->oldname) {
-			/* if the _only_ the field changed, remove
-			the value from the old one */
-			g_debug("Removing the value from old field");
-			_remove_value_from_field(view->properties,
-						fd->oldname, fd->value);
-			should_update = 1;
-		}
-	}
-	/* only add fields that changed/new */
-	if (fd->value && (should_update || fd->isnew)) {
-		_add_value_to_field(view->properties, fd->name, fd->value);
-	}
-}
 static void
 _field_edit_button_back_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 {
@@ -800,7 +706,8 @@ _field_edit_button_remove_clicked_cb(void *data, Evas_Object *obj, void *event_i
        (void) event_info;
        struct ContactFieldData *fd = data;
        elm_pager_content_pop(fd->view->pager);
-       elm_entry_entry_set(fd->value_entry, "");
+       elm_genlist_item_del(fd->item);
+       _change_value(fd, "");
 }
 
 static void
@@ -871,6 +778,8 @@ _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 		return;
 	}
 	edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
+	fd->edit_on = 1;
+	_set_modify(fd->view, 1);
 	elm_entry_editable_set(fd->value_entry, EINA_TRUE);
 }
 
@@ -895,8 +804,6 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 						0.5);
 		evas_object_size_hint_align_set(entry, 0.5,
 						0.5);
-		evas_object_smart_callback_add(entry, "changed", _value_changed,
-					       fd);
 		fd->value_entry = entry;
 		elm_entry_editable_set(fd->value_entry, EINA_FALSE);
 		return entry;
@@ -932,8 +839,6 @@ gl_field_del(const void *_data, Evas_Object * obj)
 			free(fd->type);
 		if (fd->value)
 			free(fd->value);
-		if (fd->oldname)
-			free(fd->oldname);
 		free(fd);
 	}
 	g_debug("gl_field_del DONE");
@@ -1072,15 +977,13 @@ _add_field_type_cb(GError *error, char *type, gpointer data)
 	}
 	fd->name = strdup(pack->name);
 	fd->value = strdup(pack->value);
-	fd->oldname = NULL;
-	fd->oldvalue = NULL;
 	fd->field_button = NULL;
 	fd->value_entry = NULL;
 	fd->slide_buttons = NULL;
 	fd->view = pack->view;
-	fd->dirty = 0;
 	fd->isnew = pack->isnew;
 	fd->type = strdup(type);
+	fd->edit_on = 0;
 	if (fd->isnew) {
 		fd->item = elm_genlist_item_prepend(pack->view->fields, &itc, fd, NULL,
 				ELM_GENLIST_ITEM_NONE, NULL, NULL);
@@ -1129,6 +1032,8 @@ _destroy_cb(struct View *_view)
 	g_debug("_destroy_cb");
 	if (view->properties)
 		g_hash_table_destroy(view->properties);
+	if (view->changes)
+		g_hash_table_destroy(view->changes);
 	g_hash_table_remove(contactviews, view->path);
 
 	g_debug("_destroy_cb DONE");
@@ -1140,5 +1045,12 @@ _field_unselected_cb(void *data, Evas_Object *obj, void *event_info)
 	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
 	(void) obj;
 	(void) data;
-	elm_entry_editable_set(fd->value_entry, EINA_FALSE);	
+	if (!fd->edit_on) {
+		return;
+	}
+	char *s = ui_utils_entry_utf8_get(fd->value_entry);
+	_change_value(fd, s);
+	free(s);
+	elm_entry_editable_set(fd->value_entry, EINA_FALSE);
+	fd->edit_on = 0;	
 }

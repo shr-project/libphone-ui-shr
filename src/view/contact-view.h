@@ -11,22 +11,21 @@ struct ContactViewData {
 	Evas_Object *btn_call, *btn_sms, *btn_delete, *btn_addfield;
 	Evas_Object *btn_save, *btn_cancel;
 	char *path;
-	GHashTable *properties;
-	int have_unsaved_changes;
+	GHashTable *properties, *changes;
 };
 
 struct ContactFieldData {
 	char *type;
 	char *name;
 	char *value;
-	char *oldname;
-	char *oldvalue;
 	Evas_Object *field_button, *value_entry, *slide_buttons;
-	Evas_Object *edit_widget;
 	Elm_Genlist_Item *item;
 	struct ContactViewData *view;
-	int dirty;
+/*temporary*/
+	Evas_Object *edit_widget;
 	int isnew;
+/* hack because the signals from edje don't work */
+	int edit_on;
 };
 
 
