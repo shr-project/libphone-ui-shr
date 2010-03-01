@@ -266,9 +266,8 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 		prop = g_hash_table_lookup(view->properties, field);
 		if (!prop) {
 			/* New field */
-			value = calloc(2, sizeof(char *));
-			value[0] = strdup(new_value);
-			value[1] = NULL;
+			value = calloc(1, sizeof(char *));
+			value[0] = NULL;
 		}
 		else {
 			if (G_VALUE_HOLDS_STRING(prop)) {
@@ -285,10 +284,12 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 			}
 		}
 	}
-
+	else {
+		value = g_strdupv(value); /*Copy it to our own, the old one will be erased by the hash table */
+	}
 	
 	char **cur;
-	value = g_strdupv(value); /*Copy it to our own, the old one will be erased by the hash table */
+	
 	
 	/* try to find the value we want to remove */
 	for (cur = value ; *cur ; cur++) {
@@ -309,7 +310,7 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 			for ( ; *cur ; cur++) {
 				*cur = *(cur + 1);
 			}
-			value = realloc(value, g_strv_length(value));
+			value = realloc(value, g_strv_length(value) + 1);
 		}
 	}
 	else { /* We need to add another one */
@@ -532,9 +533,7 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	g_debug("_field_remove_clicked");
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
-	if (!fd->value || !*fd->value)
-		return;
-	elm_entry_entry_set(fd->value_entry, "");
+	elm_genlist_item_del(fd->item);
 	_change_value(fd, "");
 }
 
@@ -558,7 +557,15 @@ static void
 _sanitize_changes_hash_foreach(void *key, void *value, void *data)
 {
 	GHashTable *target = data;
-	g_hash_table_insert(target, key, common_utils_new_gvalue_boxed(G_TYPE_STRV, value));
+	char **tmp = value;
+	GValue *gval;
+	if (!*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
+		gval = common_utils_new_gvalue_string(value);
+	}
+	else {
+		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, value);
+	}
+	g_hash_table_insert(target, key, gval);
 }
 
 static GHashTable *
@@ -581,7 +588,6 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 	if (!view->changes) {
 		/* should not happen ? */
 		g_warning("No changes found ?");
-		_set_modify(view, 0);
 		return;
 	}
 
@@ -673,7 +679,7 @@ _load_cb(GHashTable *content, gpointer data)
 		g_hash_table_unref(view->properties);
 	}
 	if (view->changes) {
-		g_hash_table_unref(view->changes);
+		g_hash_table_destroy(view->changes);
 		view->changes = NULL;
 	}
 	view->properties = g_hash_table_ref(content);
@@ -700,7 +706,8 @@ _field_edit_button_remove_clicked_cb(void *data, Evas_Object *obj, void *event_i
        (void) event_info;
        struct ContactFieldData *fd = data;
        elm_pager_content_pop(fd->view->pager);
-       elm_entry_entry_set(fd->value_entry, "");
+       elm_genlist_item_del(fd->item);
+       _change_value(fd, "");
 }
 
 static void
@@ -1025,6 +1032,8 @@ _destroy_cb(struct View *_view)
 	g_debug("_destroy_cb");
 	if (view->properties)
 		g_hash_table_destroy(view->properties);
+	if (view->changes)
+		g_hash_table_destroy(view->changes);
 	g_hash_table_remove(contactviews, view->path);
 
 	g_debug("_destroy_cb DONE");

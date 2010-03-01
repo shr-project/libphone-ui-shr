@@ -179,6 +179,9 @@ _new_get_index(const char *_string)
 	char *string;
 	int i;
 
+	if (!_string) {
+		return NULL;
+	}
 	i = 0;
 	utf8_get_next((const unsigned char *) _string, &i);
 
@@ -261,26 +264,27 @@ contact_list_fill_index(struct ContactListViewData *view)
 		entry = (GHashTable *)elm_genlist_item_data_get(it);
 		name = phoneui_utils_contact_display_name_get(entry);
 		idx = _new_get_index(name);
-
-		if (!current_index || strcmp(idx, current_index)) {
-			if (current_index) {
-				free(current_index);
+		if (idx) {
+			if (!current_index || strcmp(idx, current_index)) {
+				if (current_index) {
+					free(current_index);
+				}
+				current_index = idx;
+				current_index_item = it;
+				new_index = 1;
 			}
-			current_index = idx;
-			current_index_item = it;
-			new_index = 1;
+			else {
+				new_index = 0;
+				free(idx);
+			}
+			if (index_count < 1 && new_index) {
+				g_debug("Adding index %s", current_index);
+				elm_index_item_append(view->index, current_index,
+							current_index_item);
+				index_count = view->contact_count / limit;
+			}
+			index_count--;
 		}
-		else {
-			new_index = 0;
-			free(idx);
-		}
-		if (index_count < 1 && new_index) {
-			g_debug("Adding index %s", current_index);
-			elm_index_item_append(view->index, current_index,
-						current_index_item);
-			index_count = view->contact_count / limit;
-		}
-		index_count--;
 		it = elm_genlist_item_next_get(it);
 	}
 }
