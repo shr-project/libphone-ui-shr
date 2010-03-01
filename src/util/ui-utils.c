@@ -241,8 +241,6 @@ ui_utils_view_deinit(struct View *view)
 	g_debug("View destroy callback DONE");
 
 	ui_utils_view_hide(view);
- 	evas_object_del(view->layout);
-	evas_object_del(view->background);
 	evas_object_del(view->win);
 
 	/* This is enough to mark it's empty. */

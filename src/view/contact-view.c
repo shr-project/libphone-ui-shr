@@ -310,13 +310,13 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 			for ( ; *cur ; cur++) {
 				*cur = *(cur + 1);
 			}
-			value = realloc(value, g_strv_length(value) + 1);
+			value = realloc(value, (g_strv_length(value) + 1)  * sizeof (char *));
 		}
 	}
 	else { /* We need to add another one */
 		/* We added a field, we should reallocate +1 */
 		int size = g_strv_length(value) + 2;
-		value = realloc(value, size); /*One for the NULL as well */
+		value = realloc(value, size * sizeof (char *)); /*One for the NULL as well */
 		value[size - 2] = strdup(new_value);
 		value[size - 1] = NULL;
 	}
@@ -542,11 +542,14 @@ _sanitize_changes_hash_foreach(void *key, void *value, void *data)
 	GHashTable *target = data;
 	char **tmp = value;
 	GValue *gval;
-	if (!*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
+	if (!tmp) {
+		g_warning("%s:%d - Got an empty value in the hash table (key = %s), shouldn't have happend", __FILE__, __LINE__, (char *) key);
+	}
+	if (!tmp || !*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
 		gval = common_utils_new_gvalue_string(value);
 	}
 	else {
-		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, value);
+		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, g_strdupv(value));
 	}
 	g_hash_table_insert(target, key, gval);
 }
@@ -555,7 +558,7 @@ static GHashTable *
 _sanitize_changes_hash(GHashTable *source)
 {
 	GHashTable *target;
-	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
+	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
 	g_hash_table_foreach(source, _sanitize_changes_hash_foreach,target);
 	return target;
 }
@@ -885,8 +888,6 @@ _load_photo(struct ContactViewData *view)
 	}
 	if (tmp) {
 		s = g_value_get_string(tmp);
-		if (!strncmp(s, "file://", 7))
-		s += 7;
 		g_debug("Found photo %s", s);
 	}
 	else {
