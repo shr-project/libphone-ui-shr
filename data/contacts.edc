@@ -635,6 +635,7 @@ group { name: "phoneui/contacts/view";
 		part { name: "main";
 			type: SWALLOW;
 			mouse_events: 1;
+			scale: 1;
 			description {
 				state: "default" 0.0;
 				rel1 {
@@ -652,6 +653,7 @@ group { name: "phoneui/contacts/fieldedit";
 		part { name: "fields";
 			type: SWALLOW;
 			mouse_events: 1;
+			scale: 1;
 			description {
 				state: "default" 0.0;
 				rel1 {
