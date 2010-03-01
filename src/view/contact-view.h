@@ -16,6 +16,7 @@ struct ContactViewData {
 };
 
 struct ContactFieldData {
+	char *type;
 	char *name;
 	char *value;
 	char *oldname;

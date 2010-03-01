@@ -440,8 +440,14 @@ group { name: "elm/genlist/item/contactfield/default";
 				visible: 1;
 				fixed: 1 1;
 				align: 1 0;
-				rel1.relative: 0.0 0.1;
-				rel2.relative: 1.0 0.9;
+				rel1 {
+					to: "elm.swallow.button_delfield";
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					to: "elm.swallow.button_delfield";
+					relative: 1.0 1.0;
+				}
 			}
 			description {
 				state: "edit" 0.0;
@@ -629,10 +635,11 @@ group { name: "phoneui/contacts/view";
 		part { name: "main";
 			type: SWALLOW;
 			mouse_events: 1;
+			scale: 1;
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0.0 0.25;
+					relative: 0.0 0.26;
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -646,6 +653,7 @@ group { name: "phoneui/contacts/fieldedit";
 		part { name: "fields";
 			type: SWALLOW;
 			mouse_events: 1;
+			scale: 1;
 			description {
 				state: "default" 0.0;
 				rel1 {
@@ -669,11 +677,6 @@ group { name: "phoneui/contacts/fieldedit";
 				state: "dirty" 0.0;
 				inherit: "default" 0.0;
 			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
 		}
 		part { name: "button_call";
 			type: SWALLOW;
@@ -685,11 +688,6 @@ group { name: "phoneui/contacts/fieldedit";
 			}
 			description {
 				state: "dirty" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
-			description {
-				state: "photo" 0.0;
 				inherit: "default" 0.0;
 				visible: 0;
 			}
@@ -707,11 +705,6 @@ group { name: "phoneui/contacts/fieldedit";
 				inherit: "default" 0.0;
 				visible: 0;
 			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
 		}
 		part { name: "button_delete";
 			type: SWALLOW;
@@ -723,11 +716,6 @@ group { name: "phoneui/contacts/fieldedit";
 			}
 			description {
 				state: "dirty" 0.0;
-				inherit: "default" 0.0;
-				visible: 0;
-			}
-			description {
-				state: "photo" 0.0;
 				inherit: "default" 0.0;
 				visible: 0;
 			}
@@ -746,10 +734,6 @@ group { name: "phoneui/contacts/fieldedit";
 				inherit: "default" 0.0;
 				visible: 1;
 			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
-			}
 		}
 		part { name: "button_cancel";
 			type: SWALLOW;
@@ -764,10 +748,6 @@ group { name: "phoneui/contacts/fieldedit";
 				state: "dirty" 0.0;
 				inherit: "default" 0.0;
 				visible: 1;
-			}
-			description {
-				state: "photo" 0.0;
-				inherit: "default" 0.0;
 			}
 		}
 	}
@@ -789,18 +769,6 @@ group { name: "phoneui/contacts/fieldedit";
 			signal:  "elm,state,dirty";
 			source:  "";
 			action:  STATE_SET "dirty" 0.0;
-			target:  "button_delete";
-			target:  "button_call";
-			target:  "button_sms";
-			target:  "button_cancel";
-			target:  "button_save";
-			target:  "fields";
-		}
-		program {
-			name:    "go_photo";
-			signal:  "elm,state,photo";
-			source:  "";
-			action:  STATE_SET "photo" 0.0;
 			target:  "button_delete";
 			target:  "button_call";
 			target:  "button_sms";

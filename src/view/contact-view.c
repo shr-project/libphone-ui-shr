@@ -31,7 +31,7 @@ static void _load_name(struct ContactViewData *view);
 static void _load_number(struct ContactViewData *view);
 static void _load_photo(struct ContactViewData *view);
 static void _load_fields(struct ContactViewData *view);
-static Elm_Genlist_Item *_add_field(struct ContactViewData *view, const char *key, const char *value, int isnew);
+static void _add_field(struct ContactViewData *view, const char *key, const char *value, int isnew);
 
 static Evas_Object *gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part);
 static void gl_field_del(const void *_data, Evas_Object * obj);
@@ -114,7 +114,7 @@ contact_view_init(char *path, GHashTable *properties)
 				_contact_photo_clicked, view);
 	ui_utils_view_swallow(VIEW_PTR(*view), "photo", view->photo);
 	evas_object_show(view->photo);
-	
+
 	view->pager = elm_pager_add(win);
 	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 
@@ -129,8 +129,8 @@ contact_view_init(char *path, GHashTable *properties)
 	evas_object_size_hint_align_set(view->fields, 0.0, 0.0);
 	elm_object_scale_set(view->fields, 1.0);
 	elm_layout_content_set(view->pager_layout, "fields", view->fields);
-	
-	
+
+
 	itc.item_style = "contactfield";
 	itc.func.label_get = NULL;
 	itc.func.icon_get = gl_field_icon_get;
@@ -294,8 +294,7 @@ _add_field_cb(const char *field, void *data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
 	if (field) {
-		Elm_Genlist_Item *it = _add_field(view, field, "", 1);
-		elm_genlist_item_bring_in(it);
+		_add_field(view, field, "", 1);
 	}
 }
 
@@ -413,6 +412,20 @@ _contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
+_change_field_type_cb(GError *error, char *type, gpointer data)
+{
+	struct ContactFieldData *fd = (struct ContactFieldData *)data;
+	if (error || !type) {
+		type = strdup("generic");
+	}
+	if (fd->type) {
+		free(fd->type);
+	}
+	fd->type = strdup(type);
+	/*FIXME: free type*/
+}
+
+static void
 _change_field_cb(const char *field, void *data)
 {
 	g_debug("_change_field_cb");
@@ -434,6 +447,7 @@ _change_field_cb(const char *field, void *data)
 		elm_button_label_set(fd->field_button, field);
 		fd->dirty = 1;
 		_set_modify(fd->view, 1);
+		phoneui_utils_contacts_field_type_get(fd->name, _change_field_type_cb, fd);
 	}
 }
 
@@ -843,14 +857,14 @@ _field_edit_fileselector_save_cb(void *data, Evas_Object *obj, void *event_info)
 }
 
 /* genlist callbacks */
+
 static void
-_field_edit_clicked_type_cb(GError *error, char *type, gpointer data)
+_field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactFieldData *fd = data;
-	if (error || !type) {
-		/* don't return */
-	}
-	else if (!strcmp(type, "photo")) {
+	if (!strcmp(fd->type, "photo")) {
 		Evas_Object *content;
 		content = _start_file_selector(fd->view->pager, fd, getenv("HOME"));
 		_field_edit_add_edit_page(fd, content, _field_edit_fileselector_save_cb);
@@ -860,21 +874,11 @@ _field_edit_clicked_type_cb(GError *error, char *type, gpointer data)
 	elm_entry_editable_set(fd->value_entry, EINA_TRUE);
 }
 
-static void
-_field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
-{
-       (void) obj;
-       (void) event_info;
-       struct ContactFieldData *fd = data;
-       phoneui_utils_contacts_field_type_get(fd->name, _field_edit_clicked_type_cb, fd);
-}
-
 
 static Evas_Object *
 gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 {
 	g_debug("gl_field_icon_get (part=%s)", part);
-	/*FIXME: is this really the correct way to allocate? maybe check if already allocated? */
 	struct ContactFieldData *fd = (struct ContactFieldData *) _data;
 	if (strcmp(part, "elm.swallow.field_button") == 0) {
 		Evas_Object *btn = elm_button_add(obj);
@@ -900,7 +904,6 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 	else if (strcmp(part, "elm.swallow.button_delfield") == 0) {
 		Evas_Object *ico = elm_icon_add(obj);
 		elm_icon_standard_set(ico, "delete");
-// 		elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
 		evas_object_smart_callback_add(ico, "clicked",
 					       _field_remove_clicked, fd);
 		return ico;
@@ -908,11 +911,8 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 	else if (strcmp(part, "elm.swallow.button_actions") == 0) {
 		Evas_Object *ico = elm_icon_add(obj);
 		elm_icon_standard_set(ico, "edit");
-//	      	elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit_undo");
      		evas_object_smart_callback_add(ico, "clicked",
 					      _field_edit_clicked, fd);
-		evas_object_size_hint_min_set(ico, 32, 32);
-		evas_object_size_hint_max_set(ico, 32, 32);
 		fd->slide_buttons = ico;
 		return ico;
 	}
@@ -928,6 +928,8 @@ gl_field_del(const void *_data, Evas_Object * obj)
 	if (fd) {
 		if (fd->name)
 			free(fd->name);
+		if (fd->type)
+			free(fd->type);
 		if (fd->value)
 			free(fd->value);
 		if (fd->oldname)
@@ -1048,30 +1050,64 @@ _load_fields(struct ContactViewData *view)
 	g_debug("Adding fields done");
 }
 
-static Elm_Genlist_Item *
-_add_field(struct ContactViewData *view,
-	   const char *key, const char *value, int isnew)
+struct _add_field_pack {
+	struct ContactViewData *view;
+	const char *name;
+	const char *value;
+	int isnew;
+};
+
+static void
+_add_field_type_cb(GError *error, char *type, gpointer data)
 {
-	g_debug("Adding field <%s> with value '%s' to list", key, value);
+	struct _add_field_pack *pack = data;
 	struct ContactFieldData *fd =
 		malloc(sizeof(struct ContactFieldData));
-	if (fd == NULL) {
-		g_critical("Failed allocating field data!");
-		return NULL;
+	if (error || !type) {
+		type = strdup("generic");
 	}
-	fd->name = strdup(key);
-	fd->value = strdup(value);
+	if (!fd) {
+		g_critical("Failed allocating field data!");
+		return;
+	}
+	fd->name = strdup(pack->name);
+	fd->value = strdup(pack->value);
 	fd->oldname = NULL;
 	fd->oldvalue = NULL;
 	fd->field_button = NULL;
 	fd->value_entry = NULL;
 	fd->slide_buttons = NULL;
-	fd->view = view;
+	fd->view = pack->view;
 	fd->dirty = 0;
-	fd->isnew = isnew;
-	fd->item = elm_genlist_item_append(view->fields, &itc, fd, NULL,
-			ELM_GENLIST_ITEM_NONE, NULL, NULL);
-	return fd->item;
+	fd->isnew = pack->isnew;
+	fd->type = strdup(type);
+	if (fd->isnew) {
+		fd->item = elm_genlist_item_prepend(pack->view->fields, &itc, fd, NULL,
+				ELM_GENLIST_ITEM_NONE, NULL, NULL);
+		elm_genlist_item_bring_in(fd->item);
+	}
+	else {
+		fd->item = elm_genlist_item_append(pack->view->fields, &itc, fd, NULL,
+				ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	}
+	free(data);
+	/*FIXME: free type */
+	
+}
+
+static void
+_add_field(struct ContactViewData *view,
+	   const char *name, const char *value, int isnew)
+{
+	struct _add_field_pack *pack;
+	/*FIXME: check success*/
+	pack = malloc(sizeof (*pack));
+	pack->view = view;
+	pack->name = name;
+	pack->value = value;
+	pack->isnew = isnew;
+	g_debug("Adding field <%s> with value '%s' to list", name, value);
+	phoneui_utils_contacts_field_type_get(name, _add_field_type_cb, pack);
 }
 
 
