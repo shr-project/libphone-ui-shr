@@ -4,21 +4,20 @@
 #include <glib.h>
 #include <Evas.h>
 
+#include "contact-list-common.h"
+
 struct MessageNewViewData {
 	struct View view;
 	int mode;
 	char *content;
 	Evas_Object *pager, *left_button, *right_button;
-	Evas_Object *box_content, *layout_content;
-	Evas_Object *box_recipients, *layout_recipients;
-	Evas_Object *entry, *hv, *sc;
-	Evas_Object *list_contacts;
+	Evas_Object *layout_content, *layout_recipients;
+	Evas_Object *layout_contacts, *layout_number;
+	Evas_Object *content_entry, *number_entry, *hv;
 	Evas_Object *list_recipients;
-	Evas_Object *information;
 
 	GPtrArray *recipients;
-
-	struct ContactListViewData *cdata;
+	struct ContactListData contact_list_data;
 
 	int messages_sent;
 };
