@@ -36,9 +36,11 @@ shr_la_SOURCES = \
 	view/contact-view.h \
 	view/contact-delete-view.c \
 	view/contact-list-view.c \
+	view/message-new-view.h \
 	view/message-new-view.c \
-	view/message-delete-view.c \
+	view/message-show-view.h \
 	view/message-show-view.c \
+	view/message-list-view.h \
 	view/message-list-view.c \
 	view/call-common.h view/call-common.c \
 	view/call-incoming-view.c \

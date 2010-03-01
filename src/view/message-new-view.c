@@ -1,15 +1,11 @@
-#include "views.h"
 
 #include <phoneui/phoneui-utils.h>
 #include <phone-utils.h>
 
+#include "ui-utils.h"
 #include "util/common-utils.h"
-
-/* FIXME: HACKS FROM elm_priv.h that should be removed */
-#if 1
-void         elm_widget_scale_set(Evas_Object *obj, double scale);
-void         elm_widget_focus_set(Evas_Object *obj, int first);
-#endif
+#include "message-new-view.h"
+#include "views.h"
 
 
 enum MessageNewModes {
@@ -20,24 +16,109 @@ enum MessageNewModes {
 	MODE_CLOSE
 };
 
-struct MessageNewViewData {
-	struct Window *win;
-	int mode;
-	char *content;
-	Evas_Object *bb, *entry, *bt1, *bt2, *bt3, *bt4, *bt5, *hv, *bx, *hbt1,
-		*hbt2, *hbt3, *sc;
-	Evas_Object *list_contacts;
-	Evas_Object *list_recipients;
-	Evas_Object *information;
-
-	GPtrArray *recipients;
-
-	struct ContactListViewData *cdata;
-
-	unsigned int messages_sent;
-};
 
 static Elm_Genlist_Item_Class itc;
+
+
+static void _init_content_page(struct MessageNewViewData *view);
+static void _init_recipient_page(struct MessageNewViewData *view);
+static void _left_button_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _right_button_clicked(void *data, Evas_Object *obj, void *event_info);
+
+static void _content_changed(void *_data, Evas_Object * obj, void *event_info);
+static void _contact_add_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _number_add_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _recipient_delete_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _process_recipient(gpointer _properties, gpointer _data);
+static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
+static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
+
+static void _destroy_cb(struct View *view);
+
+struct MessageNewViewData *
+message_new_view_init(GHashTable *options)
+{
+	struct MessageNewViewData *view;
+	int ret;
+	Evas_Object *win;
+
+	view = malloc(sizeof(struct MessageNewViewData));
+	if (!view) {
+		g_critical("Failed to allocate new message view");
+		if (options) {
+			g_hash_table_unref(options);
+		}
+		return NULL;
+	}
+
+	ret = ui_utils_view_init(VIEW_PTR(*view), ELM_WIN_BASIC,
+				  D_("New Message"), NULL, NULL, _destroy_cb);
+	if (ret) {
+		g_critical("Failed to init new message view");
+		if (options) {
+			g_hash_table_unref(options);
+		}
+		free(view);
+		return NULL;
+	}
+
+	view->mode = MODE_CONTENT;
+	view->content = NULL;
+	view->recipients = g_ptr_array_new();
+	view->messages_sent = 0;
+	view->cdata = NULL;
+	if (options) {
+		g_ptr_array_add(view->recipients, options);
+	}
+
+	elm_theme_extension_add(DEFAULT_THEME);
+	ui_utils_view_layout_set(VIEW_PTR(*view), DEFAULT_THEME,
+				 "phoneui/messages/new");
+	win = ui_utils_view_window_get(VIEW_PTR(*view));
+
+/*	view->pager = elm_pager_add(win);
+	ui_utils_view_swallow(VIEW_PTR(*view), "pager", view->pager);
+	evas_object_show(view->pager);*/
+
+	_init_content_page(view);
+	_init_recipient_page(view);
+
+	view->left_button = elm_button_add(win);
+	elm_button_label_set(view->left_button, D_("Close"));
+	evas_object_smart_callback_add(view->left_button, "clicked",
+				       _left_button_clicked, view);
+	ui_utils_view_swallow(VIEW_PTR(*view), "left_button", view->left_button);
+	evas_object_show(view->left_button);
+
+	view->right_button = elm_button_add(win);
+	elm_button_label_set(view->right_button, D_("Continue"));
+	evas_object_smart_callback_add(view->right_button, "clicked",
+				       _right_button_clicked, view);
+	ui_utils_view_swallow(VIEW_PTR(*view), "right_button", view->right_button);
+	evas_object_show(view->right_button);
+
+	return view;
+}
+
+
+void
+message_new_view_deinit(struct MessageNewViewData *view)
+{
+	if (view) {
+		ui_utils_view_deinit(VIEW_PTR(*view));
+	}
+	else {
+		g_warning("Deiniting a new message view without view?");
+	}
+}
+
+void
+message_new_view_show(struct MessageNewViewData *view)
+{
+	if (view) {
+		ui_utils_view_show(VIEW_PTR(*view));
+	}
+}
 
 
 static char *
@@ -65,6 +146,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 static Evas_Object *
 gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 {
+	g_debug("gl_icon_get: %s", part);
 	GHashTable *parameters = (GHashTable *) data;
 	if (!strcmp(part, "elm.swallow.icon")) {
 		const char *photo_file;
@@ -86,208 +168,151 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 //static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data);
 
 static void
-  frame_content_show(void *_data);
-static void
-  frame_content_hide(void *_data);
-static void
-  frame_content_close_clicked(void *_data, Evas_Object * obj, void *event_info);
-static void
-frame_content_continue_clicked(void *_data, Evas_Object * obj,
-			       void *event_info);
-static void
-frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info);
-
-static void
-  frame_recipient_show(void *_data);
-static void
-  frame_recipient_hide(void *_data);
-static void
- frame_recipient_back_clicked(void *_data, Evas_Object * obj, void *event_info);
-static void
-frame_recipient_contact_add_clicked(void *_data, Evas_Object * obj,
-				    void *event_info);
-static void
-frame_recipient_number_add_clicked(void *_data, Evas_Object * obj,
-				   void *event_info);
-static void
-frame_recipient_delete_clicked(void *_data, Evas_Object * obj,
-			       void *event_info);
-static void
-frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
-				 void *event_info);
-static void
-  frame_recipient_process_recipient(gpointer _properties, gpointer _data);
-
-static void
-  frame_contact_add_show(void *_data);
-static void
-  frame_contact_add_hide(void *_data);
-static void
-frame_contact_add_back_clicked(void *_data, Evas_Object * obj,
-			       void *event_info);
-static void
-frame_contact_add_add_clicked(void *_data, Evas_Object * obj, void *event_info);
-
-static void
-  frame_number_add_show(void *_data);
-static void
-  frame_number_add_hide(void *_data);
-static void
- frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info);
-static void
-frame_number_add_back_clicked(void *_data, Evas_Object * obj, void *event_info);
-
-static void
-  frame_close_show(void *_data);
-static void
-  frame_close_hide(void *_data);
-static void
-  frame_close_yes_clicked(void *_data, Evas_Object * obj, void *event_info);
-static void
-  frame_close_no_clicked(void *_data, Evas_Object * obj, void *event_info);
-
-static void
-  frame_sending_show(void *_data);
-static void
-  frame_sending_hide(void *_data);
-
-
-
-/* --- main message new view functions -------------------------------------------- */
-
-void *
-message_new_view_show(struct Window *win, void *_options)
+_init_content_page(struct MessageNewViewData *view)
 {
-	GHashTable *options = (GHashTable *) _options;
+	Evas_Object *win;
 
-	g_debug("message_new_view_show()");
+	win = ui_utils_view_window_get(VIEW_PTR(*view));
 
-	struct MessageNewViewData *data =
-		calloc(1, sizeof(struct MessageNewViewData));
+	view->box_content = elm_box_add(win);
+	elm_win_resize_object_add(win, view->box_content);
 
-	data->win = win;
-	data->mode = MODE_CONTENT;
-	data->content = NULL;
-	data->recipients = g_ptr_array_new();
-	data->messages_sent = 0;
-	data->cdata = NULL;
+	view->layout_content = elm_layout_add(view->box_content);
+	elm_win_resize_object_add(win, view->layout_content);
+	elm_layout_file_set(view->layout_content, DEFAULT_THEME,
+			    "phoneui/messages/new/content");
+	evas_object_show(view->layout_content);
 
-	if (options) {
-		g_ptr_array_add(data->recipients, options);
-	}
-
-
-	window_frame_show(win, data, frame_content_show, frame_content_hide);
-	window_show(win);
-
-	return data;
-}
-
-void
-message_new_view_hide(void *_data)
-{
-	g_debug("message_new_view_hide()");
-	free(_data);
-}
-
-//static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data) 
-//{
-//    g_debug("message_send_callback()");
-//}
-//
-
-
-/* --- frame "content" ------------------------------------------------------------ */
-
-static void
-frame_content_show(void *_data)
-{
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-	struct Window *win = data->win;
-
-	g_debug("frame_content_show()");
-
-	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/content_edit");
-
-	data->bt1 = elm_button_add(win->win);
-	elm_button_label_set(data->bt1, D_("Close"));
-	evas_object_smart_callback_add(data->bt1, "clicked",
-				       frame_content_close_clicked, data);
-	window_swallow(win, "button_close", data->bt1);
-	evas_object_show(data->bt1);
-
-	data->bt2 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt2, D_("Continue"));
-	evas_object_smart_callback_add(data->bt2, "clicked",
-				       frame_content_continue_clicked, data);
-	window_swallow(win, "button_continue", data->bt2);
-	evas_object_show(data->bt2);
-
-	data->sc = elm_scroller_add(window_evas_object_get(win));
-	data->entry = elm_entry_add(window_evas_object_get(win));
-	evas_object_size_hint_weight_set(data->entry,
+	view->sc = elm_scroller_add(win);
+	view->entry = elm_entry_add(win);
+	evas_object_size_hint_weight_set(view->entry,
 			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_smart_callback_add(data->entry, "changed",
-				       frame_content_content_changed, data);
-	if (data->content != NULL)
-		elm_entry_entry_set(data->entry, data->content);
-	elm_scroller_content_set(data->sc, data->entry);
-	evas_object_show(data->entry);
+	evas_object_smart_callback_add(view->entry, "changed",
+				       _content_changed, view);
+	if (view->content != NULL)
+		elm_entry_entry_set(view->entry, view->content);
+	elm_scroller_content_set(view->sc, view->entry);
+	evas_object_show(view->entry);
 
-	window_swallow(win, "entry", data->sc);
-	evas_object_show(data->sc);
+	elm_layout_content_set(view->layout_content, "entry", view->sc);
+	evas_object_show(view->sc);
 
-	elm_object_focus(data->entry);
+	elm_object_focus(view->entry);
+
+	evas_object_show(view->box_content);
+
+// 	elm_pager_content_push(view->pager, view->box_content);
 }
 
 static void
-frame_content_hide(void *_data)
+_init_recipient_page(struct MessageNewViewData *view)
 {
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-	struct Window *win = data->win;
+	Evas_Object *win, *obj;
 
-	g_debug("frame_content_hide()");
+	win = ui_utils_view_window_get(VIEW_PTR(*view));
 
-	// Free objects
-	evas_object_del(data->bt1);
-	evas_object_del(data->bt2);
-	evas_object_del(data->entry);
-	evas_object_del(data->sc);
+        view->box_recipients = elm_box_add(win);
+	elm_win_resize_object_add(win, view->box_recipients);
+	view->layout_recipients = elm_layout_add(view->box_recipients);
+	elm_win_resize_object_add(win, view->layout_recipients);
+	elm_layout_file_set(view->layout_recipients, DEFAULT_THEME,
+			    "phoneui/messages/new/recipients");
+	evas_object_show(view->layout_recipients);
 
-	window_kbd_hide(win);
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_recipients),
+				  "title", D_("Define Recipients"));
+
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Add Contact"));
+	evas_object_smart_callback_add(obj, "clicked",
+				       _contact_add_clicked, view);
+	elm_layout_content_set(view->layout_recipients, "button_contact_add", obj);
+	evas_object_show(obj);
+
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Add Number"));
+	evas_object_smart_callback_add(obj, "clicked",
+				       _number_add_clicked, view);
+	elm_layout_content_set(view->layout_recipients, "button_number_add", obj);
+	evas_object_show(obj);
+
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Remove"));
+	evas_object_smart_callback_add(obj, "clicked",
+				       _recipient_delete_clicked, view);
+	elm_layout_content_set(view->layout_recipients, "button_delete", obj);
+	evas_object_show(obj);
+
+	view->list_recipients = elm_genlist_add(win);
+	elm_genlist_horizontal_mode_set(view->list_recipients, ELM_LIST_LIMIT);
+	evas_object_size_hint_align_set(view->list_recipients, 0.0, 0.0);
+	elm_object_scale_set(view->list_recipients, 1.0);
+	elm_layout_content_set(view->layout_recipients, "list", view->list_recipients);
+	itc.item_style = "contact";
+	itc.func.label_get = gl_label_get;
+	itc.func.icon_get = gl_icon_get;
+	itc.func.state_get = NULL;
+	itc.func.del = NULL;
+	evas_object_show(view->list_recipients);
+
+	g_ptr_array_foreach(view->recipients, _process_recipient, view);
+
+// 	elm_pager_content_push(view->pager, view->box_recipients);
 }
 
 static void
-frame_content_close_clicked(void *_data, Evas_Object * obj, void *event_info)
+_left_button_clicked(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_content_close_clicked()");
-
-	window_frame_show(data->win, data, frame_close_show, frame_close_hide);
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	switch (view->mode) {
+	case MODE_CONTENT:
+		// TODO: ask for confirmation
+		message_new_view_deinit(view);
+		break;
+	case MODE_RECIPIENT:
+		view->mode = MODE_CONTENT;
+/*		elm_pager_content_promote(view->pager,
+					  view->box_content);*/
+		evas_object_hide(view->box_recipients);
+		evas_object_show(view->box_content);
+		elm_button_label_set(view->left_button, D_("Close"));
+		elm_button_label_set(view->right_button, D_("Continue"));
+		break;
+	}
 }
 
 static void
-frame_content_continue_clicked(void *_data, Evas_Object * obj, void *event_info)
+_right_button_clicked(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_content_continue_clicked()");
-
-	data->mode = MODE_RECIPIENT;
-	window_frame_show(data->win, data, frame_recipient_show,
-			  frame_recipient_hide);
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	switch (view->mode) {
+	case MODE_CONTENT:
+		view->mode = MODE_RECIPIENT;
+/*		elm_pager_content_promote(view->pager,
+						view->box_recipients);*/
+		evas_object_hide(view->box_recipients);
+		evas_object_show(view->box_content);
+		elm_button_label_set(view->left_button, D_("Back"));
+		elm_button_label_set(view->right_button, D_("Send"));
+		break;
+	case MODE_RECIPIENT:
+		if (view->recipients->len) {
+			// TODO: show inwin for progress via callback
+			phoneui_utils_sms_send(view->content, view->recipients, NULL, NULL);
+		}
+		break;
+	}
 }
 
 static void
-frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
+_content_changed(void *_data, Evas_Object * obj, void *event_info)
 {
 	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
+	struct MessageNewViewData *view = (struct MessageNewViewData *) _data;
 	char *content;
 	int limit;		/* the limit of the sms */
 	int len;		/* the number of characters in the sms */
@@ -304,7 +329,7 @@ frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 		sprintf(text, D_("%d characters left [%d]"),
 				PHONE_UTILS_GSM_SMS_TEXT_LIMIT,
 				PHONE_UTILS_GSM_SMS_TEXT_LIMIT);
-		window_text_set(data->win, "characters_left", text);
+		ui_utils_view_text_set(VIEW_PTR(*view), "characters_left", text);
 		return;
 	}
 
@@ -333,152 +358,44 @@ frame_content_content_changed(void *_data, Evas_Object * obj, void *event_info)
 	}
 	/*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
 	sprintf(text, D_("%d characters left [%d]"), left, (len / limit) + 1);
-	window_text_set(data->win, "characters_left", text);
-	if (data->content) {
-		free(data->content);
+	ui_utils_view_text_set(VIEW_PTR(*view), "characters_left", text);
+	if (view->content) {
+		free(view->content);
 	}
-	data->content = content;
+	view->content = content;
 }
 
-
-
-/* --- frame "recipient" ---------------------------------------------------- */
-
 static void
-frame_recipient_show(void *_data)
+_contact_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-	struct Window *win = data->win;
+	(void) obj;
+	(void) event_info;
+	struct MessageNewViewData *view = (struct MessageNewViewData *) _data;
 
-	g_debug("frame_recipient_show()");
-
-	window_layout_set(win, DEFAULT_THEME, "phoneui/messages/recipient_edit");
-
-	window_text_set(win, "title", D_("Define Recipients"));
-
-	data->bt1 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt1, D_("Back"));
-	evas_object_smart_callback_add(data->bt1, "clicked",
-				       frame_recipient_back_clicked, data);
-	window_swallow(win, "button_back", data->bt1);
-	evas_object_show(data->bt1);
-
-	data->bt2 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt2, D_("Send"));
-	evas_object_smart_callback_add(data->bt2, "clicked",
-				       frame_recipient_continue_clicked, data);
-	window_swallow(win, "button_continue", data->bt2);
-	evas_object_show(data->bt2);
-
-	data->bt3 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt3, D_("Add Contact"));
-	evas_object_smart_callback_add(data->bt3, "clicked",
-				       frame_recipient_contact_add_clicked,
-				       data);
-	window_swallow(win, "button_contact_add", data->bt3);
-	evas_object_show(data->bt3);
-
-	data->bt4 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt4, D_("Add Number"));
-	evas_object_smart_callback_add(data->bt4, "clicked",
-				       frame_recipient_number_add_clicked,
-				       data);
-	window_swallow(win, "button_number_add", data->bt4);
-	evas_object_show(data->bt4);
-
-	data->bt5 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt5, D_("Remove"));
-	evas_object_smart_callback_add(data->bt5, "clicked",
-				       frame_recipient_delete_clicked, data);
-	window_swallow(win, "button_delete", data->bt5);
-	evas_object_show(data->bt5);
-
-	elm_theme_extension_add(DEFAULT_THEME);
-	data->list_recipients = elm_genlist_add(window_evas_object_get(win));
-	elm_genlist_horizontal_mode_set(data->list_recipients, ELM_LIST_LIMIT);
-	evas_object_size_hint_align_set(data->list_recipients, 0.0, 0.0);
-	elm_widget_scale_set(data->list_recipients, 1.0);
-	window_swallow(data->win, "list", data->list_recipients);
-	itc.item_style = "contact";
-	itc.func.label_get = gl_label_get;
-	itc.func.icon_get = gl_icon_get;
-	itc.func.state_get = NULL;
-	itc.func.del = NULL;
-	evas_object_show(data->list_recipients);
-
-	g_ptr_array_foreach(data->recipients, frame_recipient_process_recipient,
-			    data);
+	view->mode = MODE_RECIPIENT_CONTACT;
+	// TODO !!!
 }
 
 static void
-frame_recipient_hide(void *_data)
-{
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_recipient_hide()");
-
-	evas_object_del(data->bt1);
-	evas_object_del(data->bt2);
-	evas_object_del(data->bt3);
-	evas_object_del(data->bt4);
-	evas_object_del(data->bt5);
-	evas_object_del(data->list_recipients);
-}
-
-static void
-frame_recipient_back_clicked(void *_data, Evas_Object * obj, void *event_info)
+_number_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_recipient_back_clicked()");
-
-	data->mode = MODE_CONTENT;
-	window_frame_show(data->win, data, frame_content_show,
-			  frame_content_hide);
-}
-
-static void
-frame_recipient_contact_add_clicked(void *_data, Evas_Object * obj,
-				    void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_recipient_contact_add_clicked()");
-
-	data->mode = MODE_RECIPIENT_CONTACT;
-	window_frame_show(data->win, data, frame_contact_add_show,
-			  frame_contact_add_hide);
-}
-
-static void
-frame_recipient_number_add_clicked(void *_data, Evas_Object * obj,
-				   void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_recipient_number_add_clicked()");
 
 	data->mode = MODE_RECIPIENT_NUMBER;
-	window_frame_show(data->win, data, frame_number_add_show,
-			  frame_number_add_hide);
+	// TODO !!!
 }
 
 static void
-frame_recipient_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
+_recipient_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 
-	g_debug("frame_recipient_delete_clicked()");
-
-	Elm_Genlist_Item *it = elm_genlist_selected_item_get(data->list_recipients);
+	Elm_Genlist_Item *it =
+			elm_genlist_selected_item_get(data->list_recipients);
 	if (it) {
 		GHashTable *parameters = (GHashTable *) elm_genlist_item_data_get(it);
 		g_ptr_array_remove(data->recipients, parameters);
@@ -487,27 +404,7 @@ frame_recipient_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-frame_recipient_continue_clicked(void *_data, Evas_Object * obj,
-				 void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_recipient_continue_clicked()");
-
-	if (data->recipients->len) {
-		window_frame_show(data->win, data, frame_sending_show,
-				  frame_sending_hide);
-
-		phoneui_utils_sms_send(data->content, data->recipients, NULL, NULL);
-
-		window_destroy(data->win, NULL);
-	}
-}
-
-static void
-frame_recipient_process_recipient(gpointer _properties, gpointer _data)
+_process_recipient(gpointer _properties, gpointer _data)
 {
 	GHashTable *properties = (GHashTable *) _properties;
 	//g_debug("adding recipient %s", g_hash_table_lookup(properties, "name"));
@@ -520,7 +417,7 @@ frame_recipient_process_recipient(gpointer _properties, gpointer _data)
 
 
 /* --- frame "contact_add" -------------------------------------------------- */
-
+#if 0
 static void
 frame_contact_add_show(void *_data)
 {
@@ -660,7 +557,7 @@ frame_number_add_show(void *_data)
 
 	data->entry = elm_entry_add(window_evas_object_get(win));
 	evas_object_show(data->entry);
-	elm_widget_focus_set(data->entry, 1);
+	elm_object_focus(data->entry);
 
 	data->sc = elm_scroller_add(window_evas_object_get(win));
 	elm_scroller_content_set(data->sc, data->entry);
@@ -710,7 +607,7 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	char *number;
 	number = g_strstrip(g_strdup(elm_entry_markup_to_utf8(elm_entry_entry_get(data->entry))));
-	
+
 	if (phone_utils_sms_is_valid_number(number)) {
 		GHashTable *properties =
 			g_hash_table_new(g_str_hash, g_str_equal);
@@ -730,8 +627,6 @@ frame_number_add_add_clicked(void *_data, Evas_Object * obj, void *event_info)
 		free(number);
 }
 
-
-/* --- frame "close" -------------------------------------------------------- */
 
 static void
 frame_close_show(void *_data)
@@ -763,62 +658,18 @@ frame_close_show(void *_data)
 	window_swallow(win, "button_no", data->bt2);
 	evas_object_show(data->bt2);
 }
+#endif
 
 static void
-frame_close_hide(void *_data)
+_destroy_cb(struct View *_view)
 {
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
+	struct MessageNewViewData *view = (struct MessageNewViewData *)_view;
+	g_debug("_destroy_cb");
+	if (view->content) {
+		free(view->content);
+	}
+	// TODO: properly free recipients
 
-	g_debug("frame_close_hide()");
-
-	evas_object_del(data->bt1);
-	evas_object_del(data->bt2);
-	evas_object_del(data->information);
+	g_debug("_destroy_cb DONE");
 }
 
-static void
-frame_close_yes_clicked(void *_data, Evas_Object * obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_close_yes_clicked()");
-
-	window_destroy(data->win, NULL);
-}
-
-static void
-frame_close_no_clicked(void *_data, Evas_Object * obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_close_no_clicked()");
-
-	window_frame_show(data->win, data, frame_content_show,
-			  frame_content_hide);
-}
-
-
-
-/* --- frame "sending" ------------------------------------------------------ */
-
-static void
-frame_sending_show(void *_data)
-{
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
-
-	g_debug("frame_sending_show()");
-
-	window_layout_set(data->win, DEFAULT_THEME, "phoneui/messages/sending");
-	window_text_set(data->win, "text", D_("Sending.."));
-}
-
-static void
-frame_sending_hide(void *data)
-{
-	(void) data;
-	g_debug("frame_sending_hide()");
-}
