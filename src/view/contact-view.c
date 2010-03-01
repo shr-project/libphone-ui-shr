@@ -918,7 +918,6 @@ _load_fields(struct ContactViewData *view)
 			if (!strcmp(key, "Path") || !strcmp(key, "EntryId"))
 				continue;
 			if (G_VALUE_HOLDS_BOXED(val)) {
-				g_debug("value is boxed!!!");
 				char **vl = (char **)g_value_get_boxed(val);
 				int i = 0;
 				while (vl[i]) {
@@ -927,7 +926,6 @@ _load_fields(struct ContactViewData *view)
 				}
 			}
 			else if (G_VALUE_HOLDS_STRING(val)) {
-				g_debug("Value is string");
 				_add_field(view, key, g_value_get_string(val),
 					   isnew);
 			}

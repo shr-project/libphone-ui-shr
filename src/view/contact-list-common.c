@@ -216,13 +216,11 @@ contact_list_item_add(struct ContactListViewData *view,
 			it = elm_genlist_item_next_get(it);
 		}
 		if (it) {
-			g_debug("Found a contact to insert before");
 			return elm_genlist_item_insert_before(view->list, &itc,
 					g_hash_table_ref(entry), it,
 					ELM_GENLIST_ITEM_NONE, NULL, NULL);
 		}
 	}
-	g_debug("Appending contact to the end of the list");
 	return elm_genlist_item_append(view->list, &itc,
 				     g_hash_table_ref(entry) /*item data */ ,
 				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
