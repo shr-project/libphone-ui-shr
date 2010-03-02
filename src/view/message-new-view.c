@@ -453,6 +453,8 @@ _recipients_button_send_clicked(void *data, Evas_Object *obj, void *event_info)
 	if (view->recipients->len) {
 		// TODO: show inwin for progress via callback
 		phoneui_utils_sms_send(view->content, view->recipients, NULL, NULL);
+		message_new_view_deinit(view);
+		free(view);
 	}
 }
 
