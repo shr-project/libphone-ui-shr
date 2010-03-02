@@ -117,16 +117,14 @@ contact_view_init(char *path, GHashTable *properties)
 	view->pager = elm_pager_add(win);
 	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 
-	view->pager_layout = elm_layout_add(view->pager);
+	view->pager_layout = elm_layout_add(win);
 	elm_layout_file_set(view->pager_layout, DEFAULT_THEME, "phoneui/contacts/fieldedit");
-	elm_pager_content_push(view->pager, view->pager_layout);
-	
+	evas_object_size_hint_min_set(view->pager_layout, 1, 1);
 	view->fields = elm_genlist_add(win);
 	elm_scroller_policy_set(view->fields, ELM_SCROLLER_POLICY_OFF,
 				ELM_SCROLLER_POLICY_AUTO);
 	elm_genlist_horizontal_mode_set(view->fields, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(view->fields, 0.0, 0.0);
-	elm_object_scale_set(view->fields, 1.0);
 	elm_layout_content_set(view->pager_layout, "fields", view->fields);
 
 
@@ -191,6 +189,7 @@ l contacts.edc emits*/
 	_load_photo(view);
 	_load_fields(view);
 
+	elm_pager_content_push(view->pager, view->pager_layout);
 	/* show save and cancel buttons when this is a new one */
 	if (!*view->path)
 		_set_modify(view, 1);

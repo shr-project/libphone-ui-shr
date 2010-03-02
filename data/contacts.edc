@@ -596,6 +596,7 @@ group { name: "phoneui/contacts/view";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.0 0.0;
 					offset: 10 10;
@@ -611,6 +612,7 @@ group { name: "phoneui/contacts/view";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				color: 0 0 0 255;
 				rel1 {
 					relative: 0.3 0.0;
@@ -621,6 +623,7 @@ group { name: "phoneui/contacts/view";
 				text {
 					font: "redensek:style=bold";
 					size: 24;
+					fit: 1 1;
 					align: 0.5 0.5;
 				}
 			}
@@ -630,6 +633,7 @@ group { name: "phoneui/contacts/view";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				color: 0 0 0 255;
 				rel1 {
 					relative: 0.3 0.185;
@@ -640,6 +644,7 @@ group { name: "phoneui/contacts/view";
 				text {
 					font: "redensek:style=bold";
 					size: 20;
+					fit: 1 1;
 					align: 0.5 0.0;
 				}
 			}
@@ -647,9 +652,9 @@ group { name: "phoneui/contacts/view";
 		part { name: "main";
 			type: SWALLOW;
 			mouse_events: 1;
-			scale: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.0 0.26;
 				}
@@ -665,14 +670,15 @@ group { name: "phoneui/contacts/fieldedit";
 		part { name: "fields";
 			type: SWALLOW;
 			mouse_events: 1;
-			scale: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.0 0.0;
 				}
 				rel2 {
-					relative: 1.0 0.85;
+					to_y: "button_addfield";
+					relative: 1.0 0.0;
 				}
 			}
 		}
@@ -681,9 +687,15 @@ group { name: "phoneui/contacts/fieldedit";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				visible: 1;
-				rel1.relative: 0.0 0.85;
-				rel2.relative: 0.25 1.0;
+				rel1 {
+					relative: 0.0 1.0;
+					offset: 0 -80;
+				}
+				rel2 {
+					relative: 0.25 1.0;
+				}
 			}
 			description {
 				state: "dirty" 0.0;
@@ -695,8 +707,14 @@ group { name: "phoneui/contacts/fieldedit";
 			mouse_events, 1;
 			description {
 				state: "default" 0.0;
-				rel1.relative: 0.25 0.85;
-				rel2.relative: 0.5 1.0;
+				fixed: 1 1;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.25 0.0;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
 			}
 			description {
 				state: "dirty" 0.0;
@@ -709,8 +727,14 @@ group { name: "phoneui/contacts/fieldedit";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
-				rel1.relative: 0.5 0.85;
-				rel2.relative: 0.75 1.0;
+				fixed: 1 1;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.5 0.0;
+				}
+				rel2 {
+					relative: 0.75 1.0;
+				}
 			}
 			description {
 				state: "dirty" 0.0;
@@ -723,8 +747,14 @@ group { name: "phoneui/contacts/fieldedit";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
-				rel1.relative: 0.75 0.85;
-				rel2.relative: 1.0 1.0;
+				fixed: 1 1;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.75 0.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
 			}
 			description {
 				state: "dirty" 0.0;
@@ -737,9 +767,15 @@ group { name: "phoneui/contacts/fieldedit";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				visible: 0;
-				rel1.relative: 0.25 0.85;
-				rel2.relative: 0.625 1.0;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.25 1.0;
+				}
+				rel2 {
+					relative: 0.625 1.0;
+				}
 			}
 			description {
 				state: "dirty" 0.0;
@@ -752,9 +788,15 @@ group { name: "phoneui/contacts/fieldedit";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				visible: 0;
-				rel1.relative: 0.625 0.85;
-				rel2.relative: 1.0 1.0;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.625 1.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
 			}
 			description {
 				state: "dirty" 0.0;
