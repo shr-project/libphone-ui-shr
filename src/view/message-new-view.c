@@ -40,6 +40,7 @@ static void _process_recipient(gpointer _properties, gpointer _data);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
 
+static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _destroy_cb(struct View *view);
 
 struct MessageNewViewData *
@@ -617,6 +618,15 @@ _process_recipient(gpointer _properties, gpointer _data)
 
 	elm_genlist_item_append(data->list_recipients, &itc, properties,
 		NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+}
+
+static void
+_delete_cb(struct View *view, Evas_Object * win, void *event_info)
+{
+	(void)win;
+	(void)event_info;
+	message_new_view_deinit((struct MessageNewViewData *)view);
+	free(view);
 }
 
 static void
