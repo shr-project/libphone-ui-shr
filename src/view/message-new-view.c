@@ -291,11 +291,10 @@ _init_contacts_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/contacts");
 	evas_object_show(view->layout_contacts);
 
+	view->contact_list_data.layout = view->layout_contacts;
 	edje_object_part_text_set(elm_layout_edje_get(view->layout_contacts),
 				  "contacts_title", D_("Select a contact"));
 	contact_list_add(&view->contact_list_data);
-	elm_layout_content_set(view->layout_contacts, "contacts_list",
-			       view->contact_list_data.list);
 
 	btn = elm_button_add(win);
 	elm_button_label_set(btn, D_("Back"));

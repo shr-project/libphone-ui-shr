@@ -6,6 +6,7 @@
 
 struct ContactListData {
 	struct View *view;
+	Evas_Object *layout;
 	Evas_Object *list;
 	Evas_Object *index;
 	int count;

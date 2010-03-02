@@ -505,14 +505,14 @@ group { name: "elm/genlist/item/contactfield/default";
 			target:  "elm.swallow.button_delfield";
 			target:  "elm.swallow.button_actions";
 			transition: LINEAR 0.1;
-		}	
+		}
 	}
 } /* elm/genlist/item/contactfield/default */
 
 ///////////////////////////////////////////////////////////////////////////////
 group { name: "phoneui/contacts/list";
 	parts {
-		part { name: "list";
+		part { name: "contacts_list";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
@@ -527,19 +527,19 @@ group { name: "phoneui/contacts/list";
 				}
 			}
 		}
-		part { name: "index";
+		part { name: "contacts_index";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				fixed: 1 1;
 				state: "default" 0.0;
 				rel1 {
-					to_y: "list";
+					to_y: "contacts_list";
 					relative: 0.0 0.0;
 					offset: 0 0;
 				}
 				rel2 {
-					to_y: "list";
+					to_y: "contacts_list";
 					relative: 1.0 1.0;
 					offset: 0 0;
 				}

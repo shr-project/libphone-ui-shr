@@ -285,6 +285,10 @@ contact_list_fill_index(struct ContactListData *list_data)
 		}
 		it = elm_genlist_item_next_get(it);
 	}
+	if (list_data->layout) {
+		elm_layout_content_set(list_data->layout, "contacts_index", 
+				list_data->index);
+	}
 }
 
 static void
@@ -328,5 +332,9 @@ contact_list_add(struct ContactListData *list_data)
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
 	evas_object_show(list_data->list);
+	if (list_data->layout) {
+		elm_layout_content_set(list_data->layout, "contacts_list",
+				list_data->list);
+	}
 }
 

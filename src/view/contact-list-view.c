@@ -51,8 +51,8 @@ contact_list_view_init()
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME, "phoneui/contacts/list");
         elm_theme_extension_add(DEFAULT_THEME);
+	view.list_data.layout = view.view.layout;
 	contact_list_add(&view.list_data);
-	ui_utils_view_swallow(VIEW_PTR(view), "list", view.list_data.list);
 
 	view.bt1 = elm_button_add(win);
 	elm_button_label_set(view.bt1, D_("New"));
