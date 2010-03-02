@@ -311,6 +311,7 @@ void
 contact_list_fill(struct ContactListData *list_data)
 {
 	g_debug("contact_list_fill()");
+	list_data->current = 0;
 	phoneui_utils_contacts_get(&list_data->count, _process_entry, list_data);
 }
 
