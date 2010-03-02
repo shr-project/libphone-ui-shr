@@ -45,7 +45,7 @@ static void _update_cb(GError *error, gpointer data);
 static void _add_cb(GError *error, char *path, gpointer data);
 static void _load_cb(GHashTable *content, gpointer data);
 static void _field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info);
-static Evas_Object *_start_file_selector(Evas_Object *parent, struct ContactFieldData *fd, const char *path);
+static Evas_Object *_start_file_selector(Evas_Object *parent, const char *path);
 
 int
 contact_view_init(char *path, GHashTable *properties)
@@ -310,13 +310,13 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 			for ( ; *cur ; cur++) {
 				*cur = *(cur + 1);
 			}
-			value = realloc(value, g_strv_length(value) + 1);
+			value = realloc(value, (g_strv_length(value) + 1)  * sizeof (char *));
 		}
 	}
 	else { /* We need to add another one */
 		/* We added a field, we should reallocate +1 */
 		int size = g_strv_length(value) + 2;
-		value = realloc(value, size); /*One for the NULL as well */
+		value = realloc(value, size * sizeof (char *)); /*One for the NULL as well */
 		value[size - 2] = strdup(new_value);
 		value[size - 1] = NULL;
 	}
@@ -382,24 +382,8 @@ _contact_add_field_clicked(void *_data, Evas_Object * obj, void *event_info)
 	ui_utils_contacts_field_select(VIEW_PTR(*view), _add_field_cb, view);
 }
 
-static void
-_file_selector_done_cb(void *data, Evas_Object *obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct ContactFieldData *fd = data;
-	const char *selected = event_info;
-
-	if (selected) {
-		elm_entry_entry_set(fd->value_entry, selected);
-		_change_value(fd, selected);
-	}
-
-	elm_pager_content_pop(fd->view->pager);
-}
-
 static Evas_Object *
-_start_file_selector(Evas_Object *parent, struct ContactFieldData *fd, const char *path)
+_start_file_selector(Evas_Object *parent, const char *path)
 {
 	Evas_Object *content;
 	/*layout = elm_layout_add(view->pager);
@@ -416,7 +400,6 @@ _start_file_selector(Evas_Object *parent, struct ContactFieldData *fd, const cha
 	evas_object_size_hint_align_set(content, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	evas_object_show(content); 
 
-	evas_object_smart_callback_add(content, "done", _file_selector_done_cb, fd);
 	return content;
 }
 
@@ -533,8 +516,8 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	g_debug("_field_remove_clicked");
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
-	elm_genlist_item_del(fd->item);
 	_change_value(fd, "");
+	elm_genlist_item_del(fd->item);
 }
 
 static void
@@ -559,11 +542,14 @@ _sanitize_changes_hash_foreach(void *key, void *value, void *data)
 	GHashTable *target = data;
 	char **tmp = value;
 	GValue *gval;
-	if (!*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
+	if (!tmp) {
+		g_warning("%s:%d - Got an empty value in the hash table (key = %s), shouldn't have happend", __FILE__, __LINE__, (char *) key);
+	}
+	if (!tmp || !*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
 		gval = common_utils_new_gvalue_string(value);
 	}
 	else {
-		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, value);
+		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, g_strdupv(value));
 	}
 	g_hash_table_insert(target, key, gval);
 }
@@ -572,7 +558,7 @@ static GHashTable *
 _sanitize_changes_hash(GHashTable *source)
 {
 	GHashTable *target;
-	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
+	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
 	g_hash_table_foreach(source, _sanitize_changes_hash_foreach,target);
 	return target;
 }
@@ -706,8 +692,8 @@ _field_edit_button_remove_clicked_cb(void *data, Evas_Object *obj, void *event_i
        (void) event_info;
        struct ContactFieldData *fd = data;
        elm_pager_content_pop(fd->view->pager);
-       elm_genlist_item_del(fd->item);
        _change_value(fd, "");
+       elm_genlist_item_del(fd->item);
 }
 
 static void
@@ -759,8 +745,8 @@ _field_edit_fileselector_save_cb(void *data, Evas_Object *obj, void *event_info)
 	selected = elm_fileselector_selected_get(fd->edit_widget);
 	if (selected) {
 		elm_entry_entry_set(fd->value_entry, selected);
-	}
-	
+		_change_value(fd, selected);
+	}	
 }
 
 /* genlist callbacks */
@@ -773,14 +759,15 @@ _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 	struct ContactFieldData *fd = data;
 	if (!strcmp(fd->type, "photo")) {
 		Evas_Object *content;
-		content = _start_file_selector(fd->view->pager, fd, getenv("HOME"));
+		content = _start_file_selector(fd->view->pager, getenv("HOME"));
 		_field_edit_add_edit_page(fd, content, _field_edit_fileselector_save_cb);
-		return;
 	}
-	edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
+	else {
+		edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
+		elm_entry_editable_set(fd->value_entry, EINA_TRUE);
+	}
 	fd->edit_on = 1;
 	_set_modify(fd->view, 1);
-	elm_entry_editable_set(fd->value_entry, EINA_TRUE);
 }
 
 
@@ -901,8 +888,6 @@ _load_photo(struct ContactViewData *view)
 	}
 	if (tmp) {
 		s = g_value_get_string(tmp);
-		if (!strncmp(s, "file://", 7))
-		s += 7;
 		g_debug("Found photo %s", s);
 	}
 	else {
@@ -934,7 +919,6 @@ _load_fields(struct ContactViewData *view)
 			if (!strcmp(key, "Path") || !strcmp(key, "EntryId"))
 				continue;
 			if (G_VALUE_HOLDS_BOXED(val)) {
-				g_debug("value is boxed!!!");
 				char **vl = (char **)g_value_get_boxed(val);
 				int i = 0;
 				while (vl[i]) {
@@ -943,7 +927,6 @@ _load_fields(struct ContactViewData *view)
 				}
 			}
 			else if (G_VALUE_HOLDS_STRING(val)) {
-				g_debug("Value is string");
 				_add_field(view, key, g_value_get_string(val),
 					   isnew);
 			}
