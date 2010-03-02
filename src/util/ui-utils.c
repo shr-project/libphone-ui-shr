@@ -84,6 +84,7 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 	evas_object_show(view->layout);
 
 	/* FIXME: Not perfect, should probably be set from a config wether we want max or resize */
+	evas_object_size_hint_min_set(view->win, 100, 200);
 	elm_win_maximized_set(view->win, EINA_TRUE);
 	
 	view->show_cb = show_cb;
