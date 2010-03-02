@@ -200,7 +200,7 @@ _new_get_index(const char *_string)
 }
 
 Elm_Genlist_Item *
-contact_list_item_add(struct ContactListViewData *view,
+contact_list_item_add(struct ContactListData *list_data,
 		      GHashTable *entry, int sortin)
 {
 	GHashTable *other;
@@ -208,7 +208,7 @@ contact_list_item_add(struct ContactListViewData *view,
 
 	if (sortin) {
 		/* find the correct position to insert the new one */
-		it = elm_genlist_first_item_get(view->list);
+		it = elm_genlist_first_item_get(list_data->list);
 		while (it) {
 			other = (GHashTable *)elm_genlist_item_data_get(it);
 			if (phoneui_utils_contact_compare(entry, other) < 0)
@@ -216,18 +216,18 @@ contact_list_item_add(struct ContactListViewData *view,
 			it = elm_genlist_item_next_get(it);
 		}
 		if (it) {
-			return elm_genlist_item_insert_before(view->list, &itc,
-					g_hash_table_ref(entry), it,
+			return elm_genlist_item_insert_before(list_data->list,
+					&itc, g_hash_table_ref(entry), it,
 					ELM_GENLIST_ITEM_NONE, NULL, NULL);
 		}
 	}
-	return elm_genlist_item_append(view->list, &itc,
+	return elm_genlist_item_append(list_data->list, &itc,
 				     g_hash_table_ref(entry) /*item data */ ,
 				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
 
 void
-contact_list_fill_index(struct ContactListViewData *view)
+contact_list_fill_index(struct ContactListData *list_data)
 {
 	/* FIXME: limit to 13 indexes - BAD, gotta find a way to calculate
 	 * this, furthermore, should probably choose the best indexes better
@@ -241,23 +241,22 @@ contact_list_fill_index(struct ContactListViewData *view)
 	int index_count;
 	int new_index;
 
-	win = ui_utils_view_window_get(VIEW_PTR(*view));
-	if (view->index) {
-		evas_object_del(view->index);
+	win = ui_utils_view_window_get(list_data->view);
+	if (list_data->index) {
+		evas_object_del(list_data->index);
 	}
-	view->index = elm_index_add(win);
-	elm_win_resize_object_add(win, view->index);
- 	ui_utils_view_swallow(VIEW_PTR(*view), "index", view->index);
-	evas_object_size_hint_weight_set(view->index, 1.0, 0.0);
-	evas_object_show(view->index);
-	evas_object_smart_callback_add(view->index, "delay,changed",
+	list_data->index = elm_index_add(win);
+	elm_win_resize_object_add(win, list_data->index);
+	evas_object_size_hint_weight_set(list_data->index, 1.0, 0.0);
+	evas_object_show(list_data->index);
+	evas_object_smart_callback_add(list_data->index, "delay,changed",
 				       gl_index_changed2, NULL);
-	evas_object_smart_callback_add(view->index, "changed", gl_index_changed,
-				       NULL);
-	evas_object_smart_callback_add(view->index, "selected",
+	evas_object_smart_callback_add(list_data->index, "changed",
+				       gl_index_changed, NULL);
+	evas_object_smart_callback_add(list_data->index, "selected",
 				       gl_index_selected, NULL);
-	index_count = view->contact_count / limit;
-	it = elm_genlist_first_item_get(view->list);
+	index_count = list_data->count / limit;
+	it = elm_genlist_first_item_get(list_data->list);
 	while (it) {
 		entry = (GHashTable *)elm_genlist_item_data_get(it);
 		name = phoneui_utils_contact_display_name_get(entry);
@@ -277,13 +276,18 @@ contact_list_fill_index(struct ContactListViewData *view)
 			}
 			if (index_count < 1 && new_index) {
 				g_debug("Adding index %s", current_index);
-				elm_index_item_append(view->index, current_index,
-							current_index_item);
-				index_count = view->contact_count / limit;
+				elm_index_item_append(list_data->index,
+						      current_index,
+						      current_index_item);
+				index_count = list_data->count / limit;
 			}
 			index_count--;
 		}
 		it = elm_genlist_item_next_get(it);
+	}
+	if (list_data->layout) {
+		elm_layout_content_set(list_data->layout, "contacts_index", 
+				list_data->index);
 	}
 }
 
@@ -292,43 +296,45 @@ _process_entry(void *_entry, void *_data)
 {
 	Elm_Genlist_Item *it;
 	GHashTable *entry = (GHashTable *)_entry;
-	struct ContactListViewData *data = (struct ContactListViewData *) _data;
-	it = contact_list_item_add(data, entry, 0);
+	struct ContactListData *list_data = (struct ContactListData *) _data;
+	it = contact_list_item_add(list_data, entry, 0);
 	if (!it) {
 		g_warning("Failed adding a contact to the list");
 		return;
 	}
 
-	data->contact_current++;
-	if (data->contact_count == data->contact_current) {
-		contact_list_fill_index(data);
+	list_data->current++;
+	if (list_data->count == list_data->current) {
+		contact_list_fill_index(list_data);
 	}
 }
 
 void
-contact_list_fill(struct ContactListViewData *data)
+contact_list_fill(struct ContactListData *list_data)
 {
 	g_debug("contact_list_fill()");
-	data->contact_current = 0;
-	phoneui_utils_contacts_get(&data->contact_count, _process_entry, data);
+	list_data->current = 0;
+	phoneui_utils_contacts_get(&list_data->count, _process_entry, list_data);
 }
 
-
 void
-contact_list_add(struct ContactListViewData *data)
+contact_list_add(struct ContactListData *list_data)
 {
-	Evas_Object *win = ui_utils_view_window_get(VIEW_PTR(*data));
-	data->list = elm_genlist_add(win);
-	elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
-	evas_object_size_hint_align_set(data->list, 0.0, 0.0);
-	elm_object_scale_set(data->list, 1.0);
-	ui_utils_view_swallow(VIEW_PTR(*data), "list", data->list);
+	Evas_Object *win;
+	win = ui_utils_view_window_get(list_data->view);
+	list_data->list = elm_genlist_add(win);
+	elm_genlist_horizontal_mode_set(list_data->list, ELM_LIST_LIMIT);
+	evas_object_size_hint_align_set(list_data->list, 0.0, 0.0);
+	elm_object_scale_set(list_data->list, 1.0);
 	itc.item_style = "contact";
 	itc.func.label_get = gl_label_get;
 	itc.func.icon_get = gl_icon_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
-	evas_object_show(data->list);
-
+	evas_object_show(list_data->list);
+	if (list_data->layout) {
+		elm_layout_content_set(list_data->layout, "contacts_list",
+				list_data->list);
+	}
 }
 

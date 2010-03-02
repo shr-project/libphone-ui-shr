@@ -12,6 +12,13 @@
 #include "ui-utils.h"
 #include "contact-list-common.h"
 
+struct ContactListViewData {
+	struct View view;
+	struct ContactListData list_data;
+	Evas_Object *bx, *hv;
+	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
+	Evas_Object *inwin;
+};
 static struct ContactListViewData view;
 
 static void _list_new_clicked(void *data, Evas_Object *obj, void *event_info);
@@ -39,11 +46,13 @@ contact_list_view_init()
 		return ret;
 	}
 
+	view.list_data.view = VIEW_PTR(view);
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME, "phoneui/contacts/list");
         elm_theme_extension_add(DEFAULT_THEME);
-	contact_list_add(&view);
+	view.list_data.layout = view.view.layout;
+	contact_list_add(&view.list_data);
 
 	view.bt1 = elm_button_add(win);
 	elm_button_label_set(view.bt1, D_("New"));
@@ -102,7 +111,7 @@ contact_list_view_init()
 
 	elm_hover_content_set(view.hv, "top", view.bx);
 
-	contact_list_fill(&view);
+	contact_list_fill(&view.list_data);
 	phoneui_info_register_contact_changes(_contact_changed_cb, NULL);
 
 	return 0;
@@ -150,8 +159,11 @@ _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	Elm_Genlist_Item *it = elm_genlist_selected_item_get(view.list);
-	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	Elm_Genlist_Item *it;
+	GHashTable *properties;
+
+	it = elm_genlist_selected_item_get(view.list_data.list);
+	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
 		// TODO: show a list of numbers to select if there's more than one
 		const char *number = phoneui_utils_contact_display_phone_get(properties);
@@ -174,10 +186,13 @@ _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
+	Elm_Genlist_Item *it;
+	GHashTable *properties;
+
 	evas_object_hide(view.hv);
 
-	Elm_Genlist_Item *it = elm_genlist_selected_item_get(view.list);
-	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	it = elm_genlist_selected_item_get(view.list_data.list);
+	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
 		char *str;
 		str = phoneui_utils_contact_display_phone_get(properties);
@@ -220,7 +235,7 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 		it = (Elm_Genlist_Item *) event_info;
 	}
 	else {
-		it = elm_genlist_selected_item_get(view.list);
+		it = elm_genlist_selected_item_get(view.list_data.list);
 	}
 	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties != NULL) {
@@ -256,9 +271,11 @@ _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
+	Elm_Genlist_Item *it;
+
 	evas_object_hide(view.hv);
 
-	Elm_Genlist_Item *it = elm_genlist_selected_item_get(view.list);
+	it = elm_genlist_selected_item_get(view.list_data.list);
 	if (it) {
 		ui_utils_dialog(VIEW_PTR(view), D_("Really delete this contact?"),
 			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, it);
@@ -275,7 +292,7 @@ _add_contact_cb(GHashTable *properties, gpointer data)
 		return;
 	}
 	g_debug("Adding contact to the list");
-	contact_list_item_add(&view, properties, 1);
+	contact_list_item_add(&view.list_data, properties, 1);
 }
 
 static void
@@ -292,7 +309,7 @@ _remove_contact(const char *path)
 	GValue *tmp;
 
 	g_debug("Removing contact %s from list", path);
-	it = elm_genlist_first_item_get(view.list);
+	it = elm_genlist_first_item_get(view.list_data.list);
 	while (it) {
 		properties = (GHashTable *)elm_genlist_item_data_get(it);
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -324,14 +341,15 @@ _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType typ
 		_remove_contact(path);
 		break;
 	}
-	contact_list_fill_index(&view);
+	contact_list_fill_index(&view.list_data);
+	ui_utils_view_swallow(VIEW_PTR(view), "index", view.list_data.index);
 }
 
 static void
 _hide_cb(struct View *view)
 {
 	elm_genlist_item_bring_in(elm_genlist_first_item_get(
-		((struct ContactListViewData *)view)->list));
+		((struct ContactListViewData *)view)->list_data.list));
 }
 
 static void

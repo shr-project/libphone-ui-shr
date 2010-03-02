@@ -35,21 +35,6 @@
 void *dialog_view_show(struct Window *win, void *_options);
 void dialog_view_hide(void *_data);
 
-void *message_new_view_show(struct Window *win, void *_options);
-void message_new_view_hide(void *_data);
-
-void *message_folder_view_show(struct Window *win, void *_options);
-void message_folder_view_hide(void *_data);
-
-void *message_show_view_show(struct Window *win, void *_options);
-void message_show_view_hide(void *_data);
-
-void *message_delete_view_show(struct Window *win, void *_options);
-void message_delete_view_hide(void *_data);
-
-void *message_list_view_show(struct Window *win, void *_options);
-void message_list_view_hide(void *_data);
-
 void *sim_auth_input_view_show(struct Window *win, void *_options);
 void sim_auth_input_view_hide(void *_data);
 
