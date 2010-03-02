@@ -258,8 +258,40 @@ group { name: "elm/genlist/item/message/default";
 } /* elm/genlist/item/message/default */
 
 ///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/messages/new";
+	parts {
+		part { name: "main";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1.relative: 0.0 0.0;
+				rel2.relative: 1.0 1.0;
+			}
+		}
+	}
+} /* phoneui/messages/new */
+
+///////////////////////////////////////////////////////////////////////////////
 group { name: "phoneui/messages/new/content";
 	parts {
+		part { name: "content_title";
+			type: TEXT;
+			mouse_events: 0;
+			scale: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+                                rel1.relative: 0.05 0.0;
+				rel2.relative: 0.95 0.09;
+				text {
+					text: "";
+					font: "content-bold";
+					size: 9;
+					align: 1.0 0.5;
+				}
+			}
+		}
 		part { name: "characters_left";
 			type: TEXT;
 			mouse_events: 0;
@@ -267,8 +299,8 @@ group { name: "phoneui/messages/new/content";
 			description {
 				state: "default" 0.0;
 				color: 0 0 0 255;
-				rel1.relative: 0.05 0.0;
-				rel2.relative: 0.95 0.07;
+				rel1.relative: 0.05 0.09;
+				rel2.relative: 0.95 0.12;
 				text {
 					text: "";
 					font: "content";
@@ -282,8 +314,8 @@ group { name: "phoneui/messages/new/content";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
-				rel1.relative: 0.05 0.07;
-				rel2.relative: 0.95 0.8;
+				rel1.relative: 0.05 0.12;
+				rel2.relative: 0.95 0.85;
 			}
 		}
 		part { name: "content_button_close";
@@ -313,16 +345,17 @@ group { name: "phoneui/messages/new/recipients";
 		part { name: "recipients_title";
 			type: TEXT;
 			mouse_events: 0;
+			scale: 1;
 			description {
 				state: "default" 0.0;
 				color: 0 0 0 255;
-				rel1.relative: 0.0 0.0;
-				rel2.relative: 1.0 0.1;
+                                rel1.relative: 0.05 0.0;
+				rel2.relative: 0.95 0.09;
 				text {
 					text: "";
 					font: "content-bold";
-					size: 22;
-					align: 0.5 0.5;
+					size: 9;
+					align: 1.0 0.5;
 				}
 			}
 		}
@@ -331,7 +364,8 @@ group { name: "phoneui/messages/new/recipients";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
-				rel1.relative: 0 0.15;
+				fixed: 1 1;
+				rel1.relative: 0.0 0.09;
 				rel2.relative: 1.0 0.85;
 			}
 		}
@@ -340,6 +374,7 @@ group { name: "phoneui/messages/new/recipients";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1.relative: 0.0 0.85;
 				rel2.relative: 0.25 1.0;
 			}
@@ -349,6 +384,7 @@ group { name: "phoneui/messages/new/recipients";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1.relative: 0.25 0.85;
 				rel2.relative: 0.5 1.0;
 			}
@@ -358,6 +394,7 @@ group { name: "phoneui/messages/new/recipients";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1.relative: 0.5 0.85;
 				rel2.relative: 0.75 1.0;
 			}
@@ -367,6 +404,7 @@ group { name: "phoneui/messages/new/recipients";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1.relative: 0.75 0.85;
 				rel2.relative: 1.0 1.0;
 			}
@@ -377,37 +415,36 @@ group { name: "phoneui/messages/new/recipients";
 ///////////////////////////////////////////////////////////////////////////////
 group { name: "phoneui/messages/new/contacts";
 	parts {
-
 		part { name: "contacts_title";
 			type: TEXT;
 			mouse_events: 0;
+			scale: 1;
 			description {
 				state: "default" 0.0;
 				color: 0 0 0 255;
-				rel1.relative: 0.0 0.0;
-				rel2.relative: 1.0 0.1;
+                                rel1.relative: 0.05 0.0;
+				rel2.relative: 0.95 0.09;
 				text {
 					text: "";
-					font: "redensek";
-					size: 25;
-					align: 0.5 0.5;
+					font: "content-bold";
+					size: 9;
+					align: 1.0 0.5;
 				}
 			}
 		}
-
 		part { name: "contacts_list";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
-					relative: 0.0 0.10;
+					relative: 0.0 0.09;
 					offset: 0 0;
 				}
 				rel2.relative: 1.0 0.85;
 			}
 		}
-
 		part { name: "contacts_index";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -426,12 +463,12 @@ group { name: "phoneui/messages/new/contacts";
 				}
 			}
 		}
-
 		part { name: "contacts_button_back";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.0 0.85;
 					offset: 0 0;
@@ -442,12 +479,12 @@ group { name: "phoneui/messages/new/contacts";
 				}
 			}
 		}
-
 		part { name: "contacts_button_add";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.5 0.85;
 					offset: 0 0;
@@ -458,7 +495,6 @@ group { name: "phoneui/messages/new/contacts";
 				}
 			}
 		}
-
 	}
 } /* phoneui/messages/recipient_contact_add */
 
@@ -472,13 +508,13 @@ group { name: "phoneui/messages/new/number";
 			description {
 				state: "default" 0.0;
 				color: 0 0 0 255;
-				rel1.relative: 0.0 0.0;
-				rel2.relative: 1.0 0.1;
+                                rel1.relative: 0.05 0.0;
+				rel2.relative: 0.95 0.09;
 				text {
 					text: "";
 					font: "content-bold";
-					size: 10;
-					align: 0.5 0.5;
+					size: 9;
+					align: 1.0 0.5;
 				}
 			}
 		}
@@ -487,8 +523,9 @@ group { name: "phoneui/messages/new/number";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
-					relative: 0.05 0.10;
+					relative: 0.05 0.15;
 					offset: 0 0;
 				}
 				rel2.relative: 0.95 0.3;
@@ -499,6 +536,7 @@ group { name: "phoneui/messages/new/number";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.0 0.85;
 					offset: 0 0;
@@ -514,6 +552,7 @@ group { name: "phoneui/messages/new/number";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.5 0.85;
 					offset: 0 0;

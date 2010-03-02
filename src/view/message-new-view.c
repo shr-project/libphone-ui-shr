@@ -80,11 +80,14 @@ message_new_view_init(GHashTable *options)
 
 	elm_theme_extension_add(DEFAULT_THEME);
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
+	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);
+
+	ui_utils_view_layout_set(VIEW_PTR(*view), DEFAULT_THEME,
+				 "phoneui/messages/new");
 
 	view->pager = elm_pager_add(win);
 	elm_win_resize_object_add(win, view->pager);
-/*	evas_object_size_hint_weight_set(view->pager, EVAS_HINT_EXPAND,
-					 EVAS_HINT_EXPAND);*/
+	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 	evas_object_show(view->pager);
 
 	_init_content_page(view);
@@ -175,6 +178,9 @@ _init_content_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/content");
 	evas_object_show(view->layout_content);
 
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_content), 
+			"content_title", D_("Enter your message"));
+
 	sc = elm_scroller_add(win);
 	view->content_entry = elm_entry_add(win);
 	evas_object_size_hint_weight_set(view->content_entry,
@@ -221,8 +227,8 @@ _init_recipient_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/recipients");
 	evas_object_show(view->layout_recipients);
 
-	edje_object_part_text_set(elm_layout_edje_get(view->layout_recipients),
-				  "recipients_title", D_("Define Recipients"));
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_recipients), 
+			"recipients_title", D_("Define Recipients"));
 
 	view->list_recipients = elm_genlist_add(win);
 	elm_genlist_horizontal_mode_set(view->list_recipients, ELM_LIST_LIMIT);
@@ -250,7 +256,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	evas_object_show(btn);
 
 	btn = elm_button_add(win);
-	elm_button_label_set(btn, D_("Add Contact"));
+	elm_button_label_set(btn, D_("Contact"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _recipients_button_add_contact_clicked,
 				       view);
@@ -259,7 +265,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	evas_object_show(btn);
 
 	btn = elm_button_add(win);
-	elm_button_label_set(btn, D_("Add Number"));
+	elm_button_label_set(btn, D_("Number"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _recipients_button_add_number_clicked,
 				       view);
@@ -291,9 +297,10 @@ _init_contacts_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/contacts");
 	evas_object_show(view->layout_contacts);
 
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_contacts), 
+			"contacts_title", D_("Add Contact"));
+
 	view->contact_list_data.layout = view->layout_contacts;
-	edje_object_part_text_set(elm_layout_edje_get(view->layout_contacts),
-				  "contacts_title", D_("Select a contact"));
 	contact_list_add(&view->contact_list_data);
 
 	btn = elm_button_add(win);
@@ -310,11 +317,8 @@ _init_contacts_page(struct MessageNewViewData *view)
 	elm_layout_content_set(view->layout_contacts, "contacts_button_add", btn);
 	evas_object_show(btn);
 
-	elm_pager_content_push(view->pager, view->layout_contacts);
-
 	contact_list_fill(&view->contact_list_data);
-	elm_layout_content_set(view->layout_contacts, "contacts_index",
-			       view->contact_list_data.index);
+	elm_pager_content_push(view->pager, view->layout_contacts);
 }
 
 static void
@@ -330,8 +334,9 @@ _init_number_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/number");
 	evas_object_show(view->layout_number);
 
-	edje_object_part_text_set(elm_layout_edje_get(view->layout_number),
-				  "number_title", D_("Add a number"));
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_number), 
+			"number_title", D_("Add Number"));
+
 	btn = elm_button_add(win);
 	elm_button_label_set(btn, D_("Back"));
 	evas_object_smart_callback_add(btn, "clicked",
@@ -356,7 +361,6 @@ _init_number_page(struct MessageNewViewData *view)
 	elm_scroller_content_set(sc, view->number_entry);
 	elm_layout_content_set(view->layout_number, "number_entry", sc);
 	evas_object_show(sc);
-
 	elm_pager_content_push(view->pager, view->layout_number);
 }
 
