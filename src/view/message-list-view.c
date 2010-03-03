@@ -529,6 +529,14 @@ gl_state_get(const void *data, Evas_Object *obj, const char *part)
 	if (gval_tmp) {
 		return g_value_get_int(gval_tmp) == 0;
 	}
+	/* if it does not have a MessageRead property we have to
+	check if it's a sent or a received message */
+	gval_tmp = g_hash_table_lookup(message, "Direction");
+	if (gval_tmp) {
+		if (!strcmp(g_value_get_string(gval_tmp), "in")) {
+			return 1;
+		}
+	}
 	return 0;
 }
 
