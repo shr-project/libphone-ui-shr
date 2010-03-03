@@ -27,21 +27,18 @@ static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
 
 
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
-static Evas_Object *
-gl_icon_get(const void *data, Evas_Object * obj, const char *part);
-static Eina_Bool
-gl_state_get(const void *data, Evas_Object * obj, const char *part);
-static void
-gl_del(const void *data, Evas_Object * obj);
+static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
+static Eina_Bool gl_state_get(const void *data, Evas_Object * obj, const char *part);
+static void gl_del(const void *data, Evas_Object * obj);
 
 void phone_log_view_show()
 {
-	ui_utils_view_show(&view.parent);
+	ui_utils_view_show(VIEW_PTR(view));
 }
 
 void phone_log_view_hide()
 {
-	ui_utils_view_hide(&view.parent);
+	ui_utils_view_hide(VIEW_PTR(view));
 }
 
 int phone_log_view_init()
@@ -51,7 +48,7 @@ int phone_log_view_init()
 	int ret;
 	//char buf[PATH_MAX];
 
-	ret = ui_utils_view_init(&view.parent, ELM_WIN_BASIC, D_("Phonelog"),
+	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Phonelog"),
 			NULL, NULL, _phonelog_destroy_cb);
 
 	if (ret) {
@@ -59,14 +56,14 @@ int phone_log_view_init()
 		return ret;
 	}
 
-	win = ui_utils_view_window_get(&view.parent);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 
-	ui_utils_view_layout_set(&view.parent, DEFAULT_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME,
 				 "phoneui/phonelog/phonelog");
 	elm_theme_extension_add(DEFAULT_THEME);
 
 	view.pager = elm_pager_add(win);
-	ui_utils_view_swallow(&view.parent, "pager", view.pager);
+	ui_utils_view_swallow(VIEW_PTR(view), "pager", view.pager);
 	evas_object_show(view.pager);
 
 	view.list_in = _add_genlist(win);
@@ -85,7 +82,7 @@ int phone_log_view_init()
 	itc.func.del = gl_del;
 
 	view.toolbar = elm_toolbar_add(win);
-	ui_utils_view_swallow(&view.parent, "toolbar", view.toolbar);
+	ui_utils_view_swallow(VIEW_PTR(view), "toolbar", view.toolbar);
 	elm_toolbar_homogenous_set(view.toolbar, 1);
 	elm_toolbar_scrollable_set(view.toolbar, EINA_FALSE);
 	elm_toolbar_align_set(view.toolbar, 0.0);
@@ -126,19 +123,12 @@ int phone_log_view_init()
 
 void phone_log_view_deinit()
 {
-	ui_utils_view_deinit(&view.parent);
-
-	evas_object_del(view.list_in);
-	evas_object_del(view.list_out);
-	evas_object_del(view.list_missed);
-	evas_object_del(view.list_all);
-	evas_object_del(view.pager);
-	evas_object_del(view.toolbar);
+	ui_utils_view_deinit(VIEW_PTR(view));
 }
 
 int phone_log_view_is_init()
 {
-	return ui_utils_view_is_init(&view.parent);
+	return ui_utils_view_is_init(VIEW_PTR(view));
 }
 
 void phone_log_view_new_call(char *path)
@@ -155,7 +145,8 @@ _phonelog_destroy_cb(struct View *view)
 	phone_log_view_hide();
 }
 
-static void _toolbar_changed(void *data, Evas_Object *obj, void *event_info)
+static void
+_toolbar_changed(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
