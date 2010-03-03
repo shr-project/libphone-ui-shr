@@ -529,18 +529,7 @@ gl_state_get(const void *data, Evas_Object *obj, const char *part)
 	if (gval_tmp) {
 		return g_value_get_int(gval_tmp) == 0;
 	}
-	else {
-		const char *dir;
-		gval_tmp = g_hash_table_lookup(message, "Direction");
-		dir = g_value_get_string(gval_tmp);
-		if (!strcmp(dir, "in")) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
-	}
-	return 1;
+	return 0;
 }
 
 static void
