@@ -5,7 +5,7 @@
 #include "util/ui-utils.h"
 #include "util/common-utils.h"
 
-struct PhonelogViewData {
+struct PhoneLogViewData {
 	struct View parent;
 	Evas_Object *toolbar, *pager;
 	Evas_Object *list_in, *list_out, *list_missed, *list_all;
@@ -13,7 +13,7 @@ struct PhonelogViewData {
 	GPtrArray *calls;
 };
 
-static struct PhonelogViewData view;
+static struct PhoneLogViewData view;
 static Elm_Genlist_Item_Class itc;
 
 static void _phonelog_destroy_cb(struct View *_view);
@@ -22,9 +22,11 @@ static Evas_Object *_add_genlist(Evas_Object *win);
 static void _add_entry(GHashTable *entry);
 static void _contact_lookup(GHashTable *contact, GHashTable *entry);
 static void _get_callback(GHashTable *entry, gpointer data);
+static void _hide_cb(struct View *view);
+static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
 
-static char *
-gl_label_get(const void *data, Evas_Object * obj, const char *part);
+
+static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
 static Evas_Object *
 gl_icon_get(const void *data, Evas_Object * obj, const char *part);
 static Eina_Bool
@@ -32,17 +34,17 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part);
 static void
 gl_del(const void *data, Evas_Object * obj);
 
-void phonelog_view_show()
+void phone_log_view_show()
 {
 	ui_utils_view_show(&view.parent);
 }
 
-void phonelog_view_hide()
+void phone_log_view_hide()
 {
 	ui_utils_view_hide(&view.parent);
 }
 
-int phonelog_view_init()
+int phone_log_view_init()
 {
 	g_debug("Initializing the phonelog screen");
 	Evas_Object *win, *icon;
@@ -59,7 +61,8 @@ int phonelog_view_init()
 
 	win = ui_utils_view_window_get(&view.parent);
 
-	ui_utils_view_layout_set(&view.parent, DEFAULT_THEME, "phoneui/phonelog/phonelog");
+	ui_utils_view_layout_set(&view.parent, DEFAULT_THEME,
+				 "phoneui/phonelog/phonelog");
 	elm_theme_extension_add(DEFAULT_THEME);
 
 	view.pager = elm_pager_add(win);
@@ -121,7 +124,7 @@ int phonelog_view_init()
 	return 0;
 }
 
-void phonelog_view_deinit()
+void phone_log_view_deinit()
 {
 	ui_utils_view_deinit(&view.parent);
 
@@ -133,12 +136,12 @@ void phonelog_view_deinit()
 	evas_object_del(view.toolbar);
 }
 
-int phonelog_view_is_init()
+int phone_log_view_is_init()
 {
 	return ui_utils_view_is_init(&view.parent);
 }
 
-void phonelog_view_new_call(char *path)
+void phone_log_view_new_call(char *path)
 {
 	g_debug("New call: %s", path);
 	phoneui_utils_call_get(path, _get_callback, NULL);
@@ -149,7 +152,7 @@ static void
 _phonelog_destroy_cb(struct View *view)
 {
 	(void) view;
-	phonelog_view_hide();
+	phone_log_view_hide();
 }
 
 static void _toolbar_changed(void *data, Evas_Object *obj, void *event_info)
@@ -381,3 +384,17 @@ gl_del(const void *data, Evas_Object * obj)
 		g_hash_table_destroy((GHashTable *)data);
 }
 
+static void
+_hide_cb(struct View *view)
+{
+	elm_pager_content_promote(((PhoneLogViewData *)view)->list_missed);
+}
+
+static void
+_delete_cb(struct View *data, Evas_Object *obj, void *event_info)
+{
+	(void)data;
+	(void)obj;
+	(void)event_info;
+	phone_log_view_hide();
+}
