@@ -3,13 +3,14 @@
 #include <phoneui/phoneui-info.h>
 
 #include "views.h"
-#include "util/ui-utils.h"
-#include "util/common-utils.h"
+#include "ui-utils.h"
+#include "common-utils.h"
 
 struct PhoneLogViewData {
 	struct View parent;
 	Evas_Object *toolbar, *pager;
 	Evas_Object *list_in, *list_out, *list_missed, *list_all;
+	Elm_Toolbar_Item *toolbar_missed;
 	int count;
 	GPtrArray *calls;
 };
@@ -95,35 +96,42 @@ int phone_log_view_init()
 
 	icon = elm_icon_add(win);
 	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-incoming");
-	elm_toolbar_item_add(view.toolbar, icon, D_("received"), _toolbar_changed, view.list_in);
+	elm_toolbar_item_add(view.toolbar, icon, D_("received"),
+			     _toolbar_changed, view.list_in);
 	evas_object_show(icon);
 
 	icon = elm_icon_add(win);
 	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-outgoing");
-	elm_toolbar_item_add(view.toolbar, icon, D_("outgoing"), _toolbar_changed, view.list_out);
+	elm_toolbar_item_add(view.toolbar, icon, D_("outgoing"),
+			     _toolbar_changed, view.list_out);
 	evas_object_show(icon);
 
 	icon = elm_icon_add(win);
 	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-missed");
-	elm_toolbar_item_add(view.toolbar, icon, D_("missed"), _toolbar_changed, view.list_missed);
+	view.toolbar_missed = elm_toolbar_item_add(view.toolbar, icon,
+						   D_("missed"),
+						   _toolbar_changed,
+						   view.list_missed);
 	evas_object_show(icon);
 
 	icon = elm_icon_add(win);
 	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-all");
-	elm_toolbar_item_add(view.toolbar, icon, D_("all"), _toolbar_changed, view.list_all);
+	elm_toolbar_item_add(view.toolbar, icon, D_("all"), _toolbar_changed,
+			     view.list_all);
 	evas_object_show(icon);
 
 	evas_object_show(view.toolbar);
+	elm_toolbar_item_select(view.toolbar_missed);
 
 	view.calls = g_ptr_array_new();
 
-	g_debug("querying calls...");
 	/*FIXME: Why did I have to cast? */
 	view.count = 25; // FIXME: make the limit configurable !!! */
 	phoneui_utils_calls_get(&view.count, (void (*)(void *, void *))_get_callback, NULL);
 
 	phoneui_info_register_call_changes(_call_changed_handler, NULL);
 	phoneui_info_register_contact_changes(_contact_changed_handler, NULL);
+
 	return 0;
 }
 
@@ -390,6 +398,7 @@ _hide_cb(struct View *_view)
 {
 	struct PhoneLogViewData *view = (struct PhoneLogViewData *)_view;
 	elm_pager_content_promote(view->pager, view->list_missed);
+	elm_toolbar_item_select(view->toolbar_missed);
 }
 
 static void
