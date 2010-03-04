@@ -28,7 +28,7 @@ group { name: "elm/genlist/item/phonelog/default";
 	alias: "elm/genlist/item_odd/phonelog/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
-	data.item: "labels" "elm.text elm.text.sub";
+	data.item: "labels" "elm.text elm.text.2 elm.text.sub elm.text.sub2";
 	data.item: "icons" "elm.swallow.icon elm.swallow.end";
 
 	parts {
@@ -63,7 +63,7 @@ group { name: "elm/genlist/item/phonelog/default";
 			clip_to: "disclip";
 			mouse_events: 0;
 			type: RECT;
-			description { 
+			description {
 				state: "default" 0.0;
 				visible: 1;
 				color: COLOR_LIGHT_GRAY;
@@ -76,18 +76,18 @@ group { name: "elm/genlist/item/phonelog/default";
 					offset: 0 0;
 				}
 			}
-			description { 
+			description {
 				state: "selected" 0.0;
 				inherit: "default" 0.0;
 				visible: 1;
 				color: COLOR_ORANGE_SOLID;
-				
+
 			}
 		}
 		part { name: "seperator";
 			mouse_events: 0;
 			type: RECT;
-			description { 
+			description {
 				state: "default" 0.0;
 				visible: 1;
 				color: COLOR_DARK_GRAY;
@@ -100,13 +100,13 @@ group { name: "elm/genlist/item/phonelog/default";
 					relative: 1.0 1.0;
 					offset: 0 -2;
 				}
-				
+
 			}
-			
+
 		}
 		part { name: "elm.swallow.pad";
 			type: SWALLOW;
-			description { 
+			description {
 				state: "default" 0.0;
 				fixed: 1 0;
 				align: 0.0 0.5;
@@ -123,7 +123,7 @@ group { name: "elm/genlist/item/phonelog/default";
 		part { name: "elm.swallow.icon";
 			clip_to: "disclip";
 			type: SWALLOW;
-			description { 
+			description {
 				state: "default" 0.0;
 				fixed: 1 0;
 				align: 0.0 0.5;
@@ -142,7 +142,7 @@ group { name: "elm/genlist/item/phonelog/default";
 		part { name: "elm.swallow.end";
 			clip_to: "disclip";
 			type: SWALLOW;
-			description { 
+			description {
 				state: "default" 0.0;
 				fixed: 1 0;
 				align: 1.0 0.5;
@@ -275,12 +275,12 @@ group { name: "elm/genlist/item/phonelog/default";
 		}
 		part { name: "disclip";
 			type: RECT;
-			description { 
+			description {
 				state: "default" 0.0;
 				rel1.to: "bg";
 				rel2.to: "bg";
 			}
-			description { 
+			description {
 				state: "disabled" 0.0;
 				inherit: "default" 0.0;
 				color: 255 255 255 64;
