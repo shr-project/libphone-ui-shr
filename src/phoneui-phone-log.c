@@ -17,10 +17,3 @@ phoneui_backend_phone_log_hide()
 {
 	phone_log_view_hide();
 }
-
-void
-phoneui_backend_phone_log_new_call(char *path)
-{
-	phone_log_view_new_call(path);
-}
-
