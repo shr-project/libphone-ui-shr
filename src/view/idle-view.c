@@ -26,6 +26,7 @@ static void _idle_screen_hide();
 static void _idle_screen_update_counter(const char *name,
 		const char *label_name, int count);
 static void _idle_destroy_cb(struct View *_view);
+static void _pdp_network_status(void *_data, GHashTable *status);
 
 void
 idle_screen_view_show()
@@ -73,6 +74,9 @@ idle_screen_view_init()
 	edje_object_signal_callback_add(ui_utils_view_layout_get(VIEW_PTR(view)), "unlockScreen",
 					"slider", idle_screen_view_hide,
 					NULL);
+
+        phoneui_info_register_pdp_network_status(&view, _pdp_network_status);
+
 	phoneui_info_trigger();
 	return 0;
 }
@@ -236,7 +240,7 @@ _idle_destroy_cb(struct View *_view)
 {
 	struct DialerViewData *view = (struct DialerViewData *) _view;
 	idle_screen_view_hide();
-	
+
 }
 
 static void
@@ -258,3 +262,50 @@ _idle_screen_update_counter(const char *name, const char *label_name,
 }
 
 
+static void
+_pdp_network_status(void *_data, GHashTable *status)
+{
+	(void)_data;
+	GValue *tmp;
+	const char *s;
+	Evas_Object *layout;
+	char *sig;
+
+	if (!idle_screen_view_is_init())
+		return;
+
+	tmp = g_hash_table_lookup(status, "registration");
+	if (!tmp) {
+		g_warning("got PDP.NetworkStatus without registration info!");
+		return;
+	}
+	s = g_value_get_string(tmp);
+	if (strcmp(s, "home") && strcmp(s, "roaming")) {
+		/* registration is neither home nor roaming --> offline */
+		sig = "";
+		g_debug("PDP.NetworkStatus: offline (%s)", s);
+	}
+	else {
+		tmp = g_hash_table_lookup(status, "act");
+		if (tmp) {
+			s = g_value_get_string(tmp);
+			g_debug("PDP.NetworkStatus: %s", s);
+			if (strcmp(s, "EDGE") == 0) {
+				sig = "E";
+			}
+			else if (strcmp(s, "UMTS") == 0) {
+				sig = "3G";
+			}
+			else if (strcmp(s, "HSDPA") == 0 ||
+				strcmp(s, "HSUPA") == 0 ||
+				strcmp(s, "HSDPA/HSUPA") == 0) {
+				sig = "H";
+			}
+			else {
+				sig = "G";
+			}
+		}
+	}
+
+	ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
+}
