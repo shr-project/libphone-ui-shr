@@ -119,6 +119,7 @@ int phone_log_view_init()
 
 	g_debug("querying calls...");
 	/*FIXME: Why did I have to cast? */
+	view.count = 25; // FIXME: make the limit configurable !!! */
 	phoneui_utils_calls_get(&view.count, (void (*)(void *, void *))_get_callback, NULL);
 
 	phoneui_info_register_call_changes(_call_changed_handler, NULL);
@@ -136,23 +137,10 @@ int phone_log_view_is_init()
 	return ui_utils_view_is_init(VIEW_PTR(view));
 }
 
-static void
-_call_changed_handler(void *data, const char *path,
-		      enum PhoneuiInfoChangeType type)
+void phone_log_view_new_call(char *path)
 {
-	(void) type;
-	(void) data;
 	g_debug("New call: %s", path);
 	phoneui_utils_call_get(path, _get_callback, NULL);
-}
-
-static void
-_contact_changed_handler(void *data, const char *path,
-			 enum PhoneuiInfoChangeType type)
-{
-	(void) path;
-	(void) type;
-	(void) data;
 }
 
 static void
@@ -160,6 +148,7 @@ _toolbar_changed(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
+	g_debug("promoting %d to top", (int) data);
 	elm_pager_content_promote(view.pager, data);
 }
 
