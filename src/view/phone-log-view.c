@@ -1,5 +1,6 @@
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-info.h>
 
 #include "views.h"
 #include "util/ui-utils.h"
@@ -23,6 +24,8 @@ static void _contact_lookup(GHashTable *contact, GHashTable *entry);
 static void _get_callback(GHashTable *entry, gpointer data);
 static void _hide_cb(struct View *view);
 static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
+static void _call_changed_handler(void * data, const char *path, enum PhoneuiInfoChangeType);
+static void _contact_changed_handler(void *data, const char *path, enum PhoneuiInfoChangeType);
 
 
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
@@ -118,6 +121,8 @@ int phone_log_view_init()
 	/*FIXME: Why did I have to cast? */
 	phoneui_utils_calls_get(&view.count, (void (*)(void *, void *))_get_callback, NULL);
 
+	phoneui_info_register_call_changes(_call_changed_handler, NULL);
+	phoneui_info_register_contact_changes(_contact_changed_handler, NULL);
 	return 0;
 }
 
@@ -131,10 +136,23 @@ int phone_log_view_is_init()
 	return ui_utils_view_is_init(VIEW_PTR(view));
 }
 
-void phone_log_view_new_call(char *path)
+static void
+_call_changed_handler(void *data, const char *path,
+		      enum PhoneuiInfoChangeType type)
 {
+	(void) type;
+	(void) data;
 	g_debug("New call: %s", path);
 	phoneui_utils_call_get(path, _get_callback, NULL);
+}
+
+static void
+_contact_changed_handler(void *data, const char *path,
+			 enum PhoneuiInfoChangeType type)
+{
+	(void) path;
+	(void) type;
+	(void) data;
 }
 
 static void
@@ -142,7 +160,6 @@ _toolbar_changed(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
-	g_debug("promoting %d to top", (int) data);
 	elm_pager_content_promote(view.pager, data);
 }
 

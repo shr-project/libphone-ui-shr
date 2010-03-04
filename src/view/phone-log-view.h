@@ -6,7 +6,6 @@ void phone_log_view_hide();
 int phone_log_view_init();
 void phone_log_view_deinit();
 int phone_log_view_is_init();
-void phone_log_view_new_call(char *path);
 
 #endif
 
