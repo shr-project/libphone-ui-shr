@@ -295,7 +295,7 @@ frame_show_show(void *_data)
 	g_hash_table_iter_init(&iter, data->properties);
 	while (g_hash_table_iter_next(&iter, &key, &value)) {
 
-		if (!strcmp(key, "Path"))
+		if (!strcmp(key, "Path") || !strcmp(key, "EntryId"))
 			continue;
 
 		g_debug("adding field %s='%s' to list", key,

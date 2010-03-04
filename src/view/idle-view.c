@@ -68,9 +68,7 @@ idle_screen_view_init()
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 
 	elm_win_fullscreen_set(win, 1);
-	view.wallpaper = elm_icon_add(win);
-	elm_icon_file_set(view.wallpaper, IDLE_SCREEN_WALLPAPER, NULL);
-	ui_utils_view_swallow(VIEW_PTR(view), "background", view.wallpaper);
+	elm_win_layer_set(win, 200);
 	evas_object_show(view.wallpaper);
 
 	edje_object_signal_callback_add(ui_utils_view_layout_get(VIEW_PTR(view)), "unlockScreen",

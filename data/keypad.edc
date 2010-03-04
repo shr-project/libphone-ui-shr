@@ -1,15 +1,15 @@
 group { name: "phoneui/keypad";
 	parts {
-		part { name: "border_top";
+		part { name: "background";
 			type: RECT;
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
 				rel1 {
-					relative: 0 0;
+					relative: 0.0 0.0;
 				}
 				rel2 {
-					relative: 1 0.01;
+					relative: 1.0 1.0;
 				}
 				color: 100 100 100 255;
 			}
@@ -113,14 +113,15 @@ group { name: "phoneui/keypad";
 					to: "button1";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					to: "button1";
 				}
 				text {
 					text: "1";
 					font: "redensek:style=bold:color=000";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -136,15 +137,16 @@ group { name: "phoneui/keypad";
 					to: "button2";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button2";
 				}
 				text {
 					text: "2";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -155,9 +157,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button2";
+					to: "text2";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -165,10 +167,11 @@ group { name: "phoneui/keypad";
 					to: "button2";
 				}
 				text {
-					text: "";
+					text: "ABC";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -184,15 +187,16 @@ group { name: "phoneui/keypad";
 					to: "button3";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button3";
 				}
 				text {
 					text: "3";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -203,9 +207,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button3";
+					to: "text3";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -213,10 +217,11 @@ group { name: "phoneui/keypad";
 					to: "button3";
 				}
 				text {
-					text: "";
+					text: "DEF";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -317,15 +322,16 @@ group { name: "phoneui/keypad";
 					to: "button4";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button4";
 				}
 				text {
 					text: "4";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -336,9 +342,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button4";
+					to: "text4";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -346,10 +352,11 @@ group { name: "phoneui/keypad";
 					to: "button4";
 				}
 				text {
-					text: "";
+					text: "GHI";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -365,15 +372,16 @@ group { name: "phoneui/keypad";
 					to: "button5";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button5";
 				}
 				text {
 					text: "5";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -384,9 +392,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button5";
+					to: "text5";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -394,10 +402,11 @@ group { name: "phoneui/keypad";
 					to: "button5";
 				}
 				text {
-					text: "";
+					text: "JKL";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -414,15 +423,16 @@ group { name: "phoneui/keypad";
 					to: "button6";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button6";
 				}
 				text {
 					text: "6";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -434,9 +444,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button6";
+					to: "text6";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -444,10 +454,11 @@ group { name: "phoneui/keypad";
 					to: "button6";
 				}
 				text {
-					text: "";
+					text: "MNO";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -549,15 +560,16 @@ group { name: "phoneui/keypad";
 					to: "button7";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button7";
 				}
 				text {
 					text: "7";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -568,9 +580,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button7";
+					to: "text7";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -578,10 +590,11 @@ group { name: "phoneui/keypad";
 					to: "button7";
 				}
 				text {
-					text: "";
+					text: "PQRS";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -597,15 +610,16 @@ group { name: "phoneui/keypad";
 					to: "button8";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button8";
 				}
 				text {
 					text: "8";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -616,9 +630,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button8";
+					to: "text8";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -626,10 +640,11 @@ group { name: "phoneui/keypad";
 					to: "button8";
 				}
 				text {
-					text: "";
+					text: "TUV";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -645,15 +660,16 @@ group { name: "phoneui/keypad";
 					to: "button9";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button9";
 				}
 				text {
 					text: "9";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -665,9 +681,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button9";
+					to: "text9";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -675,10 +691,11 @@ group { name: "phoneui/keypad";
 					to: "button9";
 				}
 				text {
-					text: "";
+					text: "XYZ";
 					font: "redensek";
-					size: 20;
-					align: 0.5 0.8;
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -788,7 +805,8 @@ group { name: "phoneui/keypad";
 					text: "*";
 					font: "redensek:style=bold";
 					size: 60;
-					align: 0.5 0.15;
+					fit: 1 1;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -804,15 +822,16 @@ group { name: "phoneui/keypad";
 					to: "button0";
 				}
 				rel2 {
-					relative: 1.0 1.0;
+					relative: 1.0 0.7;
 					offset: 0 0;
 					to: "button0";
 				}
 				text {
 					text: "0";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -823,9 +842,9 @@ group { name: "phoneui/keypad";
 				state: "default" 0.0;
 				color: 60 60 60 255;
 				rel1 {
-					relative: 0.0 0.0;
+					relative: 0.0 1.0;
 					offset: 0 0;
-					to: "button0";
+					to: "text0";
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -834,9 +853,10 @@ group { name: "phoneui/keypad";
 				}
 				text {
 					text: "+";
-					font: "redensek:style=bold";
-					size: 25;
-					align: 0.5 0.8;
+					font: "redensek";
+					fit: 1 1;
+					size: 40;
+					align: 0.5 0.5;
 				}
 			}
 		}
@@ -859,8 +879,9 @@ group { name: "phoneui/keypad";
 				text {
 					text: "#";
 					font: "redensek:style=bold";
+					fit: 1 1;
 					size: 40;
-					align: 0.5 0.15;
+					align: 0.5 0.5;
 				}
 			}
 		}

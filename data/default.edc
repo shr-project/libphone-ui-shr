@@ -12,6 +12,7 @@ collections {
 #include "contacts.edc"
 #include "phonelog.edc"
 #include "keypad.edc"
+#include "quick-settings.edc"
 
 } /* end of collection */
 
