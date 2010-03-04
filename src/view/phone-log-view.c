@@ -332,10 +332,8 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	if (!strcmp(part, "elm.text.2")) {
 		val = g_hash_table_lookup(entry, "Timestamp");
 		if (val) {
-			time_t timestamp = g_value_get_int(val);
-			char datestr[35];
-			strftime(datestr, 31, "%d.%m.%Y %H:%M" LTR_STRING, localtime(&timestamp));
-			return strdup(datestr);
+			return common_utils_timestamp_to_date
+						(g_value_get_int(val));
 		}
 	}
 
