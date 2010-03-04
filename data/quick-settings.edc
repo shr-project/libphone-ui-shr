@@ -2,57 +2,57 @@
 group { name: "phoneui/settings/quick-settings";
 	parts {
 		part { 
-			name, "frame";
-			type, RECT;
-			mouse_events, 0;
+			name: "frame";
+			type: RECT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 255;
+				state: "default" 0.0;
+				color: 0 0 0 255;
 				rel1 {
-					relative, 0.0 0.0;
-					offset, 0 0;
+					relative: 0.0 0.0;
+					offset: 0 0;
 				}
 				rel2 {
-					relative, 1.0 1.0;
- 					offset, 0 0;
+					relative: 1.0 1.0;
+ 					offset: 0 0;
 				}
 			}
 		}
 		part { 
-			name, "profiles-frame";
-			type, RECT;
-			mouse_events, 0;
+			name: "profiles-frame";
+			type: RECT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 255 255 255 255;
+				state: "default" 0.0;
+				color: 255 255 255 255;
 				rel1 {
-					relative, 0.0 0.0;
-					offset, 1 1;
-					to, "frame";
+					relative: 0.0 0.0;
+					offset: 1 1;
+					to: "frame";
 				}
 				rel2 {
-					relative, 1.0 0.4;
- 					offset, -2 -2;
-					to, "frame";
+					relative: 1.0 0.4;
+ 					offset: -2 -2;
+					to: "frame";
 				}
 			}
 		}
 		part { 
-			name, "profiles-frame-headline";
-			type, TEXT;
-			mouse_events, 0;
+			name: "profiles-frame-headline";
+			type: TEXT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 150 150 150 255;
+				state: "default" 0.0;
+				color: 150 150 150 255;
 				rel1 {
-					relative, 0.0 0.0;
-					offset, 3 3;
-					to, "profiles-frame";
+					relative: 0.0 0.0;
+					offset: 3 3;
+					to: "profiles-frame";
 				}
 				rel2 {
-					relative, 1.0 0.2;
- 					offset, 0 0;
-					to, "profiles-frame";
+					relative: 1.0 0.2;
+ 					offset: 0 0;
+					to: "profiles-frame";
 				}
 				text {
 					text: "Phone profiles";
@@ -64,40 +64,40 @@ group { name: "phoneui/settings/quick-settings";
 			}
 		}
 		part { 
-			name, "profiles-frame-airplane-frame";
-			type, RECT;
-			mouse_events, 0;
+			name: "profiles-frame-airplane-frame";
+			type: RECT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 10 220 120 0;
+				state: "default" 0.0;
+				color: 10 220 120 0;
 				rel1 {
-					relative, 0.0 1.0;
-					offset, 0 0;
-					to, "profiles-frame-headline";
+					relative: 0.0 1.0;
+					offset: 0 0;
+					to: "profiles-frame-headline";
 				}
 				rel2 {
-					relative, 0.5 1.0;
- 					offset, -2 -2;
-					to, "profiles-frame";
+					relative: 0.5 1.0;
+ 					offset: -2 -2;
+					to: "profiles-frame";
 				}
 			}
 		}
 		part { 
-			name, "profiles-frame-airplane-frame-headline";
-			type, TEXT;
-			mouse_events, 0;
+			name: "profiles-frame-airplane-frame-headline";
+			type: TEXT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 30 30 30 255;
+				state: "default" 0.0;
+				color: 30 30 30 255;
 				rel1 {
-					relative, 0.0 0.0;
-					offset, 0 0;
-					to, "profiles-frame-airplane-frame";
+					relative: 0.0 0.0;
+					offset: 0 0;
+					to: "profiles-frame-airplane-frame";
 				}
 				rel2 {
-					relative, 1.0 0.3;
- 					offset, -3 0;
-					to, "profiles-frame-airplane-frame";
+					relative: 1.0 0.3;
+ 					offset: -3 0;
+					to: "profiles-frame-airplane-frame";
 				}
 				text {
 					text: "Airplane mode:";
@@ -109,76 +109,76 @@ group { name: "phoneui/settings/quick-settings";
 			}
 		}
 		part { 
-			name, "profiles-frame-airplane-slide";
-			type, SWALLOW;
-			mouse_events, 1;
+			name: "profiles-frame-airplane-slide";
+			type: SWALLOW;
+			mouse_events: 1;
 			description {
-				state, "default" 0.0;
+				state: "default" 0.0;
 				rel1 {
-					relative, 0.0 1.0;
-					offset, 5 5;
-					to, "profiles-frame-airplane-frame-headline";
+					relative: 0.0 1.0;
+					offset: 5 5;
+					to: "profiles-frame-airplane-frame-headline";
 				}
 				rel2 {
-					relative, 1.0 1.0;
- 					offset, -10 -10;
-					to, "profiles-frame-airplane-frame";
+					relative: 1.0 1.0;
+ 					offset: -10 -10;
+					to: "profiles-frame-airplane-frame";
 				}
 			}
 		}
 		part { 
-			name, "profiles-frame-profiles-combo";
-			type, SWALLOW;
-			mouse_events, 1;
+			name: "profiles-frame-profiles-combo";
+			type: SWALLOW;
+			mouse_events: 1;
 			description {
-				state, "default" 0.0;
+				state: "default" 0.0;
 				rel1 {
-					relative, 1.0 0.2;
-					offset, 10 0;
-					to, "profiles-frame-airplane-frame";
+					relative: 1.0 0.2;
+					offset: 10 0;
+					to: "profiles-frame-airplane-frame";
 				}
 				rel2 {
-					relative, 1.0 0.8;
- 					offset, -10 -10;
-					to, "profiles-frame";
+					relative: 1.0 0.8;
+ 					offset: -10 -10;
+					to: "profiles-frame";
 				}
 			}
 		}
 		part { 
-			name, "power-frame";
-			type, RECT;
-			mouse_events, 0;
+			name: "power-frame";
+			type: RECT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 255 255 255 255;
+				state: "default" 0.0;
+				color: 255 255 255 255;
 				rel1 {
-					relative, 0.0 1.0;
-					offset, 0 1;
-					to, "profiles-frame";
+					relative: 0.0 1.0;
+					offset: 0 1;
+					to: "profiles-frame";
 				}
 				rel2 {
-					relative, 1.0 1.0;
- 					offset, -2 -2;
-					to, "frame";
+					relative: 1.0 1.0;
+ 					offset: -2 -2;
+					to: "frame";
 				}
 			}
 		}
 		part { 
-			name, "power-frame-headline";
-			type, TEXT;
-			mouse_events, 0;
+			name: "power-frame-headline";
+			type: TEXT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 150 150 150 255;
+				state: "default" 0.0;
+				color: 150 150 150 255;
 				rel1 {
-					relative, 0.0 0.0;
-					offset, 3 3;
-					to, "power-frame";
+					relative: 0.0 0.0;
+					offset: 3 3;
+					to: "power-frame";
 				}
 				rel2 {
-					relative, 1.0 0.133;
- 					offset, 0 0;
-					to, "power-frame";
+					relative: 1.0 0.133;
+ 					offset: 0 0;
+					to: "power-frame";
 				}
 				text {
 					text: "Power settings";
@@ -190,40 +190,40 @@ group { name: "phoneui/settings/quick-settings";
 			}
 		}
 		part { 
-			name, "power-frame-auto-frame";
-			type, RECT;
-			mouse_events, 0;
+			name: "power-frame-auto-frame";
+			type: RECT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 0;
+				state: "default" 0.0;
+				color: 0 0 0 0;
 				rel1 {
-					relative, 0.0 1.0;
-					offset, 0 0;
-					to, "power-frame-headline";
+					relative: 0.0 1.0;
+					offset: 0 0;
+					to: "power-frame-headline";
 				}
 				rel2 {
-					relative, 1.0 0.7;
- 					offset, 0 0;
-					to, "power-frame";
+					relative: 1.0 0.7;
+ 					offset: 0 0;
+					to: "power-frame";
 				}
 			}
 		}
 		part { 
-			name, "power-frame-auto-frame-dimming-label";
-			type, TEXT;
-			mouse_events, 0;
+			name: "power-frame-auto-frame-dimming-label";
+			type: TEXT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 255;
+				state: "default" 0.0;
+				color: 0 0 0 255;
 				rel1 {
-					relative, 0.0 0.1;
-					offset, 0 0;
-					to, "power-frame-auto-frame";
+					relative: 0.0 0.1;
+					offset: 0 0;
+					to: "power-frame-auto-frame";
 				}
 				rel2 {
-					relative, 0.4 0.4;
- 					offset, 0 0;
-					to, "power-frame-auto-frame";
+					relative: 0.4 0.4;
+ 					offset: 0 0;
+					to: "power-frame-auto-frame";
 				}
 				text {
 					text: "Auto-dimming:";
@@ -235,41 +235,43 @@ group { name: "phoneui/settings/quick-settings";
 			}
 		}
 		part { 
-			name, "power-frame-auto-frame-dimming-slide";
-			type, SWALLOW;
-			mouse_events, 1;
+			name: "power-frame-auto-frame-dimming-slide";
+			type: SWALLOW;
+			mouse_events: 1;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 0;
-				fixed, 1 1;
+				state: "default" 0.0;
+				color: 0 0 0 0;
+				fixed: 1 1;
 				rel1 {
-					relative, 1.0 0.0;
-					offset, 5 5;
-					to, "power-frame-auto-frame-dimming-label";
+					relative: 1.0 0.0;
+					offset: 20 0;
+					to: "power-frame-auto-frame-dimming-label";
 				}
 				rel2 {
-					relative, 1.0 1.0;
- 					offset, 120 0;
-					to, "power-frame-auto-frame-dimming-label";
+					relative: 0.8 1.0;
+ 					offset: 0 0;
+					to_y: "power-frame-auto-frame-dimming-label";
 				}
 			}
 		}
 		part { 
-			name, "power-frame-auto-frame-suspend-label";
-			type, TEXT;
-			mouse_events, 0;
+			name: "power-frame-auto-frame-suspend-label";
+			type: TEXT;
+			mouse_events: 0;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 255;
+				state: "default" 0.0;
+				color: 0 0 0 255;
 				rel1 {
-					relative, 0.0 0.6;
-					offset, 0 0;
-					to, "power-frame-auto-frame";
+					relative: 0.0 0.6;
+					offset: 0 0;
+					to_x: "power-frame-auto-frame-dimming-label";
+					to_y: "power-frame-auto-frame";
 				}
 				rel2 {
-					relative, 0.4 0.9;
- 					offset, 0 0;
-					to, "power-frame-auto-frame";
+					relative: 1.0 0.9;
+ 					offset: 0 0;
+ 					to_x: "power-frame-auto-frame-dimming-label";
+					to_y: "power-frame-auto-frame";
 				}
 				text {
 					text: "Auto-suspend:";
@@ -281,79 +283,79 @@ group { name: "phoneui/settings/quick-settings";
 			}
 		}
 		part { 
-			name, "power-frame-auto-frame-suspend-slide";
-			type, SWALLOW;
-			mouse_events, 1;
+			name: "power-frame-auto-frame-suspend-slide";
+			type: SWALLOW;
+			mouse_events: 1;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 0;
-				fixed, 1 1;
+				state: "default" 0.0;
+				color: 0 0 0 0;
+				fixed: 1 1;
 				rel1 {
-					relative, 1.0 0.0;
-					offset, 5 5;
-					to, "power-frame-auto-frame-suspend-label";
+					relative: 1.0 0.0;
+					offset: 20 0;
+					to: "power-frame-auto-frame-suspend-label";
 				}
 				rel2 {
-					relative, 1.0 1.0;
- 					offset, 120 0;
-					to, "power-frame-auto-frame-suspend-label";
+					relative: 0.8 1.0;
+ 					offset: 0 0;
+					to_y: "power-frame-auto-frame-suspend-label";
 				}
 			}
 		}
 		part { 
-			name, "power-frame-suspend-button";
-			type, SWALLOW;
-			mouse_events, 1;
+			name: "power-frame-suspend-button";
+			type: SWALLOW;
+			mouse_events: 1;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 0;
+				state: "default" 0.0;
+				color: 0 0 0 0;
 				rel1 {
-					relative, 0.0 1.0;
-					offset, 1 1;
-					to, "power-frame-auto-frame";
+					relative: 0.0 1.0;
+					offset: 1 1;
+					to: "power-frame-auto-frame";
 				}
 				rel2 {
-					relative, 0.33 1.0;
- 					offset, -1 -6;
-					to, "power-frame";
+					relative: 0.33 1.0;
+ 					offset: -1 -6;
+					to: "power-frame";
 				}
 			}
 		}
 		part { 
-			name, "power-frame-lock-button";
-			type, SWALLOW;
-			mouse_events, 1;
+			name: "power-frame-lock-button";
+			type: SWALLOW;
+			mouse_events: 1;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 0;
+				state: "default" 0.0;
+				color: 0 0 0 0;
 				rel1 {
-					relative, 0.33 1.0;
-					offset, 1 1;
-					to, "power-frame-auto-frame";
+					relative: 0.33 1.0;
+					offset: 1 1;
+					to: "power-frame-auto-frame";
 				}
 				rel2 {
-					relative, 0.66 1.0;
- 					offset, -1 -6;
-					to, "power-frame";
+					relative: 0.66 1.0;
+ 					offset: -1 -6;
+					to: "power-frame";
 				}
 			}
 		}
 		part { 
-			name, "power-frame-shutdown-button";
-			type, SWALLOW;
-			mouse_events, 1;
+			name: "power-frame-shutdown-button";
+			type: SWALLOW;
+			mouse_events: 1;
 			description {
-				state, "default" 0.0;
-				color, 0 0 0 0;
+				state: "default" 0.0;
+				color: 0 0 0 0;
 				rel1 {
-					relative, 0.66 1.0;
-					offset, 1 1;
-					to, "power-frame-auto-frame";
+					relative: 0.66 1.0;
+					offset: 1 1;
+					to: "power-frame-auto-frame";
 				}
 				rel2 {
-					relative, 1.0 1.0;
- 					offset, -5 -6;
-					to, "power-frame";
+					relative: 1.0 1.0;
+ 					offset: -5 -6;
+					to: "power-frame";
 				}
 			}
 		}
