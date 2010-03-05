@@ -16,6 +16,10 @@ enum MessageNewModes {
 	MODE_CLOSE
 };
 
+struct _contact_lookup_pack {
+	struct MessageNewViewData *view;
+	GHashTable *recipient;
+};
 
 static Elm_Genlist_Item_Class itc;
 
@@ -37,6 +41,7 @@ static void _contacts_button_add_clicked(void *data, Evas_Object *obj, void *eve
 static void _number_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _process_recipient(gpointer _properties, gpointer _data);
+static void _contact_lookup(GHashTable *contact, gpointer data);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
 
@@ -49,6 +54,8 @@ message_new_view_init(GHashTable *options)
 	struct MessageNewViewData *view;
 	int ret;
 	Evas_Object *win;
+	GValue *gval_tmp;
+	const char *tmp;
 
 	view = malloc(sizeof(struct MessageNewViewData));
 	if (!view) {
@@ -76,7 +83,16 @@ message_new_view_init(GHashTable *options)
 	view->messages_sent = 0;
 	view->contact_list_data.view = VIEW_PTR(*view);
 	if (options) {
-		g_ptr_array_add(view->recipients, options);
+		gval_tmp = g_hash_table_lookup(options, "Phone");
+		if (gval_tmp) {
+			struct _contact_lookup_pack *pack =
+				malloc(sizeof(struct _contact_lookup_pack));
+			pack->view = view;
+			pack->recipient = options;
+			tmp = g_value_get_string(gval_tmp);
+			phoneui_utils_contact_lookup(tmp, _contact_lookup, pack);
+			g_ptr_array_add(view->recipients, options);
+		}
 	}
 
 	elm_theme_extension_add(DEFAULT_THEME);
@@ -179,7 +195,7 @@ _init_content_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/content");
 	evas_object_show(view->layout_content);
 
-	edje_object_part_text_set(elm_layout_edje_get(view->layout_content), 
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_content),
 			"content_title", D_("Enter your message"));
 
 	sc = elm_scroller_add(win);
@@ -228,7 +244,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/recipients");
 	evas_object_show(view->layout_recipients);
 
-	edje_object_part_text_set(elm_layout_edje_get(view->layout_recipients), 
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_recipients),
 			"recipients_title", D_("Define Recipients"));
 
 	view->list_recipients = elm_genlist_add(win);
@@ -298,7 +314,7 @@ _init_contacts_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/contacts");
 	evas_object_show(view->layout_contacts);
 
-	edje_object_part_text_set(elm_layout_edje_get(view->layout_contacts), 
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_contacts),
 			"contacts_title", D_("Add Contact"));
 
 	view->contact_list_data.layout = view->layout_contacts;
@@ -335,7 +351,7 @@ _init_number_page(struct MessageNewViewData *view)
 			    "phoneui/messages/new/number");
 	evas_object_show(view->layout_number);
 
-	edje_object_part_text_set(elm_layout_edje_get(view->layout_number), 
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_number),
 			"number_title", D_("Add Number"));
 
 	btn = elm_button_add(win);
@@ -620,6 +636,38 @@ _process_recipient(gpointer _properties, gpointer _data)
 
 	elm_genlist_item_append(data->list_recipients, &itc, properties,
 		NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+}
+
+static void
+_contact_lookup(GHashTable *contact, gpointer data)
+{
+	char *tmp;
+	const char *tmp2;
+	GValue *gval_tmp;
+	struct _contact_lookup_pack *pack;
+
+	if (contact == NULL)
+		return;
+
+	pack = (struct _contact_lookup_pack *)data;
+	tmp = phoneui_utils_contact_display_name_get(contact);
+	if (tmp) {
+		g_hash_table_insert(pack->recipient, "Name",
+				    common_utils_new_gvalue_string(tmp));
+		free(tmp);
+	}
+	gval_tmp = g_hash_table_lookup(contact, "Photo");
+	if (gval_tmp) {
+		tmp2 = g_value_get_string(gval_tmp);
+		g_hash_table_insert(pack->recipient, "Photo",
+				    common_utils_new_gvalue_string(tmp2));
+	}
+	if (pack->view->layout_recipients) {
+		elm_genlist_clear(pack->view->list_recipients);
+		g_ptr_array_foreach(pack->view->recipients, _process_recipient,
+				    pack->view);
+	}
+	free(pack);
 }
 
 static void
