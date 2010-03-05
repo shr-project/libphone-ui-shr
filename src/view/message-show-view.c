@@ -334,14 +334,27 @@ _answer_clicked(void *_data, Evas_Object * obj,
 {
 	(void) obj;
 	(void) event_info;
-	(void) _data;
-// 	struct MessageShowViewData *data = (struct MessageShowViewData *) _data;
+	GHashTable *options;
+	struct MessageShowViewData *view = (struct MessageShowViewData *) _data;
 
 	g_debug("message_show_view_answer_clicked()");
 
-	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-// 	g_hash_table_insert(options, "Name", common_utils_new_gvalue_string(data->name));
-// 	g_hash_table_insert(options, "Phone", common_utils_new_gvalue_string(data->number));
+	options = g_hash_table_new_full(g_str_hash, g_str_equal,
+					NULL, common_utils_gvalue_free);
+        if (!view->number) {
+		g_warning("Trying to answer a message without number?!");
+		return;
+	}
+	g_hash_table_insert(options, "Phone",
+			    common_utils_new_gvalue_string(view->number));
+	if (view->name) {
+		g_hash_table_insert(options, "Name",
+			    common_utils_new_gvalue_string(view->name));
+	}
+	if (view->photopath) {
+		g_hash_table_insert(options, "Photo",
+			common_utils_new_gvalue_string(view->photopath));
+	}
 
 	phoneui_messages_message_new(options);
 	//g_hash_table_destroy(options);
