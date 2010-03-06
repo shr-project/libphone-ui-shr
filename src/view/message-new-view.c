@@ -4,6 +4,7 @@
 
 #include "ui-utils.h"
 #include "common-utils.h"
+#include "widget/elm_keypad.h"
 #include "message-new-view.h"
 #include "views.h"
 
@@ -38,8 +39,11 @@ static void _recipients_button_send_clicked(void *data, Evas_Object *obj, void *
 // static void _recipients_button_delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _number_keypad_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _number_button_delete_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _number_update_number(struct MessageNewViewData* view);
 static void _process_recipient(gpointer _properties, gpointer _data);
 static void _contact_lookup(GHashTable *contact, gpointer data);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
@@ -342,10 +346,12 @@ _init_contacts_page(struct MessageNewViewData *view)
 static void
 _init_number_page(struct MessageNewViewData *view)
 {
-	Evas_Object *win, *btn, *sc;
+	Evas_Object *win, *btn, *ico;
 
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 
+	view->number[0] = '\0';
+	view->number_length = 0;
 	view->layout_number = elm_layout_add(view->pager);
 	elm_win_resize_object_add(win, view->layout_number);
 	elm_layout_file_set(view->layout_number, DEFAULT_THEME,
@@ -369,16 +375,25 @@ _init_number_page(struct MessageNewViewData *view)
 	elm_layout_content_set(view->layout_number, "number_button_add", btn);
 	evas_object_show(btn);
 
-	view->number_entry = elm_entry_add(win);
-	evas_object_size_hint_weight_set(view->number_entry,
-			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_show(view->number_entry);
-	elm_object_focus(view->number_entry);
+	ico = elm_icon_add(win);
+	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
+	elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit-undo");
+	evas_object_show(ico);
 
-	sc = elm_scroller_add(win);
-	elm_scroller_content_set(sc, view->number_entry);
-	elm_layout_content_set(view->layout_number, "number_entry", sc);
-	evas_object_show(sc);
+	btn = elm_button_add(win);
+	elm_button_icon_set(btn, ico);
+	elm_layout_content_set(view->layout_number, "number_button_delete", btn);
+	evas_object_smart_callback_add(btn, "clicked",
+				       _number_button_delete_clicked, view);
+	evas_object_show(btn);
+
+	view->number_keypad = (Evas_Object *) elm_keypad_add(win);
+	evas_object_smart_callback_add(view->number_keypad, "clicked",
+				       _number_keypad_clicked, view);
+	elm_layout_content_set(view->layout_number, "number_keypad",
+			       view->number_keypad);
+	evas_object_show(view->number_keypad);
+
 	elm_pager_content_push(view->pager, view->layout_number);
 }
 
@@ -528,6 +543,21 @@ _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 }
 
 static void
+_number_keypad_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	char input = ((char *) event_info)[0];
+
+	if (view->number_length < 64) {
+		view->number[view->number_length] = input;
+		view->number[view->number_length+1] = '\0';
+		view->number_length++;
+		_number_update_number(view);
+	}
+}
+
+static void
 _number_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
@@ -542,21 +572,15 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	char *number;
 
-	number = elm_entry_markup_to_utf8(elm_entry_entry_get
-						(view->number_entry));
-	if (!number)
-		return;
-	number = g_strstrip(number);
-	if (phone_utils_sms_is_valid_number(number)) {
+	if (phone_utils_sms_is_valid_number(view->number)) {
 		GHashTable *properties =
 			g_hash_table_new_full(g_str_hash, g_str_equal,
 					 NULL, common_utils_gvalue_free);
 		g_hash_table_insert(properties, "Name",
 				    common_utils_new_gvalue_string("Number"));
 		g_hash_table_insert(properties, "Phone",
-				    common_utils_new_gvalue_string(number));
+				    common_utils_new_gvalue_string(view->number));
 		g_hash_table_insert(properties, "Photo",
 				common_utils_new_gvalue_string(CONTACT_NUMBER_PHOTO));
 		g_ptr_array_add(view->recipients, properties);
@@ -566,12 +590,34 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 				malloc(sizeof(struct _contact_lookup_pack));
 		pack->view = view;
 		pack->recipient = properties;
-		phoneui_utils_contact_lookup(number, _contact_lookup, pack);
+		phoneui_utils_contact_lookup(view->number, _contact_lookup, pack);
+		view->number[0] = '\0';
+		view->number_length = 0;
+		_number_update_number(view);
 	}
-	if (number)
-		free(number);
 
 	elm_pager_content_promote(view->pager, view->layout_recipients);
+}
+
+static void
+_number_button_delete_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	if (view->number_length > 0) {
+		view->number_length--;
+		view->number[view->number_length] = '\0';
+		_number_update_number(view);
+	}
+}
+
+static void
+_number_update_number(struct MessageNewViewData *view)
+{
+	g_debug("Updating number to %s", view->number);
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_number),
+			"number_number", view->number);
 }
 
 static void
