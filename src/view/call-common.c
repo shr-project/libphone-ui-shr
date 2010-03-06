@@ -207,7 +207,7 @@ call_common_active_call_add(struct CallActiveViewData *win)
 	/* if it's not the first call, update all the windows */
 	if (active_calls_list) {
 		g_queue_foreach(active_calls_list, (GFunc) _foreach_new_active,
-				G_INT_TO_POINTER(-1));
+				GINT_TO_POINTER(-1));
 	}
 	/*init */
 	/* if first, init state */
