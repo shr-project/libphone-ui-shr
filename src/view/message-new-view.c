@@ -82,6 +82,10 @@ message_new_view_init(GHashTable *options)
 	view->recipients = g_ptr_array_new();
 	view->messages_sent = 0;
 	view->contact_list_data.view = VIEW_PTR(*view);
+	view->layout_content = NULL;
+	view->layout_recipients = NULL;
+	view->layout_contacts = NULL;
+	view->layout_number = NULL;
 	if (options) {
 		gval_tmp = g_hash_table_lookup(options, "Phone");
 		if (gval_tmp) {
@@ -108,9 +112,6 @@ message_new_view_init(GHashTable *options)
 	evas_object_show(view->pager);
 
 	_init_content_page(view);
-	view->layout_recipients = NULL;
-	view->layout_contacts = NULL;
-	view->layout_number = NULL;
 
 	return view;
 }
@@ -560,6 +561,12 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 				common_utils_new_gvalue_string(CONTACT_NUMBER_PHOTO));
 		g_ptr_array_add(view->recipients, properties);
 		_process_recipient(properties, view);
+		/* try to resolve the number to a contact */
+		struct _contact_lookup_pack *pack =
+				malloc(sizeof(struct _contact_lookup_pack));
+		pack->view = view;
+		pack->recipient = properties;
+		phoneui_utils_contact_lookup(number, _contact_lookup, pack);
 	}
 	if (number)
 		free(number);
