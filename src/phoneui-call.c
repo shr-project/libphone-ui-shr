@@ -65,7 +65,7 @@ instance_manager_remove(int id)
 	if (win) {
 		instances_size--;
 		/*FIXME: handle if can't allocate */
-		instances = realloc(instances, instances_size);
+		instances = realloc(instances, sizeof(struct Instance) * instances_size);
 	}
 
 	return win;

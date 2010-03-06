@@ -138,7 +138,7 @@ call_common_window_new_active(int id)
 
 	if (active_calls_list) {
 		g_queue_foreach(active_calls_list, (GFunc) _foreach_new_active,
-				(void *) id);
+				GINT_TO_POINTER(id));
 	}
 }
 
@@ -196,7 +196,7 @@ call_common_set_sound_state(enum SoundState state)
 	if (active_calls_list) {
 		g_queue_foreach(active_calls_list,
 				(GFunc) call_common_window_update_state,
-				(void *) state);
+				GINT_TO_POINTER(state));
 	}
 	return 0;
 }
@@ -207,7 +207,7 @@ call_common_active_call_add(struct CallActiveViewData *win)
 	/* if it's not the first call, update all the windows */
 	if (active_calls_list) {
 		g_queue_foreach(active_calls_list, (GFunc) _foreach_new_active,
-				(void *) -1);
+				G_INT_TO_POINTER(-1));
 	}
 	/*init */
 	/* if first, init state */
@@ -236,7 +236,7 @@ call_common_active_call_remove(int id)
 	struct CallActiveViewData *win = NULL;
 	if (active_calls_list) {
 		/*FIXME: cast id - bad */
-		GList *link = g_queue_find_custom(active_calls_list, (void *) id,
+		GList *link = g_queue_find_custom(active_calls_list, GINT_TO_POINTER(id),
 						(GCompareFunc)  _queue_find_by_id);
 		win = g_queue_peek_nth(active_calls_list,
 				       g_queue_link_index(active_calls_list,
