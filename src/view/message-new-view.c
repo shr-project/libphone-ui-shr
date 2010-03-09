@@ -4,6 +4,7 @@
 
 #include "ui-utils.h"
 #include "common-utils.h"
+#include "widget/elm_keypad.h"
 #include "message-new-view.h"
 #include "views.h"
 
@@ -16,9 +17,10 @@ enum MessageNewModes {
 	MODE_CLOSE
 };
 
-struct _contact_lookup_pack {
+struct _recipient_pack {
 	struct MessageNewViewData *view;
 	GHashTable *recipient;
+	Elm_Genlist_Item *it;
 };
 
 static Elm_Genlist_Item_Class itc;
@@ -35,15 +37,20 @@ static void _recipients_button_back_clicked(void *data, Evas_Object *obj, void *
 static void _recipients_button_add_contact_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _recipients_button_add_number_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _recipients_button_send_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info);
 // static void _recipients_button_delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _number_keypad_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _number_button_delete_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _number_update_number(struct MessageNewViewData* view);
 static void _process_recipient(gpointer _properties, gpointer _data);
 static void _contact_lookup(GHashTable *contact, gpointer data);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
+static void gl_del(const void *data, Evas_Object *obj);
 
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _destroy_cb(struct View *view);
@@ -54,8 +61,6 @@ message_new_view_init(GHashTable *options)
 	struct MessageNewViewData *view;
 	int ret;
 	Evas_Object *win;
-	GValue *gval_tmp;
-	const char *tmp;
 
 	view = malloc(sizeof(struct MessageNewViewData));
 	if (!view) {
@@ -87,16 +92,7 @@ message_new_view_init(GHashTable *options)
 	view->layout_contacts = NULL;
 	view->layout_number = NULL;
 	if (options) {
-		gval_tmp = g_hash_table_lookup(options, "Phone");
-		if (gval_tmp) {
-			struct _contact_lookup_pack *pack =
-				malloc(sizeof(struct _contact_lookup_pack));
-			pack->view = view;
-			pack->recipient = options;
-			tmp = g_value_get_string(gval_tmp);
-			phoneui_utils_contact_lookup(tmp, _contact_lookup, pack);
-			g_ptr_array_add(view->recipients, options);
-		}
+		g_ptr_array_add(view->recipients, options);
 	}
 
 	elm_theme_extension_add(DEFAULT_THEME);
@@ -141,32 +137,28 @@ static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
-	const char *label = NULL;
-	GHashTable *parameters = (GHashTable *) data;
-	g_debug("looking for %s", part);
+	char *label = NULL;
+	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 
-	/* Memory leak: */
 	if (!strcmp(part, "elm.text")) {
-		label = phoneui_utils_contact_display_name_get(parameters);
+		label = phoneui_utils_contact_display_name_get(pack->recipient);
 		if (!label) {
 			return strdup("Number");
 		}
 	}
 	else if (!strcmp(part, "elm.text.sub")) {
-		label = phoneui_utils_contact_display_phone_get(parameters);
+		label = phoneui_utils_contact_display_phone_get(pack->recipient);
 	}
-	/*FIXME: leaks? */
-	return strdup(label);
+	return label;
 }
 
 static Evas_Object *
 gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 {
-	g_debug("gl_icon_get: %s", part);
-	GHashTable *parameters = (GHashTable *) data;
+	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 	if (!strcmp(part, "elm.swallow.icon")) {
 		const char *photo_file;
-		GValue *tmp = g_hash_table_lookup(parameters, "Photo");
+		GValue *tmp = g_hash_table_lookup(pack->recipient, "Photo");
 		photo_file = (tmp) ? g_value_get_string(tmp) : CONTACT_DEFAULT_PHOTO;
 		Evas_Object *photo = elm_icon_add(obj);
 		elm_icon_file_set(photo, photo_file, NULL);
@@ -175,10 +167,27 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 						 1, 1);
 		return (photo);
 	}
+
+	if (!strcmp(part, "elm.swallow.end")) {
+		Evas_Object *ico = elm_icon_add(obj);
+		elm_icon_standard_set(ico, "delete");
+		evas_object_smart_callback_add(ico, "clicked",
+					       _recipients_button_remove_clicked,
+					       pack);
+		return ico;
+	}
+
 	return (NULL);
 }
 
-
+static void
+gl_del(const void *data, Evas_Object *obj)
+{
+	(void) obj;
+	struct _recipient_pack *pack = (struct _recipient_pack *)data;
+	/* content of the pack will be freed by deinit */
+	free(pack);
+}
 
 
 //static void message_send_callback(GError *error, int transaction_index, struct MessageNewViewData *data);
@@ -260,7 +269,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	itc.func.label_get = gl_label_get;
 	itc.func.icon_get = gl_icon_get;
 	itc.func.state_get = NULL;
-	itc.func.del = NULL;
+	itc.func.del = gl_del;
 	evas_object_show(view->list_recipients);
 
 	g_ptr_array_foreach(view->recipients, _process_recipient, view);
@@ -342,10 +351,12 @@ _init_contacts_page(struct MessageNewViewData *view)
 static void
 _init_number_page(struct MessageNewViewData *view)
 {
-	Evas_Object *win, *btn, *sc;
+	Evas_Object *win, *btn, *ico;
 
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 
+	view->number[0] = '\0';
+	view->number_length = 0;
 	view->layout_number = elm_layout_add(view->pager);
 	elm_win_resize_object_add(win, view->layout_number);
 	elm_layout_file_set(view->layout_number, DEFAULT_THEME,
@@ -369,16 +380,25 @@ _init_number_page(struct MessageNewViewData *view)
 	elm_layout_content_set(view->layout_number, "number_button_add", btn);
 	evas_object_show(btn);
 
-	view->number_entry = elm_entry_add(win);
-	evas_object_size_hint_weight_set(view->number_entry,
-			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	evas_object_show(view->number_entry);
-	elm_object_focus(view->number_entry);
+	ico = elm_icon_add(win);
+	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
+	elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit-undo");
+	evas_object_show(ico);
 
-	sc = elm_scroller_add(win);
-	elm_scroller_content_set(sc, view->number_entry);
-	elm_layout_content_set(view->layout_number, "number_entry", sc);
-	evas_object_show(sc);
+	btn = elm_button_add(win);
+	elm_button_icon_set(btn, ico);
+	elm_layout_content_set(view->layout_number, "number_button_delete", btn);
+	evas_object_smart_callback_add(btn, "clicked",
+				       _number_button_delete_clicked, view);
+	evas_object_show(btn);
+
+	view->number_keypad = (Evas_Object *) elm_keypad_add(win);
+	evas_object_smart_callback_add(view->number_keypad, "clicked",
+				       _number_keypad_clicked, view);
+	elm_layout_content_set(view->layout_number, "number_keypad",
+			       view->number_keypad);
+	evas_object_show(view->number_keypad);
+
 	elm_pager_content_push(view->pager, view->layout_number);
 }
 
@@ -443,6 +463,16 @@ _recipients_button_add_number_clicked(void *data, Evas_Object *obj,
 	else {
 		_init_number_page(view);
 	}
+}
+
+static void
+_recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	struct _recipient_pack *pack = (struct _recipient_pack *)data;
+	g_ptr_array_remove(pack->view->recipients, pack->recipient);
+	elm_genlist_item_del(pack->it);
 }
 
 // static void
@@ -528,6 +558,21 @@ _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 }
 
 static void
+_number_keypad_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	char input = ((char *) event_info)[0];
+
+	if (view->number_length < 64) {
+		view->number[view->number_length] = input;
+		view->number[view->number_length+1] = '\0';
+		view->number_length++;
+		_number_update_number(view);
+	}
+}
+
+static void
 _number_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
@@ -542,36 +587,46 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	char *number;
 
-	number = elm_entry_markup_to_utf8(elm_entry_entry_get
-						(view->number_entry));
-	if (!number)
-		return;
-	number = g_strstrip(number);
-	if (phone_utils_sms_is_valid_number(number)) {
+	if (phone_utils_sms_is_valid_number(view->number)) {
 		GHashTable *properties =
 			g_hash_table_new_full(g_str_hash, g_str_equal,
 					 NULL, common_utils_gvalue_free);
 		g_hash_table_insert(properties, "Name",
 				    common_utils_new_gvalue_string("Number"));
 		g_hash_table_insert(properties, "Phone",
-				    common_utils_new_gvalue_string(number));
+				    common_utils_new_gvalue_string(view->number));
 		g_hash_table_insert(properties, "Photo",
 				common_utils_new_gvalue_string(CONTACT_NUMBER_PHOTO));
 		g_ptr_array_add(view->recipients, properties);
 		_process_recipient(properties, view);
-		/* try to resolve the number to a contact */
-		struct _contact_lookup_pack *pack =
-				malloc(sizeof(struct _contact_lookup_pack));
-		pack->view = view;
-		pack->recipient = properties;
-		phoneui_utils_contact_lookup(number, _contact_lookup, pack);
+		view->number[0] = '\0';
+		view->number_length = 0;
+		_number_update_number(view);
 	}
-	if (number)
-		free(number);
 
 	elm_pager_content_promote(view->pager, view->layout_recipients);
+}
+
+static void
+_number_button_delete_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	if (view->number_length > 0) {
+		view->number_length--;
+		view->number[view->number_length] = '\0';
+		_number_update_number(view);
+	}
+}
+
+static void
+_number_update_number(struct MessageNewViewData *view)
+{
+	g_debug("Updating number to %s", view->number);
+	edje_object_part_text_set(elm_layout_edje_get(view->layout_number),
+			"number_number", view->number);
 }
 
 static void
@@ -637,12 +692,25 @@ _content_changed(void *_data, Evas_Object * obj, void *event_info)
 static void
 _process_recipient(gpointer _properties, gpointer _data)
 {
-	GHashTable *properties = (GHashTable *) _properties;
-	//g_debug("adding recipient %s", g_hash_table_lookup(properties, "name"));
-	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
+	GHashTable *properties;
+	struct MessageNewViewData *view;
+	struct _recipient_pack *pack;
+	GValue *gval_tmp;
 
-	elm_genlist_item_append(data->list_recipients, &itc, properties,
-		NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	properties = (GHashTable *) _properties;
+	view = (struct MessageNewViewData *) _data;
+	pack = malloc(sizeof(struct _recipient_pack));
+        pack->recipient = properties;
+	pack->view = view;
+	pack->it = elm_genlist_item_append(view->list_recipients, &itc, pack,
+					   NULL, ELM_GENLIST_ITEM_NONE,
+					   NULL, NULL);
+	/* try to resolve the number to a contact */
+	gval_tmp = g_hash_table_lookup(properties, "Phone");
+	if (gval_tmp) {
+		phoneui_utils_contact_lookup(g_value_get_string(gval_tmp),
+					     _contact_lookup, pack);
+	}
 }
 
 static void
@@ -651,12 +719,12 @@ _contact_lookup(GHashTable *contact, gpointer data)
 	char *tmp;
 	const char *tmp2;
 	GValue *gval_tmp;
-	struct _contact_lookup_pack *pack;
+	struct _recipient_pack *pack;
 
 	if (contact == NULL)
 		return;
 
-	pack = (struct _contact_lookup_pack *)data;
+	pack = (struct _recipient_pack *)data;
 	tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
 		g_hash_table_insert(pack->recipient, "Name",
@@ -670,11 +738,8 @@ _contact_lookup(GHashTable *contact, gpointer data)
 				    common_utils_new_gvalue_string(tmp2));
 	}
 	if (pack->view->layout_recipients) {
-		elm_genlist_clear(pack->view->list_recipients);
-		g_ptr_array_foreach(pack->view->recipients, _process_recipient,
-				    pack->view);
+		elm_genlist_item_update(pack->it);
 	}
-	free(pack);
 }
 
 static void
