@@ -922,12 +922,19 @@ _load_fields(struct ContactViewData *view)
 				int i = 0;
 				while (vl[i]) {
 					g_debug("--- %s", vl[i]);
-					_add_field(view, key, vl[i++], isnew);
+					_add_field(view, key, vl[i], isnew);
+					if (isnew) {
+						_update_changes_of_field(view, key, "", vl[i]);
+					}
+					i++;
 				}
 			}
 			else if (G_VALUE_HOLDS_STRING(val)) {
 				_add_field(view, key, g_value_get_string(val),
 					   isnew);
+				if (isnew) {
+					_update_changes_of_field(view, key, "", g_value_get_string(val));
+				}
 			}
 			else {
 				g_warning("Value is neither string nor boxed!");
