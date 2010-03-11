@@ -82,7 +82,7 @@ idle_screen_view_init()
 					"slider", idle_screen_view_hide,
 					NULL);
 
-        phoneui_info_register_pdp_network_status(&view, _pdp_network_status);
+        phoneui_info_register_pdp_network_status(_pdp_network_status, &view);
 
 	phoneui_info_trigger();
 	return 0;
@@ -271,8 +271,7 @@ _pdp_network_status(void *_data, GHashTable *status)
 	(void)_data;
 	GValue *tmp;
 	const char *s;
-	Evas_Object *layout;
-	char *sig;
+	char *sig = "";
 
 	if (!idle_screen_view_is_init())
 		return;
@@ -285,7 +284,6 @@ _pdp_network_status(void *_data, GHashTable *status)
 	s = g_value_get_string(tmp);
 	if (strcmp(s, "home") && strcmp(s, "roaming")) {
 		/* registration is neither home nor roaming --> offline */
-		sig = "";
 		g_debug("PDP.NetworkStatus: offline (%s)", s);
 	}
 	else {
