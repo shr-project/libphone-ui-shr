@@ -67,6 +67,8 @@ dialog_view_hide(void *_data)
 static void
 dialog_view_close_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct DialogViewData *data = (struct DialogViewData *) _data;
 	window_destroy(data->win, NULL);
 }

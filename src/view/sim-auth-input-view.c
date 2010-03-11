@@ -109,7 +109,7 @@ sim_auth_input_view_show(struct Window *win, void *_options)
 	struct SimAuthInputViewData *data;
 	GHashTable *options = (GHashTable *) _options;
 
-	g_debug("sim_auth_input_view_show(win=%d)", win);
+	g_debug("sim_auth_input_view_show(win=%d)", (int) win);
 
 	/* see if we are called for the first time and create
 	 * the data if so... otherwise update */
@@ -128,10 +128,9 @@ sim_auth_input_view_show(struct Window *win, void *_options)
 }
 
 void
-sim_auth_input_view_hide(void *_data)
+sim_auth_input_view_hide(void *data)
 {
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
+	(void) data;
 
 	g_debug("sim_auth_input_view_hide()");
 }
@@ -216,10 +215,12 @@ exit_callback(void *_data)
 void
 sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
 
-	g_debug("sim_auth_ok_clicked(win=%d)", data->win);
+	g_debug("sim_auth_ok_clicked(win=%d)", (int) data->win);
 
 	if (data->mode == MODE_PIN && strcmp(data->pin, "")) {
 		if (common_utils_is_pin(data->pin)) {
@@ -229,7 +230,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 			window_frame_show(data->win, data,
 					frame_message_show, NULL);
 			phoneui_utils_sim_pin_send(data->pin,
-					_sim_auth_result_callback, data);
+					(void (*)(int,  void *)) _sim_auth_result_callback, data);
 		}
 		else {
 			g_debug("no valid PIN...");
@@ -287,7 +288,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 			window_frame_show(data->win, data,
 					frame_message_show, NULL);
 			phoneui_utils_sim_puk_send(data->puk, data->pin,
-					_sim_auth_result_callback, data);
+					(void (*)(int,  void *)) _sim_auth_result_callback, data);
 		}
 	}
 }
@@ -295,6 +296,8 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 void
 sim_auth_keypad_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
 	char *string;
@@ -328,6 +331,8 @@ sim_auth_keypad_clicked(void *_data, Evas_Object * obj, void *event_info)
 void
 sim_auth_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
 	char *string;
@@ -397,7 +402,6 @@ frame_input_hide(void *_data)
 {
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
-	struct Window *win = data->win;
 
 	g_debug("frame_input_hide()");
 

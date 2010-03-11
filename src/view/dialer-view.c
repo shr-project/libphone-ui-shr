@@ -26,7 +26,6 @@ static struct DialerViewData view;
 
 static void _dialer_number_update();
 static int _dialer_number_clear();
-static void _dialer_destroy_cb(struct View *_view);
 static void _dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info);
 static void _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info);
@@ -36,6 +35,7 @@ static void _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_i
 static void _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_call_initiated_cb(GError *error, int call_id, void *userdata);
+static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 
 int
 dialer_view_init()
@@ -44,7 +44,7 @@ dialer_view_init()
 	Evas_Object *win;
 	int ret;
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Dialer"),
-				NULL, NULL, _dialer_destroy_cb);
+				NULL, NULL, NULL);
 
 	if (ret) {
 		g_critical("Failed to init dialer view");
@@ -52,6 +52,8 @@ dialer_view_init()
 	}
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
+	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
+	
 	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME, "phoneui/dialer/dialer");
 
 	view.text_number = elm_label_add(win);
@@ -190,28 +192,38 @@ dialer_view_hide()
 
 
 static void
-_dialer_destroy_cb(struct View *_view)
+_delete_cb(struct View *view, Evas_Object * win, void *event_info)
 {
-	struct DialerViewData *view = (struct DialerViewData *) _view;
+	(void)win;
+	(void)event_info;
+	(void)view;
 	dialer_view_hide();
-	
 }
 
 static void
 _dialer_options_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	evas_object_show(view.hv);
 }
 
 static void
 _dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	dialer_view_hide();
 }
 
 static void
 _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
 	g_hash_table_insert(contact, "Phone",
 			common_utils_new_gvalue_string(view.number));
@@ -224,6 +236,8 @@ _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 static void
 _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	if (*view.number) {
 		phoneui_utils_dial(view.number, _dialer_call_initiated_cb,
 					    data);
@@ -233,6 +247,9 @@ _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 static void
 _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
 	g_hash_table_insert(options, "Phone", common_utils_new_gvalue_string(view.number));
 
@@ -245,6 +262,8 @@ _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 static void
 _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
 	char input = ((char *) event_info)[0];
 
 	if (view.length < 64) {
@@ -256,8 +275,11 @@ _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info)
+_dialer_delete_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
+	(void) event_info;
 	int length = view.length;
 
 	if (length) {
@@ -269,9 +291,13 @@ _dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_info)
 
 
 static void
-_dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission,
+_dialer_number_clicked_cb(void *data, Evas_Object * obj, const char *emission,
 			    const char *source)
 {
+	(void) data;
+	(void) obj;
+	(void) emission;
+	(void) source;
 	if (!*view.number) {
 		phoneui_contacts_show();
 		dialer_view_hide();
@@ -346,6 +372,10 @@ _dialer_number_clear()
 static void
 _dialer_call_initiated_cb(GError * error, int call_id, void *userdata)
 {
+	(void) userdata;
+	(void) call_id;
+	(void) error;
+	/*FIXME: Handle errors */
 	dialer_view_hide();
 }
 

@@ -60,6 +60,27 @@ common_utils_new_gvalue_pointer(gpointer value)
 	return val;
 }
 
+GValue *
+common_utils_new_gvalue_boxed(GType type, gpointer value)
+{
+	GValue *val = calloc(1, sizeof(GValue));
+	if (!val) {
+		return NULL;
+	}
+	g_value_init(val, type);
+	g_value_set_boxed_take_ownership(val, value);
+
+	return val;
+}
+
+void
+common_utils_gvalue_free(gpointer val)
+{
+	GValue *value = (GValue *)val;
+	g_value_unset(value);
+	g_free(value);
+}
+
 void *
 common_utils_object_ref(void *object)
 {
@@ -67,7 +88,7 @@ common_utils_object_ref(void *object)
 	int count;
 	if (!ref_counter) {
 		ref_counter = g_hash_table_new_full(g_direct_hash, g_direct_equal,
-					NULL, NULL); 
+					NULL, NULL);
 	}
 	ret = g_hash_table_lookup(ref_counter, object);
 	if (ret) {
@@ -77,7 +98,7 @@ common_utils_object_ref(void *object)
 	else {
 		count = 1;
 	}
-	g_hash_table_replace(ref_counter, object, count);
+	g_hash_table_replace(ref_counter, object, GINT_TO_POINTER(count));
 	return object;
 }
 
@@ -86,7 +107,7 @@ common_utils_object_unref(void *object)
 {
 	void *ret;
 	int count;
-	
+
 	ret = g_hash_table_lookup(ref_counter, object);
 	if (!ret) {
 		return -1;
@@ -98,7 +119,7 @@ common_utils_object_unref(void *object)
 		return 0;
 	}
 	else {
-		g_hash_table_replace(ref_counter, object, count - 1);
+		g_hash_table_replace(ref_counter, object, GINT_TO_POINTER(count - 1));
 	}
 	return count;
 }
@@ -158,3 +179,23 @@ common_utils_is_puk(const char *string)
 	return 1;
 }
 
+char *
+common_utils_string_strip_newline(char *string)
+{
+	char *p;
+
+	for (p = string; *p; p++) {
+		if (*p == '\n' || *p == '\t') {
+			*p = ' ';
+		}
+	}
+	return string;
+}
+
+char *
+common_utils_timestamp_to_date(long timestamp)
+{
+	char *ret = malloc(35);
+	strftime(ret, 31, "%d.%m.%Y %H:%M" LTR_STRING, localtime(&timestamp));
+	return ret;
+}

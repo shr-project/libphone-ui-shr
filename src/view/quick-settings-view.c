@@ -130,7 +130,8 @@ quick_settings_view_init()
 
 	/*Register to all signals*/
 	phoneui_info_register_and_request_profile_changes(_profile_changed_signal_cb, NULL);
-	phoneui_info_register_resource_changes(_resource_changed_signal_cb, NULL);
+	/*FIXME: Fix this cast issue */
+	phoneui_info_register_resource_changes((void (*)(void *, const char *, gboolean,  GHashTable *)) _resource_changed_signal_cb, NULL);
 
 	/*FIXME: until we implement it*/
 	elm_object_disabled_set(view.airplane_slide, 1);
@@ -174,6 +175,8 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 static void
 _profile_selected_cb(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) data;
+	(void) obj;
 	const char *profile;
 	profile = elm_hoversel_item_label_get(event_info);
 	/*FIXME: add a callback to handle errors - setting hoversel label should
@@ -188,7 +191,6 @@ _profiles_list_cb(GError *error, char **list, gpointer userdata)
 	/*FIXME: I should probably free this list, but how?, CHECK DBUS*/
 	(void) userdata;
 	char *profile;
-	Elm_Hoversel_Item *item;
 
 	if (error || !list) {
 		g_warning("Failed to retrieve profiles list");
@@ -259,7 +261,6 @@ _resource_changed_signal_cb(void *userdata, char *resource, gboolean state, GHas
 	const GValue *tmp;
 	int policy;
 	Evas_Object *toggle = NULL;
-	int pol = 0;
 	(void) userdata;
 	(void) state;
 	if (!strcmp(resource, "Display")) {

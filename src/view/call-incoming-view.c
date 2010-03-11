@@ -40,7 +40,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 				common_utils_object_ref(
 						(struct CallViewData *) data));
 
-	Evas_Object *ic = elm_icon_add(win);
+	Evas_Object *ic = elm_icon_add(win->win);
 	elm_icon_file_set(ic, ICON_CALL_ACCEPT, NULL);
 	evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
 
@@ -53,14 +53,14 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	evas_object_show(data->bt_accept);
 	evas_object_show(ic);
 
-	ic = elm_icon_add(win);
+	ic = elm_icon_add(win->win);
 	elm_icon_file_set(ic, ICON_CALL_REJECT, NULL);
 	evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
 	data->bt_reject = elm_button_add(window_evas_object_get(win));
 	elm_button_label_set(data->bt_reject, D_("Reject"));
 	elm_button_icon_set(data->bt_reject, ic);
 	evas_object_smart_callback_add(data->bt_reject, "clicked",
-				       call_button_release_clicked, data);
+				       (Evas_Smart_Cb) call_button_release_clicked, data);
 	window_swallow(win, "button_release", data->bt_reject);
 	evas_object_show(data->bt_reject);
 	evas_object_show(ic);
@@ -77,8 +77,6 @@ void
 call_incoming_view_hide(struct CallIncomingViewData *data)
 {
 	g_debug("call_incoming_view_hide()");
-
-	struct Window *win = data->parent.win;
 
 	evas_object_del(data->number);
 	evas_object_del(data->name);
@@ -99,6 +97,8 @@ static void
 call_button_accept_clicked(void *_data, Evas_Object * obj,
 			   void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct CallIncomingViewData *data =
 		(struct CallIncomingViewData *)_data;
 	g_debug("accept_clicked(call_id=%d)", data->parent.id);
@@ -116,14 +116,16 @@ call_button_accept_clicked(void *_data, Evas_Object * obj,
 		g_hash_table_insert(options, "name", strdup(data->parent.name));
 	if (data->parent.photo)
 		g_hash_table_insert(options, "photo", strdup(data->parent.photo));
-	window_view_show(data->parent.win, options, call_active_view_show,
-			 call_active_view_hide, NULL);
+	window_view_show(data->parent.win, options, (void * (*)(struct Window *, void *)) call_active_view_show,
+			 (void (*)(void *)) call_active_view_hide, NULL);
 }
 
 static void
 call_button_release_clicked(struct CallIncomingViewData *data, Evas_Object * obj,
 			    void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	g_debug("release_clicked(call_id=%d)", data->parent.id);
 	phoneui_utils_call_release(data->parent.id, NULL, NULL);
 }

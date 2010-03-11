@@ -1,4 +1,5 @@
 #include <Edje_Edit.h>
+#include <Elementary.h>
 #include <Evas.h>
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-info.h>
@@ -21,12 +22,18 @@ struct IdleScreenViewData {
 /* No need to pass the active window everywhere, as we don't allow multiple windows. */
 static struct IdleScreenViewData view;
 
-static void _idle_screen_show();
-static void _idle_screen_hide();
 static void _idle_screen_update_counter(const char *name,
 		const char *label_name, int count);
-static void _idle_destroy_cb(struct View *_view);
 static void _pdp_network_status(void *_data, GHashTable *status);
+
+static void
+_delete_cb(struct View *view, Evas_Object * win, void *event_info)
+{
+        (void) view;
+        (void) win;
+        (void) event_info;
+        idle_screen_view_hide();
+}
 
 void
 idle_screen_view_show()
@@ -49,16 +56,16 @@ idle_screen_view_toggle()
 int
 idle_screen_view_init()
 {
-	struct Evas_Object *win;
+	Evas_Object *win;
 	int ret;
 
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
-				NULL, NULL, _idle_destroy_cb);
+				NULL, NULL, NULL);
 	if (ret) {
 		g_critical("Failed to init idle screen");
 		return ret;
 	}
-
+	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
 
@@ -165,6 +172,10 @@ idle_screen_view_update_call(enum PhoneuiCallState state, const char *name, cons
 		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine1", "");
 		ui_utils_view_text_set(VIEW_PTR(view), "incomingCallLine2", "");
 		break;
+	case PHONEUI_CALL_STATE_HELD:
+	case PHONEUI_CALL_STATE_OUTGOING:
+		/*FIXME: implement */
+		break;
 	}
 }
 
@@ -234,14 +245,6 @@ idle_screen_view_update_profile(const char *profile)
 	}
 }
 
-
-static void
-_idle_destroy_cb(struct View *_view)
-{
-	struct DialerViewData *view = (struct DialerViewData *) _view;
-	idle_screen_view_hide();
-
-}
 
 static void
 _idle_screen_update_counter(const char *name, const char *label_name,

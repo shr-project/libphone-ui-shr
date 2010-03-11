@@ -8,3 +8,7 @@ styles {
   }
 }
 
+fonts {
+	font: "DejaVuSans.ttf" "content";
+	font: "DejaVuSans-Bold.ttf" "content-bold";
+}

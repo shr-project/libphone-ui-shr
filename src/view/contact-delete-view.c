@@ -25,8 +25,6 @@ static void
 
 static void
   delete_callback(GError * error, gpointer _data);
-static void
-  delete_callback2(struct ContactDeleteViewData *data);
 
 
 
@@ -121,6 +119,8 @@ frame_delete_hide(void *_data)
 static void
 frame_delete_no_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactDeleteViewData *data =
 		(struct ContactDeleteViewData *) _data;
 
@@ -132,6 +132,8 @@ frame_delete_no_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_delete_yes_clicked(void *userdata, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct ContactDeleteViewData *data =
 		(struct ContactDeleteViewData *) userdata;
 
@@ -165,6 +167,8 @@ frame_deleting_show(void *_data)
 static void
 delete_callback(GError * error, gpointer _data)
 {
+	(void) error;
+	/* FIXME: Handle errors */
 	struct ContactDeleteViewData *data =
 		(struct ContactDeleteViewData *) _data;
 	if (data->callback != NULL)

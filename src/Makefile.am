@@ -4,7 +4,7 @@ AM_CFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/
 	      -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" \
 	      -DLOCALEDIR=\"$(localedir)\" -DG_LOG_DOMAIN=\"libphone-ui-shr\" \
 	      @E_CFLAGS@ @LIBPHONEUI_CFLAGS@ \
-	      @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3 -Werror-implicit-function-declaration
+	      @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3 -Wall -Wextra -Werror
 
 pkgdir		= $(libdir)/phoneui/modules
 pkg_LTLIBRARIES	= shr.la
@@ -17,7 +17,6 @@ shr_la_SOURCES = \
 	phoneui-idle.h phoneui-idle.c \
 	phoneui-dialog.h phoneui-dialog.c \
 	phoneui-messages.h phoneui-messages.c \
-	phoneui-incoming-message.h phoneui-incoming-message.c \
 	phoneui-sim-auth.h phoneui-sim-auth.c \
 	phoneui-call.h phoneui-call.c \
 	phoneui-contacts.h phoneui-contacts.c \
@@ -33,12 +32,15 @@ shr_la_SOURCES = \
 	view/dialog-view.c \
 	view/contact-list-common.h \
 	view/contact-list-common.c \
-	view/contact-show-view.c \
+	view/contact-view.c \
+	view/contact-view.h \
 	view/contact-delete-view.c \
 	view/contact-list-view.c \
+	view/message-new-view.h \
 	view/message-new-view.c \
-	view/message-delete-view.c \
+	view/message-show-view.h \
 	view/message-show-view.c \
+	view/message-list-view.h \
 	view/message-list-view.c \
 	view/call-common.h view/call-common.c \
 	view/call-incoming-view.c \
@@ -47,5 +49,7 @@ shr_la_SOURCES = \
 	util/common-utils.h util/common-utils.c \
 	view/ussd-view.c \
 	view/quick-settings-view.h \
-	view/quick-settings-view.c
+	view/quick-settings-view.c \
+	view/phone-log-view.h \
+	view/phone-log-view.c
 

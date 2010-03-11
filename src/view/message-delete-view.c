@@ -135,6 +135,8 @@ frame_delete_hide(void *_data)
 static void
 frame_delete_no_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageDeleteViewData *data =
 		(struct MessageDeleteViewData *) _data;
 
@@ -146,6 +148,8 @@ frame_delete_no_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 frame_delete_yes_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
+	(void) obj;
+	(void) event_info;
 	struct MessageDeleteViewData *data =
 		(struct MessageDeleteViewData *) _data;
 

@@ -21,7 +21,7 @@ group { name: "elm/genlist/item/contact/default";
 			clip_to: "disclip";
 			mouse_events: 0;
 			type: RECT;
-			description { 
+			description {
 				state: "default" 0.0;
 				visible: 1;
 				color: COLOR_LIGHT_GRAY;
@@ -34,18 +34,18 @@ group { name: "elm/genlist/item/contact/default";
 					offset: 0 0;
 				}
 			}
-			description { 
+			description {
 				state: "selected" 0.0;
 				inherit: "default" 0.0;
 				visible: 1;
 				color: COLOR_ORANGE_SOLID;
-				
+
 			}
 		}
 		part { name: "seperator";
 			mouse_events: 0;
 			type: RECT;
-			description { 
+			description {
 				state: "default" 0.0;
 				visible: 1;
 				color: COLOR_DARK_GRAY;
@@ -58,61 +58,45 @@ group { name: "elm/genlist/item/contact/default";
 					relative: 1.0 1.0;
 					offset: 0 -2;
 				}
-				
+
 			}
-			
+
 		}
-		part { name: "elm.swallow.pad";
+		part { name: "elm.swallow.icon";
+			clip_to: "disclip";
 			type: SWALLOW;
-			description { 
+			description {
 				state: "default" 0.0;
 				fixed: 1 0;
 				align: 0.0 0.5;
 				rel1 {
 					relative: 0.0  0.0;
-					offset:   4    4;
-				}
-				rel2 {
-					relative: 0.0  1.0;
-					offset:   4   -5;
-				}
-			}
-		}
-		part { name: "elm.swallow.icon";
-			clip_to: "disclip";
-			type: SWALLOW;
-			description { 
-				state: "default" 0.0;
-				fixed: 1 0;
-				align: 0.0 0.5;
-				rel1 {
-					to_x: "elm.swallow.pad";
-					relative: 1.0  0.0;
 					offset:   -1    4;
+					to: "disclip";
 				}
 				rel2 {
-					to_x: "elm.swallow.pad";
-					relative: 1.0  1.0;
+					relative: 0.2  1.0;
 					offset:   -1   -5;
+					to: "disclip";
 				}
 			}
 		}
 		part { name: "elm.swallow.end";
 			clip_to: "disclip";
 			type: SWALLOW;
-			description { 
+			description {
 				state: "default" 0.0;
 				fixed: 1 0;
 				align: 1.0 0.5;
-				aspect: 1.0 1.0;
-				aspect_preference: VERTICAL;
 				rel1 {
-					relative: 1.0  0.0;
-					offset:   -5    4;
+					relative: 0.8  0.0;
+					offset:   -1    4;
+					to: "disclip";
 				}
 				rel2 {
 					relative: 1.0  1.0;
-					offset:   -5   -5;
+					offset:   -1   -5;
+					to: "disclip";
 				}
 			}
 		}
@@ -125,16 +109,18 @@ group { name: "elm/genlist/item/contact/default";
 				state: "default" 0.0;
 				//min: 16 16;
 				rel1 {
-					relative: 0.2  0.0;
+					relative: 1.0  0.0;
+					to: "elm.swallow.icon";
 				}
 				rel2 {
-					relative: 1.0  1.0;
+					relative: 1.0  0.5;
+					to: "disclip";
 				}
 				color: 0 0 0 255;
 				color3: 0 0 0 0;
 				text {
-					font: "redensek:style=bold";
-					size: 10;
+					font: "content";
+					size: 9;
 					elipsis: 0.0;
 					min: 0 1;
 					align: 0.0 0.0;
@@ -149,17 +135,17 @@ group { name: "elm/genlist/item/contact/default";
 			description {
 				state: "default" 0.0;
 				rel1 {
-					//to_x: "elm.swallow.icon";
-					relative: 0.2  0.5;
+					to: "elm.text";
+					relative: 0.0  1.0;
 				}
 				rel2 {
-					//to_x: "elm.swallow.end";
+					to: "disclip";
 					relative: 1.0  1.0;
 				}
 				color: 0 0 0 255;
 				color3: 0 0 0 0;
 				text {
-					font: "redensek";
+					font: "content";
 					size: 9;
 					elipsis: 0.0;
 					min: 0 1;
@@ -169,12 +155,12 @@ group { name: "elm/genlist/item/contact/default";
 		}
 		part { name: "disclip";
 			type: RECT;
-			description { 
+			description {
 				state: "default" 0.0;
 				rel1.to: "bg";
 				rel2.to: "bg";
 			}
-			description { 
+			description {
 				state: "disabled" 0.0;
 				inherit: "default" 0.0;
 				color: 255 255 255 64;
@@ -224,16 +210,13 @@ group { name: "elm/genlist/item/contact/default";
 } /* elm/genlist/item/contact/default */
 
 ///////////////////////////////////////////////////////////////////////////////
-group { name: "elm/genlist/item/contactfield/default";		
-	alias: "elm/genlist/item_odd/contactfield/default";
+group { name: "elm/list/item/fieldlist";
+	alias: "elm/list/item_odd/fieldlist";
+	alias: "elm/list/item_compress/fieldlist";
+	alias: "elm/list/item_compress_odd/fieldlist";
 	data.item: "stacking" "above";
-	data.item: "selectraise" "on";
-	data.item: "labels" "elm.text";
-	data.item: "icons" "elm.swallow.icon";
-
 	parts {
-		part {
-			name: "event";
+		part { name: "event";
 			type: RECT;
 			repeat_events: 1;
 			description {
@@ -241,12 +224,10 @@ group { name: "elm/genlist/item/contactfield/default";
 				color: 0 0 0 0;
 			}
 		}
-		part { 
-			name: "bg";
-			clip_to: "disclip";
+		part { name: "bg";
 			mouse_events: 0;
 			type: RECT;
-			description { 
+			description {
 				state: "default" 0.0;
 				visible: 1;
 				color: COLOR_LIGHT_GRAY;
@@ -259,42 +240,17 @@ group { name: "elm/genlist/item/contactfield/default";
 					offset: 0 0;
 				}
 			}
-			description { 
+			description {
 				state: "selected" 0.0;
 				inherit: "default" 0.0;
 				visible: 1;
 				color: COLOR_ORANGE_SOLID;
-				
-			}
-		}
-		part { 
-			name: "seperator";
-			clip_to: "disclip";
-			mouse_events: 0;
-			type: RECT;
-			description { 
-				state: "default" 0.0;
-				visible: 1;
-				color: COLOR_DARK_GRAY;
-				rel1 {
-					to: "bg";
-					relative: 0.0 1.0;
-					offset: 0 -3;
-				}rel2 {
-					to: "bg";
-					relative: 1.0 1.0;
-					offset: 0 -2;
-				}
-				
-			}
-			
-		}
 
-		part { 
-			name: "elm.swallow.pad";
+			}
+		}
+		part { name: "elm.swallow.icon";
 			type: SWALLOW;
-			description { 
-				state: "default" 0.0;
+			description { state: "default" 0.0;
 				fixed: 1 0;
 				align: 0.0 0.5;
 				rel1 {
@@ -307,75 +263,58 @@ group { name: "elm/genlist/item/contactfield/default";
 				}
 			}
 		}
-
-		part { 
-			name: "elm.swallow.icon";
-			clip_to: "disclip";
+		part { name: "elm.swallow.end";
 			type: SWALLOW;
-			description { 
+			description {
 				state: "default" 0.0;
 				fixed: 1 0;
-				align: 0.0 0.5;
+				align: 1.0 0.5;
+				aspect: 1.0 1.0;
+				aspect_preference: VERTICAL;
 				rel1 {
-					to_x: "elm.swallow.pad";
 					relative: 1.0  0.0;
-					offset:   -1    4;
+					offset:   -5    4;
 				}
 				rel2 {
-					to_x: "elm.swallow.pad";
 					relative: 1.0  1.0;
-					offset:   -1   -5;
+					offset:   -5   -5;
 				}
 			}
 		}
-
-		part { 
-			name: "elm.text";
-			clip_to: "disclip";
+		part { name: "elm.text";
 			type:           TEXT;
 			mouse_events:   0;
 			scale: 1;
 			description {
 				state: "default" 0.0;
-				rel1 {
-					relative: 0.3  0.0;
-				}
-				rel2 {
-					relative: 1.0  1.0;
-				}
 				color: 0 0 0 255;
 				color3: 0 0 0 0;
+				rel1 {
+					to_x:     "elm.swallow.icon";
+					relative: 1.0  0.0;
+					offset:   0 4;
+				}
+				rel2 {
+					to_x:     "elm.swallow.end";
+					relative: 0.0  1.0;
+					offset:   -1 -5;
+				}
 				text {
-					font: "redensek";
-					size: 10;
-					elipsis: 0.0;
-					min: 0 1;
-					align: 0.0 0.0;
+					font: "content";
+					size: 9;
+					min: 1 1;
+					align: 0.0 0.5;
 				}
 			}
-		}
-
-		part { 
-			name: "disclip";
-			type: RECT;
-			description { 
-				state: "default" 0.0;
-				rel1.to: "bg";
-				rel2.to: "bg";
-			}
-			description { 
-				state: "disabled" 0.0;
+			description {
+				state: "selected" 0.0;
 				inherit: "default" 0.0;
-				color: 255 255 255 64;
+				color: 224 224 224 255;
+				color3: 0 0 0 64;
 			}
 		}
 	}
 	programs {
-		// signal: elm,state,%s,active
-		//   a "check" item named %s went active
-		// signal: elm,state,%s,passive
-		//   a "check" item named %s went passive
-		// default is passive
 		program {
 			name:    "go_active";
 			signal:  "elm,state,selected";
@@ -393,19 +332,198 @@ group { name: "elm/genlist/item/contactfield/default";
 			target:  "elm.text";
 			transition: LINEAR 0.1;
 		}
+	}
+}
+///////////////////////////////////////////////////////////////////////////////
+group { name: "elm/genlist/item/contactfield/default";
+	alias: "elm/genlist/item_odd/contactfield/default";
+	data.item: "stacking" "above";
+	data.item: "selectraise" "on";
+	data.item: "labels" "";
+	data.item: "icons" "elm.swallow.field_button elm.swallow.value_entry elm.swallow.button_delfield elm.swallow.button_actions";
+
+	parts {
+		part {
+			name: "event";
+			type: RECT;
+			repeat_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+			}
+		}
+		part {
+			name: "bg";
+			mouse_events: 0;
+			type: RECT;
+			description {
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_LIGHT_GRAY;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: 0 0;
+				}
+			}
+			description {
+				state: "selected" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: COLOR_ORANGE_SOLID;
+
+			}
+		}
+		part {
+			name: "seperator";
+			mouse_events: 0;
+			type: RECT;
+			description {
+				state: "default" 0.0;
+				visible: 1;
+				color: COLOR_DARK_GRAY;
+				rel1 {
+					to: "bg";
+					relative: 0.0 1.0;
+					offset: 0 -3;
+				}rel2 {
+					to: "bg";
+					relative: 1.0 1.0;
+					offset: 0 -2;
+				}
+
+			}
+
+		}
+
+		part {
+			name: "elm.swallow.field_button";
+			type: SWALLOW;
+			description {
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					relative: 0.0  0.0;
+					offset:   5    5;
+				}
+				rel2 {
+					relative: 0.3  1.0;
+					offset:   0   -5;
+				}
+			}
+		}
+
+		part {
+			name: "elm.swallow.value_entry";
+			type: SWALLOW;
+			description {
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					relative: 1.0  0.0;
+					to_x: "elm.swallow.field_button";
+					offset: 10 10;
+				}
+				rel2 {
+					relative: 0.0  1.0;
+					to_x: "elm.swallow.button_delfield";
+					offset: -5 -10;
+				}
+			}
+		}
+
+		part { name: "elm.swallow.button_delfield";
+			type: SWALLOW;
+			description {
+				state: "default" 0.0;
+				visible: 0;
+				fixed: 1 1;
+				rel1.relative: 0.85 0.1;
+				rel2.relative: 1.0 0.9;
+			}
+			description {
+				state: "edit" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+			}
+		}
+		part { name: "elm.swallow.button_actions";
+			type: SWALLOW;
+			description {
+				state: "default" 0.0;
+				visible: 1;
+				fixed: 1 1;
+				align: 1 0;
+				rel1 {
+					to: "elm.swallow.button_delfield";
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					to: "elm.swallow.button_delfield";
+					relative: 1.0 1.0;
+				}
+			}
+			description {
+				state: "edit" 0.0;
+				inherit: "default" 0.0;
+				visible: 0;
+			}
+		}
+	}
+	programs {
+		// signal: elm,state,%s,active
+		//   a "check" item named %s went active
+		// signal: elm,state,%s,passive
+		//   a "check" item named %s went passive
+		// default is passive
 		program {
-			name:    "go_disabled";
-			signal:  "elm,state,disabled";
+			name:    "go_active";
+			signal:  "elm,state,selected";
 			source:  "elm";
-			action:  STATE_SET "disabled" 0.0;
-			target:  "disclip";
+			action:  STATE_SET "selected" 0.0;
+			target:  "bg";
 		}
 		program {
-			name:    "go_enabled";
-			signal:  "elm,state,enabled";
+			name:    "go_passive";
+			signal:  "elm,state,unselected";
 			source:  "elm";
 			action:  STATE_SET "default" 0.0;
-			target:  "disclip";
+			target:  "bg";
+			transition: LINEAR 0.1;
+		}
+		program {
+			name:	"start_edit";
+			signal:  "start_edit";
+			source:  "elm";
+			action:  STATE_SET "edit" 0.0;
+			target:  "elm.swallow.button_delfield";
+			target:  "elm.swallow.button_actions";
+		}
+		program {
+			name:	"edit_stopped";
+			signal:  "elm,state,unselected";
+			source:  "elm";
+			script {
+				new st[6];
+				new Float:vl;
+				get_state(PART:"elm.swallow.button_actions", st, 5, vl);
+				if (!strcmp(st, "edit"))
+					emit("stopped_editing", "elm/genlist/item/contactfield/default")
+			}
+		}
+		program {
+			name:    "stop_edit";
+			signal:  "stopped_editing";
+			source:  "elm/genlist/item/contactfield/default";
+			action:  STATE_SET "default" 0.0;
+			target:  "elm.swallow.button_delfield";
+			target:  "elm.swallow.button_actions";
+			transition: LINEAR 0.1;
 		}
 	}
 } /* elm/genlist/item/contactfield/default */
@@ -413,7 +531,7 @@ group { name: "elm/genlist/item/contactfield/default";
 ///////////////////////////////////////////////////////////////////////////////
 group { name: "phoneui/contacts/list";
 	parts {
-		part { name: "list";
+		part { name: "contacts_list";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
@@ -428,19 +546,19 @@ group { name: "phoneui/contacts/list";
 				}
 			}
 		}
-		part { name: "index";
+		part { name: "contacts_index";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				fixed: 1 1;
 				state: "default" 0.0;
 				rel1 {
-					to_y: "list";
+					to_y: "contacts_list";
 					relative: 0.0 0.0;
 					offset: 0 0;
 				}
 				rel2 {
-					to_y: "list";
+					to_y: "contacts_list";
 					relative: 1.0 1.0;
 					offset: 0 0;
 				}
@@ -489,7 +607,7 @@ group { name: "phoneui/contacts/list";
 } /* phoneui/contacts/list */
 
 ///////////////////////////////////////////////////////////////////////////////
-group { name: "phoneui/contacts/show";
+group { name: "phoneui/contacts/view";
 
 	parts {
 		part { name: "photo";
@@ -497,12 +615,13 @@ group { name: "phoneui/contacts/show";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.0 0.0;
 					offset: 10 10;
 				}
 				rel2 {
-					relative: 0.3 0.3;
+					relative: 0.3 0.25;
 				}
 				color: 255 0 0 100;
 			}
@@ -512,16 +631,18 @@ group { name: "phoneui/contacts/show";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				color: 0 0 0 255;
 				rel1 {
 					relative: 0.3 0.0;
 				}
 				rel2 {
-					relative: 1.0 0.2;
+					relative: 1.0 0.185;
 				}
 				text {
 					font: "redensek:style=bold";
 					size: 24;
+					fit: 1 1;
 					align: 0.5 0.5;
 				}
 			}
@@ -531,126 +652,234 @@ group { name: "phoneui/contacts/show";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				color: 0 0 0 255;
 				rel1 {
-					relative: 0.3 0.2;
+					relative: 0.3 0.185;
 				}
 				rel2 {
-					relative: 1.0 0.3;
+					relative: 1.0 0.25;
 				}
 				text {
 					font: "redensek:style=bold";
 					size: 20;
+					fit: 1 1;
 					align: 0.5 0.0;
 				}
 			}
 		}
-		part { name: "fields";
+		part { name: "main";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
-					relative: 0.0 0.3;
-				}
-				rel2 {
-					relative: 1.0 0.85;
-				}
-			}
-		}
-		part { name: "button_back";
-			type: SWALLOW;
-			mouse_events, 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.66 0.85;
+					relative: 0.0 0.26;
 				}
 				rel2 {
 					relative: 1.0 1.0;
 				}
 			}
 		}
-		part { name: "button_edit";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.33 0.85;
-				}
-				rel2 {
-					relative: 0.66 1.0;
-				}
-			}
-		}
-		part { name: "button_actions";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.85;
-				}
-				rel2 {
-					relative: 0.33 1.0;
-				}
-			}
-		}
 	}
-} /* phoneui/contacts/show */
-
-///////////////////////////////////////////////////////////////////////////////
-group { name: "phoneui/contacts/edit_photo";
-
+}
+group { name: "phoneui/contacts/fieldedit";
 	parts {
-		part { name: "photo";
+		part { name: "fields";
 			type: SWALLOW;
-			mouse_events: 0;
+			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
 					relative: 0.0 0.0;
 				}
 				rel2 {
-					relative: 0.3 0.3;
+					to_y: "button_addfield";
+					relative: 1.0 0.0;
 				}
 			}
 		}
-		part { name: "file";
-			type: TEXT;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.3 0.0;
-					offset: 5 10;
-				}
-				rel2 {
-					relative: 1.0 0.3;
-				}
-			}
-		}
-		part { name: "selector";
+		part { name: "button_addfield";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
+				visible: 1;
 				rel1 {
-					relative: 0.0 0.3;
+					relative: 0.0 1.0;
+					offset: 0 -80;
 				}
 				rel2 {
-					relative: 1.0 0.85;
+					relative: 0.25 1.0;
 				}
 			}
+			description {
+				state: "dirty" 0.0;
+				inherit: "default" 0.0;
+			}
 		}
-		part { name: "button_select";
+		part { name: "button_call";
+			type: SWALLOW;
+			mouse_events, 1;
+			description {
+				state: "default" 0.0;
+				fixed: 1 1;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.25 0.0;
+				}
+				rel2 {
+					relative: 0.5 1.0;
+				}
+			}
+			description {
+				state: "dirty" 0.0;
+				inherit: "default" 0.0;
+				visible: 0;
+			}
+		}
+		part { name: "button_sms";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
-					relative: 0.0 0.85;
+					to_y: "button_addfield";
+					relative: 0.5 0.0;
+				}
+				rel2 {
+					relative: 0.75 1.0;
+				}
+			}
+			description {
+				state: "dirty" 0.0;
+				inherit: "default" 0.0;
+				visible: 0;
+			}
+		}
+		part { name: "button_delete";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				fixed: 1 1;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.75 0.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+			description {
+				state: "dirty" 0.0;
+				inherit: "default" 0.0;
+				visible: 0;
+			}
+		}
+		part { name: "button_save";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				fixed: 1 1;
+				visible: 0;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.25 0.0;
+				}
+				rel2 {
+					relative: 0.625 1.0;
+				}
+			}
+			description {
+				state: "dirty" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+			}
+		}
+		part { name: "button_cancel";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				fixed: 1 1;
+				visible: 0;
+				rel1 {
+					to_y: "button_addfield";
+					relative: 0.625 0.0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+				}
+			}
+			description {
+				state: "dirty" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+			}
+		}
+	}
+	programs {
+		program {
+			name:    "go_default";
+			signal:  "elm,state,default";
+			source:  "";
+			action:  STATE_SET "default" 0.0;
+			target:  "button_delete";
+			target:  "button_call";
+			target:  "button_sms";
+			target:  "button_cancel";
+			target:  "button_save";
+			target:  "fields";
+		}
+		program {
+			name:    "go_dirty";
+			signal:  "elm,state,dirty";
+			source:  "";
+			action:  STATE_SET "dirty" 0.0;
+			target:  "button_delete";
+			target:  "button_call";
+			target:  "button_sms";
+			target:  "button_cancel";
+			target:  "button_save";
+			target:  "fields";
+		}
+	}
+} /* phoneui/contacts/view */
+
+///////////////////////////////////////////////////////////////////////////////
+group { name: "phoneui/contacts/edit_field";
+
+	parts {
+		part { name: "main";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				fixed: 1 1;
+				rel1 {
+					relative: 0.0 0.0;
+				}
+				rel2 {
+					to_y: "button_back";
+					relative: 1.0 0.0;
+				}
+			}
+		}
+		part { name: "button_back";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				fixed: 1 1;
+				rel1 {
+					relative: 0.0 1.0;
+					offset: 0 -80;
 				}
 				rel2 {
 					relative: 0.33 1.0;
@@ -662,21 +891,25 @@ group { name: "phoneui/contacts/edit_photo";
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
-					relative: 0.33 0.85;
+					to_y: "button_back";
+					relative: 0.33 0.0;
 				}
 				rel2 {
 					relative: 0.66 1.0;
 				}
 			}
 		}
-		part { name: "button_back";
+		part { name: "button_save";
 			type: SWALLOW;
 			mouse_events: 1;
 			description {
 				state: "default" 0.0;
+				fixed: 1 1;
 				rel1 {
-					relative: 0.66 0.85;
+					to_y: "button_back";
+					relative: 0.66 0.0;
 				}
 				rel2 {
 					relative: 1.0 1.0;
@@ -686,208 +919,7 @@ group { name: "phoneui/contacts/edit_photo";
 	}
 } /* phoneui/contacts/edit_photo */
 
-///////////////////////////////////////////////////////////////////////////////
-group { name: "phoneui/contacts/loading";
-	
-	parts {
-		part { name: "text";
-			type: SWALLOW;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				max: 0 0;
-				rel1 {
-					relative: 0.0 0.0;
-					offset: 0 0;
-				}
-				rel2 {
-					relative: 1.0 1.0;
-				}
-			}
-		}
-
-	}
-} /* phoneui/contacts/loading */
-
-///////////////////////////////////////////////////////////////////////////////
-group { name: "phoneui/contacts/options";
-
-	parts {
-		part { name: "Name";
-			type: SWALLOW;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative, 0.0 0.1;
-					offset, 0 0;
-				}
-				rel2 {
-					relative, 1.0 0.2;
-					offset, 0 0;
-				}
-			}
-		}
-		part { name: "Phone";
-			type: SWALLOW;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.2;
-				}
-				rel2 {
-					relative: 1.0 0.3;
-				}
-			}
-		}
-		part { name: "button_back";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.85;
-				}
-				rel2 {
-					relative: 0.5 1.0;
-				}
-			}
-		}
-		part { name: "button_call";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.5 0.85;
-				}
-				rel2 {
-					relative: 1.0 1.0;
-				}
-			}
-		}
-		part { name: "button_modify";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.7;
-				}
-				rel2 {
-					relative: 0.5 0.85;
-				}
-			}
-		}
-
-		part { name: "button_delete";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.5 0.7;
-				}
-				rel2 {
-					relative: 1.0 0.85;
-				}
-			}
-		}
-	}
-} /* phoneui/contacts/options */
-
-///////////////////////////////////////////////////////////////////////////////
-group { name: "phoneui/contacts/edit";
-
-	parts {
-		part { name: "label_name";
-			type: SWALLOW;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.1 0.0;
-				}
-				rel2 {
-					relative: 1.0 0.1;
-				}
-			}
-		}
-		part { name: "entry_name";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.1 0.1;
-					offset: 0 0;
-				}
-				rel2 {
-					relative: 0.9 0.4;
-					offset: 0 0;
-				}
-			}
-		}
-		part {
-			name: "label_number";
-			type: SWALLOW;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.1 0.4;
-				}
-				rel2 {
-					relative: 1.0 0.5;
-				}
-			}
-		}
-		part { name: "entry_number";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.1 0.5;
-					offset: 0 0;
-				}
-				rel2 {
-					relative: 0.9 0.8;
-					offset: 0 0;
-				}
-			}
-		}
-		part { name: "button_back";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.0 0.85;
-				}
-				rel2 {
-					relative: 0.5 1.0;
-				}
-			}
-		}
-		part { name: "button_save";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1 {
-					relative: 0.5 0.85;
-				}
-				rel2 {
-					relative: 1.0 1.0;
-				}
-			}
-		}
-	}
-} /* phoneui/contacts/edit */
-
-///////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 group { name: "phoneui/contacts/delete";
 	parts {
 		part { name: "info";

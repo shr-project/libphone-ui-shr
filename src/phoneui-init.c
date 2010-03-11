@@ -15,6 +15,7 @@ char **phoneui_argv;
 void
 phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 {
+	(void) idle_cb;
 	GKeyFile *keyfile;
 	GKeyFileFlags flags;
 	GError *error = NULL;
@@ -62,6 +63,7 @@ void phoneui_backend_loop()
 {
 	/* Initialize glib main loop */
 	GMainLoop *mainloop = g_main_loop_new(NULL, FALSE);
+	(void) mainloop;
 
 	// Initializations
 	elm_init(phoneui_argc, phoneui_argv);

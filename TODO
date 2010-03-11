@@ -1,4 +1,6 @@
- * Sim Auth
+* Change a lot of the mallocs to eina_stringshare_add, better for internal use
+
+* Sim Auth
   * Vibration when wrong PIN or PUK was entered
  * Incoming Call
  * Dialer

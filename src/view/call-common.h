@@ -1,8 +1,7 @@
 #ifndef _CALL_COMMON_H
 #define _CALL_COMMON_H
 
-#include "views.h"
-
+#include <Evas.h>
 #include <phoneui/phoneui-utils.h>
 
 enum ActiveCallState {
