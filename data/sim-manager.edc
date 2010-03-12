@@ -1,0 +1,4 @@
+group { name: "phoneui/settings/sim-manager";
+	parts {
+	}
+}
