@@ -84,7 +84,6 @@ group { name: "elm/genlist/item/sim-contact/default";
 				inherit: "default" 0.0;
 				visible: 1;
 				color: COLOR_ORANGE_SOLID;
-
 			}
 		}
 		part { name: "seperator";
@@ -103,9 +102,26 @@ group { name: "elm/genlist/item/sim-contact/default";
 					relative: 1.0 1.0;
 					offset: 0 -2;
 				}
-
 			}
-
+		}
+		part { name: "elm.swallow.icon";
+			clip_to: "disclip";
+			type: SWALLOW;
+			description {
+				state: "default" 0.0;
+				fixed: 1 0;
+				align: 0.0 0.5;
+				rel1 {
+					relative: 0.0  0.0;
+					offset:   -1    4;
+					to: "disclip";
+				}
+				rel2 {
+					relative: 0.2  1.0;
+					offset:   -1   -5;
+					to: "disclip";
+				}
+			}
 		}
 		part { name: "elm.swallow.end";
 			clip_to: "disclip";

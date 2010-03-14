@@ -5,6 +5,7 @@
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-info.h>
 
+#include "common-utils.h"
 #include "sim-manager-view.h"
 #include "ui-utils.h"
 #include "views.h"
@@ -82,6 +83,25 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
+	evas_object_show(view.hv);
+}
+
+static void
+_import_contact_cb(GError *error, char *path, gpointer data)
+{
+	(void) path;
+	(void) data;
+	if (error) {
+		g_warning("Adding the contact failed");
+		ui_utils_dialog(VIEW_PTR(view),
+			D_("Failed to import contact!"),
+			DIALOG_OK, NULL, NULL);
+	}
+	else {
+		ui_utils_dialog(VIEW_PTR(view),
+			D_("Contact added succesfull"),
+			DIALOG_OK, NULL, NULL);
+	}
 }
 
 static void
@@ -90,6 +110,32 @@ _list_import_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
+	Elm_Genlist_Item *it;
+	char *name = NULL;
+	char *phone = NULL;
+	GValue *gval;
+
+	evas_object_show(view.hv);
+
+	it = elm_genlist_selected_item_get(view.list_data.list);
+	if (it) {
+		GValueArray *prop =
+		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
+		if (prop) {
+			name = phoneui_utils_sim_manager_display_name_get(prop);
+			phone = phoneui_utils_sim_manager_display_phone_get(prop);
+		}
+	}
+	if (name && phone) {
+		GHashTable *qry = g_hash_table_new_full
+		     (g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
+		gval = common_utils_new_gvalue_string(name);
+		g_hash_table_insert(qry, "Name", gval);
+		gval = common_utils_new_gvalue_string(phone);
+		g_hash_table_insert(qry, "Phone", gval);
+		phoneui_utils_contact_add(qry, _import_contact_cb, NULL);
+		g_hash_table_destroy(qry);
+	}
 }
 
 static void
@@ -98,6 +144,7 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
+	evas_object_show(view.hv);
 }
 
 static void
@@ -109,6 +156,18 @@ _list_options_clicked(void *data, Evas_Object * obj, void *event_info)
 	evas_object_show(view.hv);
 }
 
+static void 
+_contact_delete_confirmiation_cb(GError *error, void *data)
+{
+	(void) data;
+	if (error) {
+		g_warning("Error while deleting entry!");
+		ui_utils_dialog(VIEW_PTR(view),
+			D_("Error while deleting entry!"),
+			DIALOG_OK, NULL, NULL);
+	}
+}
+
 static void
 _contact_delete_confirm_cb(int result, void *data)
 {
@@ -116,12 +175,12 @@ _contact_delete_confirm_cb(int result, void *data)
 		return;
 
 	Elm_Genlist_Item *it = (Elm_Genlist_Item *)data;
-	GValueArray *properties =
+	GValueArray *prop =
 		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
-	if (properties) {
-		int index = phoneui_utils_sim_manager_display_index_get(properties);
-		// TODO: use a callback to show success/failure
-		phoneui_utils_sim_contact_delete(index, NULL, NULL);
+	if (prop) {
+		int index = phoneui_utils_sim_manager_display_index_get(prop);
+		phoneui_utils_sim_contact_delete(index,
+				_contact_delete_confirmiation_cb, NULL);
 	}
 }
 
