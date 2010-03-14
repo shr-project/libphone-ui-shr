@@ -11,7 +11,6 @@
 #include "views.h"
 
 struct SimManagerListData {
-	struct View *view;
 	Evas_Object *layout;
 	Evas_Object *list;
 	Evas_Object *index;
@@ -220,7 +219,7 @@ void
 sim_manager_list_add(struct SimManagerListData *list_data)
 {
 	Evas_Object *win;
-	win = ui_utils_view_window_get(list_data->view);
+	win = ui_utils_view_window_get(VIEW_PTR(view));
 	list_data->index = NULL;
 	list_data->list = elm_genlist_add(win);
 	elm_genlist_horizontal_mode_set(list_data->list, ELM_LIST_LIMIT);
