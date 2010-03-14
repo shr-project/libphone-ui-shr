@@ -1,6 +1,6 @@
 
 #include "phoneui-sim-manager.h"
-#include "view/sim-manager-view.h
+#include "sim-manager-view.h"
 
 
 void

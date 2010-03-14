@@ -1,5 +1,13 @@
+#include <glib.h>
+#include <glib-object.h>
+
+#include <phoneui/phoneui.h>
+#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-info.h>
+
 #include "sim-manager-view.h"
 #include "ui-utils.h"
+#include "views.h"
 
 struct SimManagerListData {
 	struct View *view;
@@ -12,7 +20,7 @@ struct SimManagerListData {
 
 struct SimManagerViewData {
 	struct View view;
-	struct SimMangerListData list_data;
+	struct SimManagerListData list_data;
 	Evas_Object *bx, *hv;
 	Evas_Object *bt_import_all, *bt_options, *bt_message, *bt_edit;
 	Evas_Object *bt_delete;
@@ -26,11 +34,11 @@ static char *
 gl_label_get(const void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
-	GValueArray *param = (GValueArray *) data;
 	char *s = NULL;
+	GValueArray *prop = (GValueArray *) data;
 
 	if (!strcmp(part, "elm.text")) {
-		s = g_value_get_string(g_value_array_get_nth(param, 1));
+		s = phoneui_utils_sim_manager_display_phone_get(prop);
 		if (s && *s) {
 			return s;
 		}
@@ -39,7 +47,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 		}
 	}
 	else if (!strcmp(part, "elm.text.sub")) {
-		s = g_value_get_string(g_value_array_get_nth(param, 2));
+		s = phoneui_utils_sim_manager_display_name_get(prop);
 		if (s && *s) {
 			return s;
 		}
@@ -49,22 +57,6 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	}
 
 	return s;
-}
-
-static Evas_Object *
-gl_icon_get(const void *data, Evas_Object * obj, const char *part)
-{
-	if (!strcmp(part, "elm.swallow.icon")) {
-		const char *photo_file;
-		photo_file = CONTACT_DEFAULT_PHOTO;
-		Evas_Object *photo = elm_image_add(obj);
-		elm_image_file_set(photo, photo_file, NULL);
-		evas_object_size_hint_aspect_set(photo,
-						 EVAS_ASPECT_CONTROL_VERTICAL,
-						 1, 1);
-		return (photo);
-	}
-	return (NULL);
 }
 
 static Eina_Bool
@@ -82,6 +74,22 @@ gl_del(const void *data, Evas_Object * obj)
 {
 	(void) obj;
 	(void) data;
+}
+
+static void
+_list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) data;
+	(void) obj;
+	(void) event_info;
+}
+
+static void
+_list_import_clicked(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) data;
+	(void) obj;
+	(void) event_info;
 }
 
 static void
@@ -108,11 +116,10 @@ _contact_delete_confirm_cb(int result, void *data)
 		return;
 
 	Elm_Genlist_Item *it = (Elm_Genlist_Item *)data;
-	GHashTable *properties =
-		(it) ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	GValueArray *properties =
+		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		int index = g_value_get_int(g_value_array_get_nth(properties,
-								  0));
+		int index = phoneui_utils_sim_manager_display_index_get(properties);
 		// TODO: use a callback to show success/failure
 		phoneui_utils_sim_contact_delete(index, NULL, NULL);
 	}
@@ -161,16 +168,15 @@ Elm_Genlist_Item *
 sim_manager_list_item_add(struct SimManagerListData *list_data,
 			GValueArray *entry)
 {
-	return elm_genlist_item_append(list_data->list, &itc,
-				     g_hash_table_ref(entry) /*item data */ ,
+	return elm_genlist_item_append(list_data->list, &itc, entry,
 				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
 
 static void
-_process_entry(void *_entry, void *_data)
+_process_entry_cb(void *_entry, void *_data)
 {
 	Elm_Genlist_Item *it;
-	GValueArray *entry = (GValueArray *)_entry;
+	GValueArray *entry = (GValueArray *) _entry;
 	struct SimManagerListData *list_data =
 				(struct SimManagerListData *) _data;
 	it = sim_manager_list_item_add(list_data, entry);
@@ -179,13 +185,30 @@ _process_entry(void *_entry, void *_data)
 		return;
 	}
 }
+
+
+static void
+_process_entry(GError *error, GPtrArray *entry, void *_data)
+{
+	(void) error;
+	g_ptr_array_foreach(entry, _process_entry_cb, _data);
+}
+
 void
-sim_manager_list_fill(struct ContactListData *list_data)
+sim_manager_list_fill(struct SimManagerListData *list_data)
 {
 	g_debug("sim_manager_list_fill()");
 	list_data->current = 0;
-	phoneui_utils_sim_manager_get(&list_data->count, _process_entry,
-				      list_data);
+	phoneui_utils_sim_manager_contacts_get(_process_entry, list_data);
+}
+
+static void
+_delete_cb(struct View *view, Evas_Object *obj, void *event_info)
+{
+	(void)view;
+	(void)obj;
+	(void)event_info;
+	sim_manager_view_hide();
 }
 
 int
@@ -240,7 +263,7 @@ sim_manager_view_init()
 	elm_button_label_set(view.bt_message, D_("Import"));
 	evas_object_size_hint_min_set(view.bt_message, 130, 80);
 	evas_object_smart_callback_add(view.bt_message, "clicked",
-				       _list_message_clicked, NULL);
+				       _list_import_clicked, NULL);
 	evas_object_show(view.bt_message);
 	elm_box_pack_end(view.bx, view.bt_message);
 
