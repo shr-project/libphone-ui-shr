@@ -85,10 +85,6 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 			 void (*callback)(const char *, void *),
 			 void *data);
 
-void
-ui_utils_contacts_field_select(struct View *view,
-			void (*callback)(const char *, void *), void *data);
-
 char *
 ui_utils_entry_utf8_get(Evas_Object *entry);
 #endif

@@ -27,6 +27,7 @@ shr_la_SOURCES = \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	util/window.h util/window.c \
 	util/ui-utils.h util/ui-utils.c \
+	util/ui-utils-contacts.h util/ui-utils-contacts.c \
 	view/views.h \
 	view/dialer-view.c \
 	view/idle-view.c \
