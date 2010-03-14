@@ -9,6 +9,7 @@
 #include "views.h"
 #include "common-utils.h"
 #include "ui-utils.h"
+#include "ui-utils-contacts.h"
 #include "contact-view.h"
 
 

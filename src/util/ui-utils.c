@@ -531,39 +531,6 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 	return pack->inwin;
 }
 
-struct _field_select_pack {
-	void (*callback)(const char *, void *);
-	void *data;
-	struct View *view;
-};
-
-static void
-_field_select_cb(GHashTable *fields, gpointer data)
-{
-	GList *keys;
-	struct _field_select_pack *pack = (struct _field_select_pack *)data;
-	if (!fields) {
-		g_warning("No fields for contacts?");
-		// TODO: show a user visible message
-		return;
-	}
-	keys = g_hash_table_get_keys(fields);
-	keys = g_list_sort(keys, (GCompareFunc) strcmp);
-	ui_utils_view_inwin_list(pack->view, keys, pack->callback, pack->data);
-	free(pack);
-}
-
-void
-ui_utils_contacts_field_select(struct View *view,
-			void (*callback)(const char *, void *), void *data)
-{
-	struct _field_select_pack *pack =
-		malloc(sizeof(struct _field_select_pack));
-	pack->callback = callback;
-	pack->data = data;
-	pack->view = view;
-	phoneui_utils_contacts_fields_get(_field_select_cb, pack);
-}
 
 int
 ui_utils_view_is_init(struct View *view)
