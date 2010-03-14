@@ -66,7 +66,7 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part)
 	(void) obj;
 	(void) data;
 	(void) part;
-	return (0);
+	return 0;
 }
 
 
@@ -83,7 +83,7 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	evas_object_show(view.hv);
+	evas_object_hide(view.hv);
 }
 
 static void
@@ -105,30 +105,20 @@ _import_contact_cb(GError *error, char *path, gpointer data)
 }
 
 static void
-_list_import_clicked(void *data, Evas_Object * obj, void *event_info)
+_import_contact(Elm_Genlist_Item *it)
 {
-	(void) data;
-	(void) obj;
-	(void) event_info;
-	Elm_Genlist_Item *it;
-	char *name = NULL;
-	char *phone = NULL;
 	GValue *gval;
+	char *name = NULL, *phone = NULL;
 
-	evas_object_show(view.hv);
-
-	it = elm_genlist_selected_item_get(view.list_data.list);
-	if (it) {
-		GValueArray *prop =
+	GValueArray *prop =
 		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
-		if (prop) {
+	if (prop) {
 			name = phoneui_utils_sim_manager_display_name_get(prop);
 			phone = phoneui_utils_sim_manager_display_phone_get(prop);
-		}
 	}
-	if (name && phone) {
+	if (name && phone && !g_strcmp0(name, "") && !g_strcmp0(phone, "")) {
 		GHashTable *qry = g_hash_table_new_full
-		     (g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
+			(g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
 		gval = common_utils_new_gvalue_string(name);
 		g_hash_table_insert(qry, "Name", gval);
 		gval = common_utils_new_gvalue_string(phone);
@@ -139,12 +129,36 @@ _list_import_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
+_list_import_clicked(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) data;
+	(void) obj;
+	(void) event_info;
+	Elm_Genlist_Item *it;
+
+	evas_object_hide(view.hv);
+
+	it = elm_genlist_selected_item_get(view.list_data.list);
+	if (it) {
+		_import_contact(it);
+	}
+}
+
+static void
 _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	evas_object_show(view.hv);
+	Elm_Genlist_Item *it;
+	
+	it = elm_genlist_first_item_get(view.list_data.list);
+	while (it) {
+		_import_contact(it);
+		it = elm_genlist_item_next_get(it);
+	}
+	if (it) 
+		_import_contact(it);
 }
 
 static void
