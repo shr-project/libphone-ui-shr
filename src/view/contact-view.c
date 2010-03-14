@@ -95,10 +95,17 @@ contact_view_init(char *path, GHashTable *properties)
 	g_hash_table_insert(contactviews, path, view);
 
 	view->path = path;
-	if (properties)
+	if (properties) {
 		view->properties = g_hash_table_ref(properties);
-	else
-		view->properties = NULL;
+	}
+	else {
+		view->properties = g_hash_table_new_full(g_str_hash, g_str_equal,
+							 NULL, common_utils_gvalue_free);
+		g_hash_table_insert(view->properties, "Phone",
+				    common_utils_new_gvalue_string(""));
+		g_hash_table_insert(view->properties, "Name",
+				    common_utils_new_gvalue_string(""));
+	}
 	view->changes = NULL;
 
 	elm_theme_extension_add(DEFAULT_THEME);
@@ -257,7 +264,7 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 	if (!view->changes) {
 		view->changes = g_hash_table_new_full(g_str_hash, g_str_equal, free, (void (*) (void *)) g_strfreev);
 	}
-	
+
 	value = g_hash_table_lookup(view->changes, field);
 	if (!value) {
 		GValue *prop;
@@ -287,13 +294,13 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 	else {
 		value = g_strdupv(value); /*Copy it to our own, the old one will be erased by the hash table */
 	}
-	
+
 	char **cur;
-	
-	
+
+
 	/* try to find the value we want to remove */
 	for (cur = value ; *cur ; cur++) {
-		if (!strcmp(old_value, *cur)) {	
+		if (!strcmp(old_value, *cur)) {
 			break;
 		}
 	}
@@ -389,16 +396,16 @@ _start_file_selector(Evas_Object *parent, const char *path)
 	/*layout = elm_layout_add(view->pager);
 	elm_layout_file_set(view->pager_layout, DEFAULT_THEME, "phoneui/contacts/fileselect");
 	*/
-	
+
 	content = elm_fileselector_add(parent);
 	elm_fileselector_is_save_set(content, EINA_FALSE);
 	elm_fileselector_expandable_set(content, EINA_FALSE);
 	elm_fileselector_buttons_ok_cancel_set(content, EINA_FALSE);
 	elm_fileselector_path_set(content, path);
-	
+
 	evas_object_size_hint_weight_set(content, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_size_hint_align_set(content, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	evas_object_show(content); 
+	evas_object_show(content);
 
 	return content;
 }
@@ -708,9 +715,9 @@ _field_edit_add_edit_page(struct ContactFieldData *fd, Evas_Object *content,
 	/*Used for callbacks*/
 	fd->edit_widget = content;
 	elm_layout_content_set(layout, "main", content);
-	
+
 	btn_save = elm_button_add(fd->view->pager);
-	
+
 	elm_button_label_set(btn_save, D_("Save"));
 	evas_object_smart_callback_add(btn_save, "clicked",
 				       save_cb, fd);
@@ -730,7 +737,7 @@ _field_edit_add_edit_page(struct ContactFieldData *fd, Evas_Object *content,
 				       _field_edit_button_remove_clicked_cb, fd);
 	elm_layout_content_set(layout, "button_remove", btn_remove);
 	evas_object_show(btn_remove);
-	
+
 	elm_pager_content_push(fd->view->pager, layout);
 }
 
@@ -746,7 +753,7 @@ _field_edit_fileselector_save_cb(void *data, Evas_Object *obj, void *event_info)
 	if (selected) {
 		elm_entry_entry_set(fd->value_entry, selected);
 		_change_value(fd, selected);
-	}	
+	}
 }
 
 /* genlist callbacks */
@@ -985,7 +992,7 @@ _add_field_type_cb(GError *error, char *type, gpointer data)
 	}
 	free(data);
 	/*FIXME: free type */
-	
+
 }
 
 static void
@@ -1042,5 +1049,5 @@ _field_unselected_cb(void *data, Evas_Object *obj, void *event_info)
 	_change_value(fd, s);
 	free(s);
 	elm_entry_editable_set(fd->value_entry, EINA_FALSE);
-	fd->edit_on = 0;	
+	fd->edit_on = 0;
 }
