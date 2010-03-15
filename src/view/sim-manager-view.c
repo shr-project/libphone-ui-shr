@@ -68,7 +68,6 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part)
 	return 0;
 }
 
-
 static void
 gl_del(const void *data, Evas_Object * obj)
 {
@@ -240,11 +239,12 @@ Elm_Genlist_Item *
 sim_manager_list_item_add(struct SimManagerListData *list_data,
 			GValueArray *entry)
 {
+	g_debug("sim_manager_list_item_add()");
 	return elm_genlist_item_append(list_data->list, &itc, entry,
 				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
 }
 
-static void
+void
 _process_entry_cb(void *_entry, void *_data)
 {
 	Elm_Genlist_Item *it;
@@ -258,12 +258,84 @@ _process_entry_cb(void *_entry, void *_data)
 	}
 }
 
-
-static void
+void
 _process_entry(GError *error, GPtrArray *entry, void *_data)
 {
+	g_debug("Start adding Contacts");
 	(void) error;
 	g_ptr_array_foreach(entry, _process_entry_cb, _data);
+}
+
+static void
+_gvalue_array_append_int(GValueArray *g_val_array, gint v_int)
+{
+  GValue val = {0, {{0}}};
+  g_value_init(&val, G_TYPE_INT);
+  g_value_set_int(&val, v_int);
+  g_value_array_append(g_val_array, &val);
+  g_value_unset(&val);
+}
+
+static void
+_gvalue_array_append_string(GValueArray *g_val_array, const gchar *v_string)
+{
+  GValue val = {0, {{0}}};
+  g_value_init(&val, G_TYPE_STRING);
+  g_value_set_string(&val, v_string);
+  g_value_array_append(g_val_array, &val);
+  g_value_unset(&val);
+}
+
+void
+_process_info_cb(GError *error, char *name, char *number, gpointer userdata)
+{
+	(void) error;
+	int index;
+	struct SimManagerListData *data =
+				(struct SimManagerListData *) userdata;
+	Elm_Genlist_Item *it;
+	GValueArray *entry = g_value_array_new(0);
+	index = data->current;
+
+	_gvalue_array_append_int(entry, index);
+	_gvalue_array_append_string(entry, name);
+	_gvalue_array_append_string(entry, number);
+
+	it = sim_manager_list_item_add(data, entry);
+	if (!it) {
+		g_warning("Failed adding a contact to the list");
+		return;
+	}
+
+	free(data);
+}
+
+void
+_process_info(GError *error, GHashTable *info, gpointer userdata)
+{
+	(void) error;
+	int min = 0, max = 99, number_len = 0, name_len = 0, i = 0;
+	gpointer p;
+	struct SimManagerListData *data =
+				(struct SimManagerListData *) userdata;
+
+	p = g_hash_table_lookup(info, "min_index");
+	if (p) min = g_value_get_int(p);
+
+	p = g_hash_table_lookup(info, "max_index");
+	if (p) max = g_value_get_int(p);
+
+	p = g_hash_table_lookup(info, "number_length");
+	if (p) number_len = g_value_get_int(p);
+
+	p = g_hash_table_lookup(info, "name_length");
+	if (p) name_len = g_value_get_int(p);
+
+	for (i = min; i < max; i++) {
+		data->current = i;
+		phoneui_utils_sim_manager_phonebook_entry_get(i,
+					_process_info_cb, data);
+	}
 }
 
 void
@@ -271,7 +343,7 @@ sim_manager_list_fill(struct SimManagerListData *list_data)
 {
 	g_debug("sim_manager_list_fill()");
 	list_data->current = 0;
-	phoneui_utils_sim_manager_contacts_get(_process_entry, list_data);
+	phoneui_utils_sim_manager_phonebook_info_get(_process_info, list_data);
 }
 
 static void
@@ -377,7 +449,7 @@ sim_manager_view_deinit()
 void
 sim_manager_view_show()
 {
-	evas_object_hide(view.hv);
+/*	evas_object_hide(view.hv); */
 	ui_utils_view_show(VIEW_PTR(view));
 }
 
