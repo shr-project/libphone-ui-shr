@@ -121,7 +121,7 @@ quick_settings_view_init()
 	evas_object_smart_callback_add(view.button_shutdown, "clicked",
 				       _button_shutdown_clicked_cb, NULL);
 	evas_object_show(view.button_shutdown);
-	
+
 	phoneui_utils_sound_profile_list(_profiles_list_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("CPU", _cpu_get_policy_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("Display", _display_get_policy_cb, NULL);
@@ -252,10 +252,10 @@ _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	int state = elm_toggle_state_get(obj);
 	if (state) {
-		
+
 	}
 	else {
-		
+
 	}
 }
 static void
@@ -288,7 +288,7 @@ _resource_changed_signal_cb(void *userdata, char *resource, gboolean state, GHas
 	else if (policy == 0) {
 		elm_toggle_state_set(toggle, 0);
 	}
-	
+
 clean:
 	/*FIXME: how should I clean it?! */
 	return;
@@ -310,7 +310,7 @@ _cpu_get_policy_cb(GError *error, char *policy, gpointer userdata)
 	else {
 		elm_object_disabled_set(view.suspend_slide, 0);
 	}
-	
+
 	if (!strcmp(policy, "enabled")) {
 		elm_toggle_state_set(view.suspend_slide, 1);
 	}
@@ -333,7 +333,7 @@ _display_get_policy_cb(GError *error, char *policy, gpointer userdata)
 	else {
 		elm_object_disabled_set(view.dimming_slide, 0);
 	}
-	
+
 	if (!strcmp(policy, "enabled")) {
 		elm_toggle_state_set(view.dimming_slide, 1);
 	}
@@ -350,7 +350,7 @@ _dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	int state = elm_toggle_state_get(obj);
 	/*FIXME: Add error handling */
 	if (state) {
-		phoneui_utils_resources_set_resource_policy("Display", "enabled", NULL, NULL);	
+		phoneui_utils_resources_set_resource_policy("Display", "enabled", NULL, NULL);
 	}
 	else {
 		phoneui_utils_resources_set_resource_policy("Display", "auto", NULL, NULL);
