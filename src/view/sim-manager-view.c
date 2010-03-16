@@ -85,10 +85,10 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_import_contact_cb(GError *error, char *path)
+_import_contact_cb(GError *error, char *path, void *data)
 {
-	(void) path;
 	(void) data;
+	(void) path;
 	if (error) {
 		g_warning("Adding the contact failed");
 		ui_utils_dialog(VIEW_PTR(view),
@@ -103,10 +103,9 @@ _import_contact_cb(GError *error, char *path)
 }
 
 static void
-_import_contact(Elm_Genlist_Item *it, gpointer userdata)
+_import_contact(Elm_Genlist_Item *it)
 {
 	g_debug("_import_contact()");
-	(void) userdata;
 	GValue *gval;
 	char *name = NULL, *phone = NULL;
 
@@ -123,7 +122,7 @@ _import_contact(Elm_Genlist_Item *it, gpointer userdata)
 		g_hash_table_insert(qry, "Name", gval);
 		gval = common_utils_new_gvalue_string(phone);
 		g_hash_table_insert(qry, "Phone", gval);
-		phoneui_utils_contact_add(qry, _import_contact_cb);
+		phoneui_utils_contact_add(qry, _import_contact_cb, NULL);
 		g_hash_table_destroy(qry);
 	}
 }
