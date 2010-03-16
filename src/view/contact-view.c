@@ -577,6 +577,22 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	struct ContactViewData *view = (struct ContactViewData *)_data;
 	GHashTable *formatted_changes;
+	Elm_Genlist_Item *it;
+	struct ContactFieldData *fd;
+	char *s;
+
+	/* check if the selected field is still in edit mode */
+	it = elm_genlist_selected_item_get(view->fields);
+	if (it) {
+		fd = (struct ContactFieldData *)elm_genlist_item_data_get(it);
+		if (fd->edit_on) {
+			s = ui_utils_entry_utf8_get(fd->value_entry);
+			_change_value(fd, s);
+			free(s);
+			elm_entry_editable_set(fd->value_entry, EINA_FALSE);
+			fd->edit_on = 0;
+		}
+	}
 
 	if (!view->changes) {
 		/* should not happen ? */
