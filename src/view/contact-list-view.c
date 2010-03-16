@@ -287,12 +287,16 @@ static void
 _add_contact_cb(GHashTable *properties, gpointer data)
 {
 	(void) data;
+	Elm_Genlist_Item *it;
 	if (!properties) {
 		g_warning("Failed adding a contact");
 		return;
 	}
 	g_debug("Adding contact to the list");
-	contact_list_item_add(&view.list_data, properties, 1);
+	it = contact_list_item_add(&view.list_data, properties, 1);
+	if (it) {
+		elm_genlist_item_bring_in(it);
+	}
 }
 
 static void
