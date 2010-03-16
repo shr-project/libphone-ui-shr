@@ -112,8 +112,8 @@ _import_contact(Elm_Genlist_Item *it)
 	GValueArray *prop =
 		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
 	if (prop) {
-			name = phoneui_utils_sim_manager_display_name_get(prop);
-			phone = phoneui_utils_sim_manager_display_phone_get(prop);
+		name = phoneui_utils_sim_manager_display_name_get(prop);
+		phone = phoneui_utils_sim_manager_display_phone_get(prop);
 	}
 	if (name && phone && !g_strcmp0(name, "") && !g_strcmp0(phone, "")) {
 		GHashTable *qry = g_hash_table_new_full
@@ -295,6 +295,10 @@ _process_info_cb(GError *error, char *name, char *number, gpointer userdata)
 	(void) userdata;
 	int index = 0;
 
+	/* don't add empty contacts to list */
+	if ((!name && !number) || (!g_strcmp0(name,"") && !g_strcmp0(number,"")))
+		return;
+
 	struct SimManagerListData *data =
 				(struct SimManagerListData *) userdata;
 	Elm_Genlist_Item *it;
@@ -317,7 +321,7 @@ void
 _process_info(GError *error, GHashTable *info, gpointer userdata)
 {
 	(void) error;
-	int min = 0, max = 99, number_len = 0, name_len = 0, i = 0;
+	int min = 1, max = 1, number_len = 0, name_len = 0, i = 0;
 	gpointer p;
 	struct SimManagerListData *data =
 				(struct SimManagerListData *) userdata;
