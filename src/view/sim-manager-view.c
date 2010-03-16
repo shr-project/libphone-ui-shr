@@ -85,7 +85,7 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_import_contact_cb(GError *error, char *path, gpointer data)
+_import_contact_cb(GError *error, char *path)
 {
 	(void) path;
 	(void) data;
@@ -103,9 +103,10 @@ _import_contact_cb(GError *error, char *path, gpointer data)
 }
 
 static void
-_import_contact(Elm_Genlist_Item *it)
+_import_contact(Elm_Genlist_Item *it, gpointer userdata)
 {
 	g_debug("_import_contact()");
+	(void) userdata;
 	GValue *gval;
 	char *name = NULL, *phone = NULL;
 
@@ -115,14 +116,14 @@ _import_contact(Elm_Genlist_Item *it)
 		name = phoneui_utils_sim_manager_display_name_get(prop);
 		phone = phoneui_utils_sim_manager_display_phone_get(prop);
 	}
-	if (name && phone && !g_strcmp0(name, "") && !g_strcmp0(phone, "")) {
+	if (name && phone) {
 		GHashTable *qry = g_hash_table_new_full
 			(g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
 		gval = common_utils_new_gvalue_string(name);
 		g_hash_table_insert(qry, "Name", gval);
 		gval = common_utils_new_gvalue_string(phone);
 		g_hash_table_insert(qry, "Phone", gval);
-		phoneui_utils_contact_add(qry, _import_contact_cb, NULL);
+		phoneui_utils_contact_add(qry, _import_contact_cb);
 		g_hash_table_destroy(qry);
 	}
 }
@@ -150,14 +151,14 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	Elm_Genlist_Item *it;
-	
+
+
+
 	it = elm_genlist_first_item_get(view.list_data.list);
 	while (it) {
 		_import_contact(it);
 		it = elm_genlist_item_next_get(it);
 	}
-	if (it) 
-		_import_contact(it);
 }
 
 static void
@@ -262,7 +263,7 @@ _process_entry_cb(void *_entry, void *_data)
 void
 _process_entry(GError *error, GPtrArray *entry, void *_data)
 {
-	g_debug("Start adding Contacts");
+	g_debug("_process_entry()");
 	(void) error;
 	g_ptr_array_foreach(entry, _process_entry_cb, _data);
 }
@@ -290,13 +291,12 @@ _gvalue_array_append_string(GValueArray *g_val_array, const gchar *v_string)
 void
 _process_info_cb(GError *error, char *name, char *number, gpointer userdata)
 {
-	g_debug("_process_info_cb()");
 	(void) error;
 	(void) userdata;
 	int index = 0;
 
 	/* don't add empty contacts to list */
-	if ((!name && !number) || (!g_strcmp0(name,"") && !g_strcmp0(number,"")))
+	if ((!name && !number) || (g_strcmp0(name,"") == 0 && g_strcmp0(number,"") == 0))
 		return;
 
 	struct SimManagerListData *data =
