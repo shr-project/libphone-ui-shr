@@ -220,6 +220,7 @@ _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	/*FIXME: Add error handling */
 	phoneui_utils_idle_set_state(PHONEUI_DEVICE_IDLE_STATE_LOCK, NULL, NULL);
+	quick_settings_view_hide()
 }
 
 static void
@@ -230,6 +231,7 @@ _button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	/*FIXME: Add error handling */
 	phoneui_utils_usage_shutdown(NULL, NULL);
+	quick_settings_view_hide()
 }
 
 static void
@@ -240,6 +242,7 @@ _button_suspend_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	/*FIXME: Add error handling */
 	phoneui_utils_usage_suspend(NULL, NULL);
+	quick_settings_view_hide()
 }
 
 static void
