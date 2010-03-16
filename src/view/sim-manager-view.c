@@ -105,6 +105,7 @@ _import_contact_cb(GError *error, char *path, gpointer data)
 static void
 _import_contact(Elm_Genlist_Item *it)
 {
+	g_debug("_import_contact()");
 	GValue *gval;
 	char *name = NULL, *phone = NULL;
 
@@ -289,25 +290,27 @@ _gvalue_array_append_string(GValueArray *g_val_array, const gchar *v_string)
 void
 _process_info_cb(GError *error, char *name, char *number, gpointer userdata)
 {
+	g_debug("_process_info_cb()");
 	(void) error;
-	int index;
+	(void) userdata;
+	int index = 0;
+
 	struct SimManagerListData *data =
 				(struct SimManagerListData *) userdata;
 	Elm_Genlist_Item *it;
 	GValueArray *entry = g_value_array_new(0);
+
 	index = data->current;
 
 	_gvalue_array_append_int(entry, index);
 	_gvalue_array_append_string(entry, name);
 	_gvalue_array_append_string(entry, number);
 
-	it = sim_manager_list_item_add(data, entry);
+	it = sim_manager_list_item_add(userdata, entry);
 	if (!it) {
 		g_warning("Failed adding a contact to the list");
 		return;
 	}
-
-	free(data);
 }
 
 void
@@ -333,6 +336,7 @@ _process_info(GError *error, GHashTable *info, gpointer userdata)
 
 	for (i = min; i < max; i++) {
 		data->current = i;
+		g_debug("Processing contact %d", i);
 		phoneui_utils_sim_manager_phonebook_entry_get(i,
 					_process_info_cb, data);
 	}
