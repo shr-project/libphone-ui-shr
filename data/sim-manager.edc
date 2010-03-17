@@ -96,6 +96,24 @@ group { name: "phoneui/settings/sim-manager";
 			}
 		}
 	}
+	programs {
+		program {
+			name:   "start_loading";
+			signal:  "start_loading";
+			source:  "";
+			action:  STATE_SET "loading" 0.0;
+			target:  "loading_indicator";
+			target:  "loading_bg";
+		}
+		program {
+			name:   "stop_loading";
+			signal:  "stop_loading";
+			source:  "";
+			action:  STATE_SET "default" 0.0;
+			target:  "loading_indicator";
+			target:  "loading_bg";
+		}
+	}
 } /* phoneui/settings/sim-manager */
 
 

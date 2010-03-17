@@ -50,8 +50,8 @@ _loading_indicator_value_set (void *data)
 static void
 loading_indicator_start()
 {
-	edje_object_signal_emit(elm_layout_edje_get(view.view.layout),
-				"loading","");
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"start_loading","");
 	elm_progressbar_pulse(view.pb, EINA_TRUE);
 	if (!view.pb_run) {
 		view.pb_timer = ecore_timer_add(0.1, _loading_indicator_value_set, NULL);
@@ -63,7 +63,7 @@ static void
 loading_indicator_stop()
 {
 	edje_object_signal_emit(elm_layout_edje_get(view.view.layout),
-				"default","");
+				"stop_loading","");
 	elm_progressbar_pulse(view.pb, EINA_FALSE);
 	if (view.pb_run) {
 		ecore_timer_del(view.pb_timer);
@@ -362,7 +362,7 @@ void
 _process_info(GError *error, GHashTable *info, gpointer userdata)
 {
 	(void) error;
-	int min = 1, max = 1, number_len = 0, name_len = 0, i = 850;
+	int min = 1, max = 1, number_len = 0, name_len = 0, i = 0;
 	gpointer p;
 	struct SimManagerListData *data =
 				(struct SimManagerListData *) userdata;
