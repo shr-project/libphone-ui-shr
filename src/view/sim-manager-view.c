@@ -23,11 +23,53 @@ struct SimManagerViewData {
 	struct SimManagerListData list_data;
 	Evas_Object *bx, *hv;
 	Evas_Object *bt_import_all, *bt_options, *bt_message, *bt_edit;
-	Evas_Object *bt_delete;
+	Evas_Object *bt_delete, *pb;
+	Eina_Bool pb_run;
+	Ecore_Timer *pb_timer;
 };
 static struct SimManagerViewData view;
 
 static Elm_Genlist_Item_Class itc;
+
+/* progressbar functions*/
+static int
+_loading_indicator_value_set (void *data)
+{
+	(void) data;
+	double progress;
+
+	progress = elm_progressbar_value_get (view.pb);
+	if (progress < 1.0) progress += 0.0123;
+	else progress = 0.0;
+	elm_progressbar_value_set(view.pb, progress);
+	if (progress < 1.0) return ECORE_CALLBACK_RENEW;
+	view.pb_run = 0;
+	return ECORE_CALLBACK_CANCEL;
+}
+
+static void
+loading_indicator_start()
+{
+	edje_object_signal_emit(elm_layout_edje_get(view.view.layout),
+				"loading","");
+	elm_progressbar_pulse(view.pb, EINA_TRUE);
+	if (!view.pb_run) {
+		view.pb_timer = ecore_timer_add(0.1, _loading_indicator_value_set, NULL);
+		view.pb_run = EINA_TRUE;
+	}
+}
+
+static void
+loading_indicator_stop()
+{
+	edje_object_signal_emit(elm_layout_edje_get(view.view.layout),
+				"default","");
+	elm_progressbar_pulse(view.pb, EINA_FALSE);
+	if (view.pb_run) {
+		ecore_timer_del(view.pb_timer);
+		view.pb_run = EINA_FALSE;
+	}
+}
 
 /* --- genlist callbacks --- */
 static char *
@@ -320,7 +362,7 @@ void
 _process_info(GError *error, GHashTable *info, gpointer userdata)
 {
 	(void) error;
-	int min = 1, max = 1, number_len = 0, name_len = 0, i = 0;
+	int min = 1, max = 1, number_len = 0, name_len = 0, i = 850;
 	gpointer p;
 	struct SimManagerListData *data =
 				(struct SimManagerListData *) userdata;
@@ -343,11 +385,13 @@ _process_info(GError *error, GHashTable *info, gpointer userdata)
 		phoneui_utils_sim_manager_phonebook_entry_get(i,
 					_process_info_cb, data);
 	}
+	loading_indicator_stop();
 }
 
 void
 sim_manager_list_fill(struct SimManagerListData *list_data)
 {
+	loading_indicator_start();
 	g_debug("sim_manager_list_fill()");
 	list_data->current = 0;
 	phoneui_utils_sim_manager_phonebook_info_get(_process_info, list_data);
@@ -435,6 +479,16 @@ sim_manager_view_init()
 	elm_box_pack_end(view.bx, view.bt_delete);
 
 	elm_hover_content_set(view.hv, "top", view.bx);
+
+	/* loading indicator */
+	view.pb = elm_progressbar_add(win);
+	elm_object_style_set(view.pb, "wheel");
+	elm_progressbar_label_set(view.pb, D_("Loading..."));
+	evas_object_size_hint_align_set(view.pb, EVAS_HINT_FILL, 0.5);
+	evas_object_size_hint_weight_set(view.pb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	ui_utils_view_swallow(VIEW_PTR(view), "loading_indicator",
+			      view.pb);
+	evas_object_show(view.pb);
 
 	sim_manager_list_fill(&view.list_data);
 
