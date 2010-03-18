@@ -31,7 +31,7 @@ static struct SimManagerViewData view;
 
 static Elm_Genlist_Item_Class itc;
 
-/* progressbar functions*/
+/* progressbar functions taken from elementary_test*/
 static int
 _loading_indicator_value_set (void *data)
 {
@@ -127,26 +127,62 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 	evas_object_hide(view.hv);
 }
 
+/* import functions */
+typedef struct {
+	char *message;
+	Eina_Bool loop, error;
+} ImportContactGlobalData;
+
+typedef struct {
+	ImportContactGlobalData *data;
+	char *name, *number;
+	Eina_Bool last_it;
+} ImportContactData;
+
 static void
 _import_contact_cb(GError *error, char *path, void *data)
 {
-	(void) data;
+	ImportContactData *cdata = (ImportContactData *) data;
 	(void) path;
-	if (error) {
-		g_warning("Adding the contact failed");
-		ui_utils_dialog(VIEW_PTR(view),
-			D_("Failed to import contact!"),
-			DIALOG_OK, NULL, NULL);
-	}
-	else {
-		ui_utils_dialog(VIEW_PTR(view),
-			D_("Contact added succesfull"),
-			DIALOG_OK, NULL, NULL);
+	if (!cdata->data->loop) {
+		if (error) {
+			g_warning("Adding the contact failed");
+			ui_utils_dialog(VIEW_PTR(view),
+				D_("Failed to import contact!"),
+				DIALOG_OK, NULL, NULL);
+		}
+		else {
+			ui_utils_dialog(VIEW_PTR(view),
+				D_("Contact added succesfull"),
+				DIALOG_OK, NULL, NULL);
+		}
+	} else {
+		if (error) {
+			g_warning("Adding the contact failed");
+			cdata->data->error = EINA_TRUE;
+			sprintf(cdata->data->message, "%s\n%s", cdata->data->message,
+				cdata->name);
+		}
+		if (cdata->last_it) {
+			if (cdata->data->error) {
+				char *message = "";
+				sprintf(message, "%s\n%s",
+				    D_("Failed to import following contacts:"),
+				    cdata->data->message);
+				ui_utils_dialog(VIEW_PTR(view), message,
+						DIALOG_OK, NULL, NULL);
+			}
+			else {
+				ui_utils_dialog(VIEW_PTR(view),
+					D_("Contacts added succesfull"),
+					DIALOG_OK, NULL, NULL);
+			}
+		}
 	}
 }
 
 static void
-_import_contact(Elm_Genlist_Item *it)
+_import_contact(Elm_Genlist_Item *it, ImportContactData *cdata)
 {
 	g_debug("_import_contact()");
 	GValue *gval;
@@ -159,13 +195,15 @@ _import_contact(Elm_Genlist_Item *it)
 		phone = phoneui_utils_sim_manager_display_phone_get(prop);
 	}
 	if (name && phone) {
+		cdata->name = name;
+		cdata->number = phone;
 		GHashTable *qry = g_hash_table_new_full
 		     (g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
 		gval = common_utils_new_gvalue_string(name);
 		g_hash_table_insert(qry, "Name", gval);
 		gval = common_utils_new_gvalue_string(phone);
 		g_hash_table_insert(qry, "Phone", gval);
-		phoneui_utils_contact_add(qry, _import_contact_cb, NULL);
+		phoneui_utils_contact_add(qry, _import_contact_cb, cdata);
 		g_hash_table_destroy(qry);
 	}
 }
@@ -178,11 +216,21 @@ _list_import_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) event_info;
 	Elm_Genlist_Item *it;
 
+	ImportContactGlobalData *gdata = 
+				g_malloc(sizeof(ImportContactGlobalData));
+	gdata->loop = EINA_FALSE;
+	gdata->error = EINA_FALSE;
+	gdata->message = "";
+
+	ImportContactData *cdata = g_malloc(sizeof(ImportContactData));
+	cdata->last_it = EINA_FALSE;
+	cdata->data = gdata;
+
 	evas_object_hide(view.hv);
 
 	it = elm_genlist_selected_item_get(view.list_data.list);
 	if (it) {
-		_import_contact(it);
+		_import_contact(it, cdata);
 	}
 }
 
@@ -192,26 +240,29 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	Elm_Genlist_Item *it;
-
-
+	Elm_Genlist_Item *it, *last_it;
+	ImportContactGlobalData *gdata = 
+				g_malloc(sizeof(ImportContactGlobalData));
+	gdata->loop = EINA_TRUE;
+	gdata->error = EINA_FALSE;
+	gdata->message = "";
 
 	it = elm_genlist_first_item_get(view.list_data.list);
+	last_it = elm_genlist_last_item_get(view.list_data.list);
 	while (it) {
-		_import_contact(it);
+		ImportContactData *cdata = g_malloc(sizeof(ImportContactData));
+		cdata->data = gdata;
+		if (it == last_it)
+			cdata->last_it = EINA_TRUE;
+		else
+			cdata->last_it = EINA_FALSE;
+
+		_import_contact(it, cdata);
 		it = elm_genlist_item_next_get(it);
 	}
 }
 
-static void
-_list_options_clicked(void *data, Evas_Object * obj, void *event_info)
-{
-	(void) data;
-	(void) obj;
-	(void) event_info;
-	evas_object_show(view.hv);
-}
-
+/* delete functions */
 static void 
 _contact_delete_confirmiation_cb(GError *error, void *data)
 {
@@ -256,6 +307,16 @@ _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 			D_("Really delete this contact?"),
 			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, it);
 	}
+}
+
+/* main ui functions */
+static void
+_list_options_clicked(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) data;
+	(void) obj;
+	(void) event_info;
+	evas_object_show(view.hv);
 }
 
 void
@@ -367,7 +428,8 @@ _process_info_cb(GError *error, char *name, char *number, gpointer userdata)
 		goto end;
 	}
 end:
-	g_debug("_process_info_cb(), index: %d, max_index: %d", pdata->index, pdata->max_index);
+	g_debug("_process_info_cb(), index: %d, max_index: %d", pdata->index,
+		pdata->max_index);
 	if (pdata->index >= pdata->max_index)
 		loading_indicator_stop();
 	return;
@@ -501,7 +563,8 @@ sim_manager_view_init()
 	elm_object_style_set(view.pb, "wheel");
 	elm_progressbar_label_set(view.pb, D_("Loading..."));
 	evas_object_size_hint_align_set(view.pb, EVAS_HINT_FILL, 0.5);
-	evas_object_size_hint_weight_set(view.pb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_weight_set(view.pb, EVAS_HINT_EXPAND,
+					 EVAS_HINT_EXPAND);
 	ui_utils_view_swallow(VIEW_PTR(view), "loading_indicator",
 			      view.pb);
 	evas_object_show(view.pb);
@@ -526,7 +589,7 @@ sim_manager_view_deinit()
 void
 sim_manager_view_show()
 {
-/*	evas_object_hide(view.hv); */
+	evas_object_hide(view.hv);
 	ui_utils_view_show(VIEW_PTR(view));
 }
 
