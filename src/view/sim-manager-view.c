@@ -192,7 +192,7 @@ _loop_import_contact(Elm_Genlist_Item *it, ImportContactData *cdata)
 		gval = common_utils_new_gvalue_string(phone);
 		g_hash_table_insert(qry, "Phone", gval);
 		phoneui_utils_contact_add(qry, _loop_import_contact_cb, cdata);
-		g_hash_table_destroy(qry);
+		g_hash_table_unref(qry);
 	}
 }
 
@@ -217,7 +217,7 @@ _single_import_contact(Elm_Genlist_Item *it)
 		gval = common_utils_new_gvalue_string(phone);
 		g_hash_table_insert(qry, "Phone", gval);
 		phoneui_contacts_contact_new(qry);
-		g_hash_table_destroy(qry);
+		g_hash_table_unref(qry);
 	}
 }
 
