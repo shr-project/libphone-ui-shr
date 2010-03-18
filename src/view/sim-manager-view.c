@@ -304,12 +304,15 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 static void 
 _contact_delete_confirmiation_cb(GError *error, void *data)
 {
-	(void) data;
 	if (error) {
 		g_warning("Error while deleting entry!");
 		ui_utils_dialog(VIEW_PTR(view),
 			D_("Error while deleting entry!"),
 			DIALOG_OK, NULL, NULL);
+	}
+	else {
+		Elm_Genlist_Item *it = (Elm_Genlist_Item *)data;
+		elm_genlist_item_del(it);
 	}
 }
 
@@ -325,7 +328,7 @@ _contact_delete_confirm_cb(int result, void *data)
 	if (prop) {
 		int index = _display_index_get(prop);
 		phoneui_utils_sim_contact_delete(index,
-				_contact_delete_confirmiation_cb, NULL);
+				_contact_delete_confirmiation_cb, it);
 	}
 }
 
