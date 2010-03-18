@@ -33,6 +33,42 @@ static struct SimManagerViewData view;
 
 static Elm_Genlist_Item_Class itc;
 
+static char *
+_display_phone_get(GValueArray *prop)
+{
+	g_debug("Get contact phonenumber");
+	GValue* gval = NULL;
+	const char *phone = NULL;
+	gval = g_value_array_get_nth(prop, 2);
+	if (gval)
+		phone = g_value_get_string(gval);
+	return (phone) ? strdup(phone) : NULL;
+}
+
+static char *
+_display_name_get(GValueArray *prop)
+{
+	g_debug("Get contact name");
+	GValue* gval = NULL;
+	const char *name = NULL;
+	gval = g_value_array_get_nth(prop, 1);
+	if (gval)
+		name = g_value_get_string(gval);
+	return (name) ? strdup(name) : NULL;
+}
+
+static int
+_display_index_get(GValueArray *prop)
+{
+	g_debug("Get contact index");
+	GValue* gval = NULL;
+	gval = g_value_array_get_nth(prop, 0);
+	if (gval)
+		return g_value_get_int(gval);
+	else
+		return -1;
+}
+
 /* progressbar functions taken from elementary_test*/
 static int
 _loading_indicator_value_set (void *data)
@@ -83,7 +119,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	GValueArray *prop = (GValueArray *) data;
 
 	if (!strcmp(part, "elm.text")) {
-		s = phoneui_utils_sim_manager_display_phone_get(prop);
+		s = _display_phone_get(prop);
 		if (s && *s) {
 			return s;
 		}
@@ -92,7 +128,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 		}
 	}
 	else if (!strcmp(part, "elm.text.sub")) {
-		s = phoneui_utils_sim_manager_display_name_get(prop);
+		s = _display_name_get(prop);
 		if (s && *s) {
 			return s;
 		}
@@ -179,8 +215,8 @@ _loop_import_contact(Elm_Genlist_Item *it, ImportContactData *cdata)
 	GValueArray *prop =
 		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
 	if (prop) {
-		name = phoneui_utils_sim_manager_display_name_get(prop);
-		phone = phoneui_utils_sim_manager_display_phone_get(prop);
+		name = _display_name_get(prop);
+		phone = _display_phone_get(prop);
 	}
 	if (name && phone) {
 		cdata->name = name;
@@ -206,8 +242,8 @@ _single_import_contact(Elm_Genlist_Item *it)
 	GValueArray *prop =
 		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
 	if (prop) {
-		name = phoneui_utils_sim_manager_display_name_get(prop);
-		phone = phoneui_utils_sim_manager_display_phone_get(prop);
+		name = _display_name_get(prop);
+		phone = _display_phone_get(prop);
 	}
 	if (name && phone) {
 		GHashTable *qry = g_hash_table_new_full
@@ -287,7 +323,7 @@ _contact_delete_confirm_cb(int result, void *data)
 	GValueArray *prop =
 		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
 	if (prop) {
-		int index = phoneui_utils_sim_manager_display_index_get(prop);
+		int index = _display_index_get(prop);
 		phoneui_utils_sim_contact_delete(index,
 				_contact_delete_confirmiation_cb, NULL);
 	}
@@ -462,7 +498,7 @@ _process_info(GError *error, GHashTable *info, gpointer userdata)
 		data->index = i;
 		data->max_index = max;
 		g_debug("_process_info(): contact %d", i);
-		phoneui_utils_sim_manager_phonebook_entry_get(i,
+		phoneui_utils_sim_phonebook_entry_get(i,
 					_process_info_cb, data);
 	}
 }
@@ -473,7 +509,7 @@ sim_manager_list_fill(struct SimManagerListData *list_data)
 	loading_indicator_start();
 	g_debug("sim_manager_list_fill()");
 	list_data->current = 0;
-	phoneui_utils_sim_manager_phonebook_info_get(_process_info, list_data);
+	phoneui_utils_sim_phonebook_info_get(_process_info, list_data);
 }
 
 static void
