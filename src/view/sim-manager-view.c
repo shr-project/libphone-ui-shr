@@ -54,7 +54,8 @@ loading_indicator_start()
 				"start_loading","");
 	elm_progressbar_pulse(view.pb, EINA_TRUE);
 	if (!view.pb_run) {
-		view.pb_timer = ecore_timer_add(0.1, _loading_indicator_value_set, NULL);
+		view.pb_timer = ecore_timer_add(0.1,
+					_loading_indicator_value_set, NULL);
 		view.pb_run = EINA_TRUE;
 	}
 }
@@ -159,7 +160,7 @@ _import_contact(Elm_Genlist_Item *it)
 	}
 	if (name && phone) {
 		GHashTable *qry = g_hash_table_new_full
-			(g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
+		     (g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
 		gval = common_utils_new_gvalue_string(name);
 		g_hash_table_insert(qry, "Name", gval);
 		gval = common_utils_new_gvalue_string(phone);
@@ -312,22 +313,28 @@ _process_entry(GError *error, GPtrArray *entry, void *_data)
 static void
 _gvalue_array_append_int(GValueArray *g_val_array, gint v_int)
 {
-  GValue val = {0, {{0}}};
-  g_value_init(&val, G_TYPE_INT);
-  g_value_set_int(&val, v_int);
-  g_value_array_append(g_val_array, &val);
-  g_value_unset(&val);
+	GValue val = {0, {{0}}};
+	g_value_init(&val, G_TYPE_INT);
+	g_value_set_int(&val, v_int);
+	g_value_array_append(g_val_array, &val);
+	g_value_unset(&val);
 }
 
 static void
 _gvalue_array_append_string(GValueArray *g_val_array, const gchar *v_string)
 {
-  GValue val = {0, {{0}}};
-  g_value_init(&val, G_TYPE_STRING);
-  g_value_set_string(&val, v_string);
-  g_value_array_append(g_val_array, &val);
-  g_value_unset(&val);
+	GValue val = {0, {{0}}};
+	g_value_init(&val, G_TYPE_STRING);
+	g_value_set_string(&val, v_string);
+	g_value_array_append(g_val_array, &val);
+	g_value_unset(&val);
 }
+
+typedef struct {
+	void *data;
+	int index;
+	int max_index;
+} ProcessInfoData;
 
 void
 _process_info_cb(GError *error, char *name, char *number, gpointer userdata)
@@ -336,26 +343,34 @@ _process_info_cb(GError *error, char *name, char *number, gpointer userdata)
 	(void) userdata;
 	int index = 0;
 
-	/* don't add empty contacts to list */
-	if ((!name && !number) || (g_strcmp0(name,"") == 0 && g_strcmp0(number,"") == 0))
-		return;
-
+	ProcessInfoData *pdata = (ProcessInfoData *) userdata;
 	struct SimManagerListData *data =
-				(struct SimManagerListData *) userdata;
+				(struct SimManagerListData *) pdata->data;
+
+	/* don't add empty contacts to list */
+	if ((!name && !number)
+		|| (g_strcmp0(name,"") == 0 && g_strcmp0(number,"") == 0))
+		goto end;
+
 	Elm_Genlist_Item *it;
 	GValueArray *entry = g_value_array_new(0);
 
-	index = data->current;
+	index = pdata->index;
 
 	_gvalue_array_append_int(entry, index);
 	_gvalue_array_append_string(entry, name);
 	_gvalue_array_append_string(entry, number);
 
-	it = sim_manager_list_item_add(userdata, entry);
+	it = sim_manager_list_item_add(data, entry);
 	if (!it) {
 		g_warning("Failed adding a contact to the list");
-		return;
+		goto end;
 	}
+end:
+	g_debug("_process_info_cb(), index: %d, max_index: %d", pdata->index, pdata->max_index);
+	if (pdata->index >= pdata->max_index)
+		loading_indicator_stop();
+	return;
 }
 
 void
@@ -364,8 +379,6 @@ _process_info(GError *error, GHashTable *info, gpointer userdata)
 	(void) error;
 	int min = 1, max = 1, number_len = 0, name_len = 0, i = 0;
 	gpointer p;
-	struct SimManagerListData *data =
-				(struct SimManagerListData *) userdata;
 
 	p = g_hash_table_lookup(info, "min_index");
 	if (p) min = g_value_get_int(p);
@@ -379,13 +392,15 @@ _process_info(GError *error, GHashTable *info, gpointer userdata)
 	p = g_hash_table_lookup(info, "name_length");
 	if (p) name_len = g_value_get_int(p);
 
-	for (i = min; i < max; i++) {
-		data->current = i;
-		g_debug("Processing contact %d", i);
+	for (i = min; i <= max; i++) {
+		ProcessInfoData *data = g_malloc(sizeof(ProcessInfoData));
+		data->data = userdata;
+		data->index = i;
+		data->max_index = max;
+		g_debug("_process_info(): contact %d", i);
 		phoneui_utils_sim_manager_phonebook_entry_get(i,
 					_process_info_cb, data);
 	}
-	loading_indicator_stop();
 }
 
 void
@@ -403,6 +418,7 @@ _delete_cb(struct View *view, Evas_Object *obj, void *event_info)
 	(void)view;
 	(void)obj;
 	(void)event_info;
+	loading_indicator_stop();
 	sim_manager_view_hide();
 }
 
