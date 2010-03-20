@@ -7,6 +7,7 @@
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-info.h>
 
+#include "../phoneui-shr.h"
 #include "views.h"
 #include "common-utils.h"
 #include "ui-utils.h"
@@ -59,9 +60,9 @@ message_list_view_init()
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
-	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
 				 "phoneui/messages/list");
-	elm_theme_extension_add(DEFAULT_THEME);
+	elm_theme_extension_add(phoneui_theme);
 
 	obj = elm_button_add(win);
 	elm_button_label_set(obj, D_("New"));

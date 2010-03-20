@@ -1,7 +1,8 @@
 #include <Elementary.h>
 #include <glib-2.0/glib.h>
 
-#include "view/views.h"
+#include "../phoneui-shr.h"
+#include "views.h"
 
 
 /* HACKS FROM elm_priv.h that should be removed */
@@ -30,7 +31,7 @@ static void _zero_mouse_up(void *data, Evas_Object * o, const char *emission,
 	       const char *source);
 static int _plus_trigered(void *data);
 
-static void 
+static void
 _del_hook(Evas_Object * obj)
 {
 	Widget_Data *wd = elm_widget_data_get(obj);
@@ -112,7 +113,7 @@ elm_keypad_add(Evas_Object * parent)
 
 	wd->keypad = edje_object_add(e);
 	g_debug("keypad evas object: %d", (int) wd->keypad);
-	edje_object_file_set(wd->keypad, DEFAULT_THEME, "phoneui/keypad");
+	edje_object_file_set(wd->keypad, phoneui_theme, "phoneui/keypad");
 	edje_object_signal_callback_add(wd->keypad, "*", "input",
 					_signal_clicked, wd->widget);
 	edje_object_signal_callback_add(wd->keypad, "0", "mouse_up",

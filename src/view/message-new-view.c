@@ -7,6 +7,7 @@
 #include "widget/elm_keypad.h"
 #include "message-new-view.h"
 #include "views.h"
+#include "../phoneui-shr.h"
 
 
 enum MessageNewModes {
@@ -97,11 +98,11 @@ message_new_view_init(GHashTable *options)
 		g_ptr_array_add(view->recipients, options);
 	}
 
-	elm_theme_extension_add(DEFAULT_THEME);
+	elm_theme_extension_add(phoneui_theme);
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);
 
-	ui_utils_view_layout_set(VIEW_PTR(*view), DEFAULT_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(*view), phoneui_theme,
 				 "phoneui/messages/new");
 
 	view->pager = elm_pager_add(win);
@@ -214,7 +215,7 @@ _init_content_page(struct MessageNewViewData *view)
 
 	view->layout_content = elm_layout_add(view->pager);
 	elm_win_resize_object_add(win, view->layout_content);
-	elm_layout_file_set(view->layout_content, DEFAULT_THEME,
+	elm_layout_file_set(view->layout_content, phoneui_theme,
 			    "phoneui/messages/new/content");
 	evas_object_show(view->layout_content);
 
@@ -263,7 +264,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 
 	view->layout_recipients = elm_layout_add(view->pager);
 	elm_win_resize_object_add(win, view->layout_recipients);
-	elm_layout_file_set(view->layout_recipients, DEFAULT_THEME,
+	elm_layout_file_set(view->layout_recipients, phoneui_theme,
 			    "phoneui/messages/new/recipients");
 	evas_object_show(view->layout_recipients);
 
@@ -333,7 +334,7 @@ _init_contacts_page(struct MessageNewViewData *view)
 
 	view->layout_contacts = elm_layout_add(view->pager);
 	elm_win_resize_object_add(win, view->layout_contacts);
-	elm_layout_file_set(view->layout_contacts, DEFAULT_THEME,
+	elm_layout_file_set(view->layout_contacts, phoneui_theme,
 			    "phoneui/messages/new/contacts");
 	evas_object_show(view->layout_contacts);
 
@@ -372,7 +373,7 @@ _init_number_page(struct MessageNewViewData *view)
 	view->number_length = 0;
 	view->layout_number = elm_layout_add(view->pager);
 	elm_win_resize_object_add(win, view->layout_number);
-	elm_layout_file_set(view->layout_number, DEFAULT_THEME,
+	elm_layout_file_set(view->layout_number, phoneui_theme,
 			    "phoneui/messages/new/number");
 	evas_object_show(view->layout_number);
 
@@ -395,7 +396,7 @@ _init_number_page(struct MessageNewViewData *view)
 
 	ico = elm_icon_add(win);
 	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
-	elm_icon_file_set(ico, DEFAULT_THEME, "icon/edit-undo");
+	elm_icon_file_set(ico, phoneui_theme, "icon/edit-undo");
 	evas_object_show(ico);
 
 	btn = elm_button_add(win);

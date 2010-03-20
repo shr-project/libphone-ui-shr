@@ -5,6 +5,7 @@
 #include "views.h"
 #include "ui-utils.h"
 #include "common-utils.h"
+#include "../phoneui-shr.h"
 
 struct PhoneLogViewData {
 	struct View parent;
@@ -62,9 +63,9 @@ int phone_log_view_init()
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 
-	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
 				 "phoneui/phonelog/phonelog");
-	elm_theme_extension_add(DEFAULT_THEME);
+	elm_theme_extension_add(phoneui_theme);
 
 	view.pager = elm_pager_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "pager", view.pager);
@@ -95,19 +96,19 @@ int phone_log_view_init()
 	evas_object_size_hint_align_set(view.toolbar, EVAS_HINT_FILL, 0.0);
 
 	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-incoming");
+	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-incoming");
 	elm_toolbar_item_add(view.toolbar, icon, D_("received"),
 			     _toolbar_changed, view.list_in);
 	evas_object_show(icon);
 
 	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-outgoing");
+	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-outgoing");
 	elm_toolbar_item_add(view.toolbar, icon, D_("outgoing"),
 			     _toolbar_changed, view.list_out);
 	evas_object_show(icon);
 
 	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-missed");
+	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-missed");
 	view.toolbar_missed = elm_toolbar_item_add(view.toolbar, icon,
 						   D_("missed"),
 						   _toolbar_changed,
@@ -115,7 +116,7 @@ int phone_log_view_init()
 	evas_object_show(icon);
 
 	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, DEFAULT_THEME, "icon/phonelog-all");
+	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-all");
 	elm_toolbar_item_add(view.toolbar, icon, D_("all"), _toolbar_changed,
 			     view.list_all);
 	evas_object_show(icon);

@@ -33,6 +33,7 @@
 
 #include "util/common-utils.h"
 #include "util/ui-utils.h"
+#include "../phoneui-shr.h"
 #include "views.h"
 #include "quick-settings-view.h"
 
@@ -75,7 +76,8 @@ quick_settings_view_init()
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
-	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME, "phoneui/settings/quick-settings");
+	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
+				 "phoneui/settings/quick-settings");
 
 	view.airplane_slide = elm_toggle_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "profiles-frame-airplane-slide", view.airplane_slide);

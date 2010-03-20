@@ -11,6 +11,7 @@
 #include "ui-utils.h"
 #include "ui-utils-contacts.h"
 #include "contact-view.h"
+#include "../phoneui-shr.h"
 
 
 static Elm_Genlist_Item_Class itc;
@@ -108,12 +109,12 @@ contact_view_init(char *path, GHashTable *properties)
 	}
 	view->changes = NULL;
 
-	elm_theme_extension_add(DEFAULT_THEME);
+	elm_theme_extension_add(phoneui_theme);
 
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);
 
-	ui_utils_view_layout_set(VIEW_PTR(*view), DEFAULT_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(*view), phoneui_theme,
 				 "phoneui/contacts/view");
 
 	view->photo = elm_icon_add(win);
@@ -126,7 +127,7 @@ contact_view_init(char *path, GHashTable *properties)
 	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 
 	view->pager_layout = elm_layout_add(win);
-	elm_layout_file_set(view->pager_layout, DEFAULT_THEME, "phoneui/contacts/fieldedit");
+	elm_layout_file_set(view->pager_layout, phoneui_theme, "phoneui/contacts/fieldedit");
 	evas_object_size_hint_min_set(view->pager_layout, 1, 1);
 	view->fields = elm_genlist_add(win);
 	elm_scroller_policy_set(view->fields, ELM_SCROLLER_POLICY_OFF,
@@ -394,7 +395,7 @@ _start_file_selector(Evas_Object *parent, const char *path)
 {
 	Evas_Object *content;
 	/*layout = elm_layout_add(view->pager);
-	elm_layout_file_set(view->pager_layout, DEFAULT_THEME, "phoneui/contacts/fileselect");
+	elm_layout_file_set(view->pager_layout, phoneui_theme, "phoneui/contacts/fileselect");
 	*/
 
 	content = elm_fileselector_add(parent);
@@ -727,7 +728,7 @@ _field_edit_add_edit_page(struct ContactFieldData *fd, Evas_Object *content,
 	Evas_Object *btn_back, *btn_remove, *btn_save;
 
 	layout = elm_layout_add(fd->view->pager);
-	elm_layout_file_set(layout, DEFAULT_THEME, "phoneui/contacts/edit_field");
+	elm_layout_file_set(layout, phoneui_theme, "phoneui/contacts/edit_field");
 	/*Used for callbacks*/
 	fd->edit_widget = content;
 	elm_layout_content_set(layout, "main", content);

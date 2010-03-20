@@ -6,7 +6,8 @@
 #include <Elementary.h>
 #include <glib.h>
 #include <glib-object.h>
-
+// FIXME: move stuff to phoneui-shr so that this is not needed
+#include "views.h"
 
 int phoneui_argc;
 char **phoneui_argv;
@@ -35,12 +36,15 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
 	if (!g_key_file_load_from_file
 	    (keyfile, PHONEUI_SHR_CONFIG, flags, &error)) {
-		g_warning("Erorr opening %s: %s", PHONEUI_SHR_CONFIG,
+		g_message("Errorr opening %s: %s", PHONEUI_SHR_CONFIG,
 					error->message);
 		return;
 	}
 
 	theme = g_key_file_get_string(keyfile, "global", "theme", NULL);
+	if (!theme)
+		theme = DEFAULT_THEME;
+
 	if (theme) {
 		/* FIXME: possible overflow in line 51 */
 		/* +6 for /, .edj and ending 0 */

@@ -2,6 +2,7 @@
 #include "views.h"
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
+#include "../phoneui-shr.h"
 
 struct DialogViewData {
 	struct Window *win;
@@ -28,14 +29,14 @@ dialog_view_show(struct Window *win, void *_options)
 		g_critical("Tried to pass a non-exisiting type (%s:%d)", __FUNCTION__, __LINE__);
 		return NULL;
 	}
-	
+
 	data = calloc(1, sizeof(struct DialogViewData));
 	data->win = win;
 	data->type = GPOINTER_TO_INT(g_hash_table_lookup(options, "type"));
 
-	
 
-	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/dialog");
+
+	window_layout_set(win, phoneui_theme, "phoneui/notification/dialog");
 	if (data->type == PHONEUI_DIALOG_MESSAGE_STORAGE_FULL)
 		window_text_set(win, "content", D_
 			("Your storage is full. Please delete some messages or you are not going to receive messages anymore!"));

@@ -7,6 +7,7 @@
 #include "ui-utils.h"
 #include "views.h"
 #include "message-show-view.h"
+#include "../phoneui-shr.h"
 
 
 static GHashTable *messageviews = NULL;
@@ -75,12 +76,12 @@ message_show_view_init(char* path, GHashTable *properties)
 	view->name = NULL;
 	view->photopath = NULL;
 
-	elm_theme_extension_add(DEFAULT_THEME);
+	elm_theme_extension_add(phoneui_theme);
 
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);
 
-	ui_utils_view_layout_set(VIEW_PTR(*view), DEFAULT_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(*view), phoneui_theme,
 				 "phoneui/messages/show");
 
 // 	char *content = elm_entry_utf8_to_markup(data->content);
@@ -132,7 +133,7 @@ message_show_view_init(char* path, GHashTable *properties)
         view->photo = elm_icon_add(win);
 	evas_object_size_hint_aspect_set(view->photo,
 					 EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
-	elm_icon_file_set(view->photo, DEFAULT_THEME, "icon/contact");
+	elm_icon_file_set(view->photo, phoneui_theme, "icon/contact");
 	ui_utils_view_swallow(VIEW_PTR(*view), "photo", view->photo);
 	evas_object_show(view->photo);
 
@@ -146,12 +147,12 @@ message_show_view_init(char* path, GHashTable *properties)
 		direction = g_value_get_string(tmp);
 		if (strcmp(direction, "in") == 0) {
 			g_debug("Setting status icon for an incoming message");
-			elm_icon_file_set(ico, DEFAULT_THEME,
+			elm_icon_file_set(ico, phoneui_theme,
 					  "icon/phonelog-incoming");
 		}
 		else {
 			g_debug("Setting status icon for a sent message");
-			elm_icon_file_set(ico, DEFAULT_THEME,
+			elm_icon_file_set(ico, phoneui_theme,
 					  "icon/phonelog-outgoing");
 		}
 	}

@@ -1,5 +1,6 @@
 
 #include "views.h"
+#include "../phoneui-shr.h"
 
 
 struct UssdViewData {
@@ -63,7 +64,7 @@ frame_ussd_show(void *_data)
 	struct UssdViewData *data = (struct UssdViewData *) _data;
 	struct Window *win = data->win;
 
-	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/ussd");
+	window_layout_set(win, phoneui_theme, "phoneui/notification/ussd");
 	window_text_set(win, "mode", D_("Data:"));
 	window_text_set(win, "message", data->message);
 

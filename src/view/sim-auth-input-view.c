@@ -1,11 +1,12 @@
 #include "common-utils.h"
 #include "views.h"
-#include "widget/elm_keypad.h" 
+#include "widget/elm_keypad.h"
 
 #include <unistd.h>		/* for sleep */
 #include <phoneui-utils.h>
 
 #define _MAX_PIN_LENGTH 9
+#include "../phoneui-shr.h"
 
 struct SimAuthInputViewData {
 	struct Window *win;
@@ -372,7 +373,7 @@ frame_input_show(void *_data)
 
 	g_debug("frame_input_show()");
 
-	window_layout_set(win, DEFAULT_THEME, "phoneui/notification/sim_auth_input");
+	window_layout_set(win, phoneui_theme, "phoneui/notification/sim_auth_input");
 
 	window_text_set(win, "instruction", data->msg);
 
@@ -418,7 +419,7 @@ frame_message_show(void *_data)
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
 
-	window_layout_set(data->win, DEFAULT_THEME, "phoneui/notification/sim_auth_message");
+	window_layout_set(data->win, phoneui_theme, "phoneui/notification/sim_auth_message");
 	window_text_set(data->win, "text", D_("Checking"));
 }
 

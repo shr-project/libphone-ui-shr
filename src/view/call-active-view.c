@@ -3,6 +3,7 @@
 #include "common-utils.h"
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-utils-sound.h>
+#include "../phoneui-shr.h"
 
 static void call_button_dtmf_clicked(struct CallActiveViewData *data,
 				     Evas_Object * obj, void *event_info);
@@ -101,7 +102,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	g_debug("active call: id=%d, number_state=%d, number='%s'", data->parent.id,
 			data->parent.number_state, data->parent.number);
 
-	window_layout_set(win, DEFAULT_THEME, "phoneui/call_management/active_call");
+	window_layout_set(win, phoneui_theme, "phoneui/call_management/active_call");
 
 	data->parent.elmphoto = elm_icon_add(window_evas_object_get(win));
 	window_swallow(win, "photo", data->parent.elmphoto);
@@ -221,7 +222,7 @@ call_active_view_hide(struct CallActiveViewData *data)
 	evas_object_del(data->bt_call_state);
 	evas_object_del(data->bt_keypad);
 
-	common_utils_object_unref_free(data);	
+	common_utils_object_unref_free(data);
 }
 
 static void
