@@ -1,3 +1,8 @@
+* convert sim-auth-input-view to ui-utils
+* convert the call screens to ui-utils
+* convert the USSD view
+* convert the dialogs
+
 * Change a lot of the mallocs to eina_stringshare_add, better for internal use
 
 * Sim Auth
