@@ -90,25 +90,33 @@ call_common_contact_callback(GHashTable *contact, void *_data)
 
 void
 call_common_window_update_state(struct CallActiveViewData *win,
-				enum SoundState state)
+				enum SoundState state, enum SoundStateType type)
 {
 	const char *state_string = "";
 	int speaker_state = 0;
 
 	switch (state) {
 	case SOUND_STATE_SPEAKER:
-		state_string = D_("Handset");
 		speaker_state = 1;
+		switch (type) {
+		case SOUND_STATE_TYPE_BLUETOOTH:
+			state_string = D_("Bluetooth");
+			break;
+		case SOUND_STATE_TYPE_HANDSET:
+			state_string = D_("Handset");
+			break;
+		case SOUND_STATE_TYPE_HEADSET:
+			state_string = D_("Headset");
+			break;
+		default:
+			speaker_state = 0; /*rollback*/
+			break;
+		}
 		break;
-	case SOUND_STATE_HEADSET:
-		break;
-		/* default to handset */
 	case SOUND_STATE_IDLE:
-	case SOUND_STATE_HANDSET:
+	case SOUND_STATE_CALL:
 		state_string = D_("Speaker");
 		speaker_state = 0;
-		break;
-	case SOUND_STATE_BT:
 		break;
 	default:
 		break;
@@ -190,9 +198,9 @@ call_common_active_call_get_last_id()
 }
 
 int
-call_common_set_sound_state(enum SoundState state)
+call_common_set_sound_state(enum SoundState state, enum SoundStateType type)
 {
-	phoneui_utils_sound_state_set(state);
+	phoneui_utils_sound_state_set(state, type);
 	if (active_calls_list) {
 		g_queue_foreach(active_calls_list,
 				(GFunc) call_common_window_update_state,
@@ -212,7 +220,7 @@ call_common_active_call_add(struct CallActiveViewData *win)
 	/*init */
 	/* if first, init state */
 	else {
-		call_common_set_sound_state(SOUND_STATE_INIT);
+		call_common_set_sound_state(SOUND_STATE_CALL, SOUND_STATE_TYPE_DEFAULT);
 		g_debug("Initialized active calls list");
 		active_calls_list = g_queue_new();
 	}
@@ -267,7 +275,7 @@ call_common_active_call_remove(int id)
 		g_debug("Freed active calls list");
 		g_queue_free(active_calls_list);
 		active_calls_list = NULL;
-		call_common_set_sound_state(SOUND_STATE_IDLE);
+		call_common_set_sound_state(SOUND_STATE_IDLE, SOUND_STATE_TYPE_DEFAULT);
 	}
 	return 0;
 }

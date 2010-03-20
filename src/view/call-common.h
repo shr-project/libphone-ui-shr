@@ -45,7 +45,7 @@ struct CallIncomingViewData {
 void call_common_contact_callback(GHashTable *contact, void *_data);
 void call_common_contact_callback2(void *_data);
 
-int call_common_set_sound_state(enum SoundState state);
+int call_common_set_sound_state(enum SoundState state, enum SoundStateType type);
 
 
 int call_common_active_call_add(struct CallActiveViewData *win);
@@ -56,7 +56,7 @@ void call_common_window_to_pending(struct CallActiveViewData *win);
 void call_common_window_to_active(struct CallActiveViewData *win);
 void call_common_window_new_active(int id);
 void call_common_window_update_state(struct CallActiveViewData *win,
-				     enum SoundState state);
+				enum SoundState state, enum SoundStateType type);
 
 void call_button_keypad_clicked(void *data, Evas_Object * obj,
 				void *event_info);

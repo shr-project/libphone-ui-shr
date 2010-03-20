@@ -14,9 +14,9 @@ _speaker_toggle_change(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) event_info;
 	if (elm_toggle_state_get(obj))
-		call_common_set_sound_state(SOUND_STATE_SPEAKER);
+		call_common_set_sound_state(SOUND_STATE_SPEAKER, SOUND_STATE_TYPE_NULL);
 	else
-		call_common_set_sound_state(SOUND_STATE_INIT);
+		call_common_set_sound_state(SOUND_STATE_CALL, SOUND_STATE_TYPE_NULL);
 }
 
 static void
