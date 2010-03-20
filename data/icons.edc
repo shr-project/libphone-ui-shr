@@ -24,4 +24,5 @@ STOCK_ICON("pl-in.png", "icon/phonelog-incoming")
 STOCK_ICON("pl-out.png", "icon/phonelog-outgoing")
 STOCK_ICON("pl-missed.png", "icon/phonelog-missed")
 STOCK_ICON("pl-all.png", "icon/phonelog-all")
+STOCK_ICON("phone-openmoko-freerunner.png", "icon/phone");
 
