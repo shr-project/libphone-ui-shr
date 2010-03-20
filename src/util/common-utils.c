@@ -199,3 +199,48 @@ common_utils_timestamp_to_date(long timestamp)
 	strftime(ret, 31, "%d.%m.%Y %H:%M" LTR_STRING, localtime(&timestamp));
 	return ret;
 }
+
+void
+common_utils_debug_dump_hashtable(GHashTable* hasht)
+{
+	GHashTableIter iter;
+	gpointer _key, _val;
+
+	g_debug("Debug Dump of HashTable");
+	if (!hasht) {
+		g_debug("--| hashtable is NULL");
+		return;
+	}
+	g_hash_table_iter_init(&iter, hasht);
+	while (g_hash_table_iter_next(&iter, &_key, &_val)) {
+		const char *key = (const char *)_key;
+		g_debug("--| key = '%s'", key);
+		if (G_IS_VALUE(_val)) {
+			const GValue *val = (const GValue *) _val;
+			if (G_VALUE_HOLDS_BOXED(val)) {
+				char **vl = (char **)g_value_get_boxed(val);
+				int i = 0;
+				while (vl[i]) {
+					g_debug("----| '%s'", vl[i]);
+					i++;
+				}
+			}
+			else if (G_VALUE_HOLDS_STRING(val)) {
+				g_debug("----| '%s'", g_value_get_string(val));
+			}
+			else if (G_VALUE_HOLDS_INT(val)) {
+				g_debug("----| %d", g_value_get_int(val));
+			}
+			else if (G_VALUE_HOLDS_BOOLEAN(val)) {
+				g_debug("----| %s", g_value_get_boolean(val) ?
+							"TRUE" : "FALSE");
+			}
+			else {
+				g_debug("----| value is of unhandled type!");
+			}
+		}
+		else {
+			g_debug("----| not a gvalue");
+		}
+	}
+}

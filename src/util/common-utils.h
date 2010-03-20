@@ -44,4 +44,7 @@ common_utils_string_strip_newline(char *string);
 char *
 common_utils_timestamp_to_date(long timestamp);
 
+void
+common_utils_debug_dump_hashtable(GHashTable *hasht);
+
 #endif
