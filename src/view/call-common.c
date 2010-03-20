@@ -220,7 +220,7 @@ call_common_active_call_add(struct CallActiveViewData *win)
 	/*init */
 	/* if first, init state */
 	else {
-		call_common_set_sound_state(SOUND_STATE_CALL, SOUND_STATE_TYPE_DEFAULT);
+		call_common_set_sound_state(SOUND_STATE_CALL, SOUND_STATE_TYPE_NULL);
 		g_debug("Initialized active calls list");
 		active_calls_list = g_queue_new();
 	}
@@ -275,7 +275,7 @@ call_common_active_call_remove(int id)
 		g_debug("Freed active calls list");
 		g_queue_free(active_calls_list);
 		active_calls_list = NULL;
-		call_common_set_sound_state(SOUND_STATE_IDLE, SOUND_STATE_TYPE_DEFAULT);
+		call_common_set_sound_state(SOUND_STATE_IDLE, SOUND_STATE_TYPE_NULL);
 	}
 	return 0;
 }
