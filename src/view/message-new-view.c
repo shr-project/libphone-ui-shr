@@ -91,7 +91,9 @@ message_new_view_init(GHashTable *options)
 	view->layout_recipients = NULL;
 	view->layout_contacts = NULL;
 	view->layout_number = NULL;
+	view->notify = NULL;
 	if (options) {
+		g_hash_table_ref(options);
 		g_ptr_array_add(view->recipients, options);
 	}
 
@@ -113,11 +115,22 @@ message_new_view_init(GHashTable *options)
 }
 
 
+static void
+_deinit_recipients_list(gpointer _properties, gpointer _data)
+{
+	GHashTable *properties;
+	(void) _data;
+
+	properties = (GHashTable *) _properties;
+	g_hash_table_unref(properties);
+}
 void
 message_new_view_deinit(struct MessageNewViewData *view)
 {
 	if (view) {
 		ui_utils_view_deinit(VIEW_PTR(*view));
+		g_ptr_array_foreach(view->recipients, _deinit_recipients_list, NULL);
+		g_ptr_array_unref(view->recipients);
 	}
 	else {
 		g_warning("Deiniting a new message view without view?");
@@ -603,9 +616,14 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 		view->number[0] = '\0';
 		view->number_length = 0;
 		_number_update_number(view);
+		elm_pager_content_promote(view->pager, view->layout_recipients);
 	}
-
-	elm_pager_content_promote(view->pager, view->layout_recipients);
+	else {
+		if (!view->notify) {
+			view->notify = ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(*view)), D_("You have entered<br>an invalid number."), 5);
+		}
+		evas_object_show(view->notify);
+	}
 }
 
 static void

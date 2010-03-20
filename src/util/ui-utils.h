@@ -81,6 +81,9 @@ ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 		      void (*callback)(int, void *), void *data);
 
 Evas_Object *
+ui_utils_notify(Evas_Object *parent, const char *label, int timeout);
+
+Evas_Object *
 ui_utils_view_inwin_list(struct View *view, GList *list,
 			 void (*callback)(const char *, void *),
 			 void *data);

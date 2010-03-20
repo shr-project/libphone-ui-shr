@@ -531,6 +531,44 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 	return pack->inwin;
 }
 
+static void
+_notify_button_close_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	Evas_Object *notify = data;
+	(void) obj;
+	(void) event_info;
+	evas_object_hide(notify);
+}
+
+Evas_Object *
+ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
+{
+	Evas_Object *notify, *bx, *bt, *lb;
+	notify = elm_notify_add(parent);
+	evas_object_size_hint_weight_set(notify, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	elm_notify_orient_set(notify, ELM_NOTIFY_ORIENT_BOTTOM);
+	elm_notify_timeout_set(notify, timeout);
+
+	bx = elm_box_add(parent);
+	elm_notify_content_set(notify, bx);
+	elm_box_horizontal_set(bx, 1);
+	evas_object_show(bx);
+
+	lb = elm_label_add(parent);
+	elm_label_label_set(lb, label);
+	elm_box_pack_end(bx, lb);
+	evas_object_show(lb);
+
+
+	bt = elm_button_add(parent);
+	elm_button_label_set(bt, "Close");
+	evas_object_smart_callback_add(bt, "clicked", _notify_button_close_cb, notify);
+	elm_box_pack_end(bx, bt);
+	evas_object_show(bt);
+	
+	return notify;
+}
+
 
 int
 ui_utils_view_is_init(struct View *view)

@@ -17,6 +17,7 @@ struct MessageNewViewData {
 	Evas_Object *layout_contacts, *layout_number;
 	Evas_Object *content_entry, *number_keypad, *number_label, *hv;
 	Evas_Object *list_recipients;
+	Evas_Object *notify;
 
 	GPtrArray *recipients;
 	struct ContactListData contact_list_data;
