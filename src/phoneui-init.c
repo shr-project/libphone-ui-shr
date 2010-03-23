@@ -9,8 +9,10 @@
 // FIXME: move stuff to phoneui-shr so that this is not needed
 #include "views.h"
 
+/*FIXME: what are they used for?!*/
 int phoneui_argc;
 char **phoneui_argv;
+
 
 
 void
@@ -76,7 +78,6 @@ phoneui_backend_loop()
 {
 	/* Initialize glib main loop */
 	GMainLoop *mainloop = g_main_loop_new(NULL, FALSE);
-	(void) mainloop;
 
 	// Initializations
 	elm_init(phoneui_argc, phoneui_argv);
@@ -89,4 +90,5 @@ phoneui_backend_loop()
 
 	elm_run();
 	elm_shutdown();
+	g_main_loop_unref(mainloop);
 }
