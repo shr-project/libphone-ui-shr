@@ -63,7 +63,16 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 	g_key_file_free(keyfile);
 }
 
-void phoneui_backend_loop()
+void
+phoneui_backend_deinit()
+{
+	if (phoneui_theme) {
+		free(phoneui_theme);
+	}
+}
+
+void
+phoneui_backend_loop()
 {
 	/* Initialize glib main loop */
 	GMainLoop *mainloop = g_main_loop_new(NULL, FALSE);
