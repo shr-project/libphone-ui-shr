@@ -13,6 +13,7 @@ collections {
 #include "phonelog.edc"
 #include "keypad.edc"
 #include "quick-settings.edc"
+#include "sim-manager.edc"
 
 } /* end of collection */
 

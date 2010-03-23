@@ -1,11 +1,8 @@
 
 #include <glib.h>
 #include <phoneui/phoneui-utils.h>
-#include "views.h"
-#include "common-utils.h"
 #include "ui-utils.h"
 #include "ui-utils-contacts.h"
-#include "../phoneui-shr.h"
 
 struct _field_select_pack {
 	void (*callback)(const char *, void *);
