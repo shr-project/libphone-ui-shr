@@ -19,6 +19,13 @@ phoneui_backend_messages_show()
 	message_list_view_show();
 }
 
+void
+phoneui_backend_messages_deinit()
+{
+	/*Also free open messages*/
+	message_list_view_deinit();
+}
+
 static void
 _message_get_cb(GHashTable *content, gpointer data)
 {

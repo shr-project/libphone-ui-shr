@@ -14,6 +14,12 @@ phoneui_backend_quick_settings_show()
 }
 
 void
+phoneui_backend_quick_settings_deinit()
+{
+	quick_settings_view_deinit();
+}
+
+void
 phoneui_backend_quick_settings_hide()
 {
         quick_settings_view_hide();

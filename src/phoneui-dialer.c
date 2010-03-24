@@ -12,3 +12,9 @@ phoneui_backend_dialer_show()
 	dialer_view_show();
 }
 
+void
+phoneui_backend_dialer_deinit()
+{
+	dialer_view_deinit();
+}
+

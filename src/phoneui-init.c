@@ -10,6 +10,10 @@
 #include "views.h"
 
 #include "phoneui-contacts.h"
+#include "phoneui-messages.h"
+#include "phoneui-dialer.h"
+#include "phoneui-idle.h"
+#include "phoneui-quick-settings.h"
 
 /*FIXME: what are they used for?!*/
 int phoneui_argc;
@@ -70,6 +74,10 @@ void
 phoneui_backend_deinit()
 {
 	phoneui_backend_contacts_deinit();
+	phoneui_backend_dialer_deinit();
+	phoneui_backend_messages_deinit();
+	phoneui_backend_idle_screen_deinit();
+	phoneui_backend_quick_settings_deinit();
 	if (phoneui_theme) {
 		free(phoneui_theme);
 	}

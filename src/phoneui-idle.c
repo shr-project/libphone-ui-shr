@@ -15,6 +15,12 @@ phoneui_backend_idle_screen_show()
 }
 
 void
+phoenui_backend_idle_screen_deinit()
+{
+	idle_screen_view_deinit();
+}
+
+void
 phoneui_backend_idle_screen_hide()
 {
 	idle_screen_view_hide();
