@@ -56,7 +56,7 @@ static void _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event
 static void _dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_info);
 static void _suspend_slide_changed_cb(void *data, Evas_Object *obj, void *event_info);
 static void _profile_changed_signal_cb(void *userdata, const char *profile);
-static void _resource_changed_signal_cb(void *userdata, char *resource, gboolean state, GHashTable *attributes);
+static void _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state, GHashTable *attributes);
 static void _cpu_get_policy_cb(GError *error, char *policy, gpointer userdata);
 static void _display_get_policy_cb(GError *error, char *policy, gpointer userdata);
 
@@ -132,8 +132,7 @@ quick_settings_view_init()
 
 	/*Register to all signals*/
 	phoneui_info_register_and_request_profile_changes(_profile_changed_signal_cb, NULL);
-	/*FIXME: Fix this cast issue */
-	phoneui_info_register_resource_changes((void (*)(void *, const char *, gboolean,  GHashTable *)) _resource_changed_signal_cb, NULL);
+	phoneui_info_register_and_request_resource_status(_resource_changed_signal_cb, NULL);
 
 	/*FIXME: until we implement it*/
 	elm_object_disabled_set(view.airplane_slide, 1);
@@ -261,7 +260,7 @@ _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	}
 }
 static void
-_resource_changed_signal_cb(void *userdata, char *resource, gboolean state, GHashTable *attributes)
+_resource_changed_signal_cb(void *userdata, const char *resource, gboolean state, GHashTable *attributes)
 {
 	const GValue *tmp;
 	int policy;
@@ -294,8 +293,8 @@ _resource_changed_signal_cb(void *userdata, char *resource, gboolean state, GHas
 clean:
 	/*FIXME: how should I clean it?! */
 	return;
-	g_free(resource);
-	g_hash_table_destroy(attributes);
+// 	g_free(resource);
+	g_hash_table_unref(attributes);
 }
 
 static void
