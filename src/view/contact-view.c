@@ -422,6 +422,19 @@ _contact_photo_clicked(void *_data, Evas_Object *obj, void *event_info)
 }
 
 static void
+_contact_call_number_callback(const char *number, void *data)
+{
+	(void) data;
+// 	struct ContactViewData *view = data;
+	if (!number) {
+		g_debug("got NO number to dial");
+		return;
+	}
+	g_debug("got number %s to dial", number);
+	phoneui_utils_dial(number, NULL, NULL);
+}
+
+static void
 _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	(void) obj;
@@ -429,11 +442,10 @@ _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	struct ContactViewData *view = (struct ContactViewData *)_data;
 	if (view->properties == NULL)
 		return;
-
-	// TODO: show an inwin to select the number if there is more than one
-	const char *number =
-		phoneui_utils_contact_display_phone_get(view->properties);
-	phoneui_utils_dial(number, NULL, NULL);
+	g_debug("Triggering phone number selection");
+	ui_utils_contacts_contact_number_select(VIEW_PTR(*view), view->path,
+						_contact_call_number_callback,
+						view);
 }
 
 static void
@@ -933,6 +945,8 @@ _load_fields(struct ContactViewData *view)
 	/* mark all fields as new when the contact is new */
 	if (!*view->path)
 		isnew = 1;
+
+	common_utils_debug_dump_hashtable(view->properties);
 
 	elm_genlist_clear(view->fields);
 	if (view->properties) {
