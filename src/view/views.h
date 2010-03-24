@@ -13,7 +13,6 @@
 #include "contact-list-common.h"
 
 
-#define D_(String) dgettext(PACKAGE, String)
 
 #define CONTACT_NAME_UNDEFINED_STRING D_("(unknown)")
 #define CONTACT_PHONE_UNDEFINED_STRING D_("(no number)")

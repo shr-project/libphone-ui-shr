@@ -8,6 +8,7 @@
 #include "common-utils.h"
 #include "sim-manager-view.h"
 #include "ui-utils.h"
+#include "phoneui-shr.h"
 #include "views.h"
 
 struct SimManagerListData {

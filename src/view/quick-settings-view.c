@@ -33,7 +33,7 @@
 
 #include "util/common-utils.h"
 #include "util/ui-utils.h"
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 #include "views.h"
 #include "quick-settings-view.h"
 

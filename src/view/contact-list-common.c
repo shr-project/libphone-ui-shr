@@ -1,4 +1,5 @@
 
+#include "phoneui-shr.h"
 #include "views.h"
 
 #include "common-utils.h"
@@ -286,7 +287,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 		it = elm_genlist_item_next_get(it);
 	}
 	if (list_data->layout) {
-		elm_layout_content_set(list_data->layout, "contacts_index", 
+		elm_layout_content_set(list_data->layout, "contacts_index",
 				list_data->index);
 	}
 }

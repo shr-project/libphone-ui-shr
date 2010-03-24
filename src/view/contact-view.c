@@ -11,7 +11,7 @@
 #include "ui-utils.h"
 #include "ui-utils-contacts.h"
 #include "contact-view.h"
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 
 static Elm_Genlist_Item_Class itc;

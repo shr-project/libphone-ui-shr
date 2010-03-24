@@ -5,7 +5,7 @@
 #include "views.h"
 #include "ui-utils.h"
 #include "common-utils.h"
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 struct PhoneLogViewData {
 	struct View parent;

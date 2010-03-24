@@ -3,7 +3,7 @@
 #include "common-utils.h"
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-utils-sound.h>
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 static void call_button_dtmf_clicked(struct CallActiveViewData *data,
 				     Evas_Object * obj, void *event_info);

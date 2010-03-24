@@ -1,6 +1,6 @@
 
 #include "views.h"
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 
 struct UssdViewData {

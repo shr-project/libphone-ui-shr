@@ -7,7 +7,7 @@
 #include "widget/elm_keypad.h"
 #include "message-new-view.h"
 #include "views.h"
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 
 enum MessageNewModes {

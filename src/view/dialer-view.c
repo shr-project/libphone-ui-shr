@@ -10,7 +10,7 @@
 /*TODO: remove the many hacks here
  * Fix the scale hack, shouldn't exist :|
  */
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 
 struct DialerViewData {

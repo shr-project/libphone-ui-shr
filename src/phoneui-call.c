@@ -3,6 +3,7 @@
 #include <phoneui/phoneui-utils.h>
 #include "phoneui-call.h"
 #include "call-common.h"
+#include "phoneui-shr.h"
 #include "window.h"
 #include "views.h"
 

@@ -7,7 +7,7 @@
 #include "ui-utils.h"
 #include "views.h"
 #include "message-show-view.h"
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 
 static GHashTable *messageviews = NULL;

@@ -2,7 +2,7 @@
 #include "views.h"
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 struct DialogViewData {
 	struct Window *win;

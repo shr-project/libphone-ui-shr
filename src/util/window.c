@@ -1,5 +1,5 @@
 
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 #include "window.h"
 #include <stdlib.h>
 #include <Ecore_Evas.h>

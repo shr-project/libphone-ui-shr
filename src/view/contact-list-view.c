@@ -12,7 +12,7 @@
 #include "ui-utils.h"
 #include "ui-utils-contacts.h"
 #include "contact-list-common.h"
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 struct ContactListViewData {
 	struct View view;

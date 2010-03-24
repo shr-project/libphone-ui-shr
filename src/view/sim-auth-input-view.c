@@ -6,7 +6,7 @@
 #include <phoneui-utils.h>
 
 #define _MAX_PIN_LENGTH 9
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 
 struct SimAuthInputViewData {
 	struct Window *win;

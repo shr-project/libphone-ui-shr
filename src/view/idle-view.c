@@ -7,6 +7,7 @@
 #include <glib.h>
 #include <time.h>
 
+#include "phoneui-shr.h"
 #include "views.h"
 #include "idle-view.h"
 #include "util/ui-utils.h"

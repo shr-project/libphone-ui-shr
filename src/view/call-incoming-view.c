@@ -1,4 +1,4 @@
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 #include "views.h"
 #include "call-common.h"
 #include "common-utils.h"

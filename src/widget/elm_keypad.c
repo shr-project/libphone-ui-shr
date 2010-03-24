@@ -1,7 +1,7 @@
 #include <Elementary.h>
 #include <glib-2.0/glib.h>
 
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 #include "views.h"
 
 

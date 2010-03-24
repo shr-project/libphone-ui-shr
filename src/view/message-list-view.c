@@ -7,7 +7,7 @@
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-info.h>
 
-#include "../phoneui-shr.h"
+#include "phoneui-shr.h"
 #include "views.h"
 #include "common-utils.h"
 #include "ui-utils.h"

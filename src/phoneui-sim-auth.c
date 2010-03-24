@@ -1,5 +1,6 @@
 #include "phoneui-sim-auth.h"
 #include <glib.h>
+#include "phoneui-shr.h"
 #include "window.h"
 #include "views.h"
 
