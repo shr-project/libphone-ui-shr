@@ -45,7 +45,7 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 
 	theme = g_key_file_get_string(keyfile, "global", "theme", NULL);
 	if (!theme)
-		theme = DEFAULT_THEME;
+		theme = strdup(DEFAULT_THEME);
 
 	if (theme) {
 		/* FIXME: possible overflow in line 51 */
@@ -62,6 +62,7 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 		}
 	}
 
+	free(theme);
 	g_key_file_free(keyfile);
 }
 
