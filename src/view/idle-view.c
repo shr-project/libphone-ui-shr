@@ -22,9 +22,18 @@ struct IdleScreenViewData {
 /* No need to pass the active window everywhere, as we don't allow multiple windows. */
 static struct IdleScreenViewData view;
 
-static void _idle_screen_update_counter(const char *name,
-		const char *label_name, int count);
-static void _pdp_network_status(void *_data, GHashTable *status);
+static void _resource_status(void *data, const char *resource, gboolean state, GHashTable *properties);
+static void _capacity_change(void *data, int capacity);
+static void _pdp_network_status(void *data, GHashTable *status);
+static void _network_status(void *data, GHashTable *properties);
+static void _signal_strength(void *data, int strength);
+static void _profile_change(void *data, const char *profile);
+static void _missed_calls(void *data, int amount);
+static void _unread_messages(void *data, int amount);
+static void _unfinished_tasks(void *data, int amount);
+
+static void _update_counter(const char *name, const char *label_name, int count);
+static void _update_signal_strength(int strength);
 
 static void
 _delete_cb(struct View *view, Evas_Object * win, void *event_info)
@@ -82,7 +91,15 @@ idle_screen_view_init()
 					"slider", idle_screen_view_hide,
 					NULL);
 
-        phoneui_info_register_pdp_network_status(_pdp_network_status, &view);
+	phoneui_info_register_and_request_resource_status(_resource_status, NULL);
+	phoneui_info_register_and_request_network_status(_network_status, NULL);
+	phoneui_info_register_and_request_signal_strength(_signal_strength, NULL);
+        phoneui_info_register_and_request_pdp_network_status(_pdp_network_status, NULL);
+	phoneui_info_register_and_request_profile_changes(_profile_change, NULL);
+	phoneui_info_register_and_request_capacity_changes(_capacity_change, NULL);
+	phoneui_info_register_and_request_missed_calls(_missed_calls, NULL);
+	phoneui_info_register_and_request_unread_messages(_unread_messages, NULL);
+	phoneui_info_register_and_request_unfinished_tasks(_unfinished_tasks, NULL);
 
 	phoneui_info_trigger();
 	return 0;
@@ -99,47 +116,6 @@ int
 idle_screen_view_is_init()
 {
 	return ui_utils_view_is_init(VIEW_PTR(view));
-}
-
-void
-idle_screen_view_update_missed_calls(const int amount)
-{
-	if (idle_screen_view_is_init()) {
-		g_debug("--- missed calls: %d", amount);
-		_idle_screen_update_counter("missedCalls", "missedCallsLabel", amount);
-	}
-}
-
-void
-idle_screen_view_update_unfinished_tasks(const int amount)
-{
-	if (idle_screen_view_is_init()) {
-		_idle_screen_update_counter("unfinishedTasks",
-						 "unfinishedTasksLabel", amount);
-	}
-}
-
-void
-idle_screen_view_update_unread_messages(const int amount)
-{
-	if (idle_screen_view_is_init()) {
-		g_debug("--- unread messages: %d", amount);
-		_idle_screen_update_counter("unreadMessages",
-						 "unreadMessagesLabel", amount);
-	}
-}
-
-void
-idle_screen_view_update_power(const int capacity)
-{
-	if (idle_screen_view_is_init()) {
-		g_debug("--- capacity: %d", capacity);
-		char buf[16];
-		snprintf(buf, 16, "%d", capacity);
-
-		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
-					buf, "batteryPowerChange");
-	}
 }
 
 void
@@ -180,46 +156,6 @@ idle_screen_view_update_call(enum PhoneuiCallState state, const char *name, cons
 }
 
 void
-idle_screen_view_update_signal_strength(const int signal)
-{
-	if (idle_screen_view_is_init()) {
-		g_debug("--- signal strength: %d", signal);
-		char buf[16];
-		snprintf(buf, 16, "%d", signal);
-
-		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
-					buf, "gsmSignalChange");
-	}
-}
-
-void
-idle_screen_view_update_provider(const char *provider)
-{
-	if (idle_screen_view_is_init()) {
-		g_debug("--- provider: %s", provider);
-		ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", provider);
-	}
-}
-
-void
-idle_screen_view_update_resource(const char *resource, const int state)
-{
-	if (idle_screen_view_is_init()) {
-		g_debug("--- resource: %s --> %s", resource, state ? "ON" : "OFF");
-		if (state) {
-			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 resource, "active 0.0");
-		}
-		else {
-			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 resource, "default 0.0");
-		}
-	}
-}
-
-void
 idle_screen_view_update_alarm(const int alarm)
 {
 	if (idle_screen_view_is_init()) {
@@ -236,45 +172,81 @@ idle_screen_view_update_alarm(const int alarm)
 	}
 }
 
-void
-idle_screen_view_update_profile(const char *profile)
-{
-	if (idle_screen_view_is_init()) {
-		g_debug("--- profile: %s", profile);
-		ui_utils_view_text_set(VIEW_PTR(view), "profile", profile);
-	}
-}
-
-
 static void
-_idle_screen_update_counter(const char *name, const char *label_name,
-				 int count)
+_resource_status(void *data, const char *resource,
+		 gboolean state, GHashTable *properties)
 {
-	char buf[16];
-	snprintf(buf, 16, "%d", count);
-
-	if (count > 0) {
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
-						  name, "active 0.0");
+	(void) properties;
+	const char *edje_state;
+	g_debug("Resource Status: %s --> %s", resource, state ? "ON" : "OFF");
+	if (state) {
+		edje_state = "active 0.0";
 	}
 	else {
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
-						  name, "default 0.0");
+		edje_state = "default 0.0";
 	}
-	ui_utils_view_text_set(VIEW_PTR(view), label_name, buf);
+	edje_edit_part_selected_state_set
+				(ui_utils_view_layout_get(VIEW_PTR(view)),
+				 resource, edje_state);
 }
 
+static void
+_capacity_change(void *data, int capacity)
+{
+	char buf[16];
+	g_debug("Capacity is now %d", capacity);
+	snprintf(buf, 16, "%d", capacity);
+
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				buf, "batteryPowerChange");
+
+}
+static void
+_profile_change(void *data, const char *profile)
+{
+	(void) data;
+	g_debug("Profile changed to '%s'", profile);
+	ui_utils_view_text_set(VIEW_PTR(view), "profile", profile);
+}
 
 static void
-_pdp_network_status(void *_data, GHashTable *status)
+_signal_strength(void *data, int strength)
 {
-	(void)_data;
+	(void) data;
+	_update_signal_strength(strength);
+}
+
+static void
+_network_status(void *data, GHashTable *properties)
+{
+	(void) data;
+	GValue *v;
+
+	v = g_hash_table_lookup(properties, "provider");
+	if (v) {
+		g_debug("provider is '%s'", g_value_get_string(v));
+		ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider",
+				       g_value_get_string(v));
+	}
+	v = g_hash_table_lookup(properties, "strength");
+	if (v) {
+		_update_signal_strength(g_value_get_int(v));
+	}
+}
+
+static void
+_pdp_network_status(void *data, GHashTable *status)
+{
+	(void) data;
 	GValue *tmp;
 	const char *s;
 	char *sig = "";
 
-	if (!idle_screen_view_is_init())
+	g_debug("_pdp_network_status");
+	if (!idle_screen_view_is_init()) {
+		g_debug("idle screen is not inited yet... nothing to do");
 		return;
+	}
 
 	tmp = g_hash_table_lookup(status, "registration");
 	if (!tmp) {
@@ -310,3 +282,53 @@ _pdp_network_status(void *_data, GHashTable *status)
 
 	ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
 }
+
+static void
+_missed_calls(void *data, int amount)
+{
+	(void) data;
+	_update_counter("missedCalls", "missedCallsLabel", amount);
+}
+
+static void
+_unread_messages(void *data, int amount)
+{
+	(void) data;
+	_update_counter("unreadMessages", "unreadMessagesLabel", amount);
+}
+
+static void
+_unfinished_tasks(void *data, int amount)
+{
+	(void) data;
+	_update_counter("unfinishedTasks", "unfinishedTasksLabel", amount);
+}
+
+static void
+_update_signal_strength(int strength)
+{
+	char buf[16];
+	g_debug("signal strength is %d", strength);
+	snprintf(buf, 16, "%d", strength);
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				buf, "gsmSignalChange");
+}
+
+static void
+_update_counter(const char *name, const char *label_name,
+				 int count)
+{
+	char buf[16];
+	snprintf(buf, 16, "%d", count);
+
+	if (count > 0) {
+		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
+						  name, "active 0.0");
+	}
+	else {
+		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
+						  name, "default 0.0");
+	}
+	ui_utils_view_text_set(VIEW_PTR(view), label_name, buf);
+}
+
