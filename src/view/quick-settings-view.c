@@ -276,6 +276,10 @@ _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state
 	else {
 		goto clean;
 	}
+
+	if (!attributes)
+		goto clean;
+
 	tmp = g_hash_table_lookup(attributes, "policy");
 	if (!tmp) {
 		goto clean;
@@ -294,7 +298,8 @@ clean:
 	/*FIXME: how should I clean it?! */
 	return;
 // 	g_free(resource);
-	g_hash_table_unref(attributes);
+        if (attributes)
+		g_hash_table_unref(attributes);
 }
 
 static void
