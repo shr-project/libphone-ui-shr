@@ -15,7 +15,7 @@ phoneui_backend_idle_screen_show()
 }
 
 void
-phoenui_backend_idle_screen_deinit()
+phoneui_backend_idle_screen_deinit()
 {
 	idle_screen_view_deinit();
 }
