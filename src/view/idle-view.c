@@ -178,6 +178,7 @@ _resource_status(void *data, const char *resource,
 		 gboolean state, GHashTable *properties)
 {
 	(void) properties;
+	(void) data;
 	const char *edje_state;
 	g_debug("Resource Status: %s --> %s", resource, state ? "ON" : "OFF");
 	if (state) {
@@ -194,6 +195,7 @@ _resource_status(void *data, const char *resource,
 static void
 _capacity_change(void *data, int capacity)
 {
+	(void) data;
 	char buf[16];
 	g_debug("Capacity is now %d", capacity);
 	snprintf(buf, 16, "%d", capacity);
