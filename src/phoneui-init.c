@@ -45,21 +45,19 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 
 	theme = g_key_file_get_string(keyfile, "global", "theme", NULL);
 	if (!theme)
-		theme = strdup(DEFAULT_THEME);
+		theme = "default";
 
-	if (theme) {
-		/* FIXME: possible overflow in line 51 */
-		/* +6 for /, .edj and ending 0 */
-		theme_len = strlen(PKGDATADIR) + strlen(theme) + 6;
-		phoneui_theme = malloc(theme_len);
-		if (!phoneui_theme) {
-			g_critical("Out of memory allocating theme path");
-		}
-		else {
-			snprintf(phoneui_theme, theme_len, "%s/%s.edj",
-					PKGDATADIR, theme);
-			g_debug("setting theme to (%d) %s", theme_len, phoneui_theme);
-		}
+	/* FIXME: possible overflow in line 51 */
+	/* +6 for /, .edj and ending 0 */
+	theme_len = strlen(PKGDATADIR) + strlen(theme) + 6;
+	phoneui_theme = malloc(theme_len);
+	if (!phoneui_theme) {
+		g_critical("Out of memory allocating theme path");
+	}
+	else {
+		snprintf(phoneui_theme, theme_len, "%s/%s.edj",
+				PKGDATADIR, theme);
+		g_debug("setting theme to (%d) %s", theme_len, phoneui_theme);
 	}
 
 	free(theme);

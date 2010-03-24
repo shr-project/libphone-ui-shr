@@ -20,7 +20,6 @@
 
 #define APP_DATA_DIR DATADIR"/libphone-ui-shr"
 #define EDJE_DIR APP_DATA_DIR
-#define DEFAULT_THEME EDJE_DIR"/default.edj"
 #define IDLE_SCREEN_THEME EDJE_DIR"/idle_screen.edj"
 #define WIDGETS_EDJE EDJE_DIR "/widgets.edj"
 
