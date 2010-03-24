@@ -1,7 +1,9 @@
 
 #include <glib.h>
+#include <glib-object.h>
 #include <phoneui/phoneui-utils.h>
 #include "phoneui-shr.h"
+#include "common-utils.h"
 #include "ui-utils.h"
 #include "ui-utils-contacts.h"
 
