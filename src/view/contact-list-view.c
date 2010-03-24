@@ -10,6 +10,7 @@
 #include "views.h"
 #include "common-utils.h"
 #include "ui-utils.h"
+#include "ui-utils-contacts.h"
 #include "contact-list-common.h"
 #include "../phoneui-shr.h"
 
@@ -155,6 +156,16 @@ _list_new_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
+_list_call_number_callback(const char *number, void *data)
+{
+	(void) data;
+	g_debug("_list_call_number_callback: %s", number ? number : "NO NUMBER");
+	if (number) {
+		phoneui_utils_dial(number, NULL, NULL);
+	}
+}
+
+static void
 _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
@@ -166,9 +177,13 @@ _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 	it = elm_genlist_selected_item_get(view.list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		// TODO: show a list of numbers to select if there's more than one
-		const char *number = phoneui_utils_contact_display_phone_get(properties);
-		phoneui_utils_dial(number, NULL, NULL);
+		GValue *gval_tmp;
+		gval_tmp = g_hash_table_lookup(properties, "Path");
+		if (gval_tmp) {
+			const char *path = g_value_get_string(gval_tmp);
+			ui_utils_contacts_contact_number_select(VIEW_PTR(view),
+				path, _list_call_number_callback, NULL);
+		}
 	}
 }
 
