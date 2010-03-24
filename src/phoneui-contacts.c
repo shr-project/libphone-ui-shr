@@ -67,3 +67,12 @@ phoneui_backend_contacts_contact_edit(const char *path)
 	phoneui_backend_contacts_contact_show(path);
 }
 
+void
+phoneui_backend_contacts_deinit()
+{
+	/*FIXME: also clean all the contact screens*/
+	if (!contact_list_view_is_init()) {
+		contact_list_view_deinit();
+	}
+}
+

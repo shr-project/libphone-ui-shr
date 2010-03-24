@@ -9,6 +9,8 @@
 // FIXME: move stuff to phoneui-shr so that this is not needed
 #include "views.h"
 
+#include "phoneui-contacts.h"
+
 /*FIXME: what are they used for?!*/
 int phoneui_argc;
 char **phoneui_argv;
@@ -67,6 +69,7 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 void
 phoneui_backend_deinit()
 {
+	phoneui_backend_contacts_deinit();
 	if (phoneui_theme) {
 		free(phoneui_theme);
 	}
