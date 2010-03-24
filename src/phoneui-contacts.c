@@ -71,8 +71,6 @@ void
 phoneui_backend_contacts_deinit()
 {
 	/*FIXME: also clean all the contact screens*/
-	if (!contact_list_view_is_init()) {
-		contact_list_view_deinit();
-	}
+	contact_list_view_deinit();
 }
 
