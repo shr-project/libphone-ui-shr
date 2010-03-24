@@ -102,7 +102,6 @@ idle_screen_view_init()
 	phoneui_info_register_and_request_unread_messages(_unread_messages, NULL);
 	phoneui_info_register_and_request_unfinished_tasks(_unfinished_tasks, NULL);
 
-	phoneui_info_trigger();
 	return 0;
 }
 
