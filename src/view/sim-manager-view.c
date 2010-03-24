@@ -281,7 +281,7 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	Elm_Genlist_Item *it, *last_it;
-	ImportContactGlobalData *gdata = 
+	ImportContactGlobalData *gdata =
 				g_malloc(sizeof(ImportContactGlobalData));
 	gdata->error = EINA_FALSE;
 	gdata->message = "";
@@ -302,7 +302,7 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 /* delete functions */
-static void 
+static void
 _contact_delete_confirmiation_cb(GError *error, void *data)
 {
 	if (error) {
@@ -542,9 +542,9 @@ sim_manager_view_init()
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 
-	ui_utils_view_layout_set(VIEW_PTR(view), DEFAULT_THEME,
+	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
 				 "phoneui/settings/sim-manager");
-        elm_theme_extension_add(DEFAULT_THEME);
+        elm_theme_extension_add(phoneui_theme);
 	view.list_data.layout = view.view.layout;
 	sim_manager_list_add(&view.list_data);
 
