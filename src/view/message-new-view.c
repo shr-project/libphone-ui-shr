@@ -61,6 +61,7 @@ message_new_view_init(GHashTable *options)
 {
 	struct MessageNewViewData *view;
 	int ret;
+	GValue *gval_tmp;
 	Evas_Object *win;
 
 	view = malloc(sizeof(struct MessageNewViewData));
@@ -94,8 +95,16 @@ message_new_view_init(GHashTable *options)
 	view->layout_number = NULL;
 	view->notify = NULL;
 	if (options) {
-		g_hash_table_ref(options);
-		g_ptr_array_add(view->recipients, options);
+		gval_tmp = g_hash_table_lookup(options, "Content");
+		if (gval_tmp) {
+			view->content = strdup(g_value_get_string(gval_tmp));
+			g_hash_table_unref(options);
+		}
+		else {
+			// FIXME: do we have to ref? or is that done by dbus for us?
+			g_hash_table_ref(options);
+			g_ptr_array_add(view->recipients, options);
+		}
 	}
 
 	elm_theme_extension_add(phoneui_theme);
