@@ -170,8 +170,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	const char *content = NULL;
 	tmp = g_hash_table_lookup(properties, "Content");
 	if (tmp) {
-		content = g_value_get_string(tmp);
-// 		content = elm_entry_utf8_to_markup(data->content);
+		content = elm_entry_utf8_to_markup(g_value_get_string(tmp));
 
 	}
 
