@@ -237,8 +237,10 @@ _init_content_page(struct MessageNewViewData *view)
 			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_smart_callback_add(view->content_entry, "changed",
 				       _content_changed, view);
-	if (view->content != NULL)
-		elm_entry_entry_set(view->content_entry, view->content);
+	if (view->content != NULL) {
+		elm_entry_entry_set(view->content_entry,
+				    elm_entry_utf8_to_markup(view->content));
+	}
 	elm_scroller_content_set(sc, view->content_entry);
 	evas_object_show(view->content_entry);
 	elm_layout_content_set(view->layout_content, "content_entry", sc);
