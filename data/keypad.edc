@@ -1057,6 +1057,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button1";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button1";
 		}
 		program {
@@ -1064,6 +1065,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button2";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button2";
 		}
 		program {
@@ -1071,6 +1073,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button3";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button3";
 		}
 		program {
@@ -1078,6 +1081,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button4";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button4";
 		}
 		program {
@@ -1085,6 +1089,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button5";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button5";
 		}
 		program {
@@ -1092,6 +1097,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button6";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button6";
 		}
 		program {
@@ -1099,6 +1105,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button7";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button7";
 		}
 		program {
@@ -1106,6 +1113,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button8";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button8";
 		}
 		program {
@@ -1113,6 +1121,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button9";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button9";
 		}
 		program {
@@ -1120,6 +1129,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button_star";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button_star";
 		}
 		program {
@@ -1127,6 +1137,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button0";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button0";
 		}
 		program {
@@ -1134,6 +1145,7 @@ group { name: "phoneui/keypad";
 			signal: "mouse,up,1";
 			source: "button_rhomb";
 			action: STATE_SET "default" 0.0;
+      transition: DECELERATE 0.2;
 			target: "button_rhomb";
 		}
 	} /* Close Prog */
