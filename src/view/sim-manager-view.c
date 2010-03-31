@@ -481,22 +481,27 @@ void
 _process_info(GError *error, GHashTable *info, gpointer userdata)
 {
 	(void) error;
-	int min = 1, max = 1, number_len = 0, name_len = 0, i = 0;
+	int max = 1, number_len = 0, name_len = 0, i = 0;
 	gpointer p;
 
-	p = g_hash_table_lookup(info, "min_index");
-	if (p) min = g_value_get_int(p);
+	// ogsmd returns GHashTable
+	if (G_VALUE_HOLDS(info, G_TYPE_HASH_TABLE)) {
+		p = g_hash_table_lookup(info, "max_index");
+		if (p) max = g_value_get_int(p);
 
-	p = g_hash_table_lookup(info, "max_index");
-	if (p) max = g_value_get_int(p);
+		p = g_hash_table_lookup(info, "number_length");
+		if (p) number_len = g_value_get_int(p);
 
-	p = g_hash_table_lookup(info, "number_length");
-	if (p) number_len = g_value_get_int(p);
+		p = g_hash_table_lookup(info, "name_length");
+		if (p) name_len = g_value_get_int(p);
+	}
+	// fsogsmd returns 3 int
+	else {
+		g_warning("fsogsmd is currently not supported!");
+		return;
+	}
 
-	p = g_hash_table_lookup(info, "name_length");
-	if (p) name_len = g_value_get_int(p);
-
-	for (i = min; i <= max; i++) {
+	for (i = 1; i <= max; i++) {
 		ProcessInfoData *data = g_malloc(sizeof(ProcessInfoData));
 		data->data = userdata;
 		data->index = i;
