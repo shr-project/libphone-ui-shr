@@ -22,7 +22,9 @@ static void _contact_delete_clicked(void *_data, Evas_Object * obj, void *event_
 static void _contact_add_field_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _contact_photo_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _contact_call_number_callback(const char *number, void *data);
 static void _contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _contact_sms_number_callback(const char *number, void *data);
 
 static void _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _contact_cancel_clicked(void *_data, Evas_Object *obj, void *event_info);
@@ -449,28 +451,20 @@ _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
+_contact_sms_number_callback(const char *number, void *data)
 {
-	(void) obj;
-	(void) event_info;
-	const char *photo;
+	GValue *gval_tmp;
 	char *str;
-	GValue *tmp;
-	struct ContactViewData *view = (struct ContactViewData *)_data;
+	const char *cstr;
+	struct ContactViewData *view = data;
 
-	if (view->properties == NULL)
+	if (!number)
 		return;
 
-	// TODO: show an inwin to select the number
-	str = phoneui_utils_contact_display_phone_get(view->properties);
-	if (!str) {
-		g_debug("contact needs a number to send a message ;)");
-		return;
-	}
-	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
+	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
+						NULL, common_utils_gvalue_free);
 	g_hash_table_insert(options, "Phone",
-				common_utils_new_gvalue_string(str));
-	free(str);
+				common_utils_new_gvalue_string(number));
 
 	str = phoneui_utils_contact_display_name_get(view->properties);
 	if (str) {
@@ -478,16 +472,30 @@ _contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
 				common_utils_new_gvalue_string(str));
 		free(str);
 	}
-	tmp = g_hash_table_lookup(view->properties, "Photo");
-	if (tmp) {
-		photo = g_value_get_string(tmp);
+	gval_tmp = g_hash_table_lookup(view->properties, "Photo");
+	if (gval_tmp) {
+		cstr = g_value_get_string(gval_tmp);
 		g_hash_table_insert(options, "Photo",
-				common_utils_new_gvalue_string(photo));
+				common_utils_new_gvalue_string(cstr));
 	}
 
 	phoneui_messages_message_new(options);
-	// TODO: free it !!!
-	//g_hash_table_destroy(options);
+	g_hash_table_unref(options);
+}
+
+static void
+_contact_sms_clicked(void *_data, Evas_Object * obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	struct ContactViewData *view = _data;
+
+	if (view->properties == NULL)
+		return;
+
+	ui_utils_contacts_contact_number_select(VIEW_PTR(*view), view->path,
+						_contact_sms_number_callback,
+						view);
 }
 
 static void
