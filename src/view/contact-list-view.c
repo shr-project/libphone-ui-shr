@@ -24,8 +24,10 @@ struct ContactListViewData {
 static struct ContactListViewData view;
 
 static void _list_new_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _list_call_number_callback(const char *number, void *data);
 static void _list_call_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_options_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _list_message_number_callback(const char *number, void *data);
 static void _list_message_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_edit_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_delete_clicked(void *data, Evas_Object *obj, void *event_info);
@@ -197,6 +199,41 @@ _list_options_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
+_list_message_number_callback(const char *number, void *data)
+{
+	(void) data;
+	GValue *gval_tmp;
+	char *str;
+	const char *cstr;
+	GHashTable *properties = data;
+
+	if (!number)
+		return;
+
+	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
+						NULL, common_utils_gvalue_free);
+	g_hash_table_insert(options, "Phone",
+			common_utils_new_gvalue_string(number));
+
+	str = phoneui_utils_contact_display_name_get(properties);
+	if (str) {
+		g_hash_table_insert(options, "Name",
+			common_utils_new_gvalue_string(str));
+		free(str);
+	}
+	/*FIXME: make sure it works */
+	gval_tmp = g_hash_table_lookup(properties, "Photo");
+	if (gval_tmp) {
+		cstr = g_value_get_string(gval_tmp);
+		g_hash_table_insert(options, "Photo",
+			common_utils_new_gvalue_string(str));
+	}
+
+	phoneui_messages_message_new(options);
+	g_hash_table_unref(options);
+}
+
+static void
 _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
@@ -210,32 +247,13 @@ _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 	it = elm_genlist_selected_item_get(view.list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		char *str;
-		str = phoneui_utils_contact_display_phone_get(properties);
-		if (!str) {
-			g_debug("contact needs a number to send a message ;)");
-			return;
+		GValue *gval_tmp;
+		gval_tmp = g_hash_table_lookup(properties, "Path");
+		if (gval_tmp) {
+			const char *path = g_value_get_string(gval_tmp);
+			ui_utils_contacts_contact_number_select(VIEW_PTR(view),
+				path, _list_message_number_callback, properties);
 		}
-		GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-		g_hash_table_insert(options, "Phone",
-				common_utils_new_gvalue_string(str));
-		free(str);
-
-		str = phoneui_utils_contact_display_name_get(properties);
-		if (str) {
-			g_hash_table_insert(options, "Name",
-				common_utils_new_gvalue_string(str));
-			free(str);
-		}
-		/*FIXME: make sure it works */
-		str = g_hash_table_lookup(properties, "Photo");
-		if (str) {
-			g_hash_table_insert(options, "Photo",
-				common_utils_new_gvalue_string(str));
-		}
-
-		phoneui_messages_message_new(options);
-		//g_hash_table_destroy(options);
 	}
 }
 

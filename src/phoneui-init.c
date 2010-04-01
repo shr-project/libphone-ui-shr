@@ -42,16 +42,14 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 
 	keyfile = g_key_file_new();
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
-	if (!g_key_file_load_from_file
+	if (g_key_file_load_from_file
 	    (keyfile, PHONEUI_SHR_CONFIG, flags, &error)) {
-		g_message("Errorr opening %s: %s", PHONEUI_SHR_CONFIG,
-					error->message);
-		return;
+		theme = g_key_file_get_string(keyfile, "global", "theme", NULL);
+		g_key_file_free(keyfile);
 	}
 
-	theme = g_key_file_get_string(keyfile, "global", "theme", NULL);
 	if (!theme)
-		theme = "default";
+		theme = strdup("default");
 
 	/* FIXME: possible overflow in line 51 */
 	/* +6 for /, .edj and ending 0 */
@@ -67,7 +65,6 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 	}
 
 	free(theme);
-	g_key_file_free(keyfile);
 }
 
 void

@@ -36,6 +36,7 @@ static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
 static void _new_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _show_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _answer_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _forward_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
@@ -91,6 +92,13 @@ message_list_view_init()
 	elm_button_label_set(obj, D_("Answer"));
 	evas_object_size_hint_min_set(obj, 130, 80);
 	evas_object_smart_callback_add(obj, "clicked", _answer_clicked, NULL);
+	evas_object_show(obj);
+	elm_box_pack_end(box, obj);
+
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Forward"));
+	evas_object_size_hint_min_set(obj, 130, 80);
+	evas_object_smart_callback_add(obj, "clicked", _forward_clicked, NULL);
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
 
@@ -198,8 +206,7 @@ _show_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_answer_clicked(void *_data, Evas_Object * obj,
-				 void *event_info)
+_answer_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	(void) _data;
 	(void) obj;
@@ -230,6 +237,36 @@ _answer_clicked(void *_data, Evas_Object * obj,
 			g_hash_table_insert(options, "Phone",
 				common_utils_new_gvalue_string(tmp));
 		}
+		phoneui_messages_message_new(options);
+	}
+}
+
+static void
+_forward_clicked(void *_data, Evas_Object * obj, void *event_info)
+{
+	(void) _data;
+	(void) obj;
+	(void) event_info;
+	Elm_Genlist_Item *it;
+	const char *tmp;
+	GValue *gval_tmp;
+	GHashTable *options, *message;
+
+	evas_object_hide(view.hv);
+
+	it = elm_genlist_selected_item_get(view.list);
+	if (it) {
+		message = (GHashTable *)elm_genlist_item_data_get(it);
+
+		options = g_hash_table_new_full(g_str_hash, g_str_equal,
+						NULL, common_utils_gvalue_free);
+		gval_tmp = g_hash_table_lookup(message, "Content");
+		if (gval_tmp) {
+			tmp = g_value_get_string(gval_tmp);
+			g_hash_table_insert(options, "Content",
+				common_utils_new_gvalue_string(tmp));
+		}
+
 		phoneui_messages_message_new(options);
 	}
 }

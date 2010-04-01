@@ -238,7 +238,7 @@ msgstr "Eingang"
 
 #: src/view/message-list-view.c:130 src/view/message-show-view.c:355
 msgid "Answer"
-msgstr "Annehmen"
+msgstr "Antworten"
 
 #: src/view/message-list-view.c:250
 msgid "Show Message"
