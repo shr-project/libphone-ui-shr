@@ -102,19 +102,46 @@ _number_select_select(void *data, Evas_Object *obj, void *event_info)
 }
 
 static void
-_add_number_to_list(gpointer _key, gpointer _value, gpointer data)
+_add_number_to_list_real(struct _number_select_pack *pack,
+			 const char *field, const char *number)
 {
 	Evas_Object *ico;
 	Elm_List_Item *it;
-	struct _number_select_pack *pack = (struct _number_select_pack *)data;
 	struct _number_entry *entry = malloc(sizeof(struct _number_entry));
-	entry->field = strdup(_key);
-	entry->number = strdup(g_value_get_string(_value));
+	entry->field = strdup(field);
+	entry->number = strdup(number);
 	g_debug("Adding %s=%s", entry->field, entry->number);
 	ico = elm_icon_add(ui_utils_view_window_get(pack->view));
 	elm_icon_scale_set(ico, 1, 1);
 	elm_icon_file_set(ico, phoneui_theme, "icon/phone");
 	it = elm_list_item_append(pack->list, entry->number, ico, NULL, NULL, entry);
+}
+
+static void
+_add_number_to_list(gpointer _key, gpointer _value, gpointer data)
+{
+	struct _number_select_pack *pack = data;
+
+	if (!G_IS_VALUE(_value)) {
+		g_warning("Ignoring number as it's no gvalue!");
+		return;
+	}
+
+	if (G_VALUE_HOLDS_BOXED(_value)) {
+		char **vl = (char **)g_value_get_boxed(_value);
+		int i = 0;
+		while (vl[i]) {
+			_add_number_to_list_real(pack, _key, vl[i]);
+			i++;
+		}
+	}
+	else if (G_VALUE_HOLDS_STRING(_value)) {
+		_add_number_to_list_real(pack, _key, g_value_get_string(_value));
+	}
+	else {
+		g_warning("Ignoring number as it's neither string nor boxed!");
+		return;
+	}
 }
 static void
 _fields_get_cb(GHashTable *contact, gpointer data)
@@ -135,18 +162,18 @@ _fields_get_cb(GHashTable *contact, gpointer data)
 
 	/* if there is just one phonenumber field return it directly */
 	if (g_hash_table_size(contact) == 1) {
-		g_debug("Contact has exactly one phone number... passing");
-		// FIXME: handle multiple numbers of same field type
 		GList *l;
 		l = g_hash_table_get_values(contact);
-		if (l && l->data) {
+		if (l && l->data && G_IS_VALUE(l->data) &&
+			G_VALUE_HOLDS_STRING(l->data)) {
+			g_debug("Contact has exactly one phone number... passing");
 			number = g_value_get_string(l->data);
 			g_debug("Calling callback with number=%s", number);
 			pack->callback(number, pack->data);
+			g_hash_table_unref(contact);
+			free(pack);
+			return;
 		}
-		g_hash_table_unref(contact);
-		free(pack);
-		return;
 	}
 
 	g_debug("There is more numbers... pop up the dialog");
