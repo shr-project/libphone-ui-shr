@@ -97,6 +97,9 @@ quick_settings_view_init()
 				       _suspend_slide_changed_cb, NULL);
 	evas_object_show(view.suspend_slide);
 
+	elm_toggle_states_labels_set(view.suspend_slide, D_("Forbid"), D_("Allow"));
+	elm_toggle_states_labels_set(view.dimming_slide, D_("Forbid"), D_("Allow"));
+
 	view.profiles_combo = elm_hoversel_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "profiles-frame-profiles-combo", view.profiles_combo);
 	elm_hoversel_hover_parent_set(view.profiles_combo, win);
