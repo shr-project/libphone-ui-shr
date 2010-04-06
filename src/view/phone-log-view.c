@@ -1,5 +1,6 @@
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
 #include <phoneui/phoneui-info.h>
 
 #include "views.h"
@@ -22,8 +23,9 @@ static Elm_Genlist_Item_Class itc;
 static void _toolbar_changed(void *data, Evas_Object *obj, void *event_info);
 static Evas_Object *_add_genlist(Evas_Object *win);
 static void _add_entry(GHashTable *entry);
-static void _contact_lookup(GHashTable *contact, GHashTable *entry);
-static void _get_callback(GHashTable *entry, gpointer data);
+static void _contact_lookup(GError *error, GHashTable *contact, gpointer data);
+static void _get_one_callback(GError *error, GHashTable *entry, gpointer data);
+static void _get_callback(GError *error, GHashTable **entry, int count, gpointer data);
 static void _hide_cb(struct View *view);
 static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
 static void _call_changed_handler(void * data, const char *path, enum PhoneuiInfoChangeType);
@@ -126,9 +128,8 @@ int phone_log_view_init()
 
 	view.calls = g_ptr_array_new();
 
-	/*FIXME: Why did I have to cast? */
 	view.count = 25; // FIXME: make the limit configurable !!! */
-	phoneui_utils_calls_get(&view.count, (void (*)(void *, void *))_get_callback, NULL);
+	phoneui_utils_calls_get(&view.count,_get_callback, NULL);
 
 	phoneui_info_register_call_changes(_call_changed_handler, NULL);
 	phoneui_info_register_contact_changes(_contact_changed_handler, NULL);
@@ -153,7 +154,7 @@ _call_changed_handler(void *data, const char *path,
 	(void) type;
 	(void) data;
 	g_debug("New call: %s", path);
-	phoneui_utils_call_get(path, _get_callback, NULL);
+	phoneui_utils_call_get(path, _get_one_callback, NULL);
 }
 
 static void
@@ -269,8 +270,14 @@ _update_entry(GHashTable *entry)
 }
 
 static void
-_contact_lookup(GHashTable *contact, GHashTable *entry)
+_contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
+	if (error) {
+		// FIXME: show a nice notification
+		g_warning("Contact lookup error: (%d) %s", error->code, error->message);
+		return;
+	}
+	GHashTable *entry = data;
 	if (contact) {
 		char *s = phoneui_utils_contact_display_name_get(contact);
 		g_hash_table_insert(entry, "Name",
@@ -286,22 +293,34 @@ _contact_lookup(GHashTable *contact, GHashTable *entry)
 }
 
 static void
-_get_callback(GHashTable *entry, gpointer data)
+_get_one_callback(GError *error, GHashTable *entry, gpointer data)
+{
+	(void) error;
+	(void) data;
+	// FIXME: !!!!!!!!!!!!1
+	g_ptr_array_add(view.calls, entry);
+}
+
+static void
+_get_callback(GError* error, GHashTable** entry, int count, gpointer data)
 {
 	(void) data;
+	(void) error; // FIXME: use it
 	GValue *val;
+        int i;
 
-	g_ptr_array_add(view.calls, entry);
+	for (i = 0; i < count; i++) {
+		g_ptr_array_add(view.calls, entry[i]);
 
-	val = g_hash_table_lookup(entry, "Peer");
-	if (val) {
-		_add_entry(entry);
-		phoneui_utils_contact_lookup(
-				g_value_get_string(val),
-				(void (*)(GHashTable *, void *)) _contact_lookup, entry);
-	}
-	else {
-		g_message("ignoring call without Peer attribute");
+		val = g_hash_table_lookup(entry[i], "Peer");
+		if (val) {
+			_add_entry(entry[i]);
+			phoneui_utils_contact_lookup(g_value_get_string(val),
+						     _contact_lookup, entry[i]);
+		}
+		else {
+			g_message("ignoring call without Peer attribute");
+		}
 	}
 }
 

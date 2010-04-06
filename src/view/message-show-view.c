@@ -2,7 +2,9 @@
 #include <glib-object.h>
 #include <Elementary.h>
 #include <phoneui/phoneui.h>
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-calls.h>
+#include <phoneui/phoneui-utils-contacts.h>
+#include <phoneui/phoneui-utils-messages.h>
 #include "common-utils.h"
 #include "ui-utils.h"
 #include "views.h"
@@ -18,7 +20,7 @@ static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _call_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _new_contact_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
-static void _common_name_callback(GHashTable *contact, void *_data);
+static void _common_name_callback(GError *error, GHashTable *contact, void *_data);
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _destroy_cb(struct View *_view);
 
@@ -251,9 +253,13 @@ message_show_view_init(char* path, GHashTable *properties)
 	ui_utils_view_swallow(VIEW_PTR(*view), "button_answer", view->bt3);
 	evas_object_show(view->bt3);
 
+	g_debug("going to set read status for the message");
 	phoneui_utils_message_set_read_status(view->path, 1, NULL, NULL);
+	g_debug("done - destroying properties now");
 
 	g_hash_table_destroy(properties);
+
+	g_debug("done");
 
 	return 0;
 }
@@ -428,13 +434,14 @@ _hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 
 
 static void
-_common_name_callback(GHashTable *contact, void *_data)
+_common_name_callback(GError *error, GHashTable *contact, void *_data)
 {
 	struct MessageShowViewData *view = (struct MessageShowViewData *) _data;
 	char *tmp;
 	GValue *gval_tmp;
 
-	if (!contact)
+	// FIXME: show some nice notification
+	if (error || !contact)
 		return;
 
 	if (!ui_utils_view_is_init(VIEW_PTR(*view))) {

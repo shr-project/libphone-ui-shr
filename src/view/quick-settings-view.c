@@ -47,7 +47,7 @@ struct QuickSettingsViewData {
 static struct QuickSettingsViewData view;
 
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
-static void _profiles_list_cb(GError *error, char **list, gpointer userdata);
+static void _profiles_list_cb(GError *error, char **list, int count, gpointer userdata);
 static void _profile_selected_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info);
@@ -57,13 +57,13 @@ static void _dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_
 static void _suspend_slide_changed_cb(void *data, Evas_Object *obj, void *event_info);
 static void _profile_changed_signal_cb(void *userdata, const char *profile);
 static void _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state, GHashTable *attributes);
-static void _cpu_get_policy_cb(GError *error, char *policy, gpointer userdata);
-static void _display_get_policy_cb(GError *error, char *policy, gpointer userdata);
+static void _cpu_get_policy_cb(GError *error, FreeSmartphoneUsageResourcePolicy policy, gpointer userdata);
+static void _display_get_policy_cb(GError *error, FreeSmartphoneUsageResourcePolicy policy, gpointer userdata);
 
 int
 quick_settings_view_init()
 {
-	g_debug("Initializing the dialer screen");
+	g_debug("Initializing the quick-settings screen");
 	Evas_Object *win;
 	int ret;
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Quick-settings"),
@@ -187,11 +187,11 @@ _profile_selected_cb(void *data, Evas_Object *obj, void *event_info)
 }
 
 static void
-_profiles_list_cb(GError *error, char **list, gpointer userdata)
+_profiles_list_cb(GError *error, char **list, int count, gpointer userdata)
 {
 	/*FIXME: I should probably free this list, but how?, CHECK DBUS*/
 	(void) userdata;
-	char *profile;
+	int i;
 
 	if (error || !list) {
 		g_warning("Failed to retrieve profiles list");
@@ -199,8 +199,8 @@ _profiles_list_cb(GError *error, char **list, gpointer userdata)
 	}
 
 	elm_hoversel_hover_begin(view.profiles_combo);
-	for (profile = *list ; profile ; profile = *(++list)) {
-		elm_hoversel_item_add(view.profiles_combo, profile, NULL,
+	for (i = 0; i < count; i++) {
+		elm_hoversel_item_add(view.profiles_combo, list[i], NULL,
 			ELM_ICON_NONE, NULL, NULL);
 	}
 }
@@ -303,12 +303,13 @@ clean:
 }
 
 static void
-_cpu_get_policy_cb(GError *error, char *policy, gpointer userdata)
+_cpu_get_policy_cb(GError* error, FreeSmartphoneUsageResourcePolicy policy,
+		   gpointer userdata)
 {
 	/*FIXME: I should probably free this profile, but how?, CHECK DBUS*/
 	(void) userdata;
 
-	if (error || !policy) {
+	if (error) {
 		g_warning("Failed to get CPU policy");
 		elm_object_disabled_set(view.suspend_slide, 1);
 		return;
@@ -317,21 +318,22 @@ _cpu_get_policy_cb(GError *error, char *policy, gpointer userdata)
 		elm_object_disabled_set(view.suspend_slide, 0);
 	}
 
-	if (!strcmp(policy, "enabled")) {
+	if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED) {
 		elm_toggle_state_set(view.suspend_slide, 1);
 	}
-	else if (!strcmp(policy, "auto")) {
+	else if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO) {
 		elm_toggle_state_set(view.suspend_slide, 0);
 	}
 }
 
 static void
-_display_get_policy_cb(GError *error, char *policy, gpointer userdata)
+_display_get_policy_cb(GError* error, FreeSmartphoneUsageResourcePolicy policy,
+		       gpointer userdata)
 {
 	/*FIXME: I should probably free this profile, but how?, CHECK DBUS*/
 	(void) userdata;
 
-	if (error || !policy) {
+	if (error) {
 		g_warning("Failed to get Display policy");
 		elm_object_disabled_set(view.dimming_slide, 1);
 		return;
@@ -340,10 +342,10 @@ _display_get_policy_cb(GError *error, char *policy, gpointer userdata)
 		elm_object_disabled_set(view.dimming_slide, 0);
 	}
 
-	if (!strcmp(policy, "enabled")) {
+	if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED) {
 		elm_toggle_state_set(view.dimming_slide, 1);
 	}
-	else if (!strcmp(policy, "auto")) {
+	else if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO) {
 		elm_toggle_state_set(view.dimming_slide, 0);
 	}
 }
@@ -356,10 +358,14 @@ _dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	int state = elm_toggle_state_get(obj);
 	/*FIXME: Add error handling */
 	if (state) {
-		phoneui_utils_resources_set_resource_policy("Display", "enabled", NULL, NULL);
+		phoneui_utils_resources_set_resource_policy("Display",
+				FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED,
+				NULL, NULL);
 	}
 	else {
-		phoneui_utils_resources_set_resource_policy("Display", "auto", NULL, NULL);
+		phoneui_utils_resources_set_resource_policy("Display",
+				FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO,
+				NULL, NULL);
 	}
 }
 static void
@@ -370,9 +376,13 @@ _suspend_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	int state = elm_toggle_state_get(obj);
 	/*FIXME: Add error handling */
 	if (state) {
-		phoneui_utils_resources_set_resource_policy("CPU", "enabled", NULL, NULL);
+		phoneui_utils_resources_set_resource_policy("CPU",
+				FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED,
+				NULL, NULL);
 	}
 	else {
-		phoneui_utils_resources_set_resource_policy("CPU", "auto", NULL, NULL);
+		phoneui_utils_resources_set_resource_policy("CPU",
+				FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO,
+				NULL, NULL);
 	}
 }

@@ -1,6 +1,6 @@
 
 #include <glib.h>
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
 #include "phoneui-contacts.h"
 #include "view/contact-list-view.h"
 #include "view/contact-view.h"
@@ -18,11 +18,11 @@ phoneui_backend_contacts_show()
 }
 
 static void
-_contact_get_cb(GHashTable *content, gpointer data)
+_contact_get_cb(GError *error, GHashTable *content, gpointer data)
 {
 	char *path = (char *)data;
 
-	if (!content) {
+	if (error || !content) {
 		g_warning("Failed aquiring data for contact %s", path);
 		// TODO: show some message dialog showing it did not work
 		free (path);

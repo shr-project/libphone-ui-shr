@@ -25,7 +25,7 @@ static struct IdleScreenViewData view;
 
 static void _resource_status(void *data, const char *resource, gboolean state, GHashTable *properties);
 static void _capacity_change(void *data, int capacity);
-static void _pdp_network_status(void *data, GHashTable *status);
+static void _pdp_network_status(void *data, const char *status, GHashTable *properties);
 static void _network_status(void *data, GHashTable *properties);
 static void _signal_strength(void *data, int strength);
 static void _profile_change(void *data, const char *profile);
@@ -237,9 +237,10 @@ _network_status(void *data, GHashTable *properties)
 }
 
 static void
-_pdp_network_status(void *data, GHashTable *status)
+_pdp_network_status(void *data, const char *status, GHashTable *properties)
 {
 	(void) data;
+	(void) status;
 	GValue *tmp;
 	const char *s;
 	char *sig = "";
@@ -250,18 +251,19 @@ _pdp_network_status(void *data, GHashTable *status)
 		return;
 	}
 
-	tmp = g_hash_table_lookup(status, "registration");
+	tmp = g_hash_table_lookup(properties, "registration");
 	if (!tmp) {
 		g_warning("got PDP.NetworkStatus without registration info!");
 		return;
 	}
+	// FIXME: use status == "active" ???
 	s = g_value_get_string(tmp);
 	if (strcmp(s, "home") && strcmp(s, "roaming")) {
 		/* registration is neither home nor roaming --> offline */
 		g_debug("PDP.NetworkStatus: offline (%s)", s);
 	}
 	else {
-		tmp = g_hash_table_lookup(status, "act");
+		tmp = g_hash_table_lookup(properties, "act");
 		if (tmp) {
 			s = g_value_get_string(tmp);
 			g_debug("PDP.NetworkStatus: %s", s);

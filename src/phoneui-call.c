@@ -1,6 +1,6 @@
 
 #include <glib.h>
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-calls.h>
 #include "phoneui-call.h"
 #include "call-common.h"
 #include "phoneui-shr.h"

@@ -2,7 +2,8 @@
 #include <glib-object.h>
 
 #include <phoneui/phoneui.h>
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
+#include <phoneui/phoneui-utils-sim.h>
 #include <phoneui/phoneui-info.h>
 
 #include "common-utils.h"
@@ -303,7 +304,7 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 
 /* delete functions */
 static void
-_contact_delete_confirmiation_cb(GError *error, void *data)
+_contact_delete_confirmiation_cb(GError *error, gpointer data)
 {
 	if (error) {
 		g_warning("Error while deleting entry!");
@@ -312,7 +313,7 @@ _contact_delete_confirmiation_cb(GError *error, void *data)
 			DIALOG_OK, NULL, NULL);
 	}
 	else {
-		Elm_Genlist_Item *it = (Elm_Genlist_Item *)data;
+		Elm_Genlist_Item *it = data;
 		elm_genlist_item_del(it);
 	}
 }
@@ -328,7 +329,7 @@ _contact_delete_confirm_cb(int result, void *data)
 		(it) ? (GValueArray *) elm_genlist_item_data_get(it) : NULL;
 	if (prop) {
 		int index = _display_index_get(prop);
-		phoneui_utils_sim_contact_delete(index,
+		phoneui_utils_sim_contact_delete(SIM_CONTACTS_CATEGORY, index,
 				_contact_delete_confirmiation_cb, it);
 	}
 }
@@ -440,7 +441,7 @@ typedef struct {
 } ProcessInfoData;
 
 void
-_process_info_cb(GError *error, char *name, char *number, gpointer userdata)
+_process_info_cb(GError *error, const char *name, const char *number, gpointer userdata)
 {
 	(void) error;
 	(void) userdata;
@@ -478,31 +479,21 @@ end:
 }
 
 void
-_process_info(GError *error, GHashTable *info, gpointer userdata)
+_process_info(GError *error, int slots, int number_len,
+	      int name_len, gpointer userdata)
 {
-	(void) error;
-	int min = 1, max = 1, number_len = 0, name_len = 0, i = 0;
-	gpointer p;
+	(void) number_len;
+	(void) name_len;
+	(void) error; // FIXME: use it!
+	int i;
 
-	p = g_hash_table_lookup(info, "min_index");
-	if (p) min = g_value_get_int(p);
-
-	p = g_hash_table_lookup(info, "max_index");
-	if (p) max = g_value_get_int(p);
-
-	p = g_hash_table_lookup(info, "number_length");
-	if (p) number_len = g_value_get_int(p);
-
-	p = g_hash_table_lookup(info, "name_length");
-	if (p) name_len = g_value_get_int(p);
-
-	for (i = min; i <= max; i++) {
+	for (i = 1; i <= slots; i++) {
 		ProcessInfoData *data = g_malloc(sizeof(ProcessInfoData));
 		data->data = userdata;
 		data->index = i;
-		data->max_index = max;
+		data->max_index = slots;
 		g_debug("_process_info(): contact %d", i);
-		phoneui_utils_sim_phonebook_entry_get(i,
+		phoneui_utils_sim_phonebook_entry_get(SIM_CONTACTS_CATEGORY, i,
 					_process_info_cb, data);
 	}
 }
@@ -513,7 +504,8 @@ sim_manager_list_fill(struct SimManagerListData *list_data)
 	loading_indicator_start();
 	g_debug("sim_manager_list_fill()");
 	list_data->current = 0;
-	phoneui_utils_sim_phonebook_info_get(_process_info, list_data);
+	phoneui_utils_sim_phonebook_info_get(SIM_CONTACTS_CATEGORY,
+					     _process_info, list_data);
 }
 
 static void

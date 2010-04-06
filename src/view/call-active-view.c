@@ -1,7 +1,8 @@
 #include "views.h"
 #include "call-common.h"
 #include "common-utils.h"
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-calls.h>
+#include <phoneui/phoneui-utils-contacts.h>
 #include <phoneui/phoneui-utils-sound.h>
 #include "phoneui-shr.h"
 

@@ -1,5 +1,5 @@
 
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
 #include <phone-utils.h>
 
 #include "ui-utils.h"
@@ -48,7 +48,7 @@ static void _number_button_add_clicked(void *data, Evas_Object *obj, void *event
 static void _number_button_delete_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_update_number(struct MessageNewViewData* view);
 static void _process_recipient(gpointer _properties, gpointer _data);
-static void _contact_lookup(GHashTable *contact, gpointer data);
+static void _contact_lookup(GError *error, GHashTable *contact, gpointer data);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
 static void gl_del(const void *data, Evas_Object *obj);
@@ -744,14 +744,15 @@ _process_recipient(gpointer _properties, gpointer _data)
 }
 
 static void
-_contact_lookup(GHashTable *contact, gpointer data)
+_contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
 	char *tmp;
 	const char *tmp2;
 	GValue *gval_tmp;
 	struct _recipient_pack *pack;
 
-	if (contact == NULL)
+	// FIXME: show some nice notification
+	if (error || !contact )
 		return;
 
 	pack = (struct _recipient_pack *)data;

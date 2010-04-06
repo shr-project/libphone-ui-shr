@@ -452,6 +452,7 @@ _inwin_list_selected_cb(void *data, Evas_Object *obj, void *event_info)
 	Elm_List_Item *it = elm_list_selected_item_get(obj);
 	g_debug("Got item [%X]", (int) it);
 	if (it) {
+		// FIXME: either remove this strdup... or the const from the cb
 		sel = strdup(elm_list_item_label_get(it));
 		g_debug("Which is '%s'", sel);
 	}
@@ -481,6 +482,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 	Evas_Object *win, *btn, *box;
 	GList *l;
 
+	g_debug("ui_utils_view_inwin_list");
 	struct _inwin_list_pack *pack = malloc(sizeof(struct _inwin_list_pack));
 	pack->callback = callback;
 	pack->data = userdata;
@@ -502,6 +504,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 // 	evas_object_size_hint_align_set(pack->list, 0.5, 0.5);
 	elm_list_horizontal_mode_set(pack->list, ELM_LIST_COMPRESS);
 	for (l = g_list_first(list); l; l = g_list_next(l)) {
+		g_debug("Adding item '%s' to list", (char *)l->data);
 		elm_list_item_append(pack->list, strdup(l->data),
 				     NULL, NULL, NULL, NULL);
 	}
@@ -565,7 +568,7 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	evas_object_smart_callback_add(bt, "clicked", _notify_button_close_cb, notify);
 	elm_box_pack_end(bx, bt);
 	evas_object_show(bt);
-	
+
 	return notify;
 }
 

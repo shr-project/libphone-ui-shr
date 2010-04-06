@@ -3,7 +3,7 @@
 #include "widget/elm_keypad.h"
 
 #include <unistd.h>		/* for sleep */
-#include <phoneui-utils.h>
+#include <phoneui-utils-sim.h>
 
 #define _MAX_PIN_LENGTH 9
 #include "phoneui-shr.h"
@@ -169,14 +169,19 @@ sim_auth_clear(struct SimAuthInputViewData *data)
 }
 
 static void
-_sim_auth_result_callback(enum PhoneuiSimStatus status, gpointer _data)
+_sim_auth_result_callback(GError *error, gpointer _data)
 {
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
+	(void)_data;
+// 	struct SimAuthInputViewData *data =
+// 		(struct SimAuthInputViewData *) _data;
 
-	g_debug("_sim_auth_result_callback(status=%d)", status);
-
-	data->status = status;
+	if (error) {
+		g_message("SIM Auth failed: (%d) %s", error->code, error->message);
+		// FIXME: show appropriate notification
+		return;
+	}
+	// FIXME: !!!!!!!!!!!!!!!!
+/*	data->status = status;
 	if (status == PHONEUI_SIM_READY) {
 		g_debug("PIN correct");
 		data->msg = D_("PIN correct");
@@ -187,7 +192,7 @@ _sim_auth_result_callback(enum PhoneuiSimStatus status, gpointer _data)
 		data->msg = D_("Failed");
 		window_frame_show(data->win, data, frame_message_show, NULL);
 		ecore_timer_add(2, reset_callback, data);
-	}
+	}*/
 }
 
 int
@@ -231,7 +236,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 			window_frame_show(data->win, data,
 					frame_message_show, NULL);
 			phoneui_utils_sim_pin_send(data->pin,
-					(void (*)(int,  void *)) _sim_auth_result_callback, data);
+					_sim_auth_result_callback, data);
 		}
 		else {
 			g_debug("no valid PIN...");
@@ -289,7 +294,7 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 			window_frame_show(data->win, data,
 					frame_message_show, NULL);
 			phoneui_utils_sim_puk_send(data->puk, data->pin,
-					(void (*)(int,  void *)) _sim_auth_result_callback, data);
+					_sim_auth_result_callback, data);
 		}
 	}
 }

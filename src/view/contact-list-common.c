@@ -1,9 +1,11 @@
 
+#include <ctype.h> /* to upper */
+#include <phoneui-utils-contacts.h>
+
 #include "phoneui-shr.h"
 #include "views.h"
 
 #include "common-utils.h"
-#include <ctype.h> /* to upper */
 
 static Elm_Genlist_Item_Class itc;
 

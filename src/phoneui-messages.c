@@ -1,6 +1,7 @@
 
 #include <glib.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-messages.h>
 #include "phoneui-messages.h"
 #include "view/message-list-view.h"
 #include "view/message-show-view.h"
@@ -27,10 +28,10 @@ phoneui_backend_messages_deinit()
 }
 
 static void
-_message_get_cb(GHashTable *content, gpointer data)
+_message_get_cb(GError *error, GHashTable *content, gpointer data)
 {
 	char *path = (char *)data;
-	if (!content) {
+	if (error || !content) {
 		g_warning("Failed aquiring data for message %s", path);
 		free (path);
 		return;

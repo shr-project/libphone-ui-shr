@@ -6,6 +6,8 @@
 #include <Elementary.h>
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
+#include <phoneui/phoneui-utils-calls.h>
 #include "views.h"
 #include "common-utils.h"
 #include "ui-utils.h"
@@ -47,7 +49,7 @@ static void _destroy_cb(struct View *_view);
 static void _set_modify(struct ContactViewData *view, int dirty);
 static void _update_cb(GError *error, gpointer data);
 static void _add_cb(GError *error, char *path, gpointer data);
-static void _load_cb(GHashTable *content, gpointer data);
+static void _load_cb(GError *error, GHashTable *content, gpointer data);
 static void _field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info);
 static Evas_Object *_start_file_selector(Evas_Object *parent, const char *path);
 
@@ -378,6 +380,7 @@ static void
 _add_field_cb(const char *field, void *data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
+	g_debug("selected field '%s'", field);
 	if (field) {
 		_add_field(view, field, "", 1);
 	}
@@ -622,6 +625,7 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 	}
 
 	formatted_changes = _sanitize_changes_hash(view->changes);
+	common_utils_debug_dump_hashtable(formatted_changes);
 	if (*view->path) {
 		g_debug("Updating contact '%s'", view->path);
 		phoneui_utils_contact_update(view->path, formatted_changes,
@@ -631,7 +635,7 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 		g_debug("Saving a new contact");
 		phoneui_utils_contact_add(formatted_changes, _add_cb, view);
 	}
-	g_hash_table_unref(formatted_changes);
+// 	g_hash_table_unref(formatted_changes);
 }
 
 static void
@@ -670,7 +674,7 @@ _set_modify(struct ContactViewData *view, int dirty)
 static void
 _update_cb(GError *error, gpointer data)
 {
-	struct ContactViewData *view = (struct ContactViewData *)data;
+	struct ContactViewData *view = data;
 	if (error) {
 		g_warning("Updating contact %s failed", view->path);
 	}
@@ -684,7 +688,7 @@ _update_cb(GError *error, gpointer data)
 static void
 _add_cb(GError *error, char *path, gpointer data)
 {
-	struct ContactViewData *view = (struct ContactViewData *)data;
+	struct ContactViewData *view = data;
 	if (error) {
 		g_warning("Adding the contact failed");
 	}
@@ -696,11 +700,12 @@ _add_cb(GError *error, char *path, gpointer data)
 }
 
 static void
-_load_cb(GHashTable *content, gpointer data)
+_load_cb(GError *error, GHashTable *content, gpointer data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
 	g_debug("_load_cb called");
-	if (!content) {
+	if (error || !content) {
+		// FIXME: show some nice notification
 		g_critical("Failed loading data of saved contact");
 		return;
 	}

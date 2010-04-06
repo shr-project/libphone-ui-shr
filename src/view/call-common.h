@@ -42,7 +42,7 @@ struct CallIncomingViewData {
 	Evas_Object *number, *name, *photo;
 };
 
-void call_common_contact_callback(GHashTable *contact, void *_data);
+void call_common_contact_callback( GError* error, GHashTable* contact, void* _data);
 void call_common_contact_callback2(void *_data);
 
 int call_common_set_sound_state(enum SoundState state, enum SoundStateType type);

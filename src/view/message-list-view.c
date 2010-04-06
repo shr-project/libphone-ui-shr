@@ -4,7 +4,9 @@
 #include <time.h>
 #include <Elementary.h>
 #include <phoneui/phoneui.h>
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-calls.h>
+#include <phoneui/phoneui-utils-contacts.h>
+#include <phoneui/phoneui-utils-messages.h>
 #include <phoneui/phoneui-info.h>
 
 #include "phoneui-shr.h"
@@ -24,8 +26,8 @@ static struct MessageListViewData view;
 static Elm_Genlist_Item_Class itc;
 
 
-static void _process_messages(GError *error, GPtrArray *messages, gpointer data);
-static void _process_message_get(GHashTable *message, gpointer data);
+static void _process_messages(GError *error, GHashTable **messages, int count, gpointer data);
+static void _process_message_get(GError* error, GHashTable* message, gpointer data);
 static void _process_message(gpointer _message, gpointer _data);
 static void _remove_message(const char *path);
 static void _add_message(const char *path);
@@ -336,13 +338,14 @@ _hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_contact_lookup(GHashTable *contact, gpointer data)
+_contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
 	Elm_Genlist_Item *it;
 	GHashTable *message;
 	char *tmp;
 
-	if (contact == NULL)
+	// FIXME: show some nice notification
+	if (error || !contact)
 		return;
 
 	it = (Elm_Genlist_Item *)data;
@@ -357,16 +360,29 @@ _contact_lookup(GHashTable *contact, gpointer data)
 }
 
 static void
-_process_messages(GError *error, GPtrArray *messages, gpointer data)
+_process_messages(GError* error, GHashTable** messages, int count, gpointer data)
 {
+	int i;
+
+	g_debug("got %d messages", count);
+
+	// FIXME: show some nice notification
 	if (error || !messages)
 		return;
-	g_ptr_array_foreach(messages, _process_message, data);
+
+	for (i = 0; i < count; i++) {
+		g_debug("processing message %d", i);
+		_process_message(messages[i], data);
+	}
 }
 
 static void
-_process_message_get(GHashTable *message, gpointer data)
+_process_message_get(GError *error, GHashTable *message, gpointer data)
 {
+	if (error || !message) {
+		// FIXME: show some nice notification
+		return;
+	}
 	_process_message(message, data);
 }
 

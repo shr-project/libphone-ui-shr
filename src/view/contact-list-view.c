@@ -2,6 +2,8 @@
 #include <Elementary.h>
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
+#include <phoneui/phoneui-utils-calls.h>
 #include <phoneui/phoneui-info.h>
 
 #include <glib.h>
@@ -318,11 +320,12 @@ _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_add_contact_cb(GHashTable *properties, gpointer data)
+_add_contact_cb(GError *error, GHashTable *properties, gpointer data)
 {
 	(void) data;
 	Elm_Genlist_Item *it;
-	if (!properties) {
+	if (error || !properties) {
+		// FIXME: show some nice notification
 		g_warning("Failed adding a contact");
 		return;
 	}
