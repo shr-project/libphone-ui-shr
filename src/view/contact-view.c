@@ -578,10 +578,13 @@ _sanitize_changes_hash_foreach(void *key, void *value, void *data)
 	if (!tmp || !*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
 		gval = common_utils_new_gvalue_string(value);
 	}
+	else if (g_strv_length(tmp) == 1) {
+		gval = common_utils_new_gvalue_string(tmp[0]);
+	}
 	else {
 		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, g_strdupv(value));
 	}
-	g_hash_table_insert(target, key, gval);
+	g_hash_table_insert(target, strdup((char *)key), gval);
 }
 
 static GHashTable *
