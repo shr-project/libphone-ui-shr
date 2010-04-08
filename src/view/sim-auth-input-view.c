@@ -110,8 +110,6 @@ sim_auth_input_view_show(struct Window *win, void *_options)
 	struct SimAuthInputViewData *data;
 	GHashTable *options = (GHashTable *) _options;
 
-	g_debug("sim_auth_input_view_show(win=%d)", (int) win);
-
 	/* see if we are called for the first time and create
 	 * the data if so... otherwise update */
 	if (!win->view_data) {
@@ -225,8 +223,6 @@ sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 	(void) event_info;
 	struct SimAuthInputViewData *data =
 		(struct SimAuthInputViewData *) _data;
-
-	g_debug("sim_auth_ok_clicked(win=%d)", (int) data->win);
 
 	if (data->mode == MODE_PIN && strcmp(data->pin, "")) {
 		if (common_utils_is_pin(data->pin)) {

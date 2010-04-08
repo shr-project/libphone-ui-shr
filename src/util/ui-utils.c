@@ -450,7 +450,6 @@ _inwin_list_selected_cb(void *data, Evas_Object *obj, void *event_info)
 	struct _inwin_list_pack *pack = (struct _inwin_list_pack *)data;
 	g_debug("Get the selected one");
 	Elm_List_Item *it = elm_list_selected_item_get(obj);
-	g_debug("Got item [%X]", (int) it);
 	if (it) {
 		// FIXME: either remove this strdup... or the const from the cb
 		sel = strdup(elm_list_item_label_get(it));

@@ -252,7 +252,6 @@ contact_view_show(const char *path)
 	view = (struct ContactViewData *)
 			g_hash_table_lookup(contactviews, path);
 	if (view) {
-		g_debug("found view [%X] for contact %s", (int) view, path);
 		ui_utils_view_show(VIEW_PTR(*view));
 	}
 	else {
