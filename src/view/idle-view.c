@@ -162,12 +162,12 @@ idle_screen_view_update_alarm(const int alarm)
 		if (alarm > 0) {
 			edje_edit_part_selected_state_set
 				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 "alarm", "active 0.0");
+				 "alarm", "active", 0.0);
 		}
 		else {
 			edje_edit_part_selected_state_set
 				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 "alarm", "default 0.0");
+				 "alarm", "default", 0.0);
 		}
 	}
 }
@@ -181,14 +181,14 @@ _resource_status(void *data, const char *resource,
 	const char *edje_state;
 	g_debug("Resource Status: %s --> %s", resource, state ? "ON" : "OFF");
 	if (state) {
-		edje_state = "active 0.0";
+		edje_state = "active";
 	}
 	else {
-		edje_state = "default 0.0";
+		edje_state = "default";
 	}
 	edje_edit_part_selected_state_set
 				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 resource, edje_state);
+				 resource, edje_state, 0.0);
 }
 
 static void
@@ -325,11 +325,11 @@ _update_counter(const char *name, const char *label_name,
 
 	if (count > 0) {
 		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
-						  name, "active 0.0");
+						  name, "active", 0.0);
 	}
 	else {
 		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
-						  name, "default 0.0");
+						  name, "default", 0.0);
 	}
 	ui_utils_view_text_set(VIEW_PTR(view), label_name, buf);
 }
