@@ -25,7 +25,6 @@ static struct IdleScreenViewData view;
 
 static void _resource_status(void *data, const char *resource, gboolean state, GHashTable *properties);
 static void _capacity_change(void *data, int capacity);
-static void _pdp_network_status(void *data, const char *status, GHashTable *properties);
 static void _network_status(void *data, GHashTable *properties);
 static void _signal_strength(void *data, int strength);
 static void _profile_change(void *data, const char *profile);
@@ -95,7 +94,6 @@ idle_screen_view_init()
 	phoneui_info_register_and_request_resource_status(_resource_status, NULL);
 	phoneui_info_register_and_request_network_status(_network_status, NULL);
 	phoneui_info_register_and_request_signal_strength(_signal_strength, NULL);
-        phoneui_info_register_and_request_pdp_network_status(_pdp_network_status, NULL);
 	phoneui_info_register_and_request_profile_changes(_profile_change, NULL);
 	phoneui_info_register_and_request_capacity_changes(_capacity_change, NULL);
 	phoneui_info_register_and_request_missed_calls(_missed_calls, NULL);
@@ -234,8 +232,9 @@ _network_status(void *data, GHashTable *properties)
 	if (v) {
 		_update_signal_strength(g_value_get_int(v));
 	}
+	// FIXME: add handling of PDP status
 }
-
+#if 0
 static void
 _pdp_network_status(void *data, const char *status, GHashTable *properties)
 {
@@ -286,6 +285,7 @@ _pdp_network_status(void *data, const char *status, GHashTable *properties)
 
 	ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
 }
+#endif
 
 static void
 _missed_calls(void *data, int amount)
