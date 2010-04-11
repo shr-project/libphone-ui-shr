@@ -548,7 +548,7 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	Evas_Object *notify, *bx, *bt, *lb;
 	notify = elm_notify_add(parent);
 	evas_object_size_hint_weight_set(notify, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_notify_orient_set(notify, ELM_NOTIFY_ORIENT_BOTTOM);
+	elm_notify_orient_set(notify, ELM_NOTIFY_ORIENT_CENTER);
 	elm_notify_timeout_set(notify, timeout);
 
 	bx = elm_box_add(parent);
@@ -560,7 +560,6 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	elm_label_label_set(lb, label);
 	elm_box_pack_end(bx, lb);
 	evas_object_show(lb);
-
 
 	bt = elm_button_add(parent);
 	elm_button_label_set(bt, "Close");
