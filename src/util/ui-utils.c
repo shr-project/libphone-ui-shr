@@ -80,6 +80,7 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 		ret = 1;
 		goto free_bg;
 	}
+	evas_object_size_hint_weight_set(view->layout, 1.0, 1.0);
 	elm_win_resize_object_add(view->win, view->layout);
 	evas_object_show(view->layout);
 
