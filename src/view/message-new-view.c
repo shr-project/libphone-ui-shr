@@ -430,11 +430,7 @@ _init_number_page(struct MessageNewViewData *view)
 static void
 _content_button_close_clicked(void *data, Evas_Object *obj, void *event_info)
 {
-	(void) obj;
-	(void) event_info;
-	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	// TODO: ask for confirmation
-	message_new_view_deinit(view);
+	_delete_cb((struct View *)data, obj, event_info);
 }
 
 static void
@@ -774,12 +770,23 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 }
 
 static void
+_delete_confirm_cb(int res, void *data)
+{
+	struct MessageNewViewData *view = data;
+	if (res == DIALOG_YES) {
+		message_new_view_deinit(view);
+		free(view);
+	}
+}
+
+static void
 _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 {
 	(void)win;
 	(void)event_info;
-	message_new_view_deinit((struct MessageNewViewData *)view);
-	free(view);
+	ui_utils_dialog(VIEW_PTR(*view),
+			D_("Do you really want to quit writing this message?"),
+			DIALOG_YES | DIALOG_NO, _delete_confirm_cb, view);
 }
 
 static void
