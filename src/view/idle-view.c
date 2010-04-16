@@ -224,7 +224,7 @@ _network_status(void *data, GHashTable *properties)
 	const char *s;
 	const char *sig = "";
 
-	v = g_hash_table_lookup(properties, "provider");
+	v = g_hash_table_lookup(properties, "display");
 	if (v) {
 		g_debug("provider is '%s'", g_value_get_string(v));
 		ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider",
