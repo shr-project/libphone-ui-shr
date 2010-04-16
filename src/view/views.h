@@ -33,9 +33,6 @@
 void *dialog_view_show(struct Window *win, void *_options);
 void dialog_view_hide(void *_data);
 
-void *sim_auth_input_view_show(struct Window *win, void *_options);
-void sim_auth_input_view_hide(void *_data);
-
 void call_incoming_view_hide(struct CallIncomingViewData *data);
 struct CallActiveViewData *call_active_view_show(struct Window *win,
 						 GHashTable * options);

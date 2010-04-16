@@ -1,17 +1,24 @@
-#include "common-utils.h"
-#include "views.h"
-#include "widget/elm_keypad.h"
 
 #include <unistd.h>		/* for sleep */
+#include <glib.h>
+#include <Evas.h>
+#include <Elementary.h>
+#include <freesmartphone.h>
 #include <phoneui-utils-sim.h>
+
+#include "common-utils.h"
+#include "ui-utils.h"
+#include "views.h"
+#include "widget/elm_keypad.h"
+#include "sim-auth-input-view.h"
+
 
 #define _MAX_PIN_LENGTH 9
 #include "phoneui-shr.h"
 
 struct SimAuthInputViewData {
-	struct Window *win;
+	struct View parent;
 
-	enum PhoneuiSimStatus status;
 	int mode;
 	const char *msg;
 
@@ -25,7 +32,9 @@ struct SimAuthInputViewData {
 	int pin_confirm_length;
 
 	Evas_Object *bt1, *bt2, *keypad;
+	Evas_Object *notify;
 };
+static struct SimAuthInputViewData view;
 
 enum SimAuthModes {
 	MODE_ERROR,
@@ -36,391 +45,336 @@ enum SimAuthModes {
 };
 
 
-void
-sim_auth_update(struct SimAuthInputViewData *data);
-void
-sim_auth_clear(struct SimAuthInputViewData *data);
+static void _sim_auth_keypad_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _sim_auth_ok_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _sim_auth_delete_clicked(void *data, Evas_Object *obj, void *event_info);
+
+static void _evaluate_status(const int status);
+static void _sim_auth_update();
+static gboolean _sim_auth_close(gpointer data);
+
 
 int
-reset_callback(void *_data);
-int
-exit_callback(void *_data);
-
-void
-sim_auth_keypad_clicked(void *_data, Evas_Object * obj, void *event_info);
-void
-sim_auth_delete_clicked(void *_data, Evas_Object * obj, void *event_info);
-void
-sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info);
-
-static void
-frame_input_show(void *data);
-static void
-frame_input_hide(void *data);
-static void
-frame_message_show(void *data);
-
-
-
-static void
-_evaluate_status(struct SimAuthInputViewData *data, enum PhoneuiSimStatus status)
+sim_auth_input_view_init()
 {
+	g_debug("Initializing the sim-auth-input view");
+	Evas_Object *win;
+	int ret;
+
+	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("SIM Auth"),
+				 NULL, NULL, NULL);
+	if (ret) {
+		g_critical("Failed to init sim-auth-input view");
+		return ret;
+	}
+
+	view.notify = NULL;
+	win = ui_utils_view_window_get(VIEW_PTR(view));
+
+	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
+				 "phoneui/notification/sim_auth_input");
+
+	view.bt1 = elm_button_add(win);
+	elm_button_label_set(view.bt1, D_("Delete"));
+	evas_object_smart_callback_add(view.bt1, "clicked",
+				       _sim_auth_delete_clicked, NULL);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_delete", view.bt1);
+	evas_object_show(view.bt1);
+
+	view.bt2 = elm_button_add(win);
+	elm_button_label_set(view.bt2, D_("OK"));
+	evas_object_smart_callback_add(view.bt2, "clicked",
+				       _sim_auth_ok_clicked, NULL);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_ok", view.bt2);
+	elm_object_disabled_set(view.bt2, EINA_TRUE);
+	evas_object_show(view.bt2);
+
+	view.keypad = (Evas_Object *)elm_keypad_add(win);
+	evas_object_smart_callback_add(view.keypad, "clicked",
+				       _sim_auth_keypad_clicked, NULL);
+	ui_utils_view_swallow(VIEW_PTR(view), "keypad", view.keypad);
+	evas_object_show(view.keypad);
+
+	return 0;
+}
+
+int
+sim_auth_input_view_is_init()
+{
+	return ui_utils_view_is_init(VIEW_PTR(view));
+}
+
+void
+sim_auth_input_view_deinit()
+{
+	ui_utils_view_deinit(VIEW_PTR(view));
+
+	evas_object_smart_callback_del(view.keypad, "clicked",
+				       _sim_auth_keypad_clicked);
+}
+
+void
+sim_auth_input_view_show(const int status)
+{
+	_evaluate_status(status);
+	ui_utils_view_show(VIEW_PTR(view));
+}
+
+void
+sim_auth_input_view_hide()
+{
+	ui_utils_view_hide(VIEW_PTR(view));
+}
+
+
+
+static void
+_evaluate_status(const int status)
+{
+	const char *msg;
 	switch (status) {
-	case PHONEUI_SIM_PIN_REQUIRED:
+	case FREE_SMARTPHONE_GSM_SIM_AUTH_STATUS_PIN_REQUIRED:
 		g_debug("PHONEUI_SIM_PIN_REQUIRED");
-		data->mode = MODE_PIN;
-		data->msg = D_("Please enter your PIN");
+		view.mode = MODE_PIN;
+		msg = D_("Please enter your PIN");
 		break;
-	case PHONEUI_SIM_PIN2_REQUIRED:
+	case FREE_SMARTPHONE_GSM_SIM_AUTH_STATUS_PIN2_REQUIRED:
 		g_debug("PHONEUI_SIM_PIN2_REQUIRED");
-		data->mode = MODE_PIN;
-		data->msg = D_("Please enter your PIN2");
+		view.mode = MODE_PIN;
+		msg = D_("Please enter your PIN2");
 		break;
-	case PHONEUI_SIM_PUK_REQUIRED:
+	case FREE_SMARTPHONE_GSM_SIM_AUTH_STATUS_PUK_REQUIRED:
 		g_debug("PHONEUI_SIM_PUK_REQUIRED");
-		data->mode = MODE_PUK;
-		data->msg = D_("Please enter your PUK");
+		view.mode = MODE_PUK;
+		msg = D_("Please enter your PUK");
 		break;
-	case PHONEUI_SIM_PUK2_REQUIRED:
+	case FREE_SMARTPHONE_GSM_SIM_AUTH_STATUS_PUK2_REQUIRED:
 		g_debug("PHONEUI_SIM_PUK2_REQUIRED");
-		data->mode = MODE_PUK;
-		data->msg = D_("Please enter your PUK2");
+		view.mode = MODE_PUK;
+		msg = D_("Please enter your PUK2");
 		break;
-	case PHONEUI_SIM_READY:
+	case FREE_SMARTPHONE_GSM_SIM_AUTH_STATUS_READY:
 		g_debug("PHONEUI_SIM_READY");
-		data->msg = D_("OK");
-		window_frame_show(data->win, data, frame_message_show, NULL);
-		ecore_timer_add(2, exit_callback, data);
+		sim_auth_input_view_hide();
+		view.notify = ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+					      D_("SIM unlocked"), 5);
+		evas_object_show(view.notify);
 		return;
 	default:
 		g_debug("Unknown status %d", status);
-		data->mode = MODE_ERROR;
-		data->msg = D_("Unknown error");
-		window_frame_show(data->win, data, frame_message_show, NULL);
-		ecore_timer_add(2, reset_callback, data);
+		view.mode = MODE_ERROR;
+		view.notify = ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+					      D_("Unknown error"), 10);
+		evas_object_show(view.notify);
 		return;
 	}
-
-	window_frame_show(data->win, data, frame_input_show, frame_input_hide);
-}
-
-void *
-sim_auth_input_view_show(struct Window *win, void *_options)
-{
-	struct SimAuthInputViewData *data;
-	GHashTable *options = (GHashTable *) _options;
-
-	/* see if we are called for the first time and create
-	 * the data if so... otherwise update */
-	if (!win->view_data) {
-		data = calloc(1, sizeof(struct SimAuthInputViewData));
-		data->win = win;
-	}
-	else {
-		data = (struct SimAuthInputViewData *)win->view_data;
-	}
-
-	data->status = GPOINTER_TO_INT(g_hash_table_lookup(options, "status"));
-	_evaluate_status(data, data->status);
-
-	return data;
-}
-
-void
-sim_auth_input_view_hide(void *data)
-{
-	(void) data;
-
-	g_debug("sim_auth_input_view_hide()");
-}
-
-void
-sim_auth_update(struct SimAuthInputViewData *data)
-{
-	int length;
-
-	g_debug("sim_auth_update() MODE: %d", data->mode);
-
-	if (data->mode == MODE_PUK)
-		length = data->puk_length;
-	else if (data->mode == MODE_PIN || data->mode == MODE_PUK_NEW_PIN)
-		length = data->pin_length;
-	else			// matches MODE_PUK_NEW_PIN_CONFIRM
-		length = data->pin_confirm_length;
-
-	int i;
-	for (i = 0; i < length && i < _MAX_PIN_LENGTH; i++)
-		data->stars[i] = '*';
-	data->stars[i] = 0;
-	window_text_set(data->win, "input_text", data->stars);
-}
-
-void
-sim_auth_clear(struct SimAuthInputViewData *data)
-{
-	data->pin[0] = 0;
-	data->pin_length = 0;
-	data->puk[0] = 0;
-	data->puk_length = 0;
-	data->pin_confirm[0] = 0;
-	data->pin_confirm_length = 0;
+	ui_utils_view_text_set(VIEW_PTR(view), "instruction", msg);
 }
 
 static void
-_sim_auth_result_callback(GError *error, gpointer _data)
+_auth_status_cb(GError *error, FreeSmartphoneGSMSIMAuthStatus status, gpointer data)
 {
-	(void)_data;
-// 	struct SimAuthInputViewData *data =
-// 		(struct SimAuthInputViewData *) _data;
+	(void) error;
+	(void) data;
+	if (view.notify) {
+		evas_object_del(view.notify);
+	}
+	_evaluate_status(status);
+	view.pin[0] = 0;
+	view.pin_length = 0;
+	view.pin_confirm[0] = 0;
+	view.pin_confirm_length = 0;
+	view.puk[0] = 0;
+	view.puk_length = 0;
+	_sim_auth_update();
+}
+
+static void
+_pin_send_cb(GError *error, gpointer data)
+{
+	(void) data;
+
+	if (view.notify) {
+		evas_object_hide(view.notify);
+	}
 
 	if (error) {
-		g_message("SIM Auth failed: (%d) %s", error->code, error->message);
-		// FIXME: show appropriate notification
-		return;
-	}
-	// FIXME: !!!!!!!!!!!!!!!!
-/*	data->status = status;
-	if (status == PHONEUI_SIM_READY) {
-		g_debug("PIN correct");
-		data->msg = D_("PIN correct");
-		window_frame_show(data->win, data, frame_message_show, NULL);
-		ecore_timer_add(2, exit_callback, data);
+		g_warning("Sending PIN failed");
+		view.notify = ui_utils_notify
+				(ui_utils_view_window_get(VIEW_PTR(view)),
+				 D_("PIN wrong"), 0);
+		phoneui_utils_sim_auth_status_get(_auth_status_cb, NULL);
 	}
 	else {
-		data->msg = D_("Failed");
-		window_frame_show(data->win, data, frame_message_show, NULL);
-		ecore_timer_add(2, reset_callback, data);
-	}*/
+		view.notify = ui_utils_notify
+				(ui_utils_view_window_get(VIEW_PTR(view)),
+				 D_("PIN Ok"), 0);
+		g_timeout_add(5, _sim_auth_close, NULL);
+	}
 }
 
-int
-reset_callback(void *_data)
+static void
+_puk_send_cb(GError *error, gpointer data)
 {
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
+	(void) data;
 
-	sim_auth_clear(data);
-	_evaluate_status(data, data->status);
-
-	return 0;
-}
-
-int
-exit_callback(void *_data)
-{
-	g_debug("exit_callback()");
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *)_data;
-	window_destroy(data->win, data);
-
-	return 0;
-}
-
-void
-sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
-
-	if (data->mode == MODE_PIN && strcmp(data->pin, "")) {
-		if (common_utils_is_pin(data->pin)) {
-			// PIN length is correct, try it
-			g_debug("PIN looks correct... sending");
-			data->msg = D_("Checking");
-			window_frame_show(data->win, data,
-					frame_message_show, NULL);
-			phoneui_utils_sim_pin_send(data->pin,
-					_sim_auth_result_callback, data);
-		}
-		else {
-			g_debug("no valid PIN...");
-			// PIN length is wrong, thus PIN is wrong
-			data->msg = D_("PIN wrong");
-			window_frame_show(data->win, data,
-					frame_message_show, NULL);
-			ecore_timer_add(2, reset_callback, data);
-		}
+	if (view.notify) {
+		evas_object_hide(view.notify);
 	}
-	else if (data->mode == MODE_PUK && strcmp(data->puk, "")) {
-		g_debug("Ask for a new PIN");
-		window_text_set(data->win, "instruction",
-				D_("Enter a NEW PIN"));
-		data->mode = MODE_PUK_NEW_PIN;
-		g_debug("MODE: %d", data->mode);
-		sim_auth_update(data);
+
+	if (error) {
+		g_critical("Sending PUK failed");
+		view.notify = ui_utils_notify
+				(ui_utils_view_window_get(VIEW_PTR(view)),
+				 D_("PUK wrong"), 0);
+		phoneui_utils_sim_auth_status_get(_auth_status_cb, NULL);
 	}
-	else if (data->mode == MODE_PUK_NEW_PIN && strcmp(data->pin, "")) {
-		g_debug("Ask for new PIN confirmation");
-		window_text_set(data->win, "instruction",
-				D_("Confirm your NEW PIN"));
-		data->mode = MODE_PUK_NEW_PIN_CONFIRM;
-		sim_auth_update(data);
-	}
-	else if (data->mode == MODE_PUK_NEW_PIN_CONFIRM) {
-		g_debug("See if NEW PINs are identical");
-		if (!common_utils_is_pin(data->pin)) {
-			g_debug("NEW PIN must be 4-8 chars long and consist of digits");
-			data->mode = MODE_PUK;
-			data->msg = D_("PIN must be 4-8 chars long");
-			window_frame_show(data->win, data,
-					  frame_message_show, NULL);
-			ecore_timer_add(2, reset_callback, data);
-		}
-		else if (strcmp(data->pin, data->pin_confirm)) {
-			g_debug("NEW PINs different");
-			data->mode = MODE_PUK;
-			data->msg = D_("PIN confirmation wrong");
-			window_frame_show(data->win, data,
-					  frame_message_show, NULL);
-			ecore_timer_add(2, reset_callback, data);
-		}
-		else if (!common_utils_is_puk(data->puk)) {
-			g_debug("PUK is invalid");
-			data->mode = MODE_PUK;
-			data->msg = D_("");
-			window_frame_show(data->win, data,
-					frame_message_show, NULL);
-			ecore_timer_add(2, reset_callback, data);
-		}
-		else {
-			g_debug("NEW PINs identical, send PUK and NEW PIN");
-			data->msg = D_("Checking");
-			window_frame_show(data->win, data,
-					frame_message_show, NULL);
-			phoneui_utils_sim_puk_send(data->puk, data->pin,
-					_sim_auth_result_callback, data);
-		}
+	else {
+		view.notify = ui_utils_notify
+				(ui_utils_view_window_get(VIEW_PTR(view)),
+				 D_("PUK Ok"), 0);
+		g_timeout_add(5, _sim_auth_close, NULL);
 	}
 }
 
-void
-sim_auth_keypad_clicked(void *_data, Evas_Object * obj, void *event_info)
+static void
+_sim_auth_ok_clicked(void *_data, Evas_Object * obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
+	(void) _data;
+
+	switch (view.mode) {
+	case MODE_PIN:
+		view.notify =
+			ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+					D_("Checking..."), 0);
+                evas_object_show(view.notify);
+		phoneui_utils_sim_pin_send(view.pin, _pin_send_cb, NULL);
+		break;
+	case MODE_PUK:
+		view.mode = MODE_PUK_NEW_PIN;
+		_sim_auth_update();
+		ui_utils_view_text_set(VIEW_PTR(view), "instruction",
+				       D_("Please enter a new PIN"));
+		break;
+	case MODE_PUK_NEW_PIN:
+		view.mode = MODE_PUK_NEW_PIN_CONFIRM;
+		_sim_auth_update();
+		ui_utils_view_text_set(VIEW_PTR(view), "instruction",
+				       D_("Please confirm the new PIN"));
+				       break;
+	case MODE_PUK_NEW_PIN_CONFIRM:
+		view.notify =
+			ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+					D_("Checking..."), 0);
+                evas_object_show(view.notify);
+		phoneui_utils_sim_puk_send(view.puk, view.pin, _puk_send_cb, NULL);
+		break;
+	}
+}
+
+static void
+_sim_auth_keypad_clicked(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) obj;
+	(void) data;
+
 	char *string;
 	int *length;
 	char input = ((char *) event_info)[0];
 
-	g_debug("MODE: %d", data->mode);
-
-
-	if (data->mode == MODE_PIN || data->mode == MODE_PUK_NEW_PIN) {
-		string = data->pin;
-		length = &(data->pin_length);
+	if (view.mode == MODE_PIN || view.mode == MODE_PUK_NEW_PIN) {
+		string = view.pin;
+		length = &(view.pin_length);
 	}
-	else if (data->mode == MODE_PUK) {
-		string = data->puk;
-		length = &(data->puk_length);
+	else if (view.mode == MODE_PUK) {
+		string = view.puk;
+		length = &(view.puk_length);
 	}
 	else {
-		string = data->pin_confirm;
-		length = &(data->pin_confirm_length);
+		string = view.pin_confirm;
+		length = &(view.pin_confirm_length);
 	}
 
 	if (*length < _MAX_PIN_LENGTH) {
 		string[*length] = input;
 		(*length)++;
 		string[*length] = 0;
-		sim_auth_update(data);
+		_sim_auth_update();
 	}
 }
 
 void
-sim_auth_delete_clicked(void *_data, Evas_Object * obj, void *event_info)
+_sim_auth_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
+	(void) data;
 	char *string;
 	int *length;
 
-	if (data->mode == MODE_PIN || data->mode == MODE_PUK_NEW_PIN) {
-		string = data->pin;
-		length = &(data->pin_length);
+	if (view.mode == MODE_PIN || view.mode == MODE_PUK_NEW_PIN) {
+		string = view.pin;
+		length = &(view.pin_length);
 	}
-	else if (data->mode == MODE_PUK) {
-		string = data->puk;
-		length = &(data->puk_length);
+	else if (view.mode == MODE_PUK) {
+		string = view.puk;
+		length = &(view.puk_length);
 	}
 	else {
-		string = data->pin_confirm;
-		length = &(data->pin_confirm_length);
+		string = view.pin_confirm;
+		length = &(view.pin_confirm_length);
 	}
 
 	if (*length > 0) {
 		(*length)--;
 		string[*length] = 0;
-		sim_auth_update(data);
+		_sim_auth_update();
 	}
 }
 
-
-
-
-/* --- main input frame --- */
-
 static void
-frame_input_show(void *_data)
+_sim_auth_update()
 {
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
-	struct Window *win = data->win;
+	Eina_Bool disabled = EINA_TRUE;
+	int i, length = 0;
 
-	g_debug("frame_input_show()");
+	if (view.mode == MODE_PIN || view.mode == MODE_PUK_NEW_PIN) {
+		if (common_utils_is_pin(view.pin)) {
+			disabled = EINA_FALSE;
+		}
+		length = view.pin_length;
+	}
+	else if (view.mode == MODE_PUK_NEW_PIN_CONFIRM) {
+		if (common_utils_is_pin(view.pin_confirm) &&
+		    !strcmp(view.pin, view.pin_confirm)) {
+			disabled = EINA_FALSE;
+		}
+		length = view.pin_confirm_length;
+	}
+	else if (view.mode == MODE_PUK) {
+		if (common_utils_is_puk(view.puk)) {
+			disabled = EINA_FALSE;
+		}
+		length = view.puk_length;
+	}
+	else {
+		g_warning("Invalid sim auth mode %d", view.mode);
+	}
 
-	window_layout_set(win, phoneui_theme, "phoneui/notification/sim_auth_input");
-
-	window_text_set(win, "instruction", data->msg);
-
-	data->bt1 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt1, D_("Delete"));
-	evas_object_smart_callback_add(data->bt1, "clicked",
-				       sim_auth_delete_clicked, data);
-	window_swallow(win, "button_delete", data->bt1);
-	evas_object_show(data->bt1);
-
-	data->bt2 = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt2, D_("OK"));
-	evas_object_smart_callback_add(data->bt2, "clicked",
-				       sim_auth_ok_clicked, data);
-	window_swallow(win, "button_ok", data->bt2);
-	evas_object_show(data->bt2);
-
-	data->keypad = elm_keypad_add(window_evas_object_get(win));
-	evas_object_smart_callback_add(data->keypad, "clicked",
-				       sim_auth_keypad_clicked, data);
-	window_swallow(win, "keypad", data->keypad);
-	evas_object_show(data->keypad);
+	elm_object_disabled_set(view.bt2, disabled);
+	for (i = 0; i < length && i < _MAX_PIN_LENGTH; i++) {
+		view.stars[i] = '*';
+	}
+	view.stars[i] = 0;
+	ui_utils_view_text_set(VIEW_PTR(view), "input_text", view.stars);
 }
 
-static void
-frame_input_hide(void *_data)
+static gboolean
+_sim_auth_close(gpointer data)
 {
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
-
-	g_debug("frame_input_hide()");
-
-	evas_object_del(data->bt1);
-	evas_object_del(data->bt2);
-	evas_object_smart_callback_del(data->keypad, "clicked",
-				       sim_auth_keypad_clicked);
-	evas_object_del(data->keypad);
+	(void) data;
+	sim_auth_input_view_deinit();
+	return FALSE;
 }
-
-static void
-frame_message_show(void *_data)
-{
-	struct SimAuthInputViewData *data =
-		(struct SimAuthInputViewData *) _data;
-
-	window_layout_set(data->win, phoneui_theme, "phoneui/notification/sim_auth_message");
-	window_text_set(data->win, "text", D_("Checking"));
-}
-
