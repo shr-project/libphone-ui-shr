@@ -118,6 +118,7 @@ ui_utils_view_show(struct View *view)
 		}
 		evas_object_show(view->win);
 		elm_win_activate(view->win);
+		evas_object_focus_set(view->win, EINA_TRUE);
 	}
 	else {
 		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
