@@ -4,7 +4,8 @@
 #include "common-utils.h"
 #include "widget/elm_keypad.h"
 
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-calls.h>
+#include <phoneui/phoneui-utils-contacts.h>
 
 
 
@@ -41,8 +42,10 @@ call_common_activate_call(struct CallActiveViewData *win)
 }
 
 void
-call_common_contact_callback(GHashTable *contact, void *_data)
+call_common_contact_callback(GError *error, GHashTable *contact, void *_data)
 {
+	(void) error;
+	// FIXME: show notification on error
 	struct CallViewData *data =
 		(struct CallViewData *) _data;
 	if (data->number_state == CALL_NUMBER_NULL) {

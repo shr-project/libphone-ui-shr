@@ -1,9 +1,11 @@
 
+#include <ctype.h> /* to upper */
+#include <phoneui-utils-contacts.h>
+
 #include "phoneui-shr.h"
 #include "views.h"
 
 #include "common-utils.h"
-#include <ctype.h> /* to upper */
 
 static Elm_Genlist_Item_Class itc;
 
@@ -298,7 +300,7 @@ _process_entry(void *_entry, void *_data)
 	Elm_Genlist_Item *it;
 	GHashTable *entry = (GHashTable *)_entry;
 	struct ContactListData *list_data = (struct ContactListData *) _data;
-	it = contact_list_item_add(list_data, entry, 0);
+	it = contact_list_item_add(list_data, entry, 1);
 	if (!it) {
 		g_warning("Failed adding a contact to the list");
 		return;

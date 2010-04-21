@@ -2,7 +2,8 @@
 #include "views.h"
 #include "call-common.h"
 #include "common-utils.h"
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-calls.h>
+#include <phoneui/phoneui-utils-contacts.h>
 
 
 static void call_button_accept_clicked(void *_data, Evas_Object * obj,

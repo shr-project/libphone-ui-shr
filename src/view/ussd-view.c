@@ -36,8 +36,7 @@ ussd_view_show(struct Window *win, void *_options)
 
 	struct UssdViewData *data = calloc(1, sizeof(struct UssdViewData));
 	data->win = win;
-
-	data->mode = (int) g_hash_table_lookup(options, "mode");
+	data->mode = GPOINTER_TO_INT(g_hash_table_lookup(options, "mode"));
 	data->message =
 		elm_entry_utf8_to_markup(g_hash_table_lookup
 					 (options, "message"));

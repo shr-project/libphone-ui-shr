@@ -25,7 +25,6 @@ static struct IdleScreenViewData view;
 
 static void _resource_status(void *data, const char *resource, gboolean state, GHashTable *properties);
 static void _capacity_change(void *data, int capacity);
-static void _pdp_network_status(void *data, GHashTable *status);
 static void _network_status(void *data, GHashTable *properties);
 static void _signal_strength(void *data, int strength);
 static void _profile_change(void *data, const char *profile);
@@ -95,7 +94,6 @@ idle_screen_view_init()
 	phoneui_info_register_and_request_resource_status(_resource_status, NULL);
 	phoneui_info_register_and_request_network_status(_network_status, NULL);
 	phoneui_info_register_and_request_signal_strength(_signal_strength, NULL);
-        phoneui_info_register_and_request_pdp_network_status(_pdp_network_status, NULL);
 	phoneui_info_register_and_request_profile_changes(_profile_change, NULL);
 	phoneui_info_register_and_request_capacity_changes(_capacity_change, NULL);
 	phoneui_info_register_and_request_missed_calls(_missed_calls, NULL);
@@ -223,8 +221,10 @@ _network_status(void *data, GHashTable *properties)
 {
 	(void) data;
 	GValue *v;
+	const char *s;
+	const char *sig = "";
 
-	v = g_hash_table_lookup(properties, "provider");
+	v = g_hash_table_lookup(properties, "display");
 	if (v) {
 		g_debug("provider is '%s'", g_value_get_string(v));
 		ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider",
@@ -234,55 +234,32 @@ _network_status(void *data, GHashTable *properties)
 	if (v) {
 		_update_signal_strength(g_value_get_int(v));
 	}
-}
-
-static void
-_pdp_network_status(void *data, GHashTable *status)
-{
-	(void) data;
-	GValue *tmp;
-	const char *s;
-	char *sig = "";
-
-	g_debug("_pdp_network_status");
-	if (!idle_screen_view_is_init()) {
-		g_debug("idle screen is not inited yet... nothing to do");
-		return;
-	}
-
-	tmp = g_hash_table_lookup(status, "registration");
-	if (!tmp) {
-		g_warning("got PDP.NetworkStatus without registration info!");
-		return;
-	}
-	s = g_value_get_string(tmp);
-	if (strcmp(s, "home") && strcmp(s, "roaming")) {
-		/* registration is neither home nor roaming --> offline */
-		g_debug("PDP.NetworkStatus: offline (%s)", s);
-	}
-	else {
-		tmp = g_hash_table_lookup(status, "act");
-		if (tmp) {
-			s = g_value_get_string(tmp);
-			g_debug("PDP.NetworkStatus: %s", s);
-			if (strcmp(s, "EDGE") == 0) {
-				sig = "E";
-			}
-			else if (strcmp(s, "UMTS") == 0) {
-				sig = "3G";
-			}
-			else if (strcmp(s, "HSDPA") == 0 ||
-				strcmp(s, "HSUPA") == 0 ||
-				strcmp(s, "HSDPA/HSUPA") == 0) {
-				sig = "H";
-			}
-			else {
-				sig = "G";
+	v = g_hash_table_lookup(properties, "pdp.registration");
+	if (v) {
+		s = g_value_get_string(v);
+		if (!strcmp(s, "home") || !strcmp(s, "roaming")) {
+			v = g_hash_table_lookup(properties, "act");
+			if (v) {
+				s = g_value_get_string(v);
+				g_debug("PDP Status: %s", s);
+				if (strcmp(s, "EDGE") == 0) {
+					sig = "E";
+				}
+				else if (strcmp(s, "UMTS") == 0) {
+					sig = "3G";
+				}
+				else if (strcmp(s, "HSDPA") == 0 ||
+					strcmp(s, "HSUPA") == 0 ||
+					strcmp(s, "HSDPA/HSUPA") == 0) {
+					sig = "H";
+				}
+				else {
+					sig = "G";
+				}
 			}
 		}
+		ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
 	}
-
-	ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
 }
 
 static void

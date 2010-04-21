@@ -6,6 +6,8 @@
 #include <Elementary.h>
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
+#include <phoneui/phoneui-utils-calls.h>
 #include "views.h"
 #include "common-utils.h"
 #include "ui-utils.h"
@@ -47,7 +49,7 @@ static void _destroy_cb(struct View *_view);
 static void _set_modify(struct ContactViewData *view, int dirty);
 static void _update_cb(GError *error, gpointer data);
 static void _add_cb(GError *error, char *path, gpointer data);
-static void _load_cb(GHashTable *content, gpointer data);
+static void _load_cb(GError *error, GHashTable *content, gpointer data);
 static void _field_unselected_cb(void *userdata, Evas_Object *obj, void *event_info);
 static Evas_Object *_start_file_selector(Evas_Object *parent, const char *path);
 
@@ -250,7 +252,6 @@ contact_view_show(const char *path)
 	view = (struct ContactViewData *)
 			g_hash_table_lookup(contactviews, path);
 	if (view) {
-		g_debug("found view [%X] for contact %s", (int) view, path);
 		ui_utils_view_show(VIEW_PTR(*view));
 	}
 	else {
@@ -378,6 +379,7 @@ static void
 _add_field_cb(const char *field, void *data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
+	g_debug("selected field '%s'", field);
 	if (field) {
 		_add_field(view, field, "", 1);
 	}
@@ -576,10 +578,13 @@ _sanitize_changes_hash_foreach(void *key, void *value, void *data)
 	if (!tmp || !*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
 		gval = common_utils_new_gvalue_string(value);
 	}
+	else if (g_strv_length(tmp) == 1) {
+		gval = common_utils_new_gvalue_string(tmp[0]);
+	}
 	else {
 		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, g_strdupv(value));
 	}
-	g_hash_table_insert(target, key, gval);
+	g_hash_table_insert(target, strdup((char *)key), gval);
 }
 
 static GHashTable *
@@ -622,6 +627,7 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 	}
 
 	formatted_changes = _sanitize_changes_hash(view->changes);
+	common_utils_debug_dump_hashtable(formatted_changes);
 	if (*view->path) {
 		g_debug("Updating contact '%s'", view->path);
 		phoneui_utils_contact_update(view->path, formatted_changes,
@@ -670,7 +676,7 @@ _set_modify(struct ContactViewData *view, int dirty)
 static void
 _update_cb(GError *error, gpointer data)
 {
-	struct ContactViewData *view = (struct ContactViewData *)data;
+	struct ContactViewData *view = data;
 	if (error) {
 		g_warning("Updating contact %s failed", view->path);
 	}
@@ -684,7 +690,7 @@ _update_cb(GError *error, gpointer data)
 static void
 _add_cb(GError *error, char *path, gpointer data)
 {
-	struct ContactViewData *view = (struct ContactViewData *)data;
+	struct ContactViewData *view = data;
 	if (error) {
 		g_warning("Adding the contact failed");
 	}
@@ -696,11 +702,12 @@ _add_cb(GError *error, char *path, gpointer data)
 }
 
 static void
-_load_cb(GHashTable *content, gpointer data)
+_load_cb(GError *error, GHashTable *content, gpointer data)
 {
 	struct ContactViewData *view = (struct ContactViewData *)data;
 	g_debug("_load_cb called");
-	if (!content) {
+	if (error || !content) {
+		// FIXME: show some nice notification
 		g_critical("Failed loading data of saved contact");
 		return;
 	}

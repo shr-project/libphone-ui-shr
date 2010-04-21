@@ -80,6 +80,7 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 		ret = 1;
 		goto free_bg;
 	}
+	evas_object_size_hint_weight_set(view->layout, 1.0, 1.0);
 	elm_win_resize_object_add(view->win, view->layout);
 	evas_object_show(view->layout);
 
@@ -451,8 +452,8 @@ _inwin_list_selected_cb(void *data, Evas_Object *obj, void *event_info)
 	struct _inwin_list_pack *pack = (struct _inwin_list_pack *)data;
 	g_debug("Get the selected one");
 	Elm_List_Item *it = elm_list_selected_item_get(obj);
-	g_debug("Got item [%X]", (int) it);
 	if (it) {
+		// FIXME: either remove this strdup... or the const from the cb
 		sel = strdup(elm_list_item_label_get(it));
 		g_debug("Which is '%s'", sel);
 	}
@@ -482,6 +483,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 	Evas_Object *win, *btn, *box;
 	GList *l;
 
+	g_debug("ui_utils_view_inwin_list");
 	struct _inwin_list_pack *pack = malloc(sizeof(struct _inwin_list_pack));
 	pack->callback = callback;
 	pack->data = userdata;
@@ -503,6 +505,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 // 	evas_object_size_hint_align_set(pack->list, 0.5, 0.5);
 	elm_list_horizontal_mode_set(pack->list, ELM_LIST_COMPRESS);
 	for (l = g_list_first(list); l; l = g_list_next(l)) {
+		g_debug("Adding item '%s' to list", (char *)l->data);
 		elm_list_item_append(pack->list, strdup(l->data),
 				     NULL, NULL, NULL, NULL);
 	}
@@ -547,7 +550,7 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	Evas_Object *notify, *bx, *bt, *lb;
 	notify = elm_notify_add(parent);
 	evas_object_size_hint_weight_set(notify, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_notify_orient_set(notify, ELM_NOTIFY_ORIENT_BOTTOM);
+	elm_notify_orient_set(notify, ELM_NOTIFY_ORIENT_CENTER);
 	elm_notify_timeout_set(notify, timeout);
 
 	bx = elm_box_add(parent);
@@ -560,13 +563,12 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	elm_box_pack_end(bx, lb);
 	evas_object_show(lb);
 
-
 	bt = elm_button_add(parent);
 	elm_button_label_set(bt, "Close");
 	evas_object_smart_callback_add(bt, "clicked", _notify_button_close_cb, notify);
 	elm_box_pack_end(bx, bt);
 	evas_object_show(bt);
-	
+
 	return notify;
 }
 

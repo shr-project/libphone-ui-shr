@@ -112,7 +112,6 @@ elm_keypad_add(Evas_Object * parent)
 	elm_widget_del_hook_set(wd->widget, _del_hook);
 
 	wd->keypad = edje_object_add(e);
-	g_debug("keypad evas object: %d", (int) wd->keypad);
 	edje_object_file_set(wd->keypad, phoneui_theme, "phoneui/keypad");
 	edje_object_signal_callback_add(wd->keypad, "*", "input",
 					_signal_clicked, wd->widget);

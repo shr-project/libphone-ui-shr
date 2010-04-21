@@ -2,6 +2,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
 #include "phoneui-shr.h"
 #include "common-utils.h"
 #include "ui-utils.h"
@@ -14,17 +15,19 @@ struct _field_select_pack {
 };
 
 static void
-_field_select_cb(GHashTable *fields, gpointer data)
+_field_select_cb(GError *error, GHashTable *fields, gpointer data)
 {
 	GList *keys;
 	struct _field_select_pack *pack = (struct _field_select_pack *)data;
-	if (!fields) {
+	if (error || !fields) {
 		g_warning("No fields for contacts?");
 		// TODO: show a user visible message
 		return;
 	}
+	/* ref the fields hashtable - otherwise it will be gone in the middle of the road ;) */
 	keys = g_hash_table_get_keys(fields);
 	keys = g_list_sort(keys, (GCompareFunc) strcmp);
+	g_debug("Showing inwin with fields to select");
 	ui_utils_view_inwin_list(pack->view, keys, pack->callback, pack->data);
 	free(pack);
 }
@@ -144,16 +147,17 @@ _add_number_to_list(gpointer _key, gpointer _value, gpointer data)
 	}
 }
 static void
-_fields_get_cb(GHashTable *contact, gpointer data)
+_fields_get_cb(GError *error, GHashTable *contact, gpointer data)
 {
 	Evas_Object *win, *box, *btn;
 	struct _number_select_pack *pack = data;
 	const char *number;
 
 	/* there is no number - pass the callback a NULL for notification */
-	if (!contact) {
+	if (error || !contact) {
 		g_message("No phonenumber fields defined for contact %s!!!",
 			  pack->path);
+		// TODO: show some notification
 		pack->callback(NULL, pack->data);
 		return;
 	}

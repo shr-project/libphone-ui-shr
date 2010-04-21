@@ -1,5 +1,5 @@
 
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-contacts.h>
 #include <phone-utils.h>
 
 #include "ui-utils.h"
@@ -48,7 +48,7 @@ static void _number_button_add_clicked(void *data, Evas_Object *obj, void *event
 static void _number_button_delete_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_update_number(struct MessageNewViewData* view);
 static void _process_recipient(gpointer _properties, gpointer _data);
-static void _contact_lookup(GHashTable *contact, gpointer data);
+static void _contact_lookup(GError *error, GHashTable *contact, gpointer data);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
 static void gl_del(const void *data, Evas_Object *obj);
@@ -430,11 +430,7 @@ _init_number_page(struct MessageNewViewData *view)
 static void
 _content_button_close_clicked(void *data, Evas_Object *obj, void *event_info)
 {
-	(void) obj;
-	(void) event_info;
-	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	// TODO: ask for confirmation
-	message_new_view_deinit(view);
+	_delete_cb((struct View *)data, obj, event_info);
 }
 
 static void
@@ -744,14 +740,15 @@ _process_recipient(gpointer _properties, gpointer _data)
 }
 
 static void
-_contact_lookup(GHashTable *contact, gpointer data)
+_contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
 	char *tmp;
 	const char *tmp2;
 	GValue *gval_tmp;
 	struct _recipient_pack *pack;
 
-	if (contact == NULL)
+	// FIXME: show some nice notification
+	if (error || !contact )
 		return;
 
 	pack = (struct _recipient_pack *)data;
@@ -773,12 +770,23 @@ _contact_lookup(GHashTable *contact, gpointer data)
 }
 
 static void
+_delete_confirm_cb(int res, void *data)
+{
+	struct MessageNewViewData *view = data;
+	if (res == DIALOG_YES) {
+		message_new_view_deinit(view);
+		free(view);
+	}
+}
+
+static void
 _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 {
 	(void)win;
 	(void)event_info;
-	message_new_view_deinit((struct MessageNewViewData *)view);
-	free(view);
+	ui_utils_dialog(VIEW_PTR(*view),
+			D_("Do you really want to quit writing this message?"),
+			DIALOG_YES | DIALOG_NO, _delete_confirm_cb, view);
 }
 
 static void

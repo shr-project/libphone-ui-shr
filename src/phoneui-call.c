@@ -1,6 +1,6 @@
 
 #include <glib.h>
-#include <phoneui/phoneui-utils.h>
+#include <phoneui/phoneui-utils-calls.h>
 #include "phoneui-call.h"
 #include "call-common.h"
 #include "phoneui-shr.h"
@@ -25,8 +25,6 @@ static struct Instance *instances;
 void
 instance_manager_add(int id, struct Window *win)
 {
-	g_debug("instance_manager_add: id=%d, window=%d", id,
-		(int) win);
 	instances_size++;
 	if (instances_size == 1) {
 		instances = malloc(sizeof(struct Instance));
@@ -38,8 +36,6 @@ instance_manager_add(int id, struct Window *win)
 				sizeof(struct Instance) * instances_size);
 		g_debug("realloc'ed");
 	}
-
-	g_debug("add window: %d", (int) win->win);
 
 	instances[instances_size - 1].id = id;
 	instances[instances_size - 1].win = win;

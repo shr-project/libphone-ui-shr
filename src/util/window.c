@@ -30,7 +30,6 @@ window_new(char *title)
 void
 window_init(struct Window *win)
 {
-	g_debug("window_init(win=%d)", (int) win);
 
 	if (phoneui_theme)
 		elm_theme_overlay_add(phoneui_theme);
@@ -65,7 +64,6 @@ void
 window_show(struct Window *win)
 {
 	if (win) {
-		g_debug("window_show(win=%d)", (int) win);
 		evas_object_show(win->win);
 		elm_win_activate(win->win);
 	}
@@ -257,7 +255,6 @@ window_kbd_hide(struct Window *win)
 void
 window_destroy(struct Window *win, void *options)
 {
-	g_debug("destroying window (win=%d)", (int) win);
 	if (!win) {
 		g_critical("Window is NULL (%s:%d)", __FUNCTION__, __LINE__);
 		return;
