@@ -174,16 +174,23 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 }
 
 static void
+_set_profile_cb(GError *error, gpointer data)
+{
+	(void) data;
+	if (error) {
+		// FIXME: show some nice inwin
+		g_warning("Failed setting the profile!");
+	}
+}
+
+static void
 _profile_selected_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
 	const char *profile;
 	profile = elm_hoversel_item_label_get(event_info);
-	/*FIXME: add a callback to handle errors - setting hoversel label should
-	 * also be done in signal callback, should probably add a rollback if failed here*/
-	elm_hoversel_label_set(view.profiles_combo, profile);
-	phoneui_utils_sound_profile_set(profile, NULL, NULL);
+	phoneui_utils_sound_profile_set(profile, _set_profile_cb, NULL);
 }
 
 static void
