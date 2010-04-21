@@ -637,7 +637,7 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 		g_debug("Saving a new contact");
 		phoneui_utils_contact_add(formatted_changes, _add_cb, view);
 	}
-// 	g_hash_table_unref(formatted_changes);
+	g_hash_table_unref(formatted_changes);
 }
 
 static void
