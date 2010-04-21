@@ -195,7 +195,7 @@ _pin_send_cb(GError *error, gpointer data)
 	(void) data;
 
 	if (view.notify) {
-		evas_object_hide(view.notify);
+		evas_object_del(view.notify);
 	}
 
 	if (error) {
@@ -204,13 +204,12 @@ _pin_send_cb(GError *error, gpointer data)
 				(ui_utils_view_window_get(VIEW_PTR(view)),
 				 D_("PIN wrong"), 0);
 		phoneui_utils_sim_auth_status_get(_auth_status_cb, NULL);
+		return;
 	}
-	else {
-		view.notify = ui_utils_notify
-				(ui_utils_view_window_get(VIEW_PTR(view)),
-				 D_("PIN Ok"), 0);
-		g_timeout_add(5, _sim_auth_close, NULL);
-	}
+	g_debug("PIN worked out");
+	view.notify = ui_utils_notify (ui_utils_view_window_get(VIEW_PTR(view)),
+				       D_("PIN Ok"), 0);
+	g_timeout_add(5, _sim_auth_close, NULL);
 }
 
 static void
