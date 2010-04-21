@@ -344,9 +344,18 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	GHashTable *message;
 	char *tmp;
 
-	// FIXME: show some nice notification
-	if (error || !contact)
+	if (error) {
+		ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+				D_("Error while trying to resolve the number"),
+				10);
+		g_warning("Error resolving number: (%d) %s",
+			  error->code, error->message);
 		return;
+	}
+
+	if (!contact) {
+		return;
+	}
 
 	it = (Elm_Genlist_Item *)data;
 	tmp = phoneui_utils_contact_display_name_get(contact);
@@ -366,9 +375,19 @@ _process_messages(GError* error, GHashTable** messages, int count, gpointer data
 
 	g_debug("got %d messages", count);
 
-	// FIXME: show some nice notification
-	if (error || !messages)
+	if (error) {
+		ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+				D_("Error while retrieving messages"), 10);
+		g_warning("Error retrieving messages: (%d) %s",
+			  error->code, error->message);
 		return;
+	}
+	if (!messages) {
+		ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+				D_("There are no messages"), 5);
+		g_debug("No messages to load");
+		return;
+	}
 
 	for (i = 0; i < count; i++) {
 		g_debug("processing message %d", i);
@@ -379,8 +398,14 @@ _process_messages(GError* error, GHashTable** messages, int count, gpointer data
 static void
 _process_message_get(GError *error, GHashTable *message, gpointer data)
 {
-	if (error || !message) {
-		// FIXME: show some nice notification
+	if (error) {
+		ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
+				D_("Error while retrieving a message"), 10);
+		g_warning("Error retrieving a message: (%d) %s",
+			  error->code, error->message);
+		return;
+	}
+	if (!message) {
 		return;
 	}
 	_process_message(message, data);
