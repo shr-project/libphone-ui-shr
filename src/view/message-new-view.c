@@ -454,6 +454,7 @@ _recipients_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	elm_pager_content_promote(view->pager, view->layout_content);
+	elm_object_focus(view->content_entry);
 }
 
 static void
@@ -776,6 +777,9 @@ _delete_confirm_cb(int res, void *data)
 	if (res == DIALOG_YES) {
 		message_new_view_deinit(view);
 		free(view);
+	}
+	else if (elm_pager_content_top_get(view->pager) == view->layout_content) {
+		elm_object_focus(view->content_entry);
 	}
 }
 
