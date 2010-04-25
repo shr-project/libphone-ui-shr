@@ -183,6 +183,10 @@ _resource_status(void *data, const char *resource,
 	}
 	else {
 		edje_state = "default";
+		if (strcmp(resource, "GSM") == 0) {
+			ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", "");
+			_update_signal_strength(0);
+		}
 	}
 	edje_edit_part_selected_state_set
 				(ui_utils_view_layout_get(VIEW_PTR(view)),
