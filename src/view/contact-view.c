@@ -8,6 +8,7 @@
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-utils-contacts.h>
 #include <phoneui/phoneui-utils-calls.h>
+#include <phoneui/phoneui-info.h>
 #include "views.h"
 #include "common-utils.h"
 #include "ui-utils.h"
@@ -45,6 +46,7 @@ static void gl_field_del(const void *_data, Evas_Object * obj);
 
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _destroy_cb(struct View *_view);
+static void _contact_changed_handler(void *data, int entryid, enum PhoneuiInfoChangeType type);
 
 static void _set_modify(struct ContactViewData *view, int dirty);
 static void _update_cb(GError *error, gpointer data);
@@ -59,6 +61,7 @@ contact_view_init(char *path, GHashTable *properties)
 	struct ContactViewData *view;
 	Evas_Object *win;
 	int ret;
+	GValue *gval_tmp;
 
 	/* path MUST always be set! For new contacts to ""
 	and it will be freed by destroying the contactviews
@@ -100,12 +103,19 @@ contact_view_init(char *path, GHashTable *properties)
 	g_hash_table_insert(contactviews, path, view);
 
 	view->path = path;
+	view->entryid = -1;
 	if (properties) {
 		view->properties = g_hash_table_ref(properties);
+		gval_tmp = g_hash_table_lookup(properties, "EntryId");
+		if (gval_tmp) {
+			view->entryid = g_value_get_int(gval_tmp);
+			phoneui_info_register_single_contact_changes
+				(view->entryid, _contact_changed_handler, view);
+		}
 	}
 	else {
 		view->properties = g_hash_table_new_full(g_str_hash, g_str_equal,
-							 NULL, common_utils_gvalue_free);
+						NULL, common_utils_gvalue_free);
 		g_hash_table_insert(view->properties, "Phone",
 				    common_utils_new_gvalue_string(""));
 		g_hash_table_insert(view->properties, "Name",
@@ -681,8 +691,6 @@ _update_cb(GError *error, gpointer data)
 		g_warning("Updating contact %s failed", view->path);
 	}
 	else {
-		g_debug("Updating contact worked - reloading");
-		phoneui_utils_contact_get(view->path, _load_cb, view);
 		_set_modify(view, 0);
 	}
 }
@@ -1073,6 +1081,8 @@ _destroy_cb(struct View *_view)
 {
 	struct ContactViewData *view = (struct ContactViewData *)_view;
 	g_debug("_destroy_cb");
+	phoneui_info_unregister_single_contact_changes(view->entryid,
+						       _contact_changed_handler);
 	if (view->properties)
 		g_hash_table_destroy(view->properties);
 	if (view->changes)
@@ -1080,6 +1090,21 @@ _destroy_cb(struct View *_view)
 	g_hash_table_remove(contactviews, view->path);
 
 	g_debug("_destroy_cb DONE");
+}
+
+static void
+_contact_changed_handler(void *data, int entryid, enum PhoneuiInfoChangeType type)
+{
+	(void) entryid;
+	struct ContactViewData *view;
+
+	view = data;
+	if (type == PHONEUI_INFO_CHANGE_DELETE) {
+		contact_view_deinit(view);
+	}
+	else if (type == PHONEUI_INFO_CHANGE_UPDATE) {
+		phoneui_utils_contact_get(view->path, _load_cb, view);
+	}
 }
 
 static void

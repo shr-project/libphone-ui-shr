@@ -11,6 +11,7 @@ struct ContactViewData {
 	Evas_Object *btn_call, *btn_sms, *btn_delete, *btn_addfield;
 	Evas_Object *btn_save, *btn_cancel;
 	char *path;
+	int entryid;
 	GHashTable *properties, *changes;
 };
 
