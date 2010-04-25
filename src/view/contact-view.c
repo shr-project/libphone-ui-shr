@@ -823,7 +823,8 @@ _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 	}
 	else {
 		edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
-		elm_genlist_item_update(fd->item);
+		elm_entry_editable_set(fd->value_entry, EINA_TRUE);
+		elm_object_unfocus(fd->value_entry);
 	}
 	fd->edit_on = 1;
 	_set_modify(fd->view, 1);
@@ -851,7 +852,7 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 		evas_object_size_hint_align_set(entry, 0.5,
 						0.5);
 		fd->value_entry = entry;
-		elm_entry_editable_set(fd->value_entry, fd->edit_on);
+		elm_entry_editable_set(fd->value_entry, EINA_FALSE);
 		return entry;
 	}
 	else if (strcmp(part, "elm.swallow.button_delfield") == 0) {
