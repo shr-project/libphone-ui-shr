@@ -3,12 +3,12 @@ MAINTAINERCLEANFILES = Makefile.in
 AM_CFLAGS = -I$(top_srcdir)/src/util -I$(top_srcdir)/src/widget -I$(top_srcdir)/src/view \
 	      -DDATADIR=\"$(datadir)\" -DPKGDATADIR=\"$(pkgdatadir)\" -DPACKAGE=\"$(PACKAGE)\" \
 	      -DLOCALEDIR=\"$(localedir)\" -DG_LOG_DOMAIN=\"libphone-ui-shr\" \
-	      @E_CFLAGS@ @LIBPHONEUI_CFLAGS@ \
+	      @E_CFLAGS@ @LIBPHONEUI_CFLAGS@ @FSO_GLIB_CFLAGS@ @FSO_FRAMEWORK_CFLAGS@ \
 	      @GLIB_CFLAGS@ @LIBPHONE_UTILS_CFLAGS@ -g3 -Wall -Wextra -Werror
 
 pkgdir		= $(libdir)/phoneui/modules
 pkg_LTLIBRARIES	= shr.la
-shr_la_LIBADD = @LIBPHONEUI_LIBS@ @LIBPHONE_UTILS_LIBS@ @GLIB_LIBS@ @E_LIBS@ @LTLIBINTL@ -lpthread
+shr_la_LIBADD = @LIBPHONEUI_LIBS@ @LIBPHONE_UTILS_LIBS@ @GLIB_LIBS@ @FSO_GLIB_LIBS@ @E_LIBS@ @LTLIBINTL@ -lpthread
 shr_la_LDFLAGS = -module -avoid-version
 
 shr_la_SOURCES = \
