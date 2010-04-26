@@ -3,6 +3,7 @@
 #include <phone-utils.h>
 
 #include "ui-utils.h"
+#include "ui-utils-contacts.h"
 #include "common-utils.h"
 #include "widget/elm_keypad.h"
 #include "message-new-view.h"
@@ -41,6 +42,7 @@ static void _recipients_button_send_clicked(void *data, Evas_Object *obj, void *
 static void _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info);
 // static void _recipients_button_delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _contacts_add_number_callback(const char *number, void *data);
 static void _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_keypad_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _number_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
@@ -537,44 +539,41 @@ _contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 }
 
 static void
+_contacts_add_number_callback(const char *number, void *data)
+{
+	GHashTable *options;
+	struct MessageNewViewData *view = data;
+	if (number) {
+		options = g_hash_table_new_full(g_str_hash, g_str_equal,
+						NULL, common_utils_gvalue_free);
+		g_hash_table_insert(options, "Phone",
+				common_utils_new_gvalue_string(number));
+		g_ptr_array_add(view->recipients, options);
+		_process_recipient(options, view);
+	}
+}
+
+static void
 _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	Elm_Genlist_Item *it;
-	GHashTable *properties, *options;
+	GHashTable *properties;
 
 	it = elm_genlist_selected_item_get(view->contact_list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		char *str;
 		GValue *tmp;
-		str = phoneui_utils_contact_display_phone_get(properties);
-		if (!str) {
-			g_debug("contact needs a number to send a message ;)");
+		tmp = g_hash_table_lookup(properties, "Path");
+		if (!tmp) {
+			g_warning("Can't add contact without Path in properties !?!");
 			return;
 		}
-		options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, common_utils_gvalue_free);
-		g_hash_table_insert(options, "Phone",
-				common_utils_new_gvalue_string(str));
-		free(str);
-
-		str = phoneui_utils_contact_display_name_get(properties);
-		if (str) {
-			g_hash_table_insert(options, "Name",
-				common_utils_new_gvalue_string(str));
-			free(str);
-		}
-		tmp = g_hash_table_lookup(properties, "Photo");
-		if (tmp) {
-			tmp = common_utils_new_gvalue_string(
-					g_value_get_string(tmp));
-			g_hash_table_insert(options, "Photo", tmp);
-		}
-		g_ptr_array_add(view->recipients, options);
-		_process_recipient(options, view);
+		const char *path = g_value_get_string(tmp);
+		ui_utils_contacts_contact_number_select(VIEW_PTR(*view), path,
+					_contacts_add_number_callback, view);
 	}
 	elm_pager_content_promote(view->pager, view->layout_recipients);
 }
@@ -749,8 +748,15 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	struct _recipient_pack *pack;
 
 	// FIXME: show some nice notification
-	if (error || !contact )
+	if (error) {
+		g_warning("Error will trying to resolve number: (%d) %s",
+			  error->code, error->message);
 		return;
+	}
+	if (!contact ) {
+		g_debug("No contact found");
+		return;
+	}
 
 	pack = (struct _recipient_pack *)data;
 	tmp = phoneui_utils_contact_display_name_get(contact);
