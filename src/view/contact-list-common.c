@@ -232,10 +232,8 @@ contact_list_item_add(struct ContactListData *list_data,
 void
 contact_list_fill_index(struct ContactListData *list_data)
 {
-	/* FIXME: limit to 13 indexes - BAD, gotta find a way to calculate
-	 * this, furthermore, should probably choose the best indexes better
-	 * current_index_item - may be used uninitialized, verify */
-	static int limit = 13;
+	static const int index_button_height = 20; /*FIXME: get actual size*/
+	int limit = 1;
 	Evas_Object *win;
 	Elm_Genlist_Item *it, *current_index_item = NULL;
 	GHashTable *entry;
@@ -243,6 +241,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 	char *name;
 	int index_count;
 	int new_index;
+	int height;
 
 	win = ui_utils_view_window_get(list_data->view);
 	if (list_data->index) {
@@ -258,6 +257,9 @@ contact_list_fill_index(struct ContactListData *list_data)
 				       gl_index_changed, NULL);
 	evas_object_smart_callback_add(list_data->index, "selected",
 				       gl_index_selected, NULL);
+
+	evas_object_geometry_get(list_data->index, NULL, NULL, NULL, &height);
+	limit = height / index_button_height;
 	index_count = list_data->count / limit;
 	it = elm_genlist_first_item_get(list_data->list);
 	while (it) {
