@@ -232,14 +232,14 @@ contact_list_item_add(struct ContactListData *list_data,
 void
 contact_list_fill_index(struct ContactListData *list_data)
 {
-	static const int index_button_height = 20; /*FIXME: get actual size*/
+	static const int index_button_height = 25; /*FIXME: get actual size*/
 	int limit = 1;
 	Evas_Object *win;
 	Elm_Genlist_Item *it, *current_index_item = NULL;
 	GHashTable *entry;
 	char *idx, *current_index = NULL;
 	char *name;
-	int index_count;
+	int init_index_count, index_count;
 	int new_index;
 	int height;
 
@@ -260,7 +260,8 @@ contact_list_fill_index(struct ContactListData *list_data)
 
 	evas_object_geometry_get(list_data->index, NULL, NULL, NULL, &height);
 	limit = height / index_button_height;
-	index_count = list_data->count / limit;
+	init_index_count = list_data->count / (limit - 1); /* The number of indexes excluding the first */
+	index_count = 0; /* Add the first as well */
 	it = elm_genlist_first_item_get(list_data->list);
 	while (it) {
 		entry = (GHashTable *)elm_genlist_item_data_get(it);
@@ -284,7 +285,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 				elm_index_item_append(list_data->index,
 						      current_index,
 						      current_index_item);
-				index_count = list_data->count / limit;
+				index_count = init_index_count;
 			}
 			index_count--;
 		}
