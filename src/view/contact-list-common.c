@@ -232,7 +232,7 @@ contact_list_item_add(struct ContactListData *list_data,
 void
 contact_list_fill_index(struct ContactListData *list_data)
 {
-	static const int index_button_height = 20; /*FIXME: get actual size*/
+	static const int index_button_height = 25; /*FIXME: get actual size*/
 	int limit = 1;
 	Evas_Object *win;
 	Elm_Genlist_Item *it, *current_index_item = NULL;
