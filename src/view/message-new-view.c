@@ -113,12 +113,8 @@ message_new_view_init(GHashTable *options)
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);
 
-	ui_utils_view_layout_set(VIEW_PTR(*view), phoneui_theme,
-				 "phoneui/messages/new");
-
 	view->pager = elm_pager_add(win);
 	elm_win_resize_object_add(win, view->pager);
-	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 	evas_object_show(view->pager);
 
 	_init_content_page(view);
@@ -220,12 +216,14 @@ gl_del(const void *data, Evas_Object *obj)
 static void
 _init_content_page(struct MessageNewViewData *view)
 {
-	Evas_Object *win, *btn, *sc;
+	Evas_Object *win, *btn;
 
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 
-	view->layout_content = elm_layout_add(view->pager);
+	view->layout_content = elm_layout_add(win);
 	elm_win_resize_object_add(win, view->layout_content);
+	evas_object_size_hint_weight_set(view->layout_content,
+					 EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_layout_file_set(view->layout_content, phoneui_theme,
 			    "phoneui/messages/new/content");
 	evas_object_show(view->layout_content);
@@ -233,20 +231,15 @@ _init_content_page(struct MessageNewViewData *view)
 	edje_object_part_text_set(elm_layout_edje_get(view->layout_content),
 			"content_title", D_("Enter your message"));
 
-	sc = elm_scroller_add(win);
-	view->content_entry = elm_entry_add(win);
-	evas_object_size_hint_weight_set(view->content_entry,
-			EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	view->content_entry = elm_scrolled_entry_add(win);
 	evas_object_smart_callback_add(view->content_entry, "changed",
 				       _content_changed, view);
 	if (view->content != NULL) {
-		elm_entry_entry_set(view->content_entry,
+		elm_scrolled_entry_entry_set(view->content_entry,
 				    elm_entry_utf8_to_markup(view->content));
 	}
-	elm_scroller_content_set(sc, view->content_entry);
 	evas_object_show(view->content_entry);
-	elm_layout_content_set(view->layout_content, "content_entry", sc);
-	evas_object_show(sc);
+	elm_layout_content_set(view->layout_content, "content_entry", view->content_entry);
 	elm_object_focus(view->content_entry);
 
 	btn = elm_button_add(win);
@@ -667,7 +660,7 @@ _content_changed(void *_data, Evas_Object * obj, void *event_info)
 
 	/*FIXME: consider changing to an iterative way by using get_size (emulating what's
 	 * being done in phone_utils) as calculating for all the string on every keystroke is a bit sluggish. */
-	content = elm_entry_markup_to_utf8(elm_entry_entry_get(obj));
+	content = elm_entry_markup_to_utf8(elm_scrolled_entry_entry_get(obj));
 	/* if the entry is still empty elm_entry_markup_to_utf8 will return
 	 * NULL - which makes g_strstrip segfault :|
 	 * and we don't have to do all the fancy calculation

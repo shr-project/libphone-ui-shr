@@ -258,21 +258,6 @@ group { name: "elm/genlist/item/message/default";
 } /* elm/genlist/item/message/default */
 
 ///////////////////////////////////////////////////////////////////////////////
-group { name: "phoneui/messages/new";
-	parts {
-		part { name: "main";
-			type: SWALLOW;
-			mouse_events: 1;
-			description {
-				state: "default" 0.0;
-				rel1.relative: 0.0 0.0;
-				rel2.relative: 1.0 1.0;
-			}
-		}
-	}
-} /* phoneui/messages/new */
-
-///////////////////////////////////////////////////////////////////////////////
 group { name: "phoneui/messages/new/content";
 	parts {
 		part { name: "content_title";
