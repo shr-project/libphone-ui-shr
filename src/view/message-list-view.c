@@ -456,17 +456,15 @@ _process_message(gpointer _message, gpointer _data)
 	gval_tmp = g_hash_table_lookup(message, "Direction");
 	if (gval_tmp) {
 		tmp = g_value_get_string(gval_tmp);
-		if (tmp && strncmp(tmp, "in", 2) == 0) {
-			gval_tmp = g_hash_table_lookup(message, "Sender");
-		}
-		else {
-			gval_tmp = g_hash_table_lookup(message, "Recipient");
-		}
-		if (gval_tmp) {
-			number = g_value_get_string(gval_tmp);
-			g_hash_table_insert(rowdata, "Phone",
-					common_utils_new_gvalue_string(number));
-		}
+		g_hash_table_insert(rowdata, "Direction",
+				    common_utils_new_gvalue_string(tmp));
+	}
+
+	gval_tmp = g_hash_table_lookup(message, "Peer");
+	if (gval_tmp) {
+		tmp = g_value_get_string(gval_tmp);
+		g_hash_table_insert(rowdata, "Phone",
+				    common_utils_new_gvalue_string(tmp));
 	}
 
 	gval_tmp = g_hash_table_lookup(message, "Content");
