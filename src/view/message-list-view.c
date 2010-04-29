@@ -530,7 +530,6 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	GHashTable *message = (GHashTable *)data;
 	GValue *tmp;
 
-	g_debug("gl_label_get: %s", part);
 	if (!strcmp(part, "elm.name")) {
 		tmp = g_hash_table_lookup(message, "Name");
 		if (tmp) {
@@ -566,7 +565,6 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 	GValue *tmp;
 	GHashTable *message = (GHashTable *)data;
 
-	g_debug("gl_icon_get: %s", part);
 	return NULL;
 	if (!strcmp(part, "elm.photo")) {
 		// TODO
@@ -607,7 +605,6 @@ gl_state_get(const void *data, Evas_Object *obj, const char *part)
 	GHashTable *message;
 	GValue *gval_tmp;
 
-	g_debug("gl_state_get: %s", part);
 	message = (GHashTable *)data;
 	gval_tmp = g_hash_table_lookup(message, "MessageRead");
 	if (gval_tmp) {
