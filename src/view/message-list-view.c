@@ -601,6 +601,7 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 static Eina_Bool
 gl_state_get(const void *data, Evas_Object *obj, const char *part)
 {
+	(void) part;
 	(void) obj;
 	GHashTable *message;
 	GValue *gval_tmp;
