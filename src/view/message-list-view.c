@@ -460,9 +460,16 @@ _process_message(gpointer _message, gpointer _data)
 				    common_utils_new_gvalue_string(tmp));
 	}
 
-	gval_tmp = g_hash_table_lookup(message, "Peer");
-	if (gval_tmp) {
+	if ((gval_tmp = g_hash_table_lookup(message, "Peer"))) {
 		tmp = g_value_get_string(gval_tmp);
+	}
+	else if ((gval_tmp = g_hash_table_lookup(message, "Sender"))) {
+		tmp = g_value_get_string(gval_tmp);
+	}
+	else if ((gval_tmp = g_hash_table_lookup(message, "Recipient"))) {
+		tmp = g_value_get_string(gval_tmp);
+	}
+	if (tmp) {
 		g_hash_table_insert(rowdata, "Phone",
 				    common_utils_new_gvalue_string(tmp));
 	}
