@@ -1,14 +1,18 @@
 #include <glib.h>
 #include <glib-object.h>
 
+#include <freesmartphone.h>
+
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils-contacts.h>
 #include <phoneui/phoneui-utils-sim.h>
 #include <phoneui/phoneui-info.h>
 
 #include "common-utils.h"
+#include "contact-list-common.h"
 #include "sim-manager-view.h"
 #include "ui-utils.h"
+#include "ui-utils-contacts.h"
 #include "phoneui-shr.h"
 #include "views.h"
 
@@ -25,7 +29,7 @@ struct SimManagerViewData {
 	struct SimManagerListData list_data;
 	Evas_Object *bx, *hv;
 	Evas_Object *bt_import_all, *bt_options, *bt_message, *bt_edit;
-	Evas_Object *bt_delete, *pb;
+	Evas_Object *bt_delete, *bt_copy_to_sim, *pb;
 	Evas_Object *notify;
 	Eina_Bool pb_run;
 	Ecore_Timer *pb_timer;
@@ -39,6 +43,9 @@ struct SimContactData {
 };
 
 static Elm_Genlist_Item_Class itc;
+
+
+void sim_manager_list_fill(struct SimManagerListData *list_data);
 
 /* progressbar functions taken from elementary_test*/
 static int
@@ -79,6 +86,113 @@ loading_indicator_stop()
 		ecore_timer_del(view.pb_timer);
 		view.pb_run = EINA_FALSE;
 	}
+}
+
+/* --- select contact functions --- */
+typedef struct {
+	struct View view;
+	void (*callback)(const char *, void *);
+	void *data;
+	Evas_Object *inwin;
+	Evas_Object *list, *layout, *cbutton, *sbutton;
+	struct ContactListData contact_list_data;
+	GList *numbers;
+} _contact_select_pack;
+
+static void
+_contact_select_delete_cb(struct View *selview, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	ui_utils_view_deinit(selview);
+}
+
+static void
+_contact_select_cancel(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	_contact_select_pack *pack = data;
+	pack->callback(NULL, pack->data);
+	ui_utils_view_deinit(&pack->view);
+}
+
+static void
+_contact_select_add(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	_contact_select_pack *pack = data;
+	Elm_Genlist_Item *it;
+	GHashTable *properties;
+	char *path = NULL;
+	const char *tmp;
+	GValue *p;
+	
+	it = elm_genlist_selected_item_get(pack->contact_list_data.list);
+	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+
+	if (properties) {
+		p = g_hash_table_lookup(properties, "Path");
+		if (p) {
+			tmp = g_value_get_string(p);
+			path = g_strdup(tmp);
+		}
+	}
+
+	pack->callback(path, pack->data);
+	ui_utils_view_deinit(&pack->view);
+}
+
+static void
+contact_select_view(void (*cb)(const char *, void *), void *data)
+{
+	Evas_Object *win;
+	int ret;
+	_contact_select_pack *pack =
+			g_malloc(sizeof(_contact_select_pack));
+	pack->callback = cb;
+	pack->data = data;
+
+	ret = ui_utils_view_init(VIEW_PTR(*pack), ELM_WIN_BASIC,
+				 D_("Select Contact"), NULL, NULL, NULL);
+
+	if (ret) {
+		g_critical("Failed to init sim manager view");
+		return;
+	}
+
+	win = ui_utils_view_window_get(VIEW_PTR(*pack));
+	ui_utils_view_delete_callback_set(VIEW_PTR(*pack), _contact_select_delete_cb);
+	pack->view.win = win;
+
+	ui_utils_view_layout_set(VIEW_PTR(*pack), phoneui_theme,
+				 "phoneui/messages/new/contacts");
+        elm_theme_extension_add(phoneui_theme);
+	pack->contact_list_data.view = &pack->view;
+	pack->contact_list_data.layout = pack->view.layout;
+	contact_list_add(&pack->contact_list_data);
+
+	pack->cbutton = elm_button_add(win);
+	elm_button_label_set(pack->cbutton, D_("Cancel"));
+	evas_object_smart_callback_add(pack->cbutton, "clicked",
+				       _contact_select_cancel, pack);
+	ui_utils_view_swallow(VIEW_PTR(pack), "contacts_button_back",
+			      pack->cbutton);
+	evas_object_show(pack->cbutton);
+
+	pack->sbutton = elm_button_add(win);
+	elm_button_label_set(pack->sbutton, D_("Select"));
+	evas_object_smart_callback_add(pack->sbutton, "clicked",
+				       _contact_select_add, pack);
+	ui_utils_view_swallow(VIEW_PTR(*pack), "contacts_button_add",
+			      pack->sbutton);
+	evas_object_show(pack->sbutton);
+
+	g_debug("fill contact list");
+	contact_list_fill(&pack->contact_list_data);
+
+	ui_utils_view_show(VIEW_PTR(*pack));
 }
 
 /* --- genlist callbacks --- */
@@ -129,6 +243,274 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 	evas_object_hide(view.hv);
 }
 
+/* add contact functions */
+typedef struct {
+	struct View* view;
+	const char *path;
+	const char *name;
+	const char *number;
+	int index;
+	Evas_Object *inwin;
+	Evas_Object *name_entry;
+	Evas_Object *number_entry;
+} _number_add_pack;
+
+static gboolean
+_number_add_destruct(gpointer data)
+{
+	_number_add_pack *pack = (_number_add_pack *) data;
+	g_debug("Destructing number add inwin");
+	evas_object_del(pack->inwin);
+	free (pack);
+	return FALSE;
+}
+
+void
+_number_add_add_to_sim(GError *error, gpointer pack)
+{
+	if (error) {
+		// FIXME: show notification
+		g_warning("Failed to write to SIM");
+	} else {
+		/*
+		elm_genlist_clear(view.list_data.list);
+		sim_manager_list_fill(&view.list_data);
+		*/
+		_number_add_pack *cpack = (_number_add_pack *) pack;
+
+		FreeSmartphoneGSMSIMEntry *entry;
+		entry = malloc(sizeof(FreeSmartphoneGSMSIMEntry));
+		entry->index = cpack->index;
+		entry->name = g_strdup(cpack->name);
+		entry->number = g_strdup(cpack->number);
+
+		struct SimContactData *data;
+		data = malloc(sizeof(*data));
+		data->entry = entry;
+		data->state = 0;
+
+		elm_genlist_item_append(view.list_data.list, &itc, data,
+				     NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+	}
+	g_timeout_add(0, _number_add_destruct, pack);
+}
+
+int
+_find_next_free_index(int max_index) {
+	int i, found;
+	Elm_Genlist_Item *it;
+	const struct SimContactData *entry;
+
+	for (i = 1; i <= max_index; i++) {
+		found = 0;
+		it = elm_genlist_first_item_get(view.list_data.list);
+		entry = elm_genlist_item_data_get(it);
+		while (entry) {
+			if (entry->entry->index == i) found = 1;
+			it = elm_genlist_item_next_get(it);
+			entry = elm_genlist_item_data_get(it);
+		}
+		if (found == 0) {
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+void
+_number_add_find_index_cb(GError *error, int max_index, int number_length,
+			   int name_length, gpointer data)
+{
+	(void)number_length;
+	(void)name_length;
+	int min_index;
+	_number_add_pack *pack = (_number_add_pack *) data;
+
+	if (error) {
+		g_warning("Failed retrieving Phonebook Info: (%d) %s",
+			  error->code, error->message);
+		// FIXME: show notification
+		g_timeout_add(0, _number_add_destruct, pack);
+		return;
+	}
+
+	min_index = _find_next_free_index(max_index);
+
+	if (min_index > 0) {
+		pack->index = min_index;
+		g_debug("Save contact: %s (%s) to index %d", pack->name,
+			pack->number, min_index);
+		phoneui_utils_sim_contact_store(SIM_CONTACTS_CATEGORY,
+					min_index, pack->name, pack->number,
+					_number_add_add_to_sim, pack);
+	} else {
+		// FIXME: show notification
+		g_warning("Failed to find an empty index on SIM!");
+		g_timeout_add(0, _number_add_destruct, pack);
+	}
+}
+
+static void
+_number_add_save(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	_number_add_pack *pack = (_number_add_pack *) data;
+	pack->name = elm_entry_markup_to_utf8(
+				elm_entry_entry_get(pack->name_entry));
+	pack->number = elm_entry_markup_to_utf8(
+				elm_entry_entry_get(pack->number_entry));
+	phoneui_utils_sim_phonebook_info_get(SIM_CONTACTS_CATEGORY,
+				       _number_add_find_index_cb, pack);
+}
+
+static void
+_number_add_cancel(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	_number_add_pack *pack = (_number_add_pack *) data;
+	g_timeout_add(0, _number_add_destruct, pack);
+}
+
+void
+_number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
+{
+	_number_add_pack *pack = (_number_add_pack *) data;
+	pack->name = phoneui_utils_contact_display_name_get(properties);
+
+	if (error || !properties) {
+		g_warning("Failed to retrieve Contact: %s", pack->path);
+		// FIXME: show notification
+		g_timeout_add(0, _number_add_destruct, pack);
+		return;
+	}
+
+	Evas_Object *name_lb, *sbtn, *win, *box, *number_lb, *fr0, *fr1;
+	Evas_Object *cbtn, *box0;
+
+	win = ui_utils_view_window_get(VIEW_PTR(view));
+	g_debug("add the inwin");
+	pack->inwin = elm_win_inwin_add(win);
+
+	g_debug("add the box");
+	box = elm_box_add(win);
+	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, 0.0);
+	elm_win_resize_object_add(win, box);
+	evas_object_show(box);
+
+	g_debug("add name label");
+	name_lb = elm_label_add(win);
+	elm_win_resize_object_add(win, name_lb);
+	evas_object_size_hint_weight_set(name_lb, EVAS_HINT_EXPAND, 0.0);
+	evas_object_size_hint_align_set(name_lb, EVAS_HINT_FILL, 0.0);
+	elm_label_label_set(name_lb, D_("Name:"));
+	evas_object_show(name_lb);
+	elm_box_pack_end(box, name_lb);
+
+	fr0 = elm_frame_add(win);
+	elm_object_style_set(fr0, "outdent_bottom");
+	evas_object_size_hint_weight_set(fr0, EVAS_HINT_EXPAND, 0.0);
+	evas_object_size_hint_align_set(fr0, EVAS_HINT_FILL, 0.0);
+	elm_box_pack_end(box, fr0);
+	evas_object_show(fr0);
+
+	// FIXME: entry expands too much on focus
+	g_debug("add name entry: %s", pack->name);
+	pack->name_entry = elm_entry_add(win);
+	elm_entry_single_line_set(pack->name_entry, EINA_TRUE);
+	elm_entry_editable_set(pack->name_entry, EINA_TRUE);
+	elm_entry_entry_set(pack->name_entry,
+			    elm_entry_utf8_to_markup(pack->name));
+	elm_frame_content_set(fr0, pack->name_entry);
+	evas_object_show(pack->name_entry);
+
+	g_debug("add number label");
+	number_lb = elm_label_add(win);
+	elm_win_resize_object_add(win, number_lb);
+	evas_object_size_hint_weight_set(number_lb, EVAS_HINT_EXPAND, 0.0);
+	evas_object_size_hint_align_set(number_lb, EVAS_HINT_FILL, 0.0);
+	elm_label_label_set(number_lb, D_("Number:"));
+	evas_object_show(number_lb);
+	elm_box_pack_end(box, number_lb);
+
+	fr1 = elm_frame_add(win);
+	elm_object_style_set(fr1, "outdent_bottom");
+	evas_object_size_hint_weight_set(fr1, EVAS_HINT_EXPAND, 0.0);
+	evas_object_size_hint_align_set(fr1, EVAS_HINT_FILL, 0.0);
+	elm_box_pack_end(box, fr1);
+	evas_object_show(fr1);
+
+	g_debug("add number entry: %s", pack->number);
+	pack->number_entry = elm_entry_add(win);
+	elm_entry_single_line_set(pack->number_entry, EINA_TRUE);
+	elm_entry_editable_set(pack->number_entry, EINA_TRUE);
+	elm_entry_entry_set(pack->number_entry,
+			    elm_entry_utf8_to_markup(pack->number));
+	elm_frame_content_set(fr1, pack->number_entry);
+	evas_object_show(pack->number_entry);
+
+	g_debug("add the bottom box");
+	box0 = elm_box_add(win);
+	elm_box_horizontal_set(box0, EINA_TRUE);
+	evas_object_size_hint_weight_set(box0, EVAS_HINT_EXPAND, 0.0);
+	elm_box_pack_end(box, box0);
+	evas_object_show(box0);
+
+	sbtn = elm_button_add(win);
+	elm_win_resize_object_add(win, sbtn);
+	evas_object_size_hint_weight_set(sbtn, EVAS_HINT_EXPAND, 0.0);
+	evas_object_size_hint_align_set(sbtn, EVAS_HINT_FILL, 0.0);
+	evas_object_smart_callback_add(sbtn, "clicked",
+				       _number_add_save, pack);
+	elm_button_label_set(sbtn, D_("Save"));
+	evas_object_show(sbtn);
+	elm_box_pack_start(box0, sbtn);
+
+	cbtn = elm_button_add(win);
+	elm_win_resize_object_add(win, cbtn);
+	evas_object_size_hint_weight_set(cbtn, EVAS_HINT_EXPAND, 0.0);
+	evas_object_size_hint_align_set(cbtn, EVAS_HINT_FILL, 0.0);
+	evas_object_smart_callback_add(cbtn, "clicked",
+				       _number_add_cancel, pack);
+	elm_button_label_set(cbtn, D_("Cancel"));
+	evas_object_show(cbtn);
+	elm_box_pack_end(box0, cbtn);
+
+	elm_win_inwin_content_set(pack->inwin, box);
+	elm_win_inwin_activate(pack->inwin);
+}
+
+void
+_number_add_cb(const char *number, void *data)
+{
+	g_debug("sim-manager: selected number: %s", number);
+	_number_add_pack *pack = (_number_add_pack *) data;
+	pack->number = g_strdup(number);
+	phoneui_utils_contact_get(pack->path, _number_add_contact_get_cb, pack);
+}
+
+void
+_list_copy_to_sim_cb(const char *path, void *data)
+{
+	g_debug("sim-manager: selected contact: %s", path);
+	_number_add_pack *pack = (_number_add_pack *) data;
+	pack->path = g_strdup(path);
+	ui_utils_contacts_contact_number_select(VIEW_PTR(view), path,
+						_number_add_cb, data);
+}
+
+static void
+_list_copy_to_sim_clicked(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	(void) data;
+	_number_add_pack *pack = g_malloc(sizeof(_number_add_pack));
+	contact_select_view( _list_copy_to_sim_cb, pack);
+}
+
 /* import functions */
 static void
 _import_one_contact_cb(GError *error, char *path, void *data)
@@ -142,8 +524,9 @@ _import_one_contact_cb(GError *error, char *path, void *data)
 	if (error) {
 		g_warning("importing one contact failed: (%d) %s",
 			  error->code, error->message);
-		view.notify = ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
-					      D_("Importing contact failed"), 10);
+		view.notify = ui_utils_notify(
+				ui_utils_view_window_get(VIEW_PTR(view)),
+				D_("Importing contact failed"), 10);
 		cdata->state = 1;
 	}
 	else {
@@ -191,7 +574,8 @@ _import_all_contacts_cb(GError *error, char *path, void *data)
 }
 
 static void
-_import_contact(Elm_Genlist_Item *it, void (*callback)(GError *, char *, gpointer))
+_import_contact(Elm_Genlist_Item *it,
+		void (*callback)(GError *, char *, gpointer))
 {
 	g_debug("_import_contact()");
 	GValue *gval;
@@ -377,7 +761,7 @@ _delete_cb(struct View *view, Evas_Object *obj, void *event_info)
 	(void)obj;
 	(void)event_info;
 	loading_indicator_stop();
-	sim_manager_view_hide();
+	sim_manager_view_deinit();
 }
 
 int
@@ -395,6 +779,7 @@ sim_manager_view_init()
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
+	view.view.win = win;
 
 	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
 				 "phoneui/settings/sim-manager");
@@ -409,6 +794,14 @@ sim_manager_view_init()
 	ui_utils_view_swallow(VIEW_PTR(view), "button_import_all",
 			      view.bt_import_all);
 	evas_object_show(view.bt_import_all);
+
+	view.bt_copy_to_sim = elm_button_add(win);
+	elm_button_label_set(view.bt_copy_to_sim, D_("Copy to SIM"));
+	evas_object_smart_callback_add(view.bt_copy_to_sim, "clicked",
+				       _list_copy_to_sim_clicked, NULL);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_new",
+			      view.bt_copy_to_sim);
+	evas_object_show(view.bt_copy_to_sim);
 
 	view.bt_options = elm_button_add(win);
 	elm_button_label_set(view.bt_options, D_("Options"));
