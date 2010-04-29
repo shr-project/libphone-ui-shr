@@ -225,15 +225,21 @@ _network_status(void *data, GHashTable *properties)
 {
 	(void) data;
 	GValue *v;
-	const char *s;
+	const char *s = "";
 	const char *sig = "";
 
 	v = g_hash_table_lookup(properties, "display");
 	if (v) {
-		g_debug("provider is '%s'", g_value_get_string(v));
-		ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider",
-				       g_value_get_string(v));
+		s = g_value_get_string(v);
 	}
+	if (!s || !*s) {
+		v = g_hash_table_lookup(properties, "provider");
+		if (v) {
+			s = g_value_get_string(v);
+		}
+	}
+	g_debug("provider is '%s'", g_value_get_string(v));
+	ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", s);
 	v = g_hash_table_lookup(properties, "strength");
 	if (v) {
 		_update_signal_strength(g_value_get_int(v));
