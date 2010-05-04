@@ -516,7 +516,6 @@ _process_message(gpointer _message, gpointer _data)
 				     ELM_GENLIST_ITEM_NONE, NULL, NULL);
 	}
 
-	common_utils_debug_dump_hashtable(message);
 	gval_tmp = g_hash_table_lookup(message, "@Contacts");
 	if (gval_tmp) {
 		char *path = phoneui_utils_contact_get_dbus_path
