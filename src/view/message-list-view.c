@@ -461,17 +461,17 @@ _process_message(gpointer _message, gpointer _data)
 	}
 
 	if ((gval_tmp = g_hash_table_lookup(message, "Peer"))) {
-		tmp = g_value_get_string(gval_tmp);
+		number = g_value_get_string(gval_tmp);
 	}
 	else if ((gval_tmp = g_hash_table_lookup(message, "Sender"))) {
-		tmp = g_value_get_string(gval_tmp);
+		number = g_value_get_string(gval_tmp);
 	}
 	else if ((gval_tmp = g_hash_table_lookup(message, "Recipient"))) {
-		tmp = g_value_get_string(gval_tmp);
+		number = g_value_get_string(gval_tmp);
 	}
-	if (tmp) {
+	if (number) {
 		g_hash_table_insert(rowdata, "Phone",
-				    common_utils_new_gvalue_string(tmp));
+				    common_utils_new_gvalue_string(number));
 	}
 
 	gval_tmp = g_hash_table_lookup(message, "Content");
