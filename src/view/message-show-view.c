@@ -106,14 +106,18 @@ message_show_view_init(char* path, GHashTable *properties)
 			}
 		}
 	}
-
-	tmp = g_hash_table_lookup(properties, "Sender");
+        tmp = g_hash_table_lookup(properties, "Peer");
+	if (!tmp) {
+		tmp = g_hash_table_lookup(properties, "Sender");
+	}
 	if (!tmp) {
 		tmp = g_hash_table_lookup(properties, "Recipient");
 	}
 	if (tmp) {
 		view->number = strdup(g_value_get_string(tmp));
 		g_debug("Found number %s - starting lookup", view->number);
+		// FIXME: use new @Contacts feature from opimd whenever it is
+		//        clear how to do that :P
 		phoneui_utils_contact_lookup(view->number,
 					     _common_name_callback,
 					     common_utils_object_ref(view));
