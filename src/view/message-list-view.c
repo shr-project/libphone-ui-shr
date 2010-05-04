@@ -516,8 +516,13 @@ _process_message(gpointer _message, gpointer _data)
 				     ELM_GENLIST_ITEM_NONE, NULL, NULL);
 	}
 
-	if (number) {
-		phoneui_utils_contact_lookup(number, _contact_lookup, it);
+	common_utils_debug_dump_hashtable(message);
+	gval_tmp = g_hash_table_lookup(message, "@Contacts");
+	if (gval_tmp) {
+		char *path = phoneui_utils_contact_get_dbus_path
+						(g_value_get_int(gval_tmp));
+		phoneui_utils_contact_get(path, _contact_lookup, it);
+		free(path);
 	}
 
 	g_hash_table_destroy(message);
