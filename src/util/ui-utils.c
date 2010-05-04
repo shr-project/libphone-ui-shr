@@ -362,11 +362,11 @@ ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 	pack->inwin = elm_win_inwin_add(win);
 	box = elm_box_add(win);
 	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND,
-					 EVAS_HINT_EXPAND);
+	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	lbl = elm_label_add(win);
 	elm_label_label_set(lbl, label);
-	evas_object_size_hint_align_set(lbl, EVAS_HINT_FILL, EVAS_HINT_FILL);
+	evas_object_size_hint_align_set(lbl, 0.5, 0.5);
+	evas_object_size_hint_weight_set(lbl, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_show(lbl);
 	elm_box_pack_end(box, lbl);
 
