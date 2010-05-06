@@ -208,7 +208,6 @@ _profiles_list_cb(GError *error, char **list, int count, gpointer userdata)
 		return;
 	}
 
-	elm_hoversel_hover_begin(view.profiles_combo);
 	for (i = 0; i < count; i++) {
 		elm_hoversel_item_add(view.profiles_combo, list[i], NULL,
 			ELM_ICON_NONE, NULL, NULL);
