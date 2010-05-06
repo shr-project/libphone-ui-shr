@@ -132,14 +132,13 @@ quick_settings_view_init()
 	phoneui_utils_resources_get_resource_policy("CPU", _cpu_get_policy_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("Display", _display_get_policy_cb, NULL);
 
-	elm_layout_sizing_eval(view.parent.layout);
-
 	/*Register to all signals*/
 	phoneui_info_register_and_request_profile_changes(_profile_changed_signal_cb, NULL);
 	phoneui_info_register_and_request_resource_status(_resource_changed_signal_cb, NULL);
 
 	/*FIXME: until we implement it*/
 	elm_object_disabled_set(view.airplane_slide, 1);
+
 	return 0;
 }
 
