@@ -1,7 +1,38 @@
 
 group { name: "phoneui/settings/quick-settings";
 	parts {
-		part { 
+		part {
+			name: "toolbar";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1.relative: 0.0 0.0;
+				rel2.relative: 1.0 0.0;
+				rel2.offset: 0 30;
+				fixed: 1 1;
+			}
+		}
+		part {
+			name: "pager";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				rel1 {
+					to_y: "toolbar";
+					relative: 0.0 1.0;
+					offset: 0 2;
+				}
+				rel2.relative: 1.0 1.0;
+			}
+		}
+	}
+}
+
+group { name: "phoneui/settings/quick-settings/profile-power";
+	parts {
+		part {
 			name: "frame";
 			type: RECT;
 			mouse_events: 0;
@@ -18,7 +49,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "profiles-frame";
 			type: RECT;
 			mouse_events: 0;
@@ -37,7 +68,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "profiles-frame-headline";
 			type: TEXT;
 			mouse_events: 0;
@@ -63,7 +94,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "profiles-frame-airplane-frame";
 			type: RECT;
 			mouse_events: 0;
@@ -82,7 +113,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "profiles-frame-airplane-frame-headline";
 			type: TEXT;
 			mouse_events: 0;
@@ -102,13 +133,13 @@ group { name: "phoneui/settings/quick-settings";
 				text {
 					text: "Airplane mode:";
 					font: "redensek";
-					size: 1;
+					size: 20;
 					fit: 1 1;
 					align: 0.0 1.0;
 				}
 			}
 		}
-		part { 
+		part {
 			name: "profiles-frame-airplane-slide";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -126,7 +157,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "profiles-frame-profiles-combo";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -144,7 +175,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame";
 			type: RECT;
 			mouse_events: 0;
@@ -163,7 +194,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-headline";
 			type: TEXT;
 			mouse_events: 0;
@@ -189,7 +220,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-auto-frame";
 			type: RECT;
 			mouse_events: 0;
@@ -208,7 +239,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-auto-frame-dimming-label";
 			type: TEXT;
 			mouse_events: 0;
@@ -234,7 +265,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-auto-frame-dimming-slide";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -254,7 +285,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-auto-frame-suspend-label";
 			type: TEXT;
 			mouse_events: 0;
@@ -282,7 +313,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-auto-frame-suspend-slide";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -302,7 +333,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-suspend-button";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -321,7 +352,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-lock-button";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -340,7 +371,7 @@ group { name: "phoneui/settings/quick-settings";
 				}
 			}
 		}
-		part { 
+		part {
 			name: "power-frame-shutdown-button";
 			type: SWALLOW;
 			mouse_events: 1;
@@ -360,8 +391,186 @@ group { name: "phoneui/settings/quick-settings";
 			}
 		}
 	}
+}
 
-	programs {
-
+group { name: "phoneui/settings/quick-settings/network";
+	parts {
+		part {
+			name: "frame";
+			type: RECT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 0 0;
+				}
+				rel2 {
+					relative: 1.0 1.0;
+ 					offset: 0 0;
+				}
+			}
+		}
+		part {
+			name: "network-frame";
+			type: RECT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 255 255 255 255;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 1 1;
+					to: "frame";
+				}
+				rel2 {
+					relative: 1.0 1.0;
+					offset: -2 -2;
+					to: "frame";
+				}
+			}
+		}
+		part {
+			name: "network-frame-headline";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 150 150 150 255;
+				rel1 {
+					relative: 0.0 0.0;
+					offset: 3 3;
+					to: "network-frame";
+				}
+				rel2 {
+					relative: 1.0 0.08;
+ 					offset: 0 0;
+					to: "network-frame";
+				}
+				text {
+					text: "Networking";
+					font: "redensek:style=bold";
+					size: 1;
+					fit: 1 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part {
+			name: "network-frame-auto-frame";
+			type: RECT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+				rel1 {
+					relative: 0.0 1.0;
+					offset: 0 0;
+					to: "network-frame-headline";
+				}
+				rel2 {
+					relative: 1.0 0.4;
+ 					offset: 0 0;
+					to: "network-frame";
+				}
+			}
+		}
+		part {
+			name: "network-frame-auto-frame-gprs-label";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.1;
+					offset: 0 0;
+					to: "network-frame-auto-frame";
+				}
+				rel2 {
+					relative: 0.4 0.3;
+ 					offset: 0 0;
+					to: "network-frame-auto-frame";
+				}
+				text {
+					text: "GPRS:";
+					font: "redensek";
+					size: 20;
+					fit: 1 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part {
+			name: "network-frame-auto-frame-gprs-slide";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+				fixed: 1 1;
+				rel1 {
+					relative: 1.0 0.0;
+					offset: 20 0;
+					to: "network-frame-auto-frame-gprs-label";
+				}
+				rel2 {
+					relative: 0.8 1.0;
+ 					offset: 0 0;
+					to_x: "network-frame-auto-frame";
+					to_y: "network-frame-auto-frame-gprs-label";
+				}
+			}
+		}
+		part {
+			name: "network-frame-auto-frame-sharing-label";
+			type: TEXT;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 255;
+				rel1 {
+					relative: 0.0 0.5;
+					offset: 0 0;
+					to_x: "network-frame-auto-frame-gprs-label";
+					to_y: "network-frame-auto-frame";
+				}
+				rel2 {
+					relative: 1.0 0.7;
+ 					offset: 0 0;
+					to_x: "network-frame-auto-frame-gprs-label";
+					to_y: "network-frame-auto-frame";
+				}
+				text {
+					text: "Share:";
+					font: "redensek";
+					size: 1;
+					fit: 1 1;
+					align: 0.0 0.5;
+				}
+			}
+		}
+		part {
+			name: "network-frame-auto-frame-sharing-slide";
+			type: SWALLOW;
+			mouse_events: 1;
+			description {
+				state: "default" 0.0;
+				color: 0 0 0 0;
+				fixed: 1 1;
+				rel1 {
+					relative: 1.0 0.0;
+					offset: 20 0;
+					to: "network-frame-auto-frame-sharing-label";
+				}
+				rel2 {
+					relative: 0.8 1.0;
+ 					offset: 0 0;
+					to_x: "network-frame-auto-frame";
+					to_y: "network-frame-auto-frame-sharing-label";
+				}
+			}
+		}
 	}
-} 
+}
