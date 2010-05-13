@@ -32,7 +32,7 @@ window_init(struct Window *win)
 {
 
 	if (phoneui_theme)
-		elm_theme_overlay_add(phoneui_theme);
+		elm_theme_overlay_add(NULL, phoneui_theme);
 
 	// Window
 	win->win = elm_win_add(NULL, "main", ELM_WIN_BASIC);
