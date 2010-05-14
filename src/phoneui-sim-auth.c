@@ -9,20 +9,21 @@
 void
 phoneui_backend_sim_auth_show(const int status)
 {
-	g_debug("phoneui_backend_sim_auth_show()");
+	// FIXME: remove status from the specs
+	(void) status;
 
 	if (!sim_auth_input_view_is_init()) {
 		if (sim_auth_input_view_init()) {
 			return;
 		}
 	}
-	sim_auth_input_view_show(status);
+	sim_auth_input_view_show();
 }
 
 void
 phoneui_backend_sim_auth_hide(const int status)
 {
+	// FIXME: remove status from the specs
 	(void) status;
-	g_debug("phoneui_backend_sim_auth_hide()");
 	sim_auth_input_view_hide();
 }

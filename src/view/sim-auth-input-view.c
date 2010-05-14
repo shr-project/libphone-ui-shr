@@ -52,6 +52,7 @@ static void _sim_auth_delete_clicked(void *data, Evas_Object *obj, void *event_i
 static void _evaluate_status(const int status);
 static void _sim_auth_update();
 static gboolean _sim_auth_close(gpointer data);
+static void _auth_status_cb(GError *error, FreeSmartphoneGSMSIMAuthStatus status, gpointer data);
 
 
 int
@@ -114,9 +115,9 @@ sim_auth_input_view_deinit()
 }
 
 void
-sim_auth_input_view_show(const int status)
+sim_auth_input_view_show()
 {
-	_evaluate_status(status);
+	phoneui_utils_sim_auth_status_get(_auth_status_cb, NULL);
 	ui_utils_view_show(VIEW_PTR(view));
 }
 
