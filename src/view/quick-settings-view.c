@@ -317,14 +317,25 @@ _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 }
 
 static void
+_shutdown_confirm_cb(int result, void *data)
+{
+	(void) data;
+	if (result == DIALOG_YES) {
+		/*FIXME: Add error handling */
+		phoneui_utils_usage_shutdown(NULL, NULL);
+		quick_settings_view_hide();
+	}
+}
+
+static void
 _button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
 	(void) obj;
-	/*FIXME: Add error handling */
-	phoneui_utils_usage_shutdown(NULL, NULL);
-	quick_settings_view_hide();
+	ui_utils_dialog(VIEW_PTR(view),
+			D_("Do you really want to<br>shutdown the phone?"),
+			DIALOG_YES|DIALOG_NO, _shutdown_confirm_cb, NULL);
 }
 
 static void
