@@ -607,15 +607,15 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 
 		program {
 			name: "showUnfinishedTasks";
-			signal: "*";
-			source: "showUnfinishedTasks";
+			signal: "show";
+			source: "unfinishedTasks";
 			action: STATE_SET "active" 0.0;
 			target: "unfinishedTasks";
 			}
 		program {
 			name: "hideUnfinishedTasks";
-			signal: "*";
-			source: "hideUnfinishedTasks";
+			signal: "hide";
+			source: "unfinishedTasks";
 			action: STATE_SET "default" 0.0;
 			target: "unfinishedTasks";
 			}
@@ -654,15 +654,15 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 
 		program {
 			name: "showUnreadMessages";
-			signal: "*";
-			source: "showUnreadMessages";
+			signal: "show";
+			source: "unreadMessages";
 			action: STATE_SET "active" 0.0;
 			target: "unreadMessages";
 			}
 		program {
 			name: "hideUnreadMessages";
-			signal: "*";
-			source: "hideUnreadMessages";
+			signal: "hide";
+			source: "unreadMessages";
 			action: STATE_SET "default" 0.0;
 			target: "unreadMessages";
 			}
@@ -701,15 +701,15 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 
 		program {
 			name: "showMissedCalls";
-			signal: "*";
-			source: "showMissedCalls";
+			signal: "show";
+			source: "missedCalls";
 			action: STATE_SET "active" 0.0;
 			target: "missedCalls";
 			}
 		program {
 			name: "hideMissedCalls";
-			signal: "*";
-			source: "hideMissedCalls";
+			signal: "hide";
+			source: "missedCalls";
 			action: STATE_SET "default" 0.0;
 			target: "missedCalls";
 			}

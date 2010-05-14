@@ -311,12 +311,12 @@ _update_counter(const char *name, const char *label_name,
 	snprintf(buf, 16, "%d", count);
 
 	if (count > 0) {
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
-						  name, "active", 0.0);
+		edje_object_signal_emit
+			(ui_utils_view_layout_get(VIEW_PTR(view)), "show", name);
 	}
 	else {
-		edje_edit_part_selected_state_set(ui_utils_view_layout_get(VIEW_PTR(view)),
-						  name, "default", 0.0);
+		edje_object_signal_emit
+			(ui_utils_view_layout_get(VIEW_PTR(view)), "hide", name);
 	}
 	ui_utils_view_text_set(VIEW_PTR(view), label_name, buf);
 }
