@@ -64,7 +64,7 @@ static void _gprs_slide_changed_cb(void *data, Evas_Object *obj, void *event_inf
 static void _sharing_slide_changed_cb(void *data, Evas_Object *obj, void *event_info);
 static void _profile_changed_signal_cb(void *userdata, const char *profile);
 static void _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state, GHashTable *attributes);
-static void _network_status_signal_cb(void *userdata, GHashTable *status);
+static void _pdp_context_status_signal_cb(void* data, FreeSmartphoneGSMContextStatus status, GHashTable* attributes);
 static void _cpu_get_policy_cb(GError *error, FreeSmartphoneUsageResourcePolicy policy, gpointer userdata);
 static void _display_get_policy_cb(GError *error, FreeSmartphoneUsageResourcePolicy policy, gpointer userdata);
 static void _toolbar_clicked(void *data, Evas_Object *obj, void *event_info);
@@ -247,7 +247,7 @@ _init_network_page()
 
 	elm_pager_content_push(view.pager, view.layout2);
 
-	phoneui_info_register_and_request_network_status(_network_status_signal_cb, NULL);
+	phoneui_info_register_and_request_pdp_context_status(_pdp_context_status_signal_cb, NULL);
 }
 
 static void
@@ -406,21 +406,22 @@ clean:
 }
 
 static void
-_network_status_signal_cb(void *data, GHashTable *status)
+_pdp_context_status_signal_cb(void* data,
+			      FreeSmartphoneGSMContextStatus status,
+			      GHashTable* attributes)
 {
 	(void) data;
-	GValue *gval_tmp;
+	(void) attributes;
 
-	gval_tmp = g_hash_table_lookup(status, "pdp.registration");
-	if (gval_tmp) {
-		const char *reg = g_value_get_string(gval_tmp);
-		if (!strcmp(reg, "unregistered")) {
-			elm_toggle_state_set(view.gprs_slide, EINA_FALSE);
-		}
-		else {
-			elm_toggle_state_set(view.gprs_slide, EINA_TRUE);
-		}
+	if (status == FREE_SMARTPHONE_GSM_CONTEXT_STATUS_ACTIVE) {
+		elm_toggle_state_set(view.gprs_slide, EINA_TRUE);
+		elm_object_disabled_set(view.sharing_slide, EINA_FALSE);
 	}
+	else {
+		elm_toggle_state_set(view.gprs_slide, EINA_FALSE);
+		elm_object_disabled_set(view.sharing_slide, EINA_TRUE);
+	}
+	elm_toggle_state_set(view.sharing_slide, EINA_FALSE);
 }
 
 static void
@@ -512,6 +513,7 @@ static void
 _pdp_activate_cb(GError *error, gpointer data)
 {
 	(void) data;
+	elm_object_disabled_set(view.gprs_slide, EINA_FALSE);
 	if (error) {
 		g_warning("Activating PDP failed: (%d) %s",
 			  error->code, error->message);
@@ -522,7 +524,11 @@ static void
 _pdp_deactivate_cb(GError *error, gpointer data)
 {
 	(void) data;
-	(void) error;
+	elm_object_disabled_set(view.gprs_slide, EINA_FALSE);
+	if (error) {
+		g_warning("De-Activating PDP failed: (%d) %s",
+			  error->code, error->message);
+	}
 }
 
 static void
@@ -531,6 +537,9 @@ _gprs_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) event_info;
 	int state = elm_toggle_state_get(obj);
+	/* disable the toggler until we get hit by the signal that
+	the PDP context actually really changed */
+	elm_object_disabled_set(obj, EINA_TRUE);
 	if (state) {
 		phoneui_utils_pdp_activate_context(_pdp_activate_cb, NULL);
 	}
@@ -545,6 +554,13 @@ _sharing_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) event_info;
 	(void) obj;
+	int state = elm_toggle_state_get(obj);
+	if (state) {
+		phoneui_utils_network_start_connection_sharing("usb0", NULL, NULL);
+	}
+	else {
+		phoneui_utils_network_stop_connection_sharing("usb0", NULL, NULL);
+	}
 }
 
 static void
