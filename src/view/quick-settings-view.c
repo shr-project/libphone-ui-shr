@@ -54,6 +54,7 @@ static void _init_network_page();
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _profiles_list_cb(GError *error, char **list, int count, gpointer userdata);
 static void _profile_selected_cb(void *data, Evas_Object *obj, void *event_info);
+static void _get_offline_mode_cb(GError *error, gboolean offline, gpointer data);
 static void _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_shutdown_clicked_cb(void *data, Evas_Object *obj, void *event_info);
 static void _button_suspend_clicked_cb(void *data, Evas_Object *obj, void *event_info);
@@ -204,14 +205,12 @@ _init_profiles_power_page()
 				       _button_shutdown_clicked_cb, NULL);
 	evas_object_show(view.button_shutdown);
 
-	/*FIXME: until we implement it*/
-	elm_object_disabled_set(view.airplane_slide, 1);
-
 	elm_pager_content_push(view.pager, view.layout1);
 
 	phoneui_utils_sound_profile_list(_profiles_list_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("CPU", _cpu_get_policy_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("Display", _display_get_policy_cb, NULL);
+	phoneui_utils_get_offline_mode(_get_offline_mode_cb, NULL);
 
 	/*Register to all signals*/
 	phoneui_info_register_and_request_profile_changes(_profile_changed_signal_cb, NULL);
@@ -277,6 +276,20 @@ _profile_selected_cb(void *data, Evas_Object *obj, void *event_info)
 	const char *profile;
 	profile = elm_hoversel_item_label_get(event_info);
 	phoneui_utils_sound_profile_set(profile, _set_profile_cb, NULL);
+}
+
+static void
+_get_offline_mode_cb(GError *error, gboolean offline, gpointer data)
+{
+	(void) data;
+
+	if (error) {
+		g_warning("Failed with GetOfflineMode: (%d) %s",
+			  error->code, error->message);
+		g_error_free(error);
+		return;
+	}
+	elm_toggle_state_set(view.airplane_slide, offline);
 }
 
 static void
@@ -355,12 +368,8 @@ _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) event_info;
 	int state = elm_toggle_state_get(obj);
-	if (state) {
-
-	}
-	else {
-
-	}
+	// FIXME: Add callback with error handling
+	phoneui_utils_set_offline_mode(state, NULL, NULL);
 }
 static void
 _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state, GHashTable *attributes)
