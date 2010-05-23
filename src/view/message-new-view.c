@@ -738,12 +738,13 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	char *tmp;
 	const char *tmp2;
 	GValue *gval_tmp;
-	struct _recipient_pack *pack;
+	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 
-	// FIXME: show some nice notification
 	if (error) {
 		g_warning("Error will trying to resolve number: (%d) %s",
 			  error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(*pack->view),
+			D_("Error will trying to resolve number."), error);
 		return;
 	}
 	if (!contact ) {
@@ -751,7 +752,6 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 		return;
 	}
 
-	pack = (struct _recipient_pack *)data;
 	tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
 		g_hash_table_insert(pack->recipient, "Name",

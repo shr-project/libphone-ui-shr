@@ -273,8 +273,9 @@ static void
 _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
 	if (error) {
-		// FIXME: show a nice notification
 		g_warning("Contact lookup error: (%d) %s", error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Contact lookup error."), error);
 		return;
 	}
 	GHashTable *entry = data;
@@ -305,9 +306,15 @@ static void
 _get_callback(GError* error, GHashTable** entry, int count, gpointer data)
 {
 	(void) data;
-	(void) error; // FIXME: use it
 	GValue *val;
         int i;
+
+	if (error) {
+		g_warning("Cannot retrieve calls list: (%d) %s", error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Cannot retrieve calls list."), error);
+		return;
+	}
 
 	for (i = 0; i < count; i++) {
 		g_ptr_array_add(view.calls, entry[i]);

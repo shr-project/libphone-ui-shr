@@ -269,8 +269,10 @@ void
 _number_add_add_to_sim(GError *error, gpointer pack)
 {
 	if (error) {
-		// FIXME: show notification
-		g_warning("Failed to write to SIM");
+		g_warning("Failed to write to SIM: (%d) %s", error->code,
+			error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed to write to SIM."), error);
 	} else {
 		/*
 		elm_genlist_clear(view.list_data.list);
@@ -330,7 +332,8 @@ _number_add_find_index_cb(GError *error, int max_index, int number_length,
 	if (error) {
 		g_warning("Failed retrieving Phonebook Info: (%d) %s",
 			  error->code, error->message);
-		// FIXME: show notification
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed retrieving Phonebook Info."), error);
 		g_timeout_add(0, _number_add_destruct, pack);
 		return;
 	}
@@ -381,8 +384,11 @@ _number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
 	pack->name = phoneui_utils_contact_display_name_get(properties);
 
 	if (error || !properties) {
-		g_warning("Failed to retrieve Contact: %s", pack->path);
-		// FIXME: show notification
+		g_warning("Failed to retrieve contact: %s [error (%d) %s]",
+			pack->path,	(error)? error->code : 0,
+			(error)? error->message : "NULL");
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed to retrieve contact."), error);
 		g_timeout_add(0, _number_add_destruct, pack);
 		return;
 	}
@@ -730,7 +736,9 @@ _sim_contacts_get_callback(GError *error, FreeSmartphoneGSMSIMEntry *entry,
 	if (error) {
 		g_warning("Failed retrieving SIM Phonebook: (%d) %s",
 			  error->code, error->message);
-		// FIXME: show notification and destroy SIM Manager
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed retrieving SIM Phonebook."), error);
+		// FIXME: destroy SIM Manager
 		return;
 	}
 

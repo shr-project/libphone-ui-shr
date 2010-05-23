@@ -263,8 +263,10 @@ _set_profile_cb(GError *error, gpointer data)
 {
 	(void) data;
 	if (error) {
-		// FIXME: show some nice inwin
-		g_warning("Failed setting the profile!");
+		g_warning("Failed setting the profile: (%d) %s",
+			error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed setting the profile."), error);
 	}
 }
 
@@ -300,7 +302,10 @@ _profiles_list_cb(GError *error, char **list, int count, gpointer userdata)
 	int i;
 
 	if (error || !list) {
-		g_warning("Failed to retrieve profiles list");
+		g_warning("Failed to retrieve profiles list: (%d) %s",
+			(error)? error->code : 0, (error)? error->message : "NULL");
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed to retrieve profiles list."), error);
 		return;
 	}
 
@@ -526,6 +531,8 @@ _pdp_activate_cb(GError *error, gpointer data)
 	if (error) {
 		g_warning("Activating PDP failed: (%d) %s",
 			  error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Activating PDP failed."), error);
 	}
 }
 
@@ -537,6 +544,8 @@ _pdp_deactivate_cb(GError *error, gpointer data)
 	if (error) {
 		g_warning("De-Activating PDP failed: (%d) %s",
 			  error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("De-Activating PDP failed."), error);
 	}
 }
 

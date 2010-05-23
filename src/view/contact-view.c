@@ -637,6 +637,7 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 	}
 
 	formatted_changes = _sanitize_changes_hash(view->changes);
+	common_utils_debug_dump_hashtable(view->properties);
 	common_utils_debug_dump_hashtable(formatted_changes);
 	if (*view->path) {
 		g_debug("Updating contact '%s'", view->path);
@@ -688,7 +689,10 @@ _update_cb(GError *error, gpointer data)
 {
 	struct ContactViewData *view = data;
 	if (error) {
-		g_warning("Updating contact %s failed", view->path);
+		g_warning("Updating contact %s failed: (%d) %s", view->path,
+			error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Updating contact failed."), error);
 	}
 	else {
 		_set_modify(view, 0);
@@ -700,7 +704,10 @@ _add_cb(GError *error, char *path, gpointer data)
 {
 	struct ContactViewData *view = data;
 	if (error) {
-		g_warning("Adding the contact failed");
+		g_warning("Adding the contact failed: (%d) %s",
+			error->code, error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Adding the contact failed."), error);
 	}
 	else {
 		view->path = path;
@@ -715,8 +722,10 @@ _load_cb(GError *error, GHashTable *content, gpointer data)
 	struct ContactViewData *view = (struct ContactViewData *)data;
 	g_debug("_load_cb called");
 	if (error || !content) {
-		// FIXME: show some nice notification
-		g_critical("Failed loading data of saved contact");
+		g_critical("Failed loading data of saved contact: (%d) %s",
+			(error)? error->code : 0, (error)? error->message : "NULL");
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed loading data of saved contact."), error);
 		return;
 	}
 	/* cleanup up the old data of the contact */

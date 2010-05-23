@@ -90,4 +90,12 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 
 char *
 ui_utils_entry_utf8_get(Evas_Object *entry);
+
+void
+error_message_show(struct View *parent, const char *error_msg,
+	const char *detail_msg);
+void
+error_message_show_from_gerror(struct View *parent, const char *msg,
+	const GError *err);
+
 #endif

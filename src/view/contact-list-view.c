@@ -325,8 +325,10 @@ _add_contact_cb(GError *error, GHashTable *properties, gpointer data)
 	(void) data;
 	Elm_Genlist_Item *it;
 	if (error || !properties) {
-		// FIXME: show some nice notification
-		g_warning("Failed adding a contact");
+		g_warning("Failed adding a contact: (%d) %s",
+			(error)? error->code : 0, (error)? error->message : "NULL");
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Failed adding contact."), error);
 		return;
 	}
 	g_debug("Adding contact to the list");

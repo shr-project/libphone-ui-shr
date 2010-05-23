@@ -376,8 +376,15 @@ _dialer_call_initiated_cb(GError * error, int call_id, void *userdata)
 {
 	(void) userdata;
 	(void) call_id;
-	(void) error;
-	/*FIXME: Handle errors */
-	dialer_view_hide();
+
+	if (error)
+	{
+		g_warning("Cannot initiate call: (%d) %s", error->code,
+			error->message);
+		error_message_show_from_gerror(VIEW_PTR(view),
+			D_("Cannot initiate call."), error);
+	}
+	else
+		dialer_view_hide();
 }
 

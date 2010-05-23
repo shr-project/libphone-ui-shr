@@ -593,3 +593,82 @@ ui_utils_entry_utf8_get(Evas_Object *entry)
 		return strdup("");
 	}
 }
+
+static void
+error_message_ok_cb(void *data, Evas_Object *obj, void *event_info)
+{
+	(void)obj;
+	(void)event_info;
+
+	g_critical("error_message_ok_cb");
+
+	Evas_Object *inwin = (Evas_Object*)data;
+	evas_object_del(inwin);
+}
+
+void
+error_message_show(struct View *parent, const char *error_msg, const char *detail_msg)
+{
+	Evas_Object *win = ui_utils_view_window_get(parent);
+
+	Evas_Object *inwin = elm_win_inwin_add(win);
+	//evas_object_event_callback_add(inwin, EVAS_CALLBACK_DEL, error_message_del, NULL);
+
+	Evas_Object *box = elm_box_add(win);
+	elm_box_homogenous_set(box, EINA_FALSE);
+	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
+
+	Evas_Object *heading = elm_label_add(win);
+	//elm_label_line_wrap_set(heading, EINA_TRUE);
+	elm_label_label_set(heading, error_msg);
+	evas_object_size_hint_weight_set(heading, 1.0, 1.0);
+	evas_object_size_hint_align_set(heading, 0.5, 0.5);
+	evas_object_show(heading);
+	elm_box_pack_end(box, heading);
+
+	if (detail_msg) {
+		Evas_Object *lb = elm_label_add(win);
+		elm_label_line_wrap_set(lb, EINA_TRUE);
+		elm_label_label_set(lb, detail_msg);
+		evas_object_size_hint_weight_set(lb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+		evas_object_size_hint_align_set(lb, EVAS_HINT_FILL, EVAS_HINT_FILL);
+		evas_object_show(lb);
+
+		Evas_Object *scroller = elm_scroller_add(win);
+		evas_object_size_hint_weight_set(scroller, EVAS_HINT_EXPAND, 1.0);
+		evas_object_size_hint_align_set(scroller, EVAS_HINT_FILL, EVAS_HINT_FILL);
+		elm_scroller_content_set(scroller, lb);
+		evas_object_show(scroller);
+
+		elm_box_pack_end(box, scroller);
+	}
+
+	Evas_Object *bt = elm_button_add(win);
+	elm_button_label_set(bt, D_("Ok"));
+	evas_object_size_hint_weight_set(bt, EVAS_HINT_EXPAND, 0.0);
+	evas_object_size_hint_align_set(bt, EVAS_HINT_FILL, 1.0);
+	evas_object_smart_callback_add(bt, "clicked", error_message_ok_cb, inwin);
+
+	evas_object_show(bt);
+	elm_box_pack_end(box, bt);
+
+	elm_win_inwin_content_set(inwin, box);
+
+	elm_win_inwin_activate(inwin);
+}
+
+void
+error_message_show_from_gerror(struct View *parent, const char *msg,
+	const GError *err)
+{
+	if (err)
+	{
+		gchar *detail_msg = g_strdup_printf("(%d) %s",
+			err->code, err->message);
+		error_message_show(parent, msg, detail_msg);
+		g_free(detail_msg);
+	}
+	else
+		error_message_show(parent, msg, NULL);
+}
