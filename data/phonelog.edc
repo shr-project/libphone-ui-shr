@@ -28,7 +28,7 @@ group { name: "elm/genlist/item/phonelog/default";
 	alias: "elm/genlist/item_odd/phonelog/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
-	data.item: "labels" "elm.text elm.text.2 elm.text.sub elm.text.sub2";
+	data.item: "labels" "elm.text elm.text.2 elm.text.sub elm.text.sub.2";
 	data.item: "icons" "elm.swallow.icon elm.swallow.end";
 
 	parts {

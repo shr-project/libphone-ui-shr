@@ -360,7 +360,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 	if (!strcmp(part, "elm.text.sub.2")) {
 		val = g_hash_table_lookup(entry, "Duration");
 		if (val) {
-			int duration = g_value_get_int(val);
+			float duration = strtof(g_value_get_string(val), NULL);
 			int h = duration / 3600;
 			int m = duration / 60 - h * 60;
 			int s = duration - h * 3600 - m * 60;
