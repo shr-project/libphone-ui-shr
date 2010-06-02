@@ -600,8 +600,6 @@ error_message_ok_cb(void *data, Evas_Object *obj, void *event_info)
 	(void)obj;
 	(void)event_info;
 
-	g_critical("error_message_ok_cb");
-
 	Evas_Object *inwin = (Evas_Object*)data;
 	evas_object_del(inwin);
 }
