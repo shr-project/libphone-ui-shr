@@ -274,7 +274,7 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
 	if (error) {
 		g_warning("Contact lookup error: (%d) %s", error->code, error->message);
-		error_message_show_from_gerror(VIEW_PTR(view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Contact lookup error."), error);
 		return;
 	}
@@ -311,7 +311,7 @@ _get_callback(GError* error, GHashTable** entry, int count, gpointer data)
 
 	if (error) {
 		g_warning("Cannot retrieve calls list: (%d) %s", error->code, error->message);
-		error_message_show_from_gerror(VIEW_PTR(view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Cannot retrieve calls list."), error);
 		return;
 	}

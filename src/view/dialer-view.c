@@ -381,7 +381,7 @@ _dialer_call_initiated_cb(GError * error, int call_id, void *userdata)
 	{
 		g_warning("Cannot initiate call: (%d) %s", error->code,
 			error->message);
-		error_message_show_from_gerror(VIEW_PTR(view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Cannot initiate call."), error);
 	}
 	else

@@ -691,7 +691,7 @@ _update_cb(GError *error, gpointer data)
 	if (error) {
 		g_warning("Updating contact %s failed: (%d) %s", view->path,
 			error->code, error->message);
-		error_message_show_from_gerror(VIEW_PTR(view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Updating contact failed."), error);
 	}
 	else {
@@ -706,7 +706,7 @@ _add_cb(GError *error, char *path, gpointer data)
 	if (error) {
 		g_warning("Adding the contact failed: (%d) %s",
 			error->code, error->message);
-		error_message_show_from_gerror(VIEW_PTR(view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Adding the contact failed."), error);
 	}
 	else {
@@ -724,7 +724,7 @@ _load_cb(GError *error, GHashTable *content, gpointer data)
 	if (error || !content) {
 		g_critical("Failed loading data of saved contact: (%d) %s",
 			(error)? error->code : 0, (error)? error->message : "NULL");
-		error_message_show_from_gerror(VIEW_PTR(view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Failed loading data of saved contact."), error);
 		return;
 	}

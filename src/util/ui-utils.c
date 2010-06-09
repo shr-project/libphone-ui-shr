@@ -605,7 +605,7 @@ error_message_ok_cb(void *data, Evas_Object *obj, void *event_info)
 }
 
 void
-error_message_show(struct View *parent, const char *error_msg, const char *detail_msg)
+ui_utils_error_message_show(struct View *parent, const char *error_msg, const char *detail_msg)
 {
 	Evas_Object *win = ui_utils_view_window_get(parent);
 
@@ -657,16 +657,16 @@ error_message_show(struct View *parent, const char *error_msg, const char *detai
 }
 
 void
-error_message_show_from_gerror(struct View *parent, const char *msg,
+ui_utils_error_message_from_gerror_show(struct View *parent, const char *msg,
 	const GError *err)
 {
 	if (err)
 	{
 		gchar *detail_msg = g_strdup_printf("(%d) %s",
 			err->code, err->message);
-		error_message_show(parent, msg, detail_msg);
+		ui_utils_error_message_show(parent, msg, detail_msg);
 		g_free(detail_msg);
 	}
 	else
-		error_message_show(parent, msg, NULL);
+		ui_utils_error_message_show(parent, msg, NULL);
 }

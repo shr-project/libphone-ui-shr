@@ -743,7 +743,7 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	if (error) {
 		g_warning("Error will trying to resolve number: (%d) %s",
 			  error->code, error->message);
-		error_message_show_from_gerror(VIEW_PTR(*pack->view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(*pack->view),
 			D_("Error will trying to resolve number."), error);
 		return;
 	}
