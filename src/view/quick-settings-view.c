@@ -38,6 +38,10 @@
 #include "views.h"
 #include "quick-settings-view.h"
 
+/* How long do we wait before retrying retrieving sound profile list
+ * after a failure. */
+static const int PROFILE_RETRY_DELAY = 2000; /*ms*/
+
 struct QuickSettingsViewData {
 	struct View parent;
 	char *profile_str;
@@ -52,7 +56,9 @@ static struct QuickSettingsViewData view;
 static void _init_profiles_power_page();
 static void _init_network_page();
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
+static gboolean _profiles_list_retry(gpointer data);
 static void _profiles_list_cb(GError *error, char **list, int count, gpointer userdata);
+static void _profile_get_current_cb(GError *error, char *profile, gpointer userdata);
 static void _profile_selected_cb(void *data, Evas_Object *obj, void *event_info);
 static void _get_offline_mode_cb(GError *error, gboolean offline, gpointer data);
 static void _button_lock_clicked_cb(void *data, Evas_Object *obj, void *event_info);
@@ -207,7 +213,10 @@ _init_profiles_power_page()
 
 	elm_pager_content_push(view.pager, view.layout1);
 
+	/* Disabled until we get the list + current profile. */
+	elm_object_disabled_set(view.profiles_combo, EINA_TRUE);
 	phoneui_utils_sound_profile_list(_profiles_list_cb, NULL);
+
 	phoneui_utils_resources_get_resource_policy("CPU", _cpu_get_policy_cb, NULL);
 	phoneui_utils_resources_get_resource_policy("Display", _display_get_policy_cb, NULL);
 	phoneui_utils_get_offline_mode(_get_offline_mode_cb, NULL);
@@ -294,6 +303,14 @@ _get_offline_mode_cb(GError *error, gboolean offline, gpointer data)
 	elm_toggle_state_set(view.airplane_slide, offline);
 }
 
+static gboolean
+_profiles_list_retry(gpointer data)
+{
+	(void)data;
+	phoneui_utils_sound_profile_list(_profiles_list_cb, NULL);
+	return FALSE;
+}
+
 static void
 _profiles_list_cb(GError *error, char **list, int count, gpointer userdata)
 {
@@ -302,10 +319,16 @@ _profiles_list_cb(GError *error, char **list, int count, gpointer userdata)
 	int i;
 
 	if (error || !list) {
-		g_warning("Failed to retrieve profiles list: (%d) %s",
-			(error)? error->code : 0, (error)? error->message : "NULL");
-		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
-			D_("Failed to retrieve profiles list."), error);
+		if (error)
+			g_warning("Failed to retrieve profile list: (%d) %s; retrying later",
+				error->code, error->message);
+		else
+			g_warning("Failed to retrieve profile list: call succeeded, "
+				"but no data was received; retrying later");
+
+		/* Schedule a retry later */
+		g_timeout_add(PROFILE_RETRY_DELAY, _profiles_list_retry, NULL);
+
 		return;
 	}
 
@@ -313,6 +336,32 @@ _profiles_list_cb(GError *error, char **list, int count, gpointer userdata)
 		elm_hoversel_item_add(view.profiles_combo, list[i], NULL,
 			ELM_ICON_NONE, NULL, NULL);
 	}
+
+	/* Determine the current profile. */
+	phoneui_utils_sound_profile_get(_profile_get_current_cb, NULL);
+}
+
+static void
+_profile_get_current_cb(GError *error, char *profile, gpointer userdata)
+{
+	(void)userdata;
+
+	if (error || !profile) {
+		if (error)
+			g_warning("Failed to retrieve the current profile: (%d) %s",
+				error->code, error->message);
+		else
+			g_warning("Failed to retrieve the current profile: call succeeded, "
+				"but no data was received");
+
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
+			D_("Failed to retrieve the current profile."), error);
+	}
+	else
+		elm_hoversel_label_set(view.profiles_combo, profile);
+
+	/* Whether we got the profile or not, enable it now. */
+	elm_object_disabled_set(view.profiles_combo, EINA_FALSE);
 }
 
 static void
