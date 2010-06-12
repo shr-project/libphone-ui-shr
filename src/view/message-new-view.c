@@ -779,7 +779,8 @@ _message_send_callback(GError *error, int reference, const char *timestamp,
 	(void) timestamp;
 
 	if (error) {
-		// FIXME: show the error !!!
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
+				D_("Sending the message failed"), error);
 	}
 }
 
