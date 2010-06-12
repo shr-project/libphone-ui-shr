@@ -51,6 +51,7 @@ static void _number_button_delete_clicked(void *data, Evas_Object *obj, void *ev
 static void _number_update_number(struct MessageNewViewData* view);
 static void _process_recipient(gpointer _properties, gpointer _data);
 static void _contact_lookup(GError *error, GHashTable *contact, gpointer data);
+static void _message_send_callback(GError *error, int reference, const char *timestamp, gpointer data);
 static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
 static void gl_del(const void *data, Evas_Object *obj);
@@ -515,8 +516,8 @@ _recipients_button_send_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	if (view->recipients->len) {
-		// TODO: show inwin for progress via callback
-		phoneui_utils_sms_send(view->content, view->recipients, NULL, NULL);
+		phoneui_utils_sms_send(view->content, view->recipients,
+				       _message_send_callback, NULL);
 		message_new_view_deinit(view);
 		free(view);
 	}
@@ -766,6 +767,19 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	}
 	if (pack->view->layout_recipients) {
 		elm_genlist_item_update(pack->it);
+	}
+}
+
+static void
+_message_send_callback(GError *error, int reference, const char *timestamp,
+		       gpointer data)
+{
+	(void) data;
+	(void) reference;
+	(void) timestamp;
+
+	if (error) {
+		// FIXME: show the error !!!
 	}
 }
 
