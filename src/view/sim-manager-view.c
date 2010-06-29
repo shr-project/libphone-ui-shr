@@ -48,7 +48,7 @@ static Elm_Genlist_Item_Class itc;
 void sim_manager_list_fill(struct SimManagerListData *list_data);
 
 /* progressbar functions taken from elementary_test*/
-static int
+static Eina_Bool
 _loading_indicator_value_set (void *data)
 {
 	(void) data;
