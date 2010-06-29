@@ -67,7 +67,7 @@ int phone_log_view_init()
 
 	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
 				 "phoneui/phonelog/phonelog");
-	elm_theme_extension_add(NULL, phoneui_theme);
+	elm_theme_extension_add(phoneui_theme);
 
 	view.pager = elm_pager_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "pager", view.pager);

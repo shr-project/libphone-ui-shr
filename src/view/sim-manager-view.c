@@ -48,7 +48,7 @@ static Elm_Genlist_Item_Class itc;
 void sim_manager_list_fill(struct SimManagerListData *list_data);
 
 /* progressbar functions taken from elementary_test*/
-static int
+static Eina_Bool
 _loading_indicator_value_set (void *data)
 {
 	(void) data;
@@ -168,7 +168,7 @@ contact_select_view(void (*cb)(const char *, void *), void *data)
 
 	ui_utils_view_layout_set(VIEW_PTR(*pack), phoneui_theme,
 				 "phoneui/messages/new/contacts");
-	elm_theme_extension_add(NULL, phoneui_theme);
+	elm_theme_extension_add(phoneui_theme);
 	pack->contact_list_data.view = &pack->view;
 	pack->contact_list_data.layout = pack->view.layout;
 	contact_list_add(&pack->contact_list_data);
@@ -791,7 +791,7 @@ sim_manager_view_init()
 
 	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
 				 "phoneui/settings/sim-manager");
-	elm_theme_extension_add(NULL, phoneui_theme);
+	elm_theme_extension_add(phoneui_theme);
 	view.list_data.layout = view.view.layout;
 	sim_manager_list_add(&view.list_data);
 

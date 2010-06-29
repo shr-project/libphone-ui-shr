@@ -58,7 +58,7 @@ ui_utils_view_init(struct View *view, Elm_Win_Type type, const char *title,
 
 	elm_win_autodel_set(view->win, 0);
 	if (phoneui_theme) {
-		elm_theme_overlay_add(NULL, phoneui_theme);
+		elm_theme_overlay_add(phoneui_theme);
 	}
 
 

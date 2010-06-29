@@ -123,7 +123,7 @@ contact_view_init(char *path, GHashTable *properties)
 	}
 	view->changes = NULL;
 
-	elm_theme_extension_add(NULL, phoneui_theme);
+	elm_theme_extension_add(phoneui_theme);
 
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);

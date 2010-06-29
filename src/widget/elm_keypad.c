@@ -29,7 +29,7 @@ static void _zero_mouse_down(void *data, Evas_Object * o, const char *emission,
 		 const char *source);
 static void _zero_mouse_up(void *data, Evas_Object * o, const char *emission,
 	       const char *source);
-static int _plus_trigered(void *data);
+static Eina_Bool _plus_trigered(void *data);
 
 static void
 _del_hook(Evas_Object * obj)
@@ -89,7 +89,7 @@ _zero_mouse_up(void *data, Evas_Object * o, const char *emission,
 	}
 }
 
-static int
+static Eina_Bool
 _plus_trigered(void *data)
 {
 	Widget_Data *wd = elm_widget_data_get(data);
