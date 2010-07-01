@@ -111,7 +111,7 @@ BUTTON("button6",      0.665, 0.255, 0.99,  0.495, "text6",     "6", "MNO");
 
 BUTTON("button7",      0.01,  0.505, 0.325, 0.745, "text7",     "7", "PQRS");
 BUTTON("button8",      0.335, 0.505, 0.655, 0.745, "text8",     "8", "TUV");
-BUTTON("button9",      0.665, 0.505, 0.99,  0.745, "text9",     "9", "XYZ");
+BUTTON("button9",      0.665, 0.505, 0.99,  0.745, "text9",     "9", "WXYZ");
 
 BUTTON("button_star",  0.01,  0.755, 0.325, 0.99,  "text_star",  "*", "");
 BUTTON("button0",      0.335, 0.755, 0.655, 0.99,  "text0",      "0", "+");
