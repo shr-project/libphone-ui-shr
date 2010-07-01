@@ -26,6 +26,7 @@ static struct IdleScreenViewData view;
 static void _resource_status(void *data, const char *resource, gboolean state, GHashTable *properties);
 static void _capacity_change(void *data, int capacity);
 static void _network_status(void *data, GHashTable *properties);
+static void _pdp_context_status(void *data, FreeSmartphoneGSMContextStatus status, GHashTable *properties);
 static void _signal_strength(void *data, int strength);
 static void _profile_change(void *data, const char *profile);
 static void _missed_calls(void *data, int amount);
@@ -94,6 +95,7 @@ idle_screen_view_init()
 	phoneui_info_register_and_request_resource_status(_resource_status, NULL);
 	phoneui_info_register_and_request_network_status(_network_status, NULL);
 	phoneui_info_register_and_request_signal_strength(_signal_strength, NULL);
+	phoneui_info_register_and_request_pdp_context_status(_pdp_context_status, NULL);
 	phoneui_info_register_and_request_profile_changes(_profile_change, NULL);
 	phoneui_info_register_and_request_capacity_changes(_capacity_change, NULL);
 	phoneui_info_register_and_request_missed_calls(_missed_calls, NULL);
@@ -218,6 +220,15 @@ _signal_strength(void *data, int strength)
 {
 	(void) data;
 	_update_signal_strength(strength);
+}
+
+static void
+_pdp_context_status(void *data, FreeSmartphoneGSMContextStatus status,
+		    GHashTable *properties)
+{
+	(void) data;
+	(void) properties;
+	g_debug("PDP ContextStatus: %s", free_smartphone_gsm_context_status_to_string(status));
 }
 
 static void
