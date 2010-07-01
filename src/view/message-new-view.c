@@ -517,9 +517,7 @@ _recipients_button_send_clicked(void *data, Evas_Object *obj, void *event_info)
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	if (view->recipients->len) {
 		phoneui_utils_sms_send(view->content, view->recipients,
-				       _message_send_callback, NULL);
-		message_new_view_deinit(view);
-		free(view);
+				       _message_send_callback, view);
 	}
 }
 
@@ -774,14 +772,17 @@ static void
 _message_send_callback(GError *error, int reference, const char *timestamp,
 		       gpointer data)
 {
-	(void) data;
 	(void) reference;
 	(void) timestamp;
 
+	struct MessageNewViewData *view = data;
 	if (error) {
 		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 				D_("Sending the message failed"), error);
+		return;
 	}
+	message_new_view_deinit(view);
+	free(view);
 }
 
 static void
