@@ -228,6 +228,14 @@ _network_status(void *data, GHashTable *properties)
 	const char *s = "";
 	const char *sig = "";
 
+	/* special case when ogsmd disappears from the bus (NameOwnerChange) */
+	if (properties == NULL) {
+		_update_signal_strength(0);
+		ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", s);
+		ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
+		return;
+	}
+
 	v = g_hash_table_lookup(properties, "display");
 	if (v) {
 		s = g_value_get_string(v);
@@ -268,8 +276,8 @@ _network_status(void *data, GHashTable *properties)
 				}
 			}
 		}
-		ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
 	}
+	ui_utils_view_text_set(VIEW_PTR(view), "pdpStatus", sig);
 }
 
 static void
