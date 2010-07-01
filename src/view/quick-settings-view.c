@@ -476,13 +476,16 @@ _pdp_context_status_signal_cb(void* data,
 	(void) data;
 	(void) attributes;
 
-	if (status == FREE_SMARTPHONE_GSM_CONTEXT_STATUS_ACTIVE) {
-		elm_toggle_state_set(view.gprs_slide, EINA_TRUE);
+	switch (status) {
+	case FREE_SMARTPHONE_GSM_CONTEXT_STATUS_ACTIVE:
 		elm_object_disabled_set(view.sharing_slide, EINA_FALSE);
-	}
-	else {
+	case FREE_SMARTPHONE_GSM_CONTEXT_STATUS_OUTGOING:
+		elm_toggle_state_set(view.gprs_slide, EINA_TRUE);
+		break;
+	default:
 		elm_toggle_state_set(view.gprs_slide, EINA_FALSE);
 		elm_object_disabled_set(view.sharing_slide, EINA_TRUE);
+		break;
 	}
 	elm_toggle_state_set(view.sharing_slide, EINA_FALSE);
 }
@@ -582,6 +585,7 @@ _pdp_activate_cb(GError *error, gpointer data)
 			  error->code, error->message);
 		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Activating PDP failed."), error);
+		elm_toggle_state_set(view.gprs_slide, EINA_FALSE);
 	}
 }
 
@@ -595,6 +599,9 @@ _pdp_deactivate_cb(GError *error, gpointer data)
 			  error->code, error->message);
 		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("De-Activating PDP failed."), error);
+		/* FIXME: think about if this is right for the deactivate
+		          does not work case !!! */
+		elm_toggle_state_set(view.gprs_slide, EINA_TRUE);
 	}
 }
 
