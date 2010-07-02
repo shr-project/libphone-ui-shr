@@ -155,8 +155,37 @@ PROGRAM("button8", "8");
 PROGRAM("button9", "9");
 
 PROGRAM("button_star", "*");
-PROGRAM("button0", "0");
 PROGRAM("button_rhomb", "#");
+
+               program {
+                       name: "button0_mouse_down";
+                       signal: "mouse,down,1";
+                       source: "button0";
+                       action: SIGNAL_EMIT "0" "mouse_down";
+               }
+               program {
+                       name: "button0_mouse_up";
+                       signal: "mouse,up,1";
+                       source: "button0";
+                       action: SIGNAL_EMIT "0" "mouse_up";
+               }
+
+
+               program {
+                       name: "button0_click";
+                       signal: "mouse,down,1";
+                       source: "button0";
+                       action: STATE_SET "clicked" 0.0;
+                       target: "button0";
+               }
+		program {
+			name: "button0_unclick";
+			signal: "mouse,up,1";
+			source: "button0";
+			action: STATE_SET "default" 0.0;
+			transition: DECELERATE 0.2;
+			target: "button0";
+		}
 
 } /* Close Programs */
 } /* Close Group: phoneui/keypad */
