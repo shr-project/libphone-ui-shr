@@ -346,6 +346,20 @@ part {																			\
 		rel1 { offset: __offset 0; }											\
 		rel2 { offset: -5 20; }													\
 		}																		\
+	}																\
+	program {												\
+		name: __name",active";											\
+		signal: __name",active";										\
+		source: "resourceStateChange";										\
+		action: STATE_SET "active" 0.0;										\
+		target: __name;												\
+	}													\
+	program {												\
+		name: __name",default";											\
+		signal: __name",default";										\
+		source: "resourceStateChange";										\
+		action: STATE_SET "default" 0.0;										\
+		target: __name;												\
 	}
 
 RESOURCE("CPU", "cpu.png", "batteryPower", -25);
