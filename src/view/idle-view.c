@@ -160,14 +160,12 @@ idle_screen_view_update_alarm(const int alarm)
 {
 	if (idle_screen_view_is_init()) {
 		if (alarm > 0) {
-			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 "alarm", "active", 0.0);
+			edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+						"alarm,active", "resourceStateChange");
 		}
 		else {
-			edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 "alarm", "default", 0.0);
+			edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+						"alarm,default", "resourceStateChange");
 		}
 	}
 }
