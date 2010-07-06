@@ -45,7 +45,8 @@ collections {
 		image: "missedCalls.png" COMP;
 		}
 	fonts {
-		font: "VeraBd.ttf" "Sans";
+		font: "VeraBd.ttf" "VeraBd";
+		font: "Miso.ttf" "Miso";
 		}
 
 	group {
@@ -138,7 +139,7 @@ collections {
 				}
 				text {
 					text, "SHR";
-					font, "VeraBd";
+					font, "Miso";
 					size, 40;
 					fit: 1 1;
 					align: 0.0 0.0;
@@ -238,7 +239,7 @@ collections {
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				text { text: ""; font: "VeraBd.ttf"; size: 18; align: 0.0 0.5; }
+				text { text: ""; font: "VeraBd"; size: 18; align: 0.0 0.5; }
 				rel1 { to: "gsmStrength"; relative: 1.0 0.0; offset: 5 0; }
 				rel2 { to: "gsmStrength"; relative: 1.0 1.0; offset: 170 0; }
 				}
@@ -251,7 +252,7 @@ collections {
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				text { text: ""; font: "VeraBd.ttf"; size: 1; fit: 1 1; align: 0.0 0.5; }
+				text { text: ""; font: "Sans"; size: 1; fit: 1 1; align: 0.0 0.5; }
 				rel1 { to: "topbar"; relative: 0.0 0.0; offset: 0 0; }
 				rel2 { to: "topbar"; relative: 0.0 0.0; offset: 22 22; }
 			}
@@ -425,7 +426,7 @@ RESOURCE("alarm", "alarm.png", "GPS", -25);
 				rel2 { to: "clock"; relative: 1.0 0.0; offset: 0 70; }
 				text {
 					text: "";
-					font: "VeraBd.ttf";
+					font: "Sans";
 					size: 80;
 					}
 				}
@@ -440,7 +441,7 @@ RESOURCE("alarm", "alarm.png", "GPS", -25);
 				rel2 { to: "time"; relative: 1.0 1.0; offset: 0 25; }
 				text {
 					text: "";
-					font: "VeraBd.ttf";
+					font: "Sans";
 					size: 24;
 					}
 				}
@@ -455,7 +456,7 @@ RESOURCE("alarm", "alarm.png", "GPS", -25);
 				rel2 { to: "date"; relative: 1.0 1.0; offset: 0 15; }
 				text {
 					text: "";
-					font: "VeraBd.ttf";
+					font: "Sans";
 					size: "18";
 					}
 				}
@@ -506,7 +507,7 @@ part {																			\
 		rel2 { to: __name"HeadingBg"; relative: 1.0 1.0; offset: -10 0; }		\
 		text {																	\
 			text: "";															\
-			font: "VeraBd.ttf";													\
+			font: "Sans";													\
 			size:20;															\
 			align: 0.0 0.0;														\
 			}																	\
@@ -527,7 +528,7 @@ part {																			\
 		rel2 { to: __name"Heading"; relative: 1.0 1.0; offset: 0 20; }			\
 		text {																	\
 			text: "";															\
-			font: "VeraBd.ttf";													\
+			font: "Sans";													\
 			size: 16;															\
 			align: 0.0 0.0;														\
 			}																	\
@@ -548,7 +549,7 @@ part {																			\
 		rel2 { to: __name"Line1"; relative: 1.0 1.0; offset: 0 20; }			\
 		text {																	\
 			text: "";															\
-			font: "VeraBd.ttf";													\
+			font: "Sans";													\
 			size: 16;															\
 			align: 0.0 0.0;														\
 			}																	\
@@ -615,7 +616,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 				color: 255 255 255 255;
 				rel1 { to: "unfinishedTasks"; relative: 0.0 0.0; offset: 0 10 ; }
 				rel2 { to: "unfinishedTasks"; relative: 1.0 0.0; offset: 0 20; }
-				text { text: ""; font: "VeraBd.ttf"; size: 25; }
+				text { text: ""; font: "Sans"; size: 25; }
 				}
 			}
 
@@ -662,7 +663,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 				color: 255 255 255 255;
 				rel1 { to: "unreadMessages"; relative: 0.0 0.0; offset: 0 10 ; }
 				rel2 { to: "unreadMessages"; relative: 1.0 0.0; offset: 0 20; }
-				text { text: ""; font: "VeraBd.ttf"; size: 25; }
+				text { text: ""; font: "Sans"; size: 25; }
 				}
 			}
 
@@ -709,7 +710,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 				color: 255 255 255 255;
 				rel1 { to: "missedCalls"; relative: 0.0 0.0; offset: 0 10 ; }
 				rel2 { to: "missedCalls"; relative: 1.0 0.0; offset: 0 20; }
-				text { text: ""; font: "VeraBd.ttf"; size: 25; }
+				text { text: ""; font: "Sans"; size: 25; }
 				}
 			}
 
