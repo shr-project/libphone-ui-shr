@@ -190,9 +190,10 @@ _resource_status(void *data, const char *resource,
 			_update_signal_strength(0);
 		}
 	}
-	edje_edit_part_selected_state_set
-				(ui_utils_view_layout_get(VIEW_PTR(view)),
-				 resource, edje_state, 0.0);
+	char resource_state[32];
+	snprintf(resource_state, 32, "%s,%s", resource, edje_state);
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				resource_state, "resourceStateChange");
 }
 
 static void
