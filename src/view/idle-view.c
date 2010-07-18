@@ -256,7 +256,7 @@ _network_status(void *data, GHashTable *properties)
 			s = g_value_get_string(v);
 		}
 	}
-	g_debug("provider is '%s'", g_value_get_string(v));
+	g_debug("provider is '%s'", s);
 	ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", s);
 	v = g_hash_table_lookup(properties, "strength");
 	if (v) {
