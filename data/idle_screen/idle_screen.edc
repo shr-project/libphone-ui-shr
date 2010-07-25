@@ -1,3 +1,4 @@
+/*
 spectra {
 	spectrum {
 		name: "clock";
@@ -10,6 +11,7 @@ spectra {
 		color: 166 166 166 255 0;
 		}
 	}
+*/
 
 collections {
 	images {
