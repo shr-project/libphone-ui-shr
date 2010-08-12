@@ -1,8 +1,8 @@
 /*
  *  Copyright (C) 2009, 2010
  *      Authors (alphabetical) :
- * 		Tom "TAsn" Hacohen <tom@stosb.com>
  * 		Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
+ * 		Lukas Märdian <lukasmaerdian@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
