@@ -76,9 +76,9 @@ static void _number_update_number(struct MessageNewViewData* view);
 static void _process_recipient(gpointer _properties, gpointer _data);
 static void _contact_lookup(GError *error, GHashTable *contact, gpointer data);
 static void _message_send_callback(GError *error, int reference, const char *timestamp, gpointer data);
-static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
-static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
-static void gl_del(const void *data, Evas_Object *obj);
+static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
+static Evas_Object *gl_icon_get(void *data, Evas_Object * obj, const char *part);
+static void gl_del(void *data, Evas_Object *obj);
 
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _destroy_cb(struct View *view);
@@ -180,7 +180,7 @@ message_new_view_show(struct MessageNewViewData *view)
 
 
 static char *
-gl_label_get(const void *data, Evas_Object * obj, const char *part)
+gl_label_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	char *label = NULL;
@@ -199,7 +199,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static Evas_Object *
-gl_icon_get(const void *data, Evas_Object * obj, const char *part)
+gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 	if (!strcmp(part, "elm.swallow.icon")) {
@@ -227,7 +227,7 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static void
-gl_del(const void *data, Evas_Object *obj)
+gl_del(void *data, Evas_Object *obj)
 {
 	(void) obj;
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;

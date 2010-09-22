@@ -220,7 +220,7 @@ contact_select_view(void (*cb)(const char *, void *), void *data)
 
 /* --- genlist callbacks --- */
 static char *
-gl_label_get(const void *data, Evas_Object * obj, const char *part)
+gl_label_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	const struct SimContactData *cdata = data;
@@ -239,7 +239,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static Eina_Bool
-gl_state_get(const void *data, Evas_Object * obj, const char *part)
+gl_state_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	(void) data;
@@ -248,7 +248,7 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static void
-gl_del(const void *data, Evas_Object * obj)
+gl_del(void *data, Evas_Object * obj)
 {
 	(void) obj;
 	(void) data;

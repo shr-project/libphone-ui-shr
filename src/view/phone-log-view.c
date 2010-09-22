@@ -56,10 +56,10 @@ static void _call_changed_handler(void * data, const char *path, enum PhoneuiInf
 static void _contact_changed_handler(void *data, const char *path, enum PhoneuiInfoChangeType);
 
 
-static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
-static Evas_Object *gl_icon_get(const void *data, Evas_Object * obj, const char *part);
-static Eina_Bool gl_state_get(const void *data, Evas_Object * obj, const char *part);
-static void gl_del(const void *data, Evas_Object * obj);
+static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
+static Evas_Object *gl_icon_get(void *data, Evas_Object * obj, const char *part);
+static Eina_Bool gl_state_get(void *data, Evas_Object * obj, const char *part);
+static void gl_del(void *data, Evas_Object * obj);
 
 void phone_log_view_show()
 {
@@ -357,7 +357,7 @@ _get_callback(GError* error, GHashTable** entry, int count, gpointer data)
 
 /* --- genlist callbacks --- */
 static char *
-gl_label_get(const void *data, Evas_Object * obj, const char *part)
+gl_label_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *entry = (GHashTable *) data;
@@ -411,7 +411,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static Evas_Object *
-gl_icon_get(const void *data, Evas_Object * obj, const char *part)
+gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) data;
 	if (!strcmp(part,"elm.swallow.end")) {
@@ -423,7 +423,7 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static Eina_Bool
-gl_state_get(const void *data, Evas_Object * obj, const char *part)
+gl_state_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	(void) part;
@@ -435,7 +435,7 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static void
-gl_del(const void *data, Evas_Object * obj)
+gl_del(void *data, Evas_Object * obj)
 {
 	(void) obj;
 	if (data)

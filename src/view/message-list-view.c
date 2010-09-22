@@ -64,10 +64,10 @@ static void _answer_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _forward_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
-static char *gl_label_get(const void *data, Evas_Object * obj, const char *part);
-static Evas_Object * gl_icon_get(const void *data, Evas_Object * obj, const char *part);
-static Eina_Bool gl_state_get(const void *data, Evas_Object *obj, const char *part);
-static void gl_del(const void *data, Evas_Object * obj);
+static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
+static Evas_Object * gl_icon_get(void *data, Evas_Object * obj, const char *part);
+static Eina_Bool gl_state_get(void *data, Evas_Object *obj, const char *part);
+static void gl_del(void *data, Evas_Object * obj);
 
 
 int
@@ -551,7 +551,7 @@ _process_message(gpointer _message, gpointer _data)
 }
 
 static char *
-gl_label_get(const void *data, Evas_Object * obj, const char *part)
+gl_label_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *message = (GHashTable *)data;
@@ -586,7 +586,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static Evas_Object *
-gl_icon_get(const void *data, Evas_Object * obj, const char *part)
+gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GValue *tmp;
@@ -626,7 +626,7 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 }
 
 static Eina_Bool
-gl_state_get(const void *data, Evas_Object *obj, const char *part)
+gl_state_get(void *data, Evas_Object *obj, const char *part)
 {
 	(void) part;
 	(void) obj;
@@ -650,7 +650,7 @@ gl_state_get(const void *data, Evas_Object *obj, const char *part)
 }
 
 static void
-gl_del(const void *data, Evas_Object * obj)
+gl_del(void *data, Evas_Object * obj)
 {
 	(void)obj;
 	g_hash_table_destroy((GHashTable *)data);

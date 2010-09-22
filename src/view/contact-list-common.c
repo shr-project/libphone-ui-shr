@@ -33,7 +33,7 @@ static Elm_Genlist_Item_Class itc;
 
 /* --- genlist callbacks --- */
 static char *
-gl_label_get(const void *data, Evas_Object * obj, const char *part)
+gl_label_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *parameters = (GHashTable *) data;
@@ -64,7 +64,7 @@ gl_label_get(const void *data, Evas_Object * obj, const char *part)
 
 
 static Evas_Object *
-gl_icon_get(const void *data, Evas_Object * obj, const char *part)
+gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	GHashTable *parameters = (GHashTable *) data;
 	if (!strcmp(part, "elm.swallow.icon")) {
@@ -87,7 +87,7 @@ gl_icon_get(const void *data, Evas_Object * obj, const char *part)
 
 
 static Eina_Bool
-gl_state_get(const void *data, Evas_Object * obj, const char *part)
+gl_state_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	(void) data;
@@ -97,7 +97,7 @@ gl_state_get(const void *data, Evas_Object * obj, const char *part)
 
 
 static void
-gl_del(const void *data, Evas_Object * obj)
+gl_del(void *data, Evas_Object * obj)
 {
 	(void) obj;
 	(void) data;

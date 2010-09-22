@@ -65,8 +65,8 @@ static void _load_photo(struct ContactViewData *view);
 static void _load_fields(struct ContactViewData *view);
 static void _add_field(struct ContactViewData *view, const char *key, const char *value, int isnew);
 
-static Evas_Object *gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part);
-static void gl_field_del(const void *_data, Evas_Object * obj);
+static Evas_Object *gl_field_icon_get(void *_data, Evas_Object * obj, const char *part);
+static void gl_field_del(void *_data, Evas_Object * obj);
 
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
 static void _destroy_cb(struct View *_view);
@@ -865,7 +865,7 @@ _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 
 
 static Evas_Object *
-gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
+gl_field_icon_get(void *_data, Evas_Object * obj, const char *part)
 {
 	g_debug("gl_field_icon_get (part=%s)", part);
 	struct ContactFieldData *fd = (struct ContactFieldData *) _data;
@@ -907,7 +907,7 @@ gl_field_icon_get(const void *_data, Evas_Object * obj, const char *part)
 }
 
 static void
-gl_field_del(const void *_data, Evas_Object * obj)
+gl_field_del(void *_data, Evas_Object * obj)
 {
 	(void) obj;
 	g_debug("gl_field_del");
