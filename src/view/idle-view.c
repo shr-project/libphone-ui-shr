@@ -22,7 +22,6 @@
  */
 
 
-#include <Edje_Edit.h>
 #include <Elementary.h>
 #include <Evas.h>
 #include <phoneui/phoneui-utils.h>
