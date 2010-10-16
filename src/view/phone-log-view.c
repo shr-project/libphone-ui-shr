@@ -74,7 +74,7 @@ void phone_log_view_hide()
 int phone_log_view_init()
 {
 	g_debug("Initializing the phonelog screen");
-	Evas_Object *win, *icon;
+	Evas_Object *win;
 	int ret;
 	//char buf[PATH_MAX];
 
@@ -121,31 +121,19 @@ int phone_log_view_init()
 	evas_object_size_hint_weight_set(view.toolbar, 0.0, 0.0);
 	evas_object_size_hint_align_set(view.toolbar, EVAS_HINT_FILL, 0.0);
 
-	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-incoming");
-	elm_toolbar_item_add(view.toolbar, icon, D_("received"),
+	elm_toolbar_item_add(view.toolbar, "icon/phonelog-incoming", D_("received"),
 			     _toolbar_changed, view.list_in);
-	evas_object_show(icon);
 
-	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-outgoing");
-	elm_toolbar_item_add(view.toolbar, icon, D_("outgoing"),
+	elm_toolbar_item_add(view.toolbar, "icon/phonelog-outgoing", D_("outgoing"),
 			     _toolbar_changed, view.list_out);
-	evas_object_show(icon);
 
-	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-missed");
-	view.toolbar_missed = elm_toolbar_item_add(view.toolbar, icon,
+	view.toolbar_missed = elm_toolbar_item_add(view.toolbar, "icon/phonelog-missed",
 						   D_("missed"),
 						   _toolbar_changed,
 						   view.list_missed);
-	evas_object_show(icon);
 
-	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, phoneui_theme, "icon/phonelog-all");
-	elm_toolbar_item_add(view.toolbar, icon, D_("all"), _toolbar_changed,
+	elm_toolbar_item_add(view.toolbar, "icon/phonelog-all", D_("all"), _toolbar_changed,
 			     view.list_all);
-	evas_object_show(icon);
 
 	evas_object_show(view.toolbar);
 	elm_toolbar_item_select(view.toolbar_missed);

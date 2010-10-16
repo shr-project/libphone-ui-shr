@@ -84,7 +84,7 @@ int
 quick_settings_view_init()
 {
 	g_debug("Initializing the quick-settings screen");
-	Evas_Object *win, *icon;
+	Evas_Object *win;
 	int ret;
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Quick-settings"),
 				NULL, NULL, NULL);
@@ -114,17 +114,11 @@ quick_settings_view_init()
 	evas_object_size_hint_weight_set(view.toolbar, 0.0, 0.0);
 	evas_object_size_hint_align_set(view.toolbar, EVAS_HINT_FILL, 0.0);
 
-	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, phoneui_theme, "icon/profile");
 	Elm_Toolbar_Item *tbitem = elm_toolbar_item_add(view.toolbar,
-		icon, D_("Profile/Power"), _toolbar_clicked, view.layout1);
-	evas_object_show(icon);
+		"icon/profile", D_("Profile/Power"), _toolbar_clicked, view.layout1);
 
-	icon = elm_icon_add(win);
-	elm_icon_file_set(icon, phoneui_theme, "icon/network");
-	elm_toolbar_item_add(view.toolbar, icon, D_("Network"),
+	elm_toolbar_item_add(view.toolbar, "icon/network", D_("Network"),
 			     _toolbar_clicked, view.layout2);
-	evas_object_show(icon);
 	evas_object_show(view.toolbar);
 	elm_toolbar_item_select(tbitem);
 
