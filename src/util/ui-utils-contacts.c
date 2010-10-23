@@ -217,7 +217,7 @@ _fields_get_cb(GError *error, GHashTable *contact, gpointer data)
 	pack->list = elm_list_add(win);
 	evas_object_size_hint_weight_set(pack->list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_size_hint_align_set(pack->list, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	elm_list_horizontal_mode_set(pack->list, ELM_LIST_LIMIT);
+	elm_list_mode_set(pack->list, ELM_LIST_LIMIT);
 	evas_object_smart_callback_add(pack->list, "selected",
 				       _number_select_select, pack);
 // 	elm_object_scale_set(pack->list, 1.0);

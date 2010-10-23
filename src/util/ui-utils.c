@@ -526,7 +526,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 	evas_object_size_hint_weight_set(pack->list, EVAS_HINT_EXPAND,
 					 EVAS_HINT_EXPAND);
 // 	evas_object_size_hint_align_set(pack->list, 0.5, 0.5);
-	elm_list_horizontal_mode_set(pack->list, ELM_LIST_COMPRESS);
+	elm_list_mode_set(pack->list, ELM_LIST_COMPRESS);
 	for (l = g_list_first(list); l; l = g_list_next(l)) {
 		g_debug("Adding item '%s' to list", (char *)l->data);
 		elm_list_item_append(pack->list, strdup(l->data),
