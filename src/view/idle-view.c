@@ -92,7 +92,7 @@ idle_screen_view_init()
 	Evas_Object *win;
 	int ret;
 
-	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
+	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_SPLASH, D_("Idle_Screen"),
 				NULL, NULL, NULL);
 	if (ret) {
 		g_critical("Failed to init idle screen");
