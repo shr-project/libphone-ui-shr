@@ -114,13 +114,13 @@ quick_settings_view_init()
 	evas_object_size_hint_weight_set(view.toolbar, 0.0, 0.0);
 	evas_object_size_hint_align_set(view.toolbar, EVAS_HINT_FILL, 0.0);
 
-	Elm_Toolbar_Item *tbitem = elm_toolbar_item_add(view.toolbar,
+	Elm_Toolbar_Item *tbitem = elm_toolbar_item_append(view.toolbar,
 		"icon/profile", D_("Profile/Power"), _toolbar_clicked, view.layout1);
 
-	elm_toolbar_item_add(view.toolbar, "icon/network", D_("Network"),
+	elm_toolbar_item_append(view.toolbar, "icon/network", D_("Network"),
 			     _toolbar_clicked, view.layout2);
 	evas_object_show(view.toolbar);
-	elm_toolbar_item_select(tbitem);
+	elm_toolbar_item_selected_set(tbitem, EINA_TRUE);
 
 	return 0;
 }
