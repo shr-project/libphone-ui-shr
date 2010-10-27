@@ -55,7 +55,6 @@ message_show_view_init(char* path, GHashTable *properties)
 	Evas_Object *win, *ico;
 	int ret;
 	GValue *tmp;
-	int status = 0;
 	const char *direction = NULL;
 
 	/* path MUST always be set! It will be freed by
@@ -167,10 +166,6 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_show(view->photo);
 
 	ico = elm_icon_add(win);
-	tmp = (GValue *)g_hash_table_lookup(properties, "MessageRead");
-	if (tmp) {
-		status = g_value_get_int(tmp);
-	}
 	tmp = (GValue *)g_hash_table_lookup(properties, "Direction");
 	if (tmp) {
 		direction = g_value_get_string(tmp);
@@ -187,15 +182,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	}
 	ui_utils_view_swallow(VIEW_PTR(*view), "icon_status", ico);
 	evas_object_show(ico);
-/*	if (status && direction) {
-		char *str = malloc(strlen(status) + strlen(direction) + 4);
-		if (str) {
-			sprintf(str, "%s (%s)", status, direction);
-			ui_utils_view_text_set(VIEW_PTR(*view), "text_status", str);
-			free(str);
-		}
-	}
-*/
+
 	const char *content = NULL;
 	tmp = g_hash_table_lookup(properties, "Content");
 	if (tmp) {
