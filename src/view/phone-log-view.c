@@ -121,22 +121,22 @@ int phone_log_view_init()
 	evas_object_size_hint_weight_set(view.toolbar, 0.0, 0.0);
 	evas_object_size_hint_align_set(view.toolbar, EVAS_HINT_FILL, 0.0);
 
-	elm_toolbar_item_add(view.toolbar, "icon/phonelog-incoming", D_("received"),
+	elm_toolbar_item_append(view.toolbar, "icon/phonelog-incoming", D_("received"),
 			     _toolbar_changed, view.list_in);
 
-	elm_toolbar_item_add(view.toolbar, "icon/phonelog-outgoing", D_("outgoing"),
+	elm_toolbar_item_append(view.toolbar, "icon/phonelog-outgoing", D_("outgoing"),
 			     _toolbar_changed, view.list_out);
 
-	view.toolbar_missed = elm_toolbar_item_add(view.toolbar, "icon/phonelog-missed",
+	view.toolbar_missed = elm_toolbar_item_append(view.toolbar, "icon/phonelog-missed",
 						   D_("missed"),
 						   _toolbar_changed,
 						   view.list_missed);
 
-	elm_toolbar_item_add(view.toolbar, "icon/phonelog-all", D_("all"), _toolbar_changed,
+	elm_toolbar_item_append(view.toolbar, "icon/phonelog-all", D_("all"), _toolbar_changed,
 			     view.list_all);
 
 	evas_object_show(view.toolbar);
-	elm_toolbar_item_select(view.toolbar_missed);
+	elm_toolbar_item_selected_set(view.toolbar_missed, EINA_TRUE);
 
 	view.calls = g_ptr_array_new();
 
@@ -435,7 +435,7 @@ _hide_cb(struct View *_view)
 {
 	struct PhoneLogViewData *view = (struct PhoneLogViewData *)_view;
 	elm_pager_content_promote(view->pager, view->list_missed);
-	elm_toolbar_item_select(view->toolbar_missed);
+	elm_toolbar_item_selected_set(view->toolbar_missed, EINA_TRUE);
 }
 
 static void
