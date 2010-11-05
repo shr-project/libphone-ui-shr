@@ -92,12 +92,16 @@ idle_screen_view_init()
 	Evas_Object *win;
 	int ret;
 
-	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_SPLASH, D_("Idle_Screen"),
+	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
 				NULL, NULL, NULL);
 	if (ret) {
 		g_critical("Failed to init idle screen");
 		return ret;
 	}
+
+	win = ui_utils_view_window_get(VIEW_PTR(view));
+	elm_win_override_set(win, 1);
+
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), IDLE_SCREEN_THEME,
 			  "phoneui/idle_screen/idle_screen");
@@ -105,7 +109,6 @@ idle_screen_view_init()
 	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"clock_init", "");
 
-	win = ui_utils_view_window_get(VIEW_PTR(view));
 
 	elm_win_fullscreen_set(win, 1);
 	elm_win_layer_set(win, 200);
