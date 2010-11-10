@@ -38,16 +38,26 @@
 #include "ui-utils.h"
 #include "message-list-view.h"
 
+#define MSG_PER_UPDATE 6
+#define MSG_PAGE_SIZE MSG_PER_UPDATE*5
+
 struct MessageListViewData  {
 	struct View view;
 	char *path;
 	int count;
+	unsigned int msg_start;
+	unsigned int msg_end;
 	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer,
 		*button_delete;
 };
 static struct MessageListViewData view;
 static Elm_Genlist_Item_Class itc;
 
+typedef enum _InsertMode {
+	LIST_INSERT_APPEND,
+	LIST_INSERT_PREPEND,
+	LIST_INSERT_SORTED
+} InsertMode;
 
 static void _process_messages(GError *error, GHashTable **messages, int count, gpointer data);
 static void _process_message_get(GError* error, GHashTable* message, gpointer data);
@@ -64,6 +74,8 @@ static void _answer_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _forward_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
+static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info);
+static void _scroll_top(void *_data, Evas_Object * obj, void *event_info);
 static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
 static Evas_Object * gl_icon_get(void *data, Evas_Object * obj, const char *part);
 static Eina_Bool gl_state_get(void *data, Evas_Object *obj, const char *part);
@@ -158,7 +170,12 @@ message_list_view_init()
 	//evas_object_size_hint_weight_set(data->list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_show(view.list);
 
-	phoneui_utils_messages_get(_process_messages, GINT_TO_POINTER(0)); // do _not_ sort in
+	evas_object_smart_callback_add(view.list, "scroll,edge,bottom", _scroll_bottom, NULL);
+	evas_object_smart_callback_add(view.list, "scroll,edge,top", _scroll_top, NULL);
+
+	view.msg_start = 0;
+	view.msg_end = 0;
+	phoneui_utils_messages_get_full("Timestamp", TRUE, 0, MSG_PAGE_SIZE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
 	phoneui_info_register_message_changes(_message_changed_cb, NULL);
 
 	return 0;
@@ -360,6 +377,26 @@ _hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 	evas_object_show(view.hv);
 }
 
+static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info) {
+	(void) _data;
+	(void) obj;
+	(void) event_info;
+
+	phoneui_utils_messages_get_full("Timestamp", TRUE, view.msg_end, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
+}
+
+static void _scroll_top(void *_data, Evas_Object * obj, void *event_info) {
+	(void) _data;
+	(void) obj;
+	(void) event_info;
+	if (view.msg_start == 0)
+		return;
+
+	unsigned int start = view.msg_start > MSG_PER_UPDATE ? view.msg_start-MSG_PER_UPDATE : 0;
+	
+	phoneui_utils_messages_get_full("Timestamp", TRUE, start, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_SORTED));
+}
+
 static void
 _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
@@ -445,7 +482,7 @@ _process_message(gpointer _message, gpointer _data)
 	long timestamp = 0, other_timestamp = 0;
 	char datestr[35];
 	Elm_Genlist_Item *it = NULL;
-	int insert_sorted;
+	InsertMode insert_mode;
 
 	if (!_message) {
 		return;
@@ -458,7 +495,7 @@ _process_message(gpointer _message, gpointer _data)
 		return;
 	}
 
-	insert_sorted = GPOINTER_TO_INT(_data);
+	insert_mode = GPOINTER_TO_INT(_data);
 
 	rowdata = g_hash_table_new_full(g_str_hash, g_str_equal, NULL,
 					common_utils_gvalue_free);
@@ -513,7 +550,7 @@ _process_message(gpointer _message, gpointer _data)
 				    g_value_get_int(gval_tmp)));
 	}
 
-	if (insert_sorted) {
+	if (insert_mode == LIST_INSERT_SORTED) {
 		it = elm_genlist_first_item_get(view.list);
 		while (it) {
 			other = (GHashTable *)elm_genlist_item_data_get(it);
@@ -535,8 +572,13 @@ _process_message(gpointer _message, gpointer _data)
 	}
 
 	if (!it) {
-		it = elm_genlist_item_append(view.list, &itc, rowdata, NULL,
-				     ELM_GENLIST_ITEM_NONE, NULL, NULL);
+		if (insert_mode == LIST_INSERT_PREPEND) {
+			it = elm_genlist_item_prepend(view.list, &itc, rowdata, NULL,
+					     ELM_GENLIST_ITEM_NONE, NULL, NULL);
+		} else {
+			it = elm_genlist_item_append(view.list, &itc, rowdata, NULL,
+					     ELM_GENLIST_ITEM_NONE, NULL, NULL);
+		}
 	}
 
 	gval_tmp = g_hash_table_lookup(message, "@Contacts");
@@ -548,6 +590,23 @@ _process_message(gpointer _message, gpointer _data)
 	}
 
 	g_hash_table_destroy(message);
+
+	view.msg_end++;
+
+	if ((view.msg_end - view.msg_start) > MSG_PAGE_SIZE) {
+		if (insert_mode == LIST_INSERT_APPEND) {
+			it = elm_genlist_first_item_get(view.list);
+			view.msg_start++;
+		} else {
+			it = elm_genlist_last_item_get(view.list);
+			view.msg_start = view.msg_start > 1 ? view.msg_start-1 : 0;
+			view.msg_end = view.msg_end > 2 ? view.msg_end-2 : 0;
+		}
+
+		if (it) {
+			elm_genlist_item_del(it);
+		}
+	}
 }
 
 static char *
@@ -652,7 +711,7 @@ static void
 _add_message(const char *path)
 {
 	// insert sorted
-	phoneui_utils_message_get(path, _process_message_get, GINT_TO_POINTER(1));
+	phoneui_utils_message_get(path, _process_message_get, GINT_TO_POINTER(LIST_INSERT_SORTED));
 }
 
 static void
