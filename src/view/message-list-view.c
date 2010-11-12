@@ -49,6 +49,7 @@ struct MessageListViewData  {
 	unsigned int msg_end;
 	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer,
 		*button_delete;
+	Elm_Genlist_Item *latest_it;
 };
 static struct MessageListViewData view;
 static Elm_Genlist_Item_Class itc;
@@ -175,6 +176,7 @@ message_list_view_init()
 
 	view.msg_start = 0;
 	view.msg_end = 0;
+	view.latest_it = NULL;
 	phoneui_utils_messages_get_full("Timestamp", TRUE, 0, MSG_PAGE_SIZE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
 	phoneui_info_register_message_changes(_message_changed_cb, NULL);
 
@@ -382,6 +384,7 @@ static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info) {
 	(void) obj;
 	(void) event_info;
 
+	view.latest_it = elm_genlist_last_item_get(view.list);
 	phoneui_utils_messages_get_full("Timestamp", TRUE, view.msg_end, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
 }
 
@@ -394,6 +397,7 @@ static void _scroll_top(void *_data, Evas_Object * obj, void *event_info) {
 
 	unsigned int start = view.msg_start > MSG_PER_UPDATE ? view.msg_start-MSG_PER_UPDATE : 0;
 	
+	view.latest_it = elm_genlist_first_item_get(view.list);
 	phoneui_utils_messages_get_full("Timestamp", TRUE, start, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_SORTED));
 }
 
@@ -452,6 +456,11 @@ _process_messages(GError* error, GHashTable** messages, int count, gpointer data
 	for (i = 0; i < count; i++) {
 		g_debug("processing message %d", i);
 		_process_message(messages[i], data);
+	}
+
+	if (view.latest_it) {
+		elm_genlist_item_middle_show(view.latest_it);
+		view.latest_it = NULL;
 	}
 }
 
