@@ -76,6 +76,7 @@ static void _answer_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _forward_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
+static Eina_Bool _release_scroll_lock(void *_data);
 static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info);
 static void _scroll_top(void *_data, Evas_Object * obj, void *event_info);
 static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
@@ -406,7 +407,17 @@ _hover_bt_1(void *_data, Evas_Object * obj, void *event_info)
 	evas_object_show(view.hv);
 }
 
-static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info) {
+static Eina_Bool _release_scroll_lock(void *_data)
+{
+	(void) _data;
+
+	view.scroll_lock = FALSE;
+
+	return ECORE_CALLBACK_CANCEL;
+}
+
+static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info)
+{
 	(void) _data;
 	(void) obj;
 	(void) event_info;
@@ -421,7 +432,8 @@ static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info) {
 	phoneui_utils_messages_get_full("Timestamp", TRUE, view.msg_end, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
 }
 
-static void _scroll_top(void *_data, Evas_Object * obj, void *event_info) {
+static void _scroll_top(void *_data, Evas_Object * obj, void *event_info)
+{
 	(void) _data;
 	(void) obj;
 	(void) event_info;
@@ -504,7 +516,7 @@ _process_messages(GError* error, GHashTable** messages, int count, gpointer data
 	}
 
 close:
-	view.scroll_lock = FALSE;
+	ecore_timer_add(0.75, _release_scroll_lock, NULL);
 	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"stop_loading","");
 }
