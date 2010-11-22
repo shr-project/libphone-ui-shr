@@ -419,6 +419,7 @@ static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info)
 	if (view.scroll_lock) return;
 	view.scroll_lock = TRUE;
 
+	elm_progressbar_pulse(view.bottom_pb, EINA_TRUE);
 	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"start_bottom_loading","");
 
@@ -437,6 +438,7 @@ static void _scroll_top(void *_data, Evas_Object * obj, void *event_info)
 	if (view.scroll_lock) return;
 	view.scroll_lock = TRUE;
 
+	elm_progressbar_pulse(view.top_pb, EINA_TRUE);
 	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"start_top_loading","");
 
@@ -513,6 +515,8 @@ close:
 	ecore_timer_add(0.75, _release_scroll_lock, NULL);
 	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"stop_loading","");
+	elm_progressbar_pulse(view.top_pb, EINA_FALSE);
+	elm_progressbar_pulse(view.bottom_pb, EINA_FALSE);
 }
 
 static void
