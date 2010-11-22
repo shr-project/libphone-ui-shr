@@ -5,7 +5,7 @@ group { name: "elm/genlist/item/message/default";
 	data.item: "selectraise" "on";
 	data.item: "labels" "elm.date elm.name elm.content";
 	data.item: "icons" "elm.photo";
-	data.item: "states" "elm.date";
+	data.item: "states" "elm.date bg";
 
 	parts {
 		part { name: "event";
@@ -23,7 +23,7 @@ group { name: "elm/genlist/item/message/default";
 			description {
 				state: "default" 0.0;
 				visible: 1;
-				color: COLOR_LIGHT_GRAY;
+				color: COLOR_LIGHT_BLUE;
 				rel1 {
 					relative: 0.0 0.0;
 					offset: 0 0;
@@ -32,6 +32,11 @@ group { name: "elm/genlist/item/message/default";
 					relative: 1.0 1.0;
 					offset: 0 0;
 				}
+			}
+			description {
+				state: "out" 0.0;
+				inherit: "default" 0.0;
+				color: COLOR_LIGHT_GREEN;
 			}
 			description {
 				state: "selected" 0.0;
@@ -241,6 +246,15 @@ group { name: "elm/genlist/item/message/default";
 			target:  "elm.content";
 		}
 		program {
+			name:    "go_read";
+			signal:  "elm,state,elm.date,passive";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "elm.name";
+			target:  "elm.date";
+			target:  "elm.content";
+		}
+		program {
 			name:    "go_disabled";
 			signal:  "elm,state,disabled";
 			source:  "elm";
@@ -253,6 +267,20 @@ group { name: "elm/genlist/item/message/default";
 			source:  "elm";
 			action:  STATE_SET "default" 0.0;
 			target:  "disclip";
+		}
+		program {
+			name:    "go_direction_out";
+			signal:  "elm,state,bg,active";
+			source:  "elm";
+			action:  STATE_SET "out" 0.0;
+			target:  "bg";
+		}
+		program {
+			name:    "go_direction_in";
+			signal:  "elm,state,bg,passive";
+			source:  "elm";
+			action:  STATE_SET "default" 0.0;
+			target:  "bg";
 		}
 	}
 } /* elm/genlist/item/message/default */
