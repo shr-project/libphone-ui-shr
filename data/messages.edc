@@ -634,6 +634,115 @@ group { name: "phoneui/messages/list";
 				}
 			}
 		}
+		part { name: "loading_top_bg";
+			mouse_events: 1;
+			type: RECT;
+			description {
+				state: "default" 0.0;
+				visible: 0;
+				color: 0 0 0 0;
+				rel1.relative: 0.0 0.0;
+				rel2.relative: 1.0 0.1;
+			}
+			description {
+				state: "loading" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: 0 0 0 100;
+			}
+		}
+		part { name: "loading_top_indicator";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				visible: 0;
+				fixed: 1 1;
+				rel1 {
+					to: "loading_top_bg";
+					relative: 1.0 1.0;
+				}
+				rel2 {
+					to: "loading_top_bg";
+					relative: 0.0 0.0;
+				}
+			}
+			description {
+				state: "loading" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+			}
+		}
+		part { name: "loading_bottom_bg";
+			mouse_events: 1;
+			type: RECT;
+			description {
+				state: "default" 0.0;
+				visible: 0;
+				color: 0 0 0 0;
+				rel1.relative: 0.0 0.75;
+				rel2.relative: 1.0 0.85;
+			}
+			description {
+				state: "loading" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: 0 0 0 100;
+			}
+		}
+		part { name: "loading_bottom_indicator";
+			type: SWALLOW;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				visible: 0;
+				fixed: 1 1;
+				rel1 {
+					to: "loading_bottom_bg";
+					relative: 1.0 1.0;
+				}
+				rel2 {
+					to: "loading_bottom_bg";
+					relative: 0.0 0.0;
+				}
+			}
+			description {
+				state: "loading" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+			}
+		}
+	}
+	programs {
+		program {
+			name:   "start_top_loading";
+			signal:  "start_top_loading";
+			source:  "";
+			action:  STATE_SET "loading" 0.0;
+			target:  "loading_top_indicator";
+			target:  "loading_top_bg";
+			transition: ACCELERATE 0.4;
+		}
+		program {
+			name:   "start_bottom_loading";
+			signal:  "start_bottom_loading";
+			source:  "";
+			action:  STATE_SET "loading" 0.0;
+			target:  "loading_bottom_indicator";
+			target:  "loading_bottom_bg";
+			transition: ACCELERATE 0.4;
+		}
+		program {
+			name:   "stop_loading";
+			signal:  "stop_loading";
+			source:  "";
+			action:  STATE_SET "default" 0.0;
+			target:  "loading_top_indicator";
+			target:  "loading_top_bg";
+			target:  "loading_bottom_indicator";
+			target:  "loading_bottom_bg";
+			transition: DECELERATE 0.4;
+		}
 	}
 } /* phoneui/messages/list */
 

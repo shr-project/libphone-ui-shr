@@ -48,7 +48,7 @@ struct MessageListViewData  {
 	unsigned int msg_start;
 	unsigned int msg_end;
 	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer,
-		*button_delete;
+		*button_delete, *top_pb, *bottom_pb;
 	Elm_Genlist_Item *latest_it;
 	Eina_Bool scroll_lock;
 };
@@ -176,9 +176,34 @@ message_list_view_init()
 	evas_object_smart_callback_add(view.list, "scroll,edge,bottom", _scroll_bottom, NULL);
 	evas_object_smart_callback_add(view.list, "scroll,edge,top", _scroll_top, NULL);
 
+	view.top_pb = elm_progressbar_add(win);
+	elm_object_style_set(view.top_pb, "wheel");
+	elm_progressbar_label_set(view.top_pb, D_("Loading..."));
+	elm_progressbar_pulse(view.top_pb, EINA_TRUE);
+	evas_object_size_hint_align_set(view.top_pb, EVAS_HINT_FILL, 0.5);
+	evas_object_size_hint_weight_set(view.top_pb, EVAS_HINT_EXPAND,
+					 EVAS_HINT_EXPAND);
+	ui_utils_view_swallow(VIEW_PTR(view), "loading_top_indicator",
+			      view.top_pb);
+	evas_object_show(view.top_pb);
+
+	view.bottom_pb = elm_progressbar_add(win);
+	elm_object_style_set(view.bottom_pb, "wheel");
+	elm_progressbar_label_set(view.bottom_pb, D_("Loading..."));
+	elm_progressbar_pulse(view.bottom_pb, EINA_TRUE);
+	evas_object_size_hint_align_set(view.bottom_pb, EVAS_HINT_FILL, 0.5);
+	evas_object_size_hint_weight_set(view.bottom_pb, EVAS_HINT_EXPAND,
+					 EVAS_HINT_EXPAND);
+	ui_utils_view_swallow(VIEW_PTR(view), "loading_bottom_indicator",
+			      view.bottom_pb);
+	evas_object_show(view.bottom_pb);
+
 	view.msg_start = 0;
 	view.msg_end = 0;
 	view.latest_it = NULL;
+
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"start_bottom_loading","");
 	phoneui_utils_messages_get_full("Timestamp", TRUE, 0, MSG_PAGE_SIZE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
 	phoneui_info_register_message_changes(_message_changed_cb, NULL);
 
@@ -389,6 +414,9 @@ static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info) {
 	if (view.scroll_lock) return;
 	view.scroll_lock = TRUE;
 
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"start_bottom_loading","");
+
 	view.latest_it = elm_genlist_last_item_get(view.list);
 	phoneui_utils_messages_get_full("Timestamp", TRUE, view.msg_end, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
 }
@@ -402,6 +430,9 @@ static void _scroll_top(void *_data, Evas_Object * obj, void *event_info) {
 
 	if (view.scroll_lock) return;
 	view.scroll_lock = TRUE;
+
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"start_top_loading","");
 
 	unsigned int start = view.msg_start > MSG_PER_UPDATE ? view.msg_start-MSG_PER_UPDATE : 0;
 	
@@ -452,7 +483,7 @@ _process_messages(GError* error, GHashTable** messages, int count, gpointer data
 				D_("Error while retrieving messages"), 10);
 		g_warning("Error retrieving messages: (%d) %s",
 			  error->code, error->message);
-		view.scroll_lock = FALSE;
+		goto close;
 		return;
 	}
 	if (!messages) {
@@ -472,7 +503,10 @@ _process_messages(GError* error, GHashTable** messages, int count, gpointer data
 		view.latest_it = NULL;
 	}
 
+close:
 	view.scroll_lock = FALSE;
+	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"stop_loading","");
 }
 
 static void
