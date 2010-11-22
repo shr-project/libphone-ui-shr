@@ -207,7 +207,7 @@ common_utils_string_strip_newline(char *string)
 	char *p;
 
 	for (p = string; *p; p++) {
-		if (*p == '\n' || *p == '\t') {
+		if (isspace(*p)) {
 			*p = ' ';
 		}
 	}
