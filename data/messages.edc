@@ -113,7 +113,7 @@ group { name: "elm/genlist/item/message/default";
 				color: 0 0 0 255;
 				color3: 0 0 0 0;
 				text {
-					font: "content";
+					font: "content:style=Oblique";
 					size: 9;
 					elipsis: 0.0;
 					min: 0 1;
@@ -124,7 +124,7 @@ group { name: "elm/genlist/item/message/default";
 				state: "new" 0.0;
 				inherit: "default" 0.0;
 				color: 255 0 0 255;
-				text.font: "content-bold";
+				text.font: "content-bold:style=Oblique";
 			}
 		}
 		part { name: "elm.date";
@@ -180,7 +180,7 @@ group { name: "elm/genlist/item/message/default";
 				color: 0 0 0 255;
 				color3: 0 0 0 0;
 				text {
-					font: "content";
+					font: "content-bold";
 					size: 9;
 					elipsis: 0.0;
 					min: 0 1;
