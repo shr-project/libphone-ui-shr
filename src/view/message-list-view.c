@@ -743,15 +743,21 @@ gl_state_get(void *data, Evas_Object *obj, const char *part)
 {
 	(void) part;
 	(void) obj;
+	Eina_Bool new = EINA_FALSE;
 	GHashTable *message;
 	GValue *gval_tmp;
 
 	message = (GHashTable *)data;
-	gval_tmp = g_hash_table_lookup(message, "New");
-	if (gval_tmp) {
-		return g_value_get_int(gval_tmp) == 1;
+
+	if ((gval_tmp = g_hash_table_lookup(message, "New"))) {
+		new = (g_value_get_int(gval_tmp) == 1);
 	}
-	return 0;
+
+	if ((gval_tmp = g_hash_table_lookup(message, "Direction")) && new) {
+		new = (!strcmp(g_value_get_string(gval_tmp), "in"));
+	}
+
+	return new;
 }
 
 static void
