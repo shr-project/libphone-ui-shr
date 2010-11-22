@@ -379,6 +379,7 @@ ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 		      void (*callback)(int, void *), void *data)
 {
 	Evas_Object *win, *box, *box2, *lbl, *btn;
+	char *tmp;
 	struct _dialog_pack *pack = malloc(sizeof(struct _dialog_pack));
 	win = ui_utils_view_window_get(view);
 	pack->callback = callback;
@@ -387,10 +388,15 @@ ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 	box = elm_box_add(win);
 	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+
+	tmp = g_strdup_printf("<font align=center>%s</font>", label);
 	lbl = elm_label_add(win);
-	elm_label_label_set(lbl, label);
-	evas_object_size_hint_align_set(lbl, 0.5, 0.5);
+	elm_label_label_set(lbl, tmp);
+	elm_label_line_wrap_set(lbl, EINA_TRUE);
+	evas_object_size_hint_align_set(lbl, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	evas_object_size_hint_weight_set(lbl, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
+	g_free(tmp);
+
 	evas_object_show(lbl);
 	elm_box_pack_end(box, lbl);
 
