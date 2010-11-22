@@ -159,18 +159,12 @@ message_list_view_init()
 	evas_object_show(obj);
 
 	view.list = elm_genlist_add(win);
-	//elm_genlist_horizontal_mode_set(data->list, ELM_LIST_LIMIT);
-// 	elm_object_scale_set(view.list, 1.0);
 	ui_utils_view_swallow(VIEW_PTR(view), "list", view.list);
-	//itc.item_style     = "double_label";
 	itc.item_style = "message";
 	itc.func.label_get = gl_label_get;
 	itc.func.icon_get = gl_icon_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
-	//elm_scroller_policy_set(data->list, ELM_SCROLLER_POLICY_AUTO, ELM_SCROLLER_POLICY_AUTO);
-	//evas_object_size_hint_align_set(data->list, EVAS_HINT_FILL, EVAS_HINT_FILL);
-	//evas_object_size_hint_weight_set(data->list, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_show(view.list);
 
 	view.scroll_lock = FALSE;
