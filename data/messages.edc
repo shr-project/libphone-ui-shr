@@ -710,7 +710,7 @@ group { name: "phoneui/messages/list";
 				fixed: 1 1;
 				rel1 {
 					to: "loading_bottom_bg";
-					relative: 1.0 0.75;
+					relative: 1.0 1.0;
 				}
 				rel2 {
 					to: "loading_bottom_bg";
@@ -726,7 +726,7 @@ group { name: "phoneui/messages/list";
 			source:  "";
 			action:  STATE_SET "loading" 0.0;
 			target:  "loading_top_clipper";
-			transition: ACCELERATE 0.4;
+			transition: ACCELERATE 0.2;
 		}
 		program {
 			name:   "start_bottom_loading";
@@ -734,7 +734,7 @@ group { name: "phoneui/messages/list";
 			source:  "";
 			action:  STATE_SET "loading" 0.0;
 			target:  "loading_bottom_clipper";
-			transition: ACCELERATE 0.4;
+			transition: ACCELERATE 0.2;
 		}
 		program {
 			name:   "stop_loading";
@@ -743,7 +743,7 @@ group { name: "phoneui/messages/list";
 			action:  STATE_SET "default" 0.0;
 			target:  "loading_top_clipper";
 			target:  "loading_bottom_clipper";
-			transition: DECELERATE 0.4;
+			transition: DECELERATE 0.2;
 		}
 	}
 } /* phoneui/messages/list */
