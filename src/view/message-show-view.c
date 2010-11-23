@@ -57,6 +57,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	int ret;
 	GValue *tmp;
 	const char *direction = NULL;
+	Eina_Bool in_msg = EINA_FALSE;
 
 	/* path MUST always be set! It will be freed by
 	destroying the messageviews hashtable in here, thus must be a copy */
@@ -170,11 +171,13 @@ message_show_view_init(char* path, GHashTable *properties)
 		direction = g_value_get_string(tmp);
 		if (strcmp(direction, "in") == 0) {
 			g_debug("Setting status icon for an incoming message");
+			in_msg = EINA_TRUE;
 			elm_icon_file_set(ico, phoneui_theme,
 					  "icon/phonelog-incoming");
 		}
 		else {
 			g_debug("Setting status icon for a sent message");
+			in_msg = EINA_FALSE;
 			elm_icon_file_set(ico, phoneui_theme,
 					  "icon/phonelog-outgoing");
 		}
@@ -239,22 +242,25 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
 
-	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Call"));
-	evas_object_size_hint_min_set(obj, 140, 80);
-	evas_object_smart_callback_add(obj, "clicked",
-				       _call_clicked, view);
-	evas_object_show(obj);
-	elm_box_pack_end(box, obj);
+	if (in_msg) {
+		obj = elm_button_add(win);
+		elm_button_label_set(obj, D_("Call"));
+		evas_object_size_hint_min_set(obj, 140, 80);
+		evas_object_smart_callback_add(obj, "clicked",
+						   _call_clicked, view);
+		evas_object_show(obj);
+		elm_box_pack_end(box, obj);
+	}
 
 	obj = elm_button_add(win);
 	elm_button_label_set(obj, D_("Add Contact"));
 	evas_object_size_hint_min_set(obj, 140, 80);
 	evas_object_smart_callback_add(obj, "clicked",
-				       _new_contact_clicked,
-				       view);
+					   _new_contact_clicked,
+					   view);
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
+	view->add_contact_bt = obj;
 
 	obj = elm_button_add(win);
 	elm_button_label_set(obj, D_("Forward"));
@@ -497,6 +503,11 @@ _common_name_callback(GError *error, GHashTable *contact, void *_data)
 	if (tmp) {
 		ui_utils_view_text_set(VIEW_PTR(*view), "text_number", tmp);
 		free(tmp);
+
+		if (view->add_contact_bt) {
+			evas_object_del(view->add_contact_bt);
+			view->add_contact_bt = NULL;
+		}
 	}
 	gval_tmp = g_hash_table_lookup(contact, "Photo");
 	if (gval_tmp) {

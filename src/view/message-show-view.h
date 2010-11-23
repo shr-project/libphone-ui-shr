@@ -30,7 +30,7 @@ struct MessageShowViewData {
 	struct View parent;
 	char *path, *number, *name, *photopath;
 	GHashTable *properties;
-	Evas_Object *content, *photo, *sc_content, *hv;
+	Evas_Object *content, *photo, *sc_content, *hv, *add_contact_bt;
 
 	void (*callback) ();
 	void *callback_data;
