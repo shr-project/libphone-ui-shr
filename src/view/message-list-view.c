@@ -73,6 +73,7 @@ static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
 static void _new_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _show_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _answer_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _call_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _forward_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
@@ -132,6 +133,13 @@ message_list_view_init()
 	elm_button_label_set(obj, D_("Answer"));
 	evas_object_size_hint_min_set(obj, 130, 80);
 	evas_object_smart_callback_add(obj, "clicked", _answer_clicked, NULL);
+	evas_object_show(obj);
+	elm_box_pack_end(box, obj);
+
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Call"));
+	evas_object_size_hint_min_set(obj, 130, 80);
+	evas_object_smart_callback_add(obj, "clicked", _call_clicked, NULL);
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
 
@@ -304,6 +312,32 @@ _answer_clicked(void *_data, Evas_Object * obj, void *event_info)
 				common_utils_new_gvalue_string(tmp));
 		}
 		phoneui_messages_message_new(options);
+	}
+}
+
+static void
+_call_clicked(void *_data, Evas_Object * obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	(void) _data;
+
+	const char *number;
+	GValue *gval_tmp;
+	GHashTable *message;
+	Elm_Genlist_Item *it;
+
+	evas_object_hide(view.hv);
+
+	it = elm_genlist_selected_item_get(view.list);
+	if (it) {
+		message = (GHashTable *)elm_genlist_item_data_get(it);
+
+		gval_tmp = g_hash_table_lookup(message, "Phone");
+		if (gval_tmp) {
+			number = g_value_get_string(gval_tmp);
+			phoneui_utils_dial(number, NULL, NULL);
+		}
 	}
 }
 
