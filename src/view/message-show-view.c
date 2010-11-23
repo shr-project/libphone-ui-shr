@@ -53,7 +53,7 @@ int
 message_show_view_init(char* path, GHashTable *properties)
 {
 	struct MessageShowViewData *view;
-	Evas_Object *win, *ico;
+	Evas_Object *win, *ico, *box, *obj;
 	int ret;
 	GValue *tmp;
 	const char *direction = NULL;
@@ -109,8 +109,6 @@ message_show_view_init(char* path, GHashTable *properties)
 	ui_utils_view_layout_set(VIEW_PTR(*view), phoneui_theme,
 				 "phoneui/messages/show");
 
-// 	char *content = elm_entry_utf8_to_markup(data->content);
-
 	GList *keys = g_hash_table_get_keys(properties);
 	for (; keys; keys = keys->next) {
 		tmp = g_hash_table_lookup(properties, keys->data);
@@ -159,7 +157,7 @@ message_show_view_init(char* path, GHashTable *properties)
 		}
 	}
 
-        view->photo = elm_icon_add(win);
+	view->photo = elm_icon_add(win);
 	evas_object_size_hint_aspect_set(view->photo,
 					 EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
 	elm_icon_file_set(view->photo, phoneui_theme, "icon/contact");
@@ -208,72 +206,72 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_show(view->sc_content);
 
 
-	view->bt1 = elm_button_add(win);
-	elm_button_label_set(view->bt1, D_("Close"));
-	evas_object_smart_callback_add(view->bt1, "clicked",
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Close"));
+	evas_object_smart_callback_add(obj, "clicked",
 				       _close_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_close", view->bt1);
-	evas_object_show(view->bt1);
+	ui_utils_view_swallow(VIEW_PTR(*view), "button_close", obj);
+	evas_object_show(obj);
 
 	// Options button with hover
 	view->hv = elm_hover_add(win);
 
-	view->bt2 = elm_button_add(win);
-	elm_button_label_set(view->bt2, D_("Options"));
-	evas_object_smart_callback_add(view->bt2, "clicked", _hover_bt_1,
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Options"));
+	evas_object_smart_callback_add(obj, "clicked", _hover_bt_1,
 				       view->hv);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_options", view->bt2);
-	evas_object_show(view->bt2);
+	ui_utils_view_swallow(VIEW_PTR(*view), "button_options", obj);
+	evas_object_show(obj);
 
 	elm_hover_parent_set(view->hv, win);
-	elm_hover_target_set(view->hv, view->bt2);
+	elm_hover_target_set(view->hv, obj);
 
-	view->bx = elm_box_add(win);
-	elm_box_horizontal_set(view->bx, 0);
-	elm_box_homogenous_set(view->bx, 1);
-	evas_object_show(view->bx);
+	box = elm_box_add(win);
+	elm_box_horizontal_set(box, 0);
+	elm_box_homogenous_set(box, 1);
+	evas_object_show(box);
 
-	view->hbt1 = elm_button_add(win);
-	elm_button_label_set(view->hbt1, D_("Delete"));
-	evas_object_size_hint_min_set(view->hbt1, 140, 80);
-	evas_object_smart_callback_add(view->hbt1, "clicked",
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Delete"));
+	evas_object_size_hint_min_set(obj, 140, 80);
+	evas_object_smart_callback_add(obj, "clicked",
 				       _delete_clicked, view);
-	evas_object_show(view->hbt1);
-	elm_box_pack_end(view->bx, view->hbt1);
+	evas_object_show(obj);
+	elm_box_pack_end(box, obj);
 
-	view->hbt2 = elm_button_add(win);
-	elm_button_label_set(view->hbt2, D_("Call"));
-	evas_object_size_hint_min_set(view->hbt2, 140, 80);
-	evas_object_smart_callback_add(view->hbt2, "clicked",
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Call"));
+	evas_object_size_hint_min_set(obj, 140, 80);
+	evas_object_smart_callback_add(obj, "clicked",
 				       _call_clicked, view);
-	evas_object_show(view->hbt2);
-	elm_box_pack_end(view->bx, view->hbt2);
+	evas_object_show(obj);
+	elm_box_pack_end(box, obj);
 
-	view->hbt3 = elm_button_add(win);
-	elm_button_label_set(view->hbt3, D_("Add Contact"));
-	evas_object_size_hint_min_set(view->hbt3, 140, 80);
-	evas_object_smart_callback_add(view->hbt3, "clicked",
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Add Contact"));
+	evas_object_size_hint_min_set(obj, 140, 80);
+	evas_object_smart_callback_add(obj, "clicked",
 				       _new_contact_clicked,
 				       view);
-	evas_object_show(view->hbt3);
-	elm_box_pack_end(view->bx, view->hbt3);
+	evas_object_show(obj);
+	elm_box_pack_end(box, obj);
 
-	view->hbt4 = elm_button_add(win);
-	elm_button_label_set(view->hbt4, D_("Forward"));
-	evas_object_size_hint_min_set(view->hbt4, 140, 80);
-	evas_object_smart_callback_add(view->hbt4, "clicked", _forward_clicked, view);
-	evas_object_show(view->hbt4);
-	elm_box_pack_end(view->bx, view->hbt4);
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Forward"));
+	evas_object_size_hint_min_set(obj, 140, 80);
+	evas_object_smart_callback_add(obj, "clicked", _forward_clicked, view);
+	evas_object_show(obj);
+	elm_box_pack_end(box, obj);
 
-	elm_hover_content_set(view->hv, "top", view->bx);
+	elm_hover_content_set(view->hv, "top", box);
 
 
-	view->bt3 = elm_button_add(win);
-	elm_button_label_set(view->bt3, D_("Answer"));
-	evas_object_smart_callback_add(view->bt3, "clicked",
+	obj = elm_button_add(win);
+	elm_button_label_set(obj, D_("Answer"));
+	evas_object_smart_callback_add(obj, "clicked",
 				       _answer_clicked, view);
-	ui_utils_view_swallow(VIEW_PTR(*view), "button_answer", view->bt3);
-	evas_object_show(view->bt3);
+	ui_utils_view_swallow(VIEW_PTR(*view), "button_answer", obj);
+	evas_object_show(obj);
 
 	g_debug("going to set read status for the message");
 	phoneui_utils_message_set_read_status(view->path, 1, NULL, NULL);
