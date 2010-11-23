@@ -68,14 +68,17 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	GHashTable *parameters = (GHashTable *) data;
 	if (!strcmp(part, "elm.swallow.icon")) {
-		const char *photo_file;
+		const char *photo_file = NULL;
 		GValue *tmp = g_hash_table_lookup(parameters, "Photo");
-		if (tmp)
+		if (tmp) {
 			photo_file = g_value_get_string(tmp);
-		else
+		}
+
+		if (!photo_file || !ecore_file_exists(photo_file))
 			photo_file = CONTACT_DEFAULT_PHOTO;
-		Evas_Object *photo = elm_image_add(obj);
-		elm_image_file_set(photo, photo_file, NULL);
+
+		Evas_Object *photo = elm_icon_add(obj);
+		elm_icon_file_set(photo, photo_file, NULL);
 		evas_object_size_hint_aspect_set(photo,
 						 EVAS_ASPECT_CONTROL_VERTICAL,
 						 1, 1);

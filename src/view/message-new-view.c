@@ -203,9 +203,15 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 	if (!strcmp(part, "elm.swallow.icon")) {
-		const char *photo_file;
+		const char *photo_file = NULL;
 		GValue *tmp = g_hash_table_lookup(pack->recipient, "Photo");
-		photo_file = (tmp) ? g_value_get_string(tmp) : CONTACT_DEFAULT_PHOTO;
+		if (tmp) {
+			photo_file = g_value_get_string(tmp);
+		}
+
+		if (!photo_file || !ecore_file_exists(photo_file))
+			photo_file = CONTACT_DEFAULT_PHOTO;
+
 		Evas_Object *photo = elm_icon_add(obj);
 		elm_icon_file_set(photo, photo_file, NULL);
 		evas_object_size_hint_aspect_set(photo,
