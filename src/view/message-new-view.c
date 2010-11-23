@@ -676,6 +676,7 @@ _content_changed(void *_data, Evas_Object * obj, void *event_info)
 {
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *) _data;
+	GRegex *rgx;
 	char *content;
 	int limit;		/* the limit of the sms */
 	int len;		/* the number of characters in the sms */
@@ -684,6 +685,23 @@ _content_changed(void *_data, Evas_Object * obj, void *event_info)
 	/*FIXME: consider changing to an iterative way by using get_size (emulating what's
 	 * being done in phone_utils) as calculating for all the string on every keystroke is a bit sluggish. */
 	content = elm_entry_markup_to_utf8(elm_scrolled_entry_entry_get(obj));
+
+	/* Elementary uses the <ps> tag as paragraph separator, this get converted to
+	 * the Unicode paragraph separator "\xE2\x80\xA9" causing the sms to grow in size;
+	 * let's replace it with the standard "\n" separator avoiding to send multiple
+	 * SMSs messages */
+	char *tmp = strdup(content);
+	free(content);
+
+	rgx = g_regex_new("\xE2\x80\xA9", 0, 0, NULL);
+	content = g_regex_replace_literal(rgx, tmp, -1, 0, "\n", 0, NULL);
+	g_regex_unref(rgx);
+
+	if (!content)
+		content = tmp;
+	else
+		free(tmp);
+
 	/* if the entry is still empty elm_entry_markup_to_utf8 will return
 	 * NULL - which makes g_strstrip segfault :|
 	 * and we don't have to do all the fancy calculation
