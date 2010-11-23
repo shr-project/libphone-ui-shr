@@ -727,13 +727,16 @@ _content_changed(void *_data, Evas_Object * obj, void *event_info)
 		}
 	}
 
-
 	int left = limit - (len % limit);
+	int msg_count = (len / limit) + 1;
+
 	if (left == limit && (len / limit) + 1 > 1) {
 		left = 0;
+		msg_count--;
 	}
-	/*FIXME: BAD BAD BAD! will cause an overflow when using a long translation!!! */
-	sprintf(text, D_("%d characters left [%d]"), left, (len / limit) + 1);
+
+	/*FIXME: BAD! will cause a string-cut when using a long translation!!! */
+	snprintf(text, sizeof(text), D_("%d characters left [%d]"), left, msg_count);
 	ui_utils_view_text_set(VIEW_PTR(*view), "characters_left", text);
 	edje_object_part_text_set(elm_layout_edje_get(view->layout_content),
 				  "characters_left", text);
