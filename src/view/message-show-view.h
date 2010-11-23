@@ -31,7 +31,7 @@ struct MessageShowViewData {
 	char *path, *number, *name, *photopath;
 	GHashTable *properties;
 	Evas_Object *content, *photo, *sc_content, *bt1, *bt2, *bt3, *hv, *bx,
-		    *hbt1, *hbt2, *hbt3;
+		    *hbt1, *hbt2, *hbt3, *hbt4;
 
 	void (*callback) ();
 	void *callback_data;

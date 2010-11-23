@@ -41,6 +41,7 @@ static void _close_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _answer_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _call_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _forward_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _new_contact_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 static void _common_name_callback(GError *error, GHashTable *contact, void *_data);
@@ -257,6 +258,13 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_show(view->hbt3);
 	elm_box_pack_end(view->bx, view->hbt3);
 
+	view->hbt4 = elm_button_add(win);
+	elm_button_label_set(view->hbt4, D_("Forward"));
+	evas_object_size_hint_min_set(view->hbt4, 140, 80);
+	evas_object_smart_callback_add(view->hbt4, "clicked", _forward_clicked, view);
+	evas_object_show(view->hbt4);
+	elm_box_pack_end(view->bx, view->hbt4);
+
 	elm_hover_content_set(view->hv, "top", view->bx);
 
 
@@ -389,7 +397,32 @@ _call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	char *number = view->number;
 	g_debug("_call_clicked()");
 
+	evas_object_hide(view->hv);
 	phoneui_utils_dial(number, NULL, NULL);
+}
+
+static void
+_forward_clicked(void *_data, Evas_Object * obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+
+	char *content;
+	GHashTable *options;
+	struct MessageShowViewData *view = (struct MessageShowViewData *) _data;
+
+	evas_object_hide(view->hv);
+
+	options = g_hash_table_new_full(g_str_hash, g_str_equal,
+					NULL, common_utils_gvalue_free);
+	content = elm_entry_markup_to_utf8(elm_anchorblock_text_get(view->content));
+	if (content) {
+		g_hash_table_insert(options, "Content",
+		                    common_utils_new_gvalue_string(content));
+		free(content);
+	}
+
+	phoneui_messages_message_new(options);
 }
 
 static void
