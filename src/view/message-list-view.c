@@ -47,8 +47,7 @@ struct MessageListViewData  {
 	int count;
 	unsigned int msg_start;
 	unsigned int msg_end;
-	Evas_Object *list, *bt1, *bt2, *bt3, *hv, *bx, *button_answer,
-		*button_delete, *top_pb, *bottom_pb;
+	Evas_Object *list, *hv, *bx, *call_bt, *answer_bt, *top_pb, *bottom_pb;
 	Elm_Genlist_Item *latest_it;
 	Eina_Bool scroll_lock;
 };
@@ -80,6 +79,7 @@ static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 static Eina_Bool _release_scroll_lock(void *_data);
 static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info);
 static void _scroll_top(void *_data, Evas_Object * obj, void *event_info);
+static void _selected_changed(void *_data, Evas_Object * obj, void *event_info);
 static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
 static Evas_Object * gl_icon_get(void *data, Evas_Object * obj, const char *part);
 static Eina_Bool gl_state_get(void *data, Evas_Object *obj, const char *part);
@@ -135,6 +135,7 @@ message_list_view_init()
 	evas_object_smart_callback_add(obj, "clicked", _answer_clicked, NULL);
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
+	view.answer_bt = obj;
 
 	obj = elm_button_add(win);
 	elm_button_label_set(obj, D_("Call"));
@@ -142,6 +143,7 @@ message_list_view_init()
 	evas_object_smart_callback_add(obj, "clicked", _call_clicked, NULL);
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
+	view.call_bt = obj;
 
 	obj = elm_button_add(win);
 	elm_button_label_set(obj, D_("Forward"));
@@ -178,7 +180,8 @@ message_list_view_init()
 	view.scroll_lock = FALSE;
 	evas_object_smart_callback_add(view.list, "scroll,edge,bottom", _scroll_bottom, NULL);
 	evas_object_smart_callback_add(view.list, "scroll,edge,top", _scroll_top, NULL);
-
+	evas_object_smart_callback_add(view.list, "selected", _selected_changed, NULL);
+	
 	view.top_pb = elm_progressbar_add(win);
 	elm_object_style_set(view.top_pb, "wheel");
 	elm_progressbar_label_set(view.top_pb, D_("Loading..."));
@@ -480,6 +483,29 @@ static void _scroll_top(void *_data, Evas_Object * obj, void *event_info)
 	
 	view.latest_it = elm_genlist_first_item_get(view.list);
 	phoneui_utils_messages_get_full("Timestamp", TRUE, start, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_SORTED));
+}
+
+static void
+_selected_changed(void *_data, Evas_Object * obj, void *event_info) {
+	(void)_data;
+	(void)obj;
+	GValue *gtmp;
+
+	Elm_Genlist_Item *it = (Elm_Genlist_Item *)event_info;
+	if (!it) return;
+
+	GHashTable *message = (GHashTable *)elm_genlist_item_data_get(it);
+	if (!message) return;
+
+	if ((gtmp = g_hash_table_lookup(message, "Direction"))) {
+		if (!strcmp(g_value_get_string(gtmp), "out")) {
+			evas_object_hide(view.answer_bt);
+			evas_object_hide(view.call_bt);
+		} else {
+			evas_object_show(view.answer_bt);
+			evas_object_show(view.call_bt);
+		}
+	}
 }
 
 static void
