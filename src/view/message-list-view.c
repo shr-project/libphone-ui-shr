@@ -532,9 +532,9 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
 		message = (GHashTable *)elm_genlist_item_data_get(it);
-		g_hash_table_insert(message, "Name",
-				    common_utils_new_gvalue_string(tmp));
-		elm_genlist_item_update(it);
+		g_hash_table_insert(message, "Name", common_utils_new_gvalue_string(tmp));
+		Evas_Object *obj = (Evas_Object *)elm_genlist_item_object_get(it);
+		edje_object_part_text_set(obj, "elm.name", tmp);
 		free(tmp);
 	}
 }
@@ -705,6 +705,9 @@ _process_message(gpointer _message, gpointer _data)
 		}
 	}
 
+	/* Save also the genlist item pointer in the messsage data, to get them dobule-linked */
+	g_hash_table_insert(rowdata, "_GenlistItem", common_utils_new_gvalue_pointer(it));
+
 	gval_tmp = g_hash_table_lookup(message, "@Contacts");
 	if (gval_tmp) {
 		char *path = phoneui_utils_contact_get_dbus_path
@@ -748,7 +751,18 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 		else {
 			tmp = g_hash_table_lookup(message, "Phone");
 			if (tmp) {
-				return strdup(g_value_get_string(tmp));
+				const char *number = g_value_get_string(tmp);
+
+				/* FIXME this is a bad workaround needed for reloading the
+				 * message contact name when the user has showed the message.
+				 * It seems to be a genlist bug, which cause to use different data */
+				if ((tmp = g_hash_table_lookup(message, "_GenlistItem"))) {
+					Elm_Genlist_Item *it;
+					it = (Elm_Genlist_Item *) g_value_get_pointer(tmp);
+					phoneui_utils_contact_lookup(number, _contact_lookup, it);
+				}
+
+				return strdup(number);
 			}
 		}
 	}
