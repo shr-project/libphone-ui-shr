@@ -30,6 +30,7 @@ struct ContactListData {
 	Evas_Object *layout;
 	Evas_Object *list;
 	Evas_Object *index;
+	Evas_Object *progress;
 	int count;
 	int current;
 };

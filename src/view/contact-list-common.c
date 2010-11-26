@@ -67,6 +67,7 @@ static Evas_Object *
 gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	GHashTable *parameters = (GHashTable *) data;
+
 	if (!strcmp(part, "elm.swallow.icon")) {
 		const char *photo_file = NULL;
 		GValue *tmp = g_hash_table_lookup(parameters, "Photo");
@@ -336,6 +337,9 @@ _process_entry(void *_entry, void *_data)
 	list_data->current++;
 	if (list_data->count == list_data->current) {
 		contact_list_fill_index(list_data);
+		edje_object_signal_emit(elm_layout_edje_get(list_data->layout),
+		                        "stop_loading","");
+		elm_progressbar_pulse(list_data->progress, EINA_FALSE);
 	}
 }
 
@@ -344,6 +348,10 @@ contact_list_fill(struct ContactListData *list_data)
 {
 	g_debug("contact_list_fill()");
 	list_data->current = 0;
+	elm_progressbar_pulse(list_data->progress, EINA_TRUE);
+
+	edje_object_signal_emit(elm_layout_edje_get(list_data->layout),
+	                        "start_loading","");
 	phoneui_utils_contacts_get(&list_data->count, _process_entry, list_data);
 }
 
@@ -367,5 +375,13 @@ contact_list_add(struct ContactListData *list_data)
 		elm_layout_content_set(list_data->layout, "contacts_list",
 				list_data->list);
 	}
+	list_data->progress = elm_progressbar_add(win);
+	elm_object_style_set(list_data->progress, "wheel");
+	elm_progressbar_label_set(list_data->progress, D_("Loading..."));
+	evas_object_size_hint_align_set(list_data->progress, EVAS_HINT_FILL, 0.5);
+	evas_object_size_hint_weight_set(list_data->progress, EVAS_HINT_EXPAND,
+	                                 EVAS_HINT_EXPAND);
+	elm_layout_content_set(list_data->layout, "loading_indicator", list_data->progress);
+	evas_object_show(list_data->progress);
 }
 
