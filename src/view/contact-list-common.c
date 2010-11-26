@@ -140,15 +140,15 @@ _new_get_index(const char *_string)
 
 	if (g_ascii_isalnum(_string[0])) {
 		char *string;
-		string = malloc(sizeof(char) + 1);
+		string = malloc(sizeof(char)+1);
 		string[0] = g_ascii_toupper(_string[0]);
 		string[1] = '\0';
 		return string;
 	} else if (g_unichar_isalnum(_string[0])) {
 		gunichar *string;
-		string = malloc(sizeof(gunichar) + 1);
+		string = malloc(sizeof(gunichar)+1);
 		string[0] = g_unichar_toupper(_string[0]);
-		string[1] = '\0';
+		*(string + sizeof(gunichar)) = '\0';
 		return (char *)string;
 	}
 
