@@ -20,8 +20,6 @@
  */
 
 
-
-#include <ctype.h> /* to upper */
 #include <phoneui-utils-contacts.h>
 
 #include "phoneui-shr.h"
@@ -133,99 +131,28 @@ gl_index_selected(void *data, Evas_Object * obj, void *event_info)
 	elm_genlist_item_top_bring_in(event_info);
 }
 
-
-
-int /* thanks to evas */
-utf8_get_next(const unsigned char *buf, int *iindex)
-{
-   /* Reads UTF8 bytes from @buf, starting at *@index and returns
-    * the decoded code point at iindex offset, and advances iindex
-    * to the next code point after this.
-    *
-    * Returns 0 to indicate there is no next char
-    */
-	int index = *iindex, len, r;
-	unsigned char d, d2, d3, d4;
-
-	/* if this char is the null terminator, exit */
-	if (!buf[index])
-		return 0;
-
-	d = buf[index++];
-
-	while (buf[index] && ((buf[index] & 0xc0) == 0x80))
-		index++;
-
-	len = index - *iindex;
-
-	if (len == 1)
-		r = d;
-	else if (len == 2)
-	{
-		/* 2 bytes */
-		d2 = buf[*iindex + 1];
-		r = d & 0x1f; /* copy lower 5 */
-		r <<= 6;
-		r |= (d2 & 0x3f); /* copy lower 6 */
-	}
-	else if (len == 3)
-	{
-		/* 3 bytes */
-		d2 = buf[*iindex + 1];
-		d3 = buf[*iindex + 2];
-		r = d & 0x0f; /* copy lower 4 */
-		r <<= 6;
-		r |= (d2 & 0x3f);
-		r <<= 6;
-		r |= (d3 & 0x3f);
-	}
-	else
-	{
-		/* 4 bytes */
-		d2 = buf[*iindex + 1];
-		d3 = buf[*iindex + 2];
-		d4 = buf[*iindex + 3];
-		r = d & 0x0f; /* copy lower 4 */
-		r <<= 6;
-		r |= (d2 & 0x3f);
-		r <<= 6;
-		r |= (d3 & 0x3f);
-		r <<= 6;
-		r |= (d4 & 0x3f);
-	}
-
-	*iindex = index;
-	return r;
-}
-
-
 /* allocates space and returns the index part of a string */
 static char *
 _new_get_index(const char *_string)
 {
-	/*FIXME: handle the upper in a more sane manner,
-	 * i.e, unicode support */
-	char *string;
-	int i;
-
-	if (!_string) {
+	if (!_string)
 		return NULL;
-	}
-	i = 0;
-	utf8_get_next((const unsigned char *) _string, &i);
 
-	string = malloc(i + 1);
-	if (!string) {
-		return NULL;
+	if (g_ascii_isalnum(_string[0])) {
+		char *string;
+		string = malloc(sizeof(char) + 1);
+		string[0] = g_ascii_toupper(_string[0]);
+		string[1] = '\0';
+		return string;
+	} else if (g_unichar_isalnum(_string[0])) {
+		gunichar *string;
+		string = malloc(sizeof(gunichar) + 1);
+		string[0] = g_unichar_toupper(_string[0]);
+		string[1] = '\0';
+		return (char *)string;
 	}
-	strncpy(string, _string, i);
-	string[i] = '\0';
 
-	if (i == 1) {/* i.e, an ascii char */
-		string[0] = toupper(string[0]);
-	}
-
-	return string;
+	return NULL;
 }
 
 Elm_Genlist_Item *
@@ -266,7 +193,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 	char *idx, *current_index = NULL;
 	char *name;
 	int init_index_count, index_count;
-	int new_index;
+	Eina_Bool new_index;
 	int height;
 
 	win = ui_utils_view_window_get(list_data->view);
@@ -276,7 +203,6 @@ contact_list_fill_index(struct ContactListData *list_data)
 	list_data->index = elm_index_add(win);
 	elm_win_resize_object_add(win, list_data->index);
 	evas_object_size_hint_weight_set(list_data->index, 1.0, 0.0);
-	evas_object_show(list_data->index);
 	evas_object_smart_callback_add(list_data->index, "delay,changed",
 				       gl_index_changed2, NULL);
 	evas_object_smart_callback_add(list_data->index, "changed",
@@ -300,10 +226,10 @@ contact_list_fill_index(struct ContactListData *list_data)
 				}
 				current_index = idx;
 				current_index_item = it;
-				new_index = 1;
+				new_index = TRUE;
 			}
 			else {
-				new_index = 0;
+				new_index = FALSE;
 				free(idx);
 			}
 			if (index_count < 1 && new_index) {
@@ -321,6 +247,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 		elm_layout_content_set(list_data->layout, "contacts_index",
 				list_data->index);
 	}
+	evas_object_show(list_data->index);
 }
 
 static void
