@@ -87,35 +87,15 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 }
 
 
-
-static Eina_Bool
-gl_state_get(void *data, Evas_Object * obj, const char *part)
-{
-	(void) obj;
-	(void) data;
-	(void) part;
-	return (0);
-}
-
-
 static void
 gl_del(void *data, Evas_Object * obj)
 {
 	(void) obj;
-	(void) data;
-}
-
-
-static void
-gl_index_changed(void *data, Evas_Object * obj, void *event_info)
-{
-	(void) data;
-	(void) obj;
-	(void) event_info;
+	g_hash_table_unref((GHashTable *)data);
 }
 
 	static void
-gl_index_changed2(void *data, Evas_Object * obj, void *event_info)
+gl_index_changed(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
@@ -211,8 +191,6 @@ contact_list_fill_index(struct ContactListData *list_data)
 	elm_win_resize_object_add(win, list_data->index);
 	evas_object_size_hint_weight_set(list_data->index, 1.0, 0.0);
 	evas_object_smart_callback_add(list_data->index, "delay,changed",
-				       gl_index_changed2, NULL);
-	evas_object_smart_callback_add(list_data->index, "changed",
 				       gl_index_changed, NULL);
 	evas_object_smart_callback_add(list_data->index, "selected",
 				       gl_index_selected, NULL);
@@ -302,7 +280,7 @@ contact_list_add(struct ContactListData *list_data)
 	itc.item_style = "contact";
 	itc.func.label_get = gl_label_get;
 	itc.func.icon_get = gl_icon_get;
-	itc.func.state_get = gl_state_get;
+	itc.func.state_get = NULL;
 	itc.func.del = gl_del;
 	evas_object_show(list_data->list);
 	if (list_data->layout) {
