@@ -138,21 +138,28 @@ _new_get_index(const char *_string)
 	if (!_string)
 		return NULL;
 
+	size_t size;
+	gunichar u;
+	char *string = NULL;
+
 	if (g_ascii_isalnum(_string[0])) {
-		char *string;
-		string = malloc(sizeof(char)+1);
+		size = sizeof(char);
+		string = malloc(size+1);
 		string[0] = g_ascii_toupper(_string[0]);
-		string[1] = '\0';
-		return string;
-	} else if (g_unichar_isalnum(_string[0])) {
-		gunichar *string;
-		string = malloc(sizeof(gunichar)+1);
-		string[0] = g_unichar_toupper(_string[0]);
-		*(string + sizeof(gunichar)) = '\0';
-		return (char *)string;
+	} else {
+		u = g_utf8_get_char_validated(_string, -1);
+		if ((u != (gunichar)-1 || u != (gunichar)-2) && g_unichar_isalnum(u)) {
+			u = g_unichar_toupper(u);
+			size = g_unichar_to_utf8(u, NULL);
+			string = malloc(size+1);
+			g_unichar_to_utf8(u, string);
+		}
 	}
 
-	return NULL;
+	if (string)
+		string[size] = '\0';
+
+	return string;
 }
 
 Elm_Genlist_Item *
