@@ -830,13 +830,17 @@ _message_send_callback(GError *error, int reference, const char *timestamp,
 	free(view);
 }
 
+static void _deinit_message_new_view(struct MessageNewViewData *view) {
+	message_new_view_deinit(view);
+	free(view);
+}
+
 static void
 _delete_confirm_cb(int res, void *data)
 {
 	struct MessageNewViewData *view = data;
 	if (res == DIALOG_YES) {
-		message_new_view_deinit(view);
-		free(view);
+		_deinit_message_new_view(view);
 	}
 	else if (elm_pager_content_top_get(view->pager) == view->layout_content) {
 		elm_object_focus(view->content_entry);
@@ -848,9 +852,16 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 {
 	(void)win;
 	(void)event_info;
-	ui_utils_dialog(VIEW_PTR(*view),
-			D_("Do you really want to quit writing this message?"),
-			DIALOG_YES | DIALOG_NO, _delete_confirm_cb, view);
+	struct MessageNewViewData *mw = (struct MessageNewViewData *)view;
+
+	if (mw && (!mw->content || !strlen(mw->content))) {
+		_deinit_message_new_view(mw);
+	}
+	else {
+		ui_utils_dialog(VIEW_PTR(*view),
+				D_("Do you really want to quit writing this message?"),
+				DIALOG_YES | DIALOG_NO, _delete_confirm_cb, view);
+	}
 }
 
 static void
