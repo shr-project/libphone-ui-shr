@@ -103,6 +103,28 @@ common_utils_gvalue_free(gpointer val)
 	g_free(value);
 }
 
+static void
+_common_utils_gvalue_ghashtable_foreach_clone(void *k, void *v, void *data) {
+	GHashTable *tbl = ((GHashTable *)data);
+	char *key = (char *)k;
+	GValue *value = (GValue *)v;
+	GValue *new_value = malloc(sizeof(GValue));
+	bzero(new_value, sizeof(GValue));
+
+	g_value_init(new_value, G_VALUE_TYPE(value));
+	g_value_copy(value, new_value);
+	g_hash_table_insert(tbl, strdup(key), new_value);
+}
+
+GHashTable *common_utils_gvalue_ghashtable_clone(GHashTable *hash_table) {
+	GHashTable *tbl = g_hash_table_new_full(g_str_hash, g_str_equal, NULL,
+	                                        common_utils_gvalue_free);
+
+	g_hash_table_foreach(hash_table, _common_utils_gvalue_ghashtable_foreach_clone, tbl);
+
+	return tbl;
+}
+
 void *
 common_utils_object_ref(void *object)
 {
