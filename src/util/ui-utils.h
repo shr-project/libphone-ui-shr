@@ -103,6 +103,11 @@ void
 ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 		      void (*callback)(int, void *), void *data);
 
+void
+ui_utils_dialog_check(struct View *view, const char *label, const char *check_label,
+		      Eina_Bool *check_value, int buttonflags,
+		      void (*callback)(int, void *), void *data);
+
 Evas_Object *
 ui_utils_notify(Evas_Object *parent, const char *label, int timeout);
 

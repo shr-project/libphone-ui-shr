@@ -350,7 +350,15 @@ void
 ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 		      void (*callback)(int, void *), void *data)
 {
-	Evas_Object *win, *box, *box2, *lbl, *btn;
+	ui_utils_dialog_check(view, label, NULL, NULL, buttonflags, callback, data);
+}
+
+void
+ui_utils_dialog_check(struct View *view, const char *label, const char *check_label,
+		      Eina_Bool *check_value, int buttonflags,
+		      void (*callback)(int, void *), void *data)
+{
+	Evas_Object *win, *box, *box2, *lbl, *btn, *check;
 	char *tmp;
 	struct _dialog_pack *pack = malloc(sizeof(struct _dialog_pack));
 	win = ui_utils_view_window_get(view);
@@ -371,6 +379,15 @@ ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 
 	evas_object_show(lbl);
 	elm_box_pack_end(box, lbl);
+
+	if 	(check_label && strlen(check_label) && check_value) {
+		check = elm_check_add(win);
+		elm_check_label_set(check, check_label);
+		elm_check_state_set(check, *check_value);
+		elm_check_state_pointer_set(check, check_value);
+		elm_box_pack_end(box, check);
+		evas_object_show(check);
+	}
 
 	box2 = elm_box_add(win);
 	elm_box_horizontal_set(box2, EINA_TRUE);
