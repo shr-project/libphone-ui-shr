@@ -822,7 +822,7 @@ _message_send_callback(GError *error, int reference, const char *timestamp,
 
 	struct MessageNewViewData *view = data;
 	if (error) {
-		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
+		ui_utils_error_message_from_gerror_show(VIEW_PTR(view->view),
 				D_("Sending the message failed"), error);
 		return;
 	}
