@@ -331,46 +331,18 @@ struct _dialog_pack {
 
 /*FIXME: clean all the _dialog_pack */
 static void
-_inwin_dialog_cancel_cb(void *data, Evas_Object *obj, void *event_info)
+_inwin_dialog_cb(void *data, Evas_Object *obj, void *event_info)
 {
-	(void) obj;
 	(void) event_info;
 	struct _dialog_pack *pack = (struct _dialog_pack *)data;
-	if (pack->callback)
-		pack->callback(DIALOG_CANCEL, pack->data);
-	evas_object_del(pack->inwin);
-}
+	int *tmp;
+	int cb_type = 0;
 
-static void
-_inwin_dialog_no_cb(void *data, Evas_Object *obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct _dialog_pack *pack = (struct _dialog_pack *)data;
-	if (pack->callback)
-		pack->callback(DIALOG_NO, pack->data);
-	evas_object_del(pack->inwin);
-}
+	if ((tmp = evas_object_data_get(obj, "type")))
+		cb_type = GPOINTER_TO_INT(tmp);
 
-static void
-_inwin_dialog_yes_cb(void *data, Evas_Object *obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct _dialog_pack *pack = (struct _dialog_pack *)data;
 	if (pack->callback)
-		pack->callback(DIALOG_YES, pack->data);
-	evas_object_del(pack->inwin);
-}
-
-static void
-_inwin_dialog_ok_cb(void *data, Evas_Object *obj, void *event_info)
-{
-	(void) obj;
-	(void) event_info;
-	struct _dialog_pack *pack = (struct _dialog_pack *)data;
-	if (pack->callback)
-		pack->callback(DIALOG_OK, pack->data);
+		pack->callback(cb_type, pack->data);
 	evas_object_del(pack->inwin);
 }
 
@@ -409,40 +381,44 @@ ui_utils_dialog(struct View *view, const char *label, int buttonflags,
 	if (buttonflags & DIALOG_OK) {
 		btn = elm_button_add(win);
 		elm_button_label_set(btn, D_("Ok"));
+		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_OK));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
 		evas_object_smart_callback_add(btn, "clicked",
-					_inwin_dialog_ok_cb, pack);
+					_inwin_dialog_cb, pack);
 		evas_object_show(btn);
 		elm_box_pack_end(box2, btn);
 	}
 	if (buttonflags & DIALOG_YES) {
 		btn = elm_button_add(win);
 		elm_button_label_set(btn, D_("Yes"));
+		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_YES));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
 		evas_object_smart_callback_add(btn, "clicked",
-					_inwin_dialog_yes_cb, pack);
+					_inwin_dialog_cb, pack);
 		evas_object_show(btn);
 		elm_box_pack_end(box2, btn);
 	}
 	if (buttonflags & DIALOG_NO) {
 		btn = elm_button_add(win);
 		elm_button_label_set(btn, D_("No"));
+		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_NO));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
 		evas_object_smart_callback_add(btn, "clicked",
-					_inwin_dialog_no_cb, pack);
+					_inwin_dialog_cb, pack);
 		evas_object_show(btn);
 		elm_box_pack_end(box2, btn);
 	}
 	if (buttonflags & DIALOG_CANCEL) {
 		btn = elm_button_add(win);
 		elm_button_label_set(btn, D_("Cancel"));
+		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_CANCEL));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
 		evas_object_smart_callback_add(btn, "clicked",
-					_inwin_dialog_cancel_cb, pack);
+					_inwin_dialog_cb, pack);
 		evas_object_show(btn);
 		elm_box_pack_end(box2, btn);
 	}
