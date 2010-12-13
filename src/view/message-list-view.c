@@ -830,23 +830,30 @@ gl_state_get(void *data, Evas_Object *obj, const char *part)
 	GHashTable *message;
 	GValue *gval_tmp;
 	Eina_Bool msg_out;
+	Eina_Bool new;
 
 	message = (GHashTable *)data;
 	msg_out = EINA_FALSE;
+	new = EINA_FALSE;
 
 	if ((gval_tmp = g_hash_table_lookup(message, "Direction"))) {
-			msg_out = !strcmp(g_value_get_string(gval_tmp), "out");
+		msg_out = !strcmp(g_value_get_string(gval_tmp), "out");
 	}
 
-	if (!strcmp(part, "elm.date")) {
-		Eina_Bool new = EINA_FALSE;
+	if ((gval_tmp = g_hash_table_lookup(message, "New"))) {
+		new = (g_value_get_int(gval_tmp) == 1);
+	}
 
-		if ((gval_tmp = g_hash_table_lookup(message, "New")) && !msg_out) {
-			new = (g_value_get_int(gval_tmp) == 1);
-		}
-
-		return new;
-	} else if (!strcmp(part, "bg")) {
+	if (new && !msg_out && !strcmp(part, "new_incoming")) {
+		return EINA_TRUE;
+	}
+	else if (new && msg_out && !strcmp(part, "new_outgoing")) {
+		return EINA_TRUE;
+	}
+	else if (!new && !strcmp(part, "standard")) {
+		return EINA_TRUE;
+	}
+	else if (!strcmp(part, "direction_out")) {
 		return msg_out;
 	}
 
