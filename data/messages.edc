@@ -45,6 +45,13 @@ group { name: "elm/genlist/item/message/default";
 				color: COLOR_ORANGE_SOLID;
 
 			}
+			description {
+				state: "selected_out" 0.0;
+				inherit: "default" 0.0;
+				visible: 1;
+				color: COLOR_ORANGE_SOLID;
+
+			}
 		}
 		part { name: "seperator";
 			mouse_events: 0;
@@ -238,17 +245,36 @@ group { name: "elm/genlist/item/message/default";
 		// default is passive
 
 		program {
-			name:    "go_active";
+			name:    "go_active_in";
 			signal:  "elm,state,selected";
 			source:  "elm";
+			filter:  "bg" "default" 0.0;
 			action:  STATE_SET "selected" 0.0;
 			target:  "bg";
 		}
 		program {
-			name:    "go_passive";
+			name:    "go_passive_in";
 			signal:  "elm,state,unselected";
 			source:  "elm";
+			filter:  "bg" "selected" 0.0;
 			action:  STATE_SET "default" 0.0;
+			target:  "bg";
+			transition: LINEAR 0.1;
+		}
+		program {
+			name:    "go_active_out";
+			signal:  "elm,state,selected";
+			source:  "elm";
+			filter:  "bg" "out" 0.0;
+			action:  STATE_SET "selected_out" 0.0;
+			target:  "bg";
+		}
+		program {
+			name:    "go_passive_out";
+			signal:  "elm,state,unselected";
+			source:  "elm";
+			filter:  "bg" "selected_out" 0.0;
+			action:  STATE_SET "out" 0.0;
 			target:  "bg";
 			transition: LINEAR 0.1;
 		}
