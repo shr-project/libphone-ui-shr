@@ -5,7 +5,7 @@ group { name: "elm/genlist/item/message/default";
 	data.item: "selectraise" "on";
 	data.item: "labels" "elm.date elm.name elm.content";
 	data.item: "icons" "elm.photo";
-	data.item: "states" "direction_out new_outgoing new_incoming standard";
+	data.item: "states" "direction_out new_outgoing new_incoming";
 
 	parts {
 		part { name: "event";
@@ -135,11 +135,13 @@ group { name: "elm/genlist/item/message/default";
 			description {
 				state: "new_incoming_state" 0.0;
 				inherit: "default" 0.0;
+				text.font: "content-bold";
 				color: COLOR_DARK_BLUE;
 			}
 			description {
 				state: "new_outgoing_state" 0.0;
 				inherit: "default" 0.0;
+				text.font: "content-bold";
 				color: COLOR_DARK_GREEN;
 			}
 		}
@@ -282,7 +284,18 @@ group { name: "elm/genlist/item/message/default";
 			name:    "go_unread";
 			signal:  "elm,state,new_incoming,active";
 			source:  "elm";
+			filter:  "elm.content" "default" 0.0;
 			action:  STATE_SET "new_incoming_state" 0.0;
+			target:  "elm.name";
+			target:  "elm.date";
+			target:  "elm.content";
+		}
+		program {
+			name:    "go_read";
+			signal:  "elm,state,new_incoming,passive";
+			source:  "elm";
+			filter:  "elm.content" "new_incoming_state" 0.0;
+			action:  STATE_SET "default" 0.0;
 			target:  "elm.name";
 			target:  "elm.date";
 			target:  "elm.content";
@@ -291,15 +304,17 @@ group { name: "elm/genlist/item/message/default";
 			name:    "go_unsent";
 			signal:  "elm,state,new_outgoing,active";
 			source:  "elm";
+			filter:  "elm.content" "default" 0.0;
 			action:  STATE_SET "new_outgoing_state" 0.0;
 			target:  "elm.name";
 			target:  "elm.date";
 			target:  "elm.content";
 		}
 		program {
-			name:    "go_standard";
-			signal:  "elm,state,standard,active";
+			name:    "go_sent";
+			signal:  "elm,state,new_outgoing,passive";
 			source:  "elm";
+			filter:  "elm.content" "new_outgoing_state" 0.0;
 			action:  STATE_SET "default" 0.0;
 			target:  "elm.name";
 			target:  "elm.date";

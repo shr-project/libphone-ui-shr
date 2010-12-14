@@ -850,9 +850,6 @@ gl_state_get(void *data, Evas_Object *obj, const char *part)
 	else if (new && msg_out && !strcmp(part, "new_outgoing")) {
 		return EINA_TRUE;
 	}
-	else if (!new && !strcmp(part, "standard")) {
-		return EINA_TRUE;
-	}
 	else if (!strcmp(part, "direction_out")) {
 		return msg_out;
 	}
