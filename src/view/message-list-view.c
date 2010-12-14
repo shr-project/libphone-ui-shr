@@ -539,7 +539,7 @@ _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 	} else {
 		elm_button_label_set(view.right_bt, D_("Show"));
 		evas_object_smart_callback_del(view.right_bt, "clicked", _edit_clicked);
-		evas_object_smart_callback_del(view.right_bt, "clicked", _edit_clicked);
+		evas_object_smart_callback_del(view.right_bt, "clicked", _show_clicked);
 		evas_object_smart_callback_add(view.right_bt, "clicked", _show_clicked, NULL);
 
 		elm_button_label_set(view.forward_bt, D_("Forward"));
