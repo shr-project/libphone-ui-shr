@@ -44,7 +44,6 @@
 struct MessageListViewData  {
 	struct View view;
 	char *path;
-	int count;
 	unsigned int msg_start;
 	unsigned int msg_end;
 	Evas_Object *list, *hv, *bx, *call_bt, *answer_bt, *top_pb, *bottom_pb,
@@ -86,7 +85,6 @@ static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
 static Evas_Object * gl_icon_get(void *data, Evas_Object * obj, const char *part);
 static Eina_Bool gl_state_get(void *data, Evas_Object *obj, const char *part);
 static void gl_del(void *data, Evas_Object * obj);
-
 
 int
 message_list_view_init()
@@ -624,6 +622,10 @@ close:
 static void
 _process_message_get(GError *error, GHashTable *message, gpointer data)
 {
+	Elm_Genlist_Item *it;
+	GHashTable *it_data;
+	GValue *gval_tmp;
+
 	if (error) {
 		ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
 				D_("Error while retrieving a message"), 10);
@@ -634,7 +636,31 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 	if (!message) {
 		return;
 	}
-	_process_message(message, data);
+
+	long new_timestamp = 0;
+	long first_timestamp = 0;
+	long last_timestamp = 0;
+
+	if ((gval_tmp = g_hash_table_lookup(message, "Timestamp"))) {
+		new_timestamp = (long) g_value_get_int(gval_tmp);
+	}
+
+	it = elm_genlist_first_item_get(view.list);
+	it_data = elm_genlist_item_data_get(it);
+	if ((gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
+		first_timestamp = (long) g_value_get_int(gval_tmp);
+	}
+
+	it = elm_genlist_last_item_get(view.list);
+	it_data = elm_genlist_item_data_get(it);
+	if ((gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
+		last_timestamp = (long) g_value_get_int(gval_tmp);
+	}
+
+	if ((view.msg_start == 0 && new_timestamp >= first_timestamp) ||
+	    (new_timestamp > last_timestamp && new_timestamp <= first_timestamp)) {
+		_process_message(message, data);
+	}
 }
 
 static void
@@ -730,6 +756,11 @@ _process_message(gpointer _message, gpointer _data)
 			it = elm_genlist_item_next_get(it);
 		}
 		if (it) {
+			if (it == elm_genlist_first_item_get(view.list))
+				insert_mode = LIST_INSERT_PREPEND;
+			else if (it == elm_genlist_last_item_get(view.list))
+				insert_mode = LIST_INSERT_APPEND;
+
 			it = elm_genlist_item_insert_before(view.list, &itc,
 						rowdata, it,
 						ELM_GENLIST_ITEM_NONE,
