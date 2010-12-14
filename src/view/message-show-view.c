@@ -128,7 +128,7 @@ message_show_view_init(char* path, GHashTable *properties)
 			}
 		}
 	}
-        tmp = g_hash_table_lookup(properties, "Peer");
+	tmp = g_hash_table_lookup(properties, "Peer");
 	if (!tmp) {
 		tmp = g_hash_table_lookup(properties, "Sender");
 	}
@@ -279,9 +279,11 @@ message_show_view_init(char* path, GHashTable *properties)
 	ui_utils_view_swallow(VIEW_PTR(*view), "button_answer", obj);
 	evas_object_show(obj);
 
-	g_debug("going to set read status for the message");
-	phoneui_utils_message_set_read_status(view->path, 1, NULL, NULL);
-	g_debug("done - destroying properties now");
+	if (in_msg) {
+		g_debug("going to set read status for the message");
+		phoneui_utils_message_set_read_status(view->path, 1, NULL, NULL);
+		g_debug("done - destroying properties now");
+	}
 
 	g_hash_table_destroy(properties);
 
