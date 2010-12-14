@@ -47,7 +47,8 @@ struct MessageListViewData  {
 	int count;
 	unsigned int msg_start;
 	unsigned int msg_end;
-	Evas_Object *list, *hv, *bx, *call_bt, *answer_bt, *top_pb, *bottom_pb;
+	Evas_Object *list, *hv, *bx, *call_bt, *answer_bt, *top_pb, *bottom_pb,
+	            *forward_bt, *right_bt;
 	Elm_Genlist_Item *latest_it;
 	Eina_Bool scroll_lock;
 };
@@ -74,6 +75,7 @@ static void _show_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _answer_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _call_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _forward_clicked(void *_data, Evas_Object *obj, void *event_info);
+static void _edit_clicked(void *_data, Evas_Object *obj, void *event_info);
 static void _delete_clicked(void *_data, Evas_Object * obj, void *event_info);
 static void _hover_bt_1(void *_data, Evas_Object * obj, void *event_info);
 static Eina_Bool _release_scroll_lock(void *_data);
@@ -151,6 +153,7 @@ message_list_view_init()
 	evas_object_smart_callback_add(obj, "clicked", _forward_clicked, NULL);
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
+	view.forward_bt = obj;
 
 	obj = elm_button_add(win);
 	elm_button_label_set(obj, D_("Delete"));
@@ -161,12 +164,12 @@ message_list_view_init()
 
 	elm_hover_content_set(view.hv, "top", box);
 
-
 	obj = elm_button_add(win);
 	elm_button_label_set(obj, D_("Show"));
 	evas_object_smart_callback_add(obj, "clicked", _show_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_show", obj);
 	evas_object_show(obj);
+	view.right_bt = obj;
 
 	view.list = elm_genlist_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "list", view.list);
@@ -375,6 +378,12 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 }
 
 static void
+_edit_clicked(void *_data, Evas_Object * obj, void *event_info)
+{
+	_forward_clicked(_data, obj, event_info);
+}
+
+static void
 _delete_result_cb(GError *error, gpointer data)
 {
 	(void)data;
@@ -490,6 +499,8 @@ _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 	(void)_data;
 	(void)obj;
 	GValue *gtmp;
+	Eina_Bool new = EINA_FALSE;
+	Eina_Bool out = EINA_FALSE;
 
 	Elm_Genlist_Item *it = (Elm_Genlist_Item *)event_info;
 	if (!it) return;
@@ -499,12 +510,43 @@ _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 
 	if ((gtmp = g_hash_table_lookup(message, "Direction"))) {
 		if (!strcmp(g_value_get_string(gtmp), "out")) {
+			out = EINA_TRUE;
 			evas_object_hide(view.answer_bt);
 			evas_object_hide(view.call_bt);
 		} else {
 			evas_object_show(view.answer_bt);
 			evas_object_show(view.call_bt);
 		}
+	}
+
+	if ((gtmp = g_hash_table_lookup(message, "New"))) {
+		if (g_value_get_int(gtmp) == 1) {
+			new = EINA_TRUE;
+		}
+	}
+
+	if (new && out) {
+		elm_button_label_set(view.right_bt, D_("Edit"));
+		evas_object_smart_callback_del(view.right_bt, "clicked", _edit_clicked);
+		evas_object_smart_callback_del(view.right_bt, "clicked", _show_clicked);
+		evas_object_smart_callback_add(view.right_bt, "clicked", _edit_clicked, NULL);
+
+		elm_button_label_set(view.forward_bt, D_("Edit"));
+		evas_object_size_hint_min_set(view.forward_bt, 130, 80);
+		evas_object_smart_callback_del(view.forward_bt, "clicked", _edit_clicked);
+		evas_object_smart_callback_del(view.forward_bt, "clicked", _forward_clicked);
+		evas_object_smart_callback_add(view.forward_bt, "clicked", _edit_clicked, NULL);
+	} else {
+		elm_button_label_set(view.right_bt, D_("Show"));
+		evas_object_smart_callback_del(view.right_bt, "clicked", _edit_clicked);
+		evas_object_smart_callback_del(view.right_bt, "clicked", _edit_clicked);
+		evas_object_smart_callback_add(view.right_bt, "clicked", _show_clicked, NULL);
+
+		elm_button_label_set(view.forward_bt, D_("Forward"));
+		evas_object_size_hint_min_set(view.forward_bt, 130, 80);
+		evas_object_smart_callback_del(view.forward_bt, "clicked", _edit_clicked);
+		evas_object_smart_callback_del(view.forward_bt, "clicked", _forward_clicked);
+		evas_object_smart_callback_add(view.forward_bt, "clicked", _forward_clicked, NULL);
 	}
 }
 
