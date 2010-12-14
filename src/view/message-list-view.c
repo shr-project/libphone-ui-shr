@@ -931,6 +931,7 @@ _remove_message(const char *path)
 			if (!strcmp(path, tmp)) {
 				g_debug("found him - removing");
 				elm_genlist_item_del(it);
+				view.msg_end = view.msg_end > 1 ? view.msg_end-1 : 0;
 				break;
 			}
 		}
