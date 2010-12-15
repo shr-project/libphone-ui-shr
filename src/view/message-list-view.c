@@ -670,7 +670,6 @@ _process_message(gpointer _message, gpointer _data)
 	GValue *gval_tmp;
 	const char *number = NULL;
 	const char *tmp;
-	char *tmp2;
 	long timestamp = 0, other_timestamp = 0;
 	char datestr[35];
 	Elm_Genlist_Item *it = NULL;
@@ -728,11 +727,9 @@ _process_message(gpointer _message, gpointer _data)
 
 	gval_tmp = g_hash_table_lookup(message, "Content");
 	if (gval_tmp) {
-		tmp2 = common_utils_string_strip_newline
-					(strdup(g_value_get_string(gval_tmp)));
+		tmp = g_value_get_string(gval_tmp);
 		g_hash_table_insert(rowdata, "Content",
-				    common_utils_new_gvalue_string(tmp2));
-		free(tmp2);
+				    common_utils_new_gvalue_string(tmp));
 	}
 
 	gval_tmp = g_hash_table_lookup(message, "New");
@@ -848,7 +845,8 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 	else if (!strcmp(part, "elm.content")) {
 		tmp = g_hash_table_lookup(message, "Content");
 		if (tmp) {
-			return strdup(g_value_get_string(tmp));
+			char *tmp2 = strdup(g_value_get_string(tmp));
+			return common_utils_string_strip_newline(tmp2);
 		}
 	}
 
