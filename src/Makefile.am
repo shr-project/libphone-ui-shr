@@ -24,6 +24,7 @@ shr_la_SOURCES = \
 	phoneui-quick-settings.h phoneui-quick-settings.c \
 	phoneui-phone-log.h phoneui-phone-log.c \
 	phoneui-sim-manager.h phoneui-sim-manager.c \
+	phoneui-calendar.h phoneui-calendar.c \
 	widget/elm_keypad.h widget/elm_keypad.c \
 	util/window.h util/window.c \
 	util/ui-utils.h util/ui-utils.c \
@@ -54,5 +55,12 @@ shr_la_SOURCES = \
 	view/phone-log-view.h \
 	view/phone-log-view.c \
 	view/sim-manager-view.h \
-	view/sim-manager-view.c
-
+	view/sim-manager-view.c \
+	view/calendar-date-view.h \
+	view/calendar-date-view.c \
+	view/calendar-day-view.h \
+	view/calendar-day-view.c \
+	view/calendar-month-view.h \
+	view/calendar-month-view.c \
+	view/calendar-new-view.h \
+	view/calendar-new-view.c
