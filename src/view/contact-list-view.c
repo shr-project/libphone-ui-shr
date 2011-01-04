@@ -31,7 +31,6 @@
 #include <phoneui/phoneui-info.h>
 
 #include <glib.h>
-#include <dbus/dbus-glib.h>
 
 #include "views.h"
 #include "common-utils.h"

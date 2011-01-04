@@ -24,7 +24,6 @@
 #ifndef _VIEWS_H
 #define _VIEWS_H
 
-#include <dbus/dbus-glib.h>
 #include <glib.h>
 #include <phoneui/phoneui.h>
 #include <Ecore_Evas.h>

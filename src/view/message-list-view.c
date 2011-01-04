@@ -23,7 +23,6 @@
 
 
 #include <glib.h>
-#include <dbus/dbus-glib.h>
 #include <time.h>
 #include <Elementary.h>
 #include <phoneui/phoneui.h>
