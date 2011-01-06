@@ -146,27 +146,24 @@ _add_number_to_list(gpointer _key, gpointer _value, gpointer data)
 {
 	struct _number_select_pack *pack = data;
 
-	if (!G_IS_VALUE(_value)) {
-		g_warning("Ignoring number as it's no gvalue!");
+	if (g_variant_is_of_type(_value, G_VARIANT_TYPE_STRING)) {
+		_add_number_to_list_real(pack, _key, g_variant_get_string(_value, NULL));
 		return;
 	}
 
-	if (G_VALUE_HOLDS_BOXED(_value)) {
-		char **vl = (char **)g_value_get_boxed(_value);
+	if (g_variant_is_of_type(_value, G_VARIANT_TYPE_STRING_ARRAY)) {
+		const gchar **vl = g_variant_get_strv(_value, NULL);
 		int i = 0;
 		while (vl[i]) {
 			_add_number_to_list_real(pack, _key, vl[i]);
 			i++;
 		}
-	}
-	else if (G_VALUE_HOLDS_STRING(_value)) {
-		_add_number_to_list_real(pack, _key, g_value_get_string(_value));
-	}
-	else {
-		g_warning("Ignoring number as it's neither string nor boxed!");
 		return;
 	}
+
+	g_warning("Ignoring number as it's neither string nor boxed!");
 }
+
 static void
 _fields_get_cb(GError *error, GHashTable *contact, gpointer data)
 {
@@ -189,10 +186,9 @@ _fields_get_cb(GError *error, GHashTable *contact, gpointer data)
 	if (g_hash_table_size(contact) == 1) {
 		GList *l;
 		l = g_hash_table_get_values(contact);
-		if (l && l->data && G_IS_VALUE(l->data) &&
-			G_VALUE_HOLDS_STRING(l->data)) {
+		if (l && l->data && g_variant_is_of_type(l->data, G_VARIANT_TYPE_STRING)) {
 			g_debug("Contact has exactly one phone number... passing");
-			number = g_value_get_string(l->data);
+			number = g_variant_get_string(l->data, NULL);
 			g_debug("Calling callback with number=%s", number);
 			pack->callback(number, pack->data);
 			g_hash_table_unref(contact);
