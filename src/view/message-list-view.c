@@ -181,7 +181,7 @@ message_list_view_init()
 	evas_object_smart_callback_add(view.list, "scroll,edge,bottom", _scroll_bottom, NULL);
 	evas_object_smart_callback_add(view.list, "scroll,edge,top", _scroll_top, NULL);
 	evas_object_smart_callback_add(view.list, "selected", _selected_changed, NULL);
-	
+
 	view.top_pb = elm_progressbar_add(win);
 	elm_object_style_set(view.top_pb, "wheel");
 	elm_progressbar_label_set(view.top_pb, D_("Loading..."));
@@ -261,7 +261,7 @@ _show_clicked(void *_data, Evas_Object * obj, void *event_info)
 	(void) event_info;
 	Elm_Genlist_Item *it;
 	GHashTable *message;
-	GValue *gval_tmp;
+	GVariant *tmp;
 
 	it = elm_genlist_selected_item_get(view.list);
 	if (it) {
@@ -271,10 +271,10 @@ _show_clicked(void *_data, Evas_Object * obj, void *event_info)
 			g_warning("message has NO PROPERTIES!!!!");
 			return;
 		}
-		gval_tmp = g_hash_table_lookup(message, "Path");
-		if (gval_tmp) {
+		tmp = g_hash_table_lookup(message, "Path");
+		if (tmp) {
 			phoneui_messages_message_show
-					(g_value_get_string(gval_tmp));
+					(g_variant_get_string(tmp, NULL));
 		}
 		else {
 			g_warning("No path for message found!!!");
@@ -289,8 +289,7 @@ _answer_clicked(void *_data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	Elm_Genlist_Item *it;
-	const char *tmp;
-	GValue *gval_tmp;
+	GVariant *tmp;
 	GHashTable *options, *message;
 
 	evas_object_hide(view.hv);
@@ -300,19 +299,15 @@ _answer_clicked(void *_data, Evas_Object * obj, void *event_info)
 		message = (GHashTable *)elm_genlist_item_data_get(it);
 
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, common_utils_gvalue_free);
-		gval_tmp = g_hash_table_lookup(message, "Name");
-		if (gval_tmp) {
-			tmp = g_value_get_string(gval_tmp);
-			g_hash_table_insert(options, "Name",
-				common_utils_new_gvalue_string(tmp));
+						NULL, NULL);
+		tmp = g_hash_table_lookup(message, "Name");
+		if (tmp) {
+			g_hash_table_insert(options, "Name", g_variant_ref(tmp));
 		}
 
-		gval_tmp = g_hash_table_lookup(message, "Phone");
-		if (gval_tmp) {
-			tmp = g_value_get_string(gval_tmp);
-			g_hash_table_insert(options, "Phone",
-				common_utils_new_gvalue_string(tmp));
+		tmp = g_hash_table_lookup(message, "Phone");
+		if (tmp) {
+			g_hash_table_insert(options, "Phone", g_variant_ref(tmp));
 		}
 		phoneui_messages_message_new(options);
 	}
@@ -326,7 +321,7 @@ _call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	(void) _data;
 
 	const char *number;
-	GValue *gval_tmp;
+	GVariant *tmp;
 	GHashTable *message;
 	Elm_Genlist_Item *it;
 
@@ -336,9 +331,9 @@ _call_clicked(void *_data, Evas_Object * obj, void *event_info)
 	if (it) {
 		message = (GHashTable *)elm_genlist_item_data_get(it);
 
-		gval_tmp = g_hash_table_lookup(message, "Phone");
-		if (gval_tmp) {
-			number = g_value_get_string(gval_tmp);
+		tmp = g_hash_table_lookup(message, "Phone");
+		if (tmp) {
+			number = g_variant_get_string(tmp, NULL);
 			phoneui_utils_dial(number, NULL, NULL);
 		}
 	}
@@ -351,8 +346,7 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	Elm_Genlist_Item *it;
-	const char *tmp;
-	GValue *gval_tmp;
+	GVariant *tmp;
 	GHashTable *options, *message;
 
 	evas_object_hide(view.hv);
@@ -363,11 +357,9 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
 						NULL, common_utils_gvalue_free);
-		gval_tmp = g_hash_table_lookup(message, "Content");
-		if (gval_tmp) {
-			tmp = g_value_get_string(gval_tmp);
-			g_hash_table_insert(options, "Content",
-				common_utils_new_gvalue_string(tmp));
+		tmp = g_hash_table_lookup(message, "Content");
+		if (tmp) {
+			g_hash_table_insert(options, "Content", g_variant_ref(tmp));
 		}
 
 		phoneui_messages_message_new(options);
@@ -398,16 +390,15 @@ _delete_confirm_cb(int result, void *data)
 {
 	Elm_Genlist_Item *it;
 	GHashTable *message;
-	GValue *gval_tmp;
+	GVariant *tmp;
 
 	it = (Elm_Genlist_Item *)data;
 	if (result == DIALOG_YES) {
 		message = (GHashTable *)elm_genlist_item_data_get(it);
-		gval_tmp = g_hash_table_lookup(message, "Path");
-		if (gval_tmp) {
-			phoneui_utils_message_delete(g_value_get_string(gval_tmp),
-						     _delete_result_cb, NULL);
-			return;
+		tmp = g_hash_table_lookup(message, "Path");
+		if (tmp) {
+			phoneui_utils_message_delete
+				(g_variant_get_string(tmp, NULL), _delete_result_cb, NULL);
 		}
 	}
 }
@@ -486,7 +477,7 @@ static void _scroll_top(void *_data, Evas_Object * obj, void *event_info)
 				"start_top_loading","");
 
 	unsigned int start = view.msg_start > MSG_PER_UPDATE ? view.msg_start-MSG_PER_UPDATE : 0;
-	
+
 	view.latest_it = elm_genlist_first_item_get(view.list);
 	phoneui_utils_messages_get_full("Timestamp", TRUE, start, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_SORTED));
 }
@@ -495,7 +486,7 @@ static void
 _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 	(void)_data;
 	(void)obj;
-	GValue *gtmp;
+	GVariant *tmp;
 	Eina_Bool new = EINA_FALSE;
 	Eina_Bool out = EINA_FALSE;
 
@@ -505,8 +496,8 @@ _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 	GHashTable *message = (GHashTable *)elm_genlist_item_data_get(it);
 	if (!message) return;
 
-	if ((gtmp = g_hash_table_lookup(message, "Direction"))) {
-		if (!strcmp(g_value_get_string(gtmp), "out")) {
+	if ((tmp = g_hash_table_lookup(message, "Direction"))) {
+		if (!strcmp(g_variant_get_string(tmp, NULL), "out")) {
 			out = EINA_TRUE;
 			evas_object_hide(view.answer_bt);
 			evas_object_hide(view.call_bt);
@@ -516,8 +507,9 @@ _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 		}
 	}
 
-	if ((gtmp = g_hash_table_lookup(message, "New"))) {
-		if (g_value_get_int(gtmp) == 1) {
+	if ((tmp = g_hash_table_lookup(message, "New"))) {
+		// FIXME: shouldn't this be boolean ?
+		if (g_variant_get_int32(tmp) == 1) {
 			new = EINA_TRUE;
 		}
 	}
@@ -571,7 +563,8 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
 		message = (GHashTable *)elm_genlist_item_data_get(it);
-		g_hash_table_insert(message, "Name", common_utils_new_gvalue_string(tmp));
+		g_hash_table_insert(message, "Name",
+				      g_variant_ref_sink(g_variant_new_string(tmp)));
 		Evas_Object *obj = (Evas_Object *)elm_genlist_item_object_get(it);
 		edje_object_part_text_set(obj, "elm.name", tmp);
 		free(tmp);
@@ -623,7 +616,7 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 {
 	Elm_Genlist_Item *it;
 	GHashTable *it_data;
-	GValue *gval_tmp;
+	GVariant *tmp;
 
 	if (error) {
 		ui_utils_notify(ui_utils_view_window_get(VIEW_PTR(view)),
@@ -640,20 +633,20 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 	long first_timestamp = 0;
 	long last_timestamp = 0;
 
-	if ((gval_tmp = g_hash_table_lookup(message, "Timestamp"))) {
-		new_timestamp = (long) g_value_get_int(gval_tmp);
+	if ((tmp = g_hash_table_lookup(message, "Timestamp"))) {
+		new_timestamp = (long) g_variant_get_int32(tmp);
 	}
 
 	it = elm_genlist_first_item_get(view.list);
 	it_data = elm_genlist_item_data_get(it);
-	if ((gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
-		first_timestamp = (long) g_value_get_int(gval_tmp);
+	if ((tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
+		first_timestamp = (long) g_variant_get_int32(tmp);
 	}
 
 	it = elm_genlist_last_item_get(view.list);
 	it_data = elm_genlist_item_data_get(it);
-	if ((gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
-		last_timestamp = (long) g_value_get_int(gval_tmp);
+	if ((tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
+		last_timestamp = (long) g_variant_get_int32(tmp);
 	}
 
 	if ((view.msg_start == 0 && new_timestamp >= first_timestamp) ||
@@ -666,9 +659,7 @@ static void
 _process_message(gpointer _message, gpointer _data)
 {
 	GHashTable *message, *rowdata, *other;
-	GValue *gval_tmp;
-	const char *number = NULL;
-	const char *tmp;
+	GVariant *tmp;
 	long timestamp = 0, other_timestamp = 0;
 	char datestr[35];
 	Elm_Genlist_Item *it = NULL;
@@ -679,73 +670,61 @@ _process_message(gpointer _message, gpointer _data)
 	}
 	message = (GHashTable *)_message;
 
-	gval_tmp = g_hash_table_lookup(message, "Path");
-	if (!gval_tmp) {
+	tmp = g_hash_table_lookup(message, "Path");
+	if (!tmp) {
 		g_critical("Message without Path?!?");
 		return;
 	}
 
 	insert_mode = GPOINTER_TO_INT(_data);
 
-	rowdata = g_hash_table_new_full(g_str_hash, g_str_equal, NULL,
-					common_utils_gvalue_free);
-	tmp = g_value_get_string(gval_tmp);
-	g_hash_table_insert(rowdata, "Path",
-			    common_utils_new_gvalue_string(tmp));
+	rowdata = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+	g_hash_table_insert(rowdata, "Path", g_variant_ref(tmp));
 
-	gval_tmp = g_hash_table_lookup(message, "Timestamp");
-	if (gval_tmp) {
-		timestamp = (long) g_value_get_int(gval_tmp);
+	tmp = g_hash_table_lookup(message, "Timestamp");
+	if (tmp) {
+		timestamp = (long) g_variant_get_int32(tmp);
 	}
 	strftime(datestr, 31, "%d.%m.%Y %H:%M" LTR_STRING, localtime(&timestamp));
 	g_hash_table_insert(rowdata, "Date",
-			    common_utils_new_gvalue_string(datestr));
+			    g_variant_ref_sink(g_variant_new_string(datestr)));
 	g_hash_table_insert(rowdata, "Timestamp",
-			    common_utils_new_gvalue_int(timestamp));
+			    g_variant_ref_sink(g_variant_new_int32(timestamp)));
 
-	gval_tmp = g_hash_table_lookup(message, "Direction");
-	if (gval_tmp) {
-		tmp = g_value_get_string(gval_tmp);
-		g_hash_table_insert(rowdata, "Direction",
-				    common_utils_new_gvalue_string(tmp));
+	tmp = g_hash_table_lookup(message, "Direction");
+	if (tmp) {
+		g_hash_table_insert(rowdata, "Direction", g_variant_ref(tmp));
 	}
 
-	if ((gval_tmp = g_hash_table_lookup(message, "Peer"))) {
-		number = g_value_get_string(gval_tmp);
+	tmp = g_hash_table_lookup(message, "Peer");
+	if (!tmp) {
+		tmp = g_hash_table_lookup(message, "Sender");
 	}
-	else if ((gval_tmp = g_hash_table_lookup(message, "Sender"))) {
-		number = g_value_get_string(gval_tmp);
+	if (!tmp) {
+		tmp = g_hash_table_lookup(message, "Recipient");
 	}
-	else if ((gval_tmp = g_hash_table_lookup(message, "Recipient"))) {
-		number = g_value_get_string(gval_tmp);
-	}
-	if (number) {
-		g_hash_table_insert(rowdata, "Phone",
-				    common_utils_new_gvalue_string(number));
+	if (tmp) {
+		g_hash_table_insert(rowdata, "Phone", g_variant_ref(tmp));
 	}
 
-	gval_tmp = g_hash_table_lookup(message, "Content");
-	if (gval_tmp) {
-		tmp = g_value_get_string(gval_tmp);
-		g_hash_table_insert(rowdata, "Content",
-				    common_utils_new_gvalue_string(tmp));
+	tmp = g_hash_table_lookup(message, "Content");
+	if (tmp) {
+		g_hash_table_insert(rowdata, "Content", g_variant_ref(tmp));
 	}
 
-	gval_tmp = g_hash_table_lookup(message, "New");
-	if (gval_tmp) {
-		g_hash_table_insert(rowdata, "New",
-				    common_utils_new_gvalue_int(
-				    g_value_get_int(gval_tmp)));
+	tmp = g_hash_table_lookup(message, "New");
+	if (tmp) {
+		g_hash_table_insert(rowdata, "New", g_variant_ref(tmp));
 	}
 
 	if (insert_mode == LIST_INSERT_SORTED) {
 		it = elm_genlist_first_item_get(view.list);
 		while (it) {
 			other = (GHashTable *)elm_genlist_item_data_get(it);
-			gval_tmp = g_hash_table_lookup(other, "Timestamp");
-			if (gval_tmp) {
+			tmp = g_hash_table_lookup(other, "Timestamp");
+			if (tmp) {
 				other_timestamp =
-					(long)g_value_get_int(gval_tmp);
+					(long)g_variant_get_int32(tmp);
 			}
 			if (timestamp > other_timestamp)
 				break;
@@ -775,12 +754,12 @@ _process_message(gpointer _message, gpointer _data)
 	}
 
 	/* Save also the genlist item pointer in the messsage data, to get them dobule-linked */
-	g_hash_table_insert(rowdata, "_GenlistItem", common_utils_new_gvalue_pointer(it));
+	g_hash_table_insert(rowdata, "_GenlistItem", g_variant_new_int32(GPOINTER_TO_INT(it)));
 
-	gval_tmp = g_hash_table_lookup(message, "@Contacts");
-	if (gval_tmp) {
+	tmp = g_hash_table_lookup(message, "@Contacts");
+	if (tmp) {
 		char *path = phoneui_utils_contact_get_dbus_path
-						(g_value_get_int(gval_tmp));
+						(g_variant_get_int32(tmp));
 		phoneui_utils_contact_get(path, _contact_lookup, it);
 		free(path);
 	}
@@ -810,42 +789,43 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *message = (GHashTable *)data;
-	GValue *tmp;
+	GVariant *tmp;
 
 	if (!strcmp(part, "elm.name")) {
 		tmp = g_hash_table_lookup(message, "Name");
 		if (tmp) {
-			return strdup(g_value_get_string(tmp));
+			return g_variant_dup_string(tmp, NULL);
 		}
 		else {
 			tmp = g_hash_table_lookup(message, "Phone");
 			if (tmp) {
-				const char *number = g_value_get_string(tmp);
+				char *number = g_variant_dup_string(tmp, NULL);
 
 				/* FIXME this is a bad workaround needed for reloading the
 				 * message contact name when the user has showed the message.
 				 * It seems to be a genlist bug, which cause to use different data */
 				if ((tmp = g_hash_table_lookup(message, "_GenlistItem"))) {
 					Elm_Genlist_Item *it;
-					it = (Elm_Genlist_Item *) g_value_get_pointer(tmp);
+					it = (Elm_Genlist_Item *)
+						GINT_TO_POINTER(g_variant_get_int32(tmp));
 					phoneui_utils_contact_lookup(number, _contact_lookup, it);
 				}
 
-				return strdup(number);
+				return number;
 			}
 		}
 	}
 	else if (!strcmp(part, "elm.date")) {
 		tmp = g_hash_table_lookup(message, "Date");
 		if (tmp) {
-			return strdup(g_value_get_string(tmp));
+			return g_variant_dup_string(tmp, NULL);
 		}
 	}
 	else if (!strcmp(part, "elm.content")) {
 		tmp = g_hash_table_lookup(message, "Content");
 		if (tmp) {
-			char *tmp2 = strdup(g_value_get_string(tmp));
-			return common_utils_string_strip_newline(tmp2);
+			return common_utils_string_strip_newline
+						(g_variant_dup_string(tmp, NULL));
 		}
 	}
 
@@ -856,7 +836,7 @@ static Evas_Object *
 gl_icon_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
-	GValue *tmp;
+	GVariant *tmp;
 	GHashTable *message = (GHashTable *)data;
 
 	return NULL;
@@ -872,19 +852,19 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 			Evas_Object *txt = elm_anchorblock_add(win);
 			elm_anchorblock_hover_style_set(txt, "popout");
 			elm_anchorblock_hover_parent_set(txt, win);
-			elm_anchorblock_text_set(txt, g_value_get_string(tmp));
+			elm_anchorblock_text_set(txt, g_variant_get_string(tmp, NULL));
 			evas_object_show(txt);
 			Evas_Object *bubble = elm_bubble_add(win);
 			elm_bubble_content_set(bubble, txt);
 			tmp = g_hash_table_lookup(message, "Date");
 			if (tmp) {
 				elm_bubble_label_set(bubble,
-						     g_value_get_string(tmp));
+						     g_variant_get_string(tmp, NULL));
 			}
 			tmp = g_hash_table_lookup(message, "Phone");
 			if (tmp) {
 				elm_bubble_info_set(bubble,
-						    g_value_get_string(tmp));
+						    g_variant_get_string(tmp, NULL));
 			}
 			return bubble;
 		}
@@ -898,7 +878,7 @@ gl_state_get(void *data, Evas_Object *obj, const char *part)
 	(void) part;
 	(void) obj;
 	GHashTable *message;
-	GValue *gval_tmp;
+	GVariant *tmp;
 	Eina_Bool msg_out;
 	Eina_Bool new;
 
@@ -906,12 +886,13 @@ gl_state_get(void *data, Evas_Object *obj, const char *part)
 	msg_out = EINA_FALSE;
 	new = EINA_FALSE;
 
-	if ((gval_tmp = g_hash_table_lookup(message, "Direction"))) {
-		msg_out = !strcmp(g_value_get_string(gval_tmp), "out");
+	if ((tmp = g_hash_table_lookup(message, "Direction"))) {
+		msg_out = !strcmp(g_variant_get_string(tmp, NULL), "out");
 	}
 
-	if ((gval_tmp = g_hash_table_lookup(message, "New"))) {
-		new = (g_value_get_int(gval_tmp) == 1);
+	if ((tmp = g_hash_table_lookup(message, "New"))) {
+		// FIXME: shouldn't be boolean?
+		new = (g_variant_get_int32(tmp) == 1);
 	}
 
 	if (new && !msg_out && !strcmp(part, "new_incoming")) {
@@ -946,17 +927,15 @@ _remove_message(const char *path)
 {
 	Elm_Genlist_Item *it;
 	GHashTable *properties;
-	GValue *gval_tmp;
-	const char *tmp;
+	GVariant *tmp;
 
 	g_debug("Removing message %s from list", path);
 	it = elm_genlist_first_item_get(view.list);
 	while (it) {
 		properties = (GHashTable *)elm_genlist_item_data_get(it);
-		gval_tmp = g_hash_table_lookup(properties, "Path");
-		if (gval_tmp) {
-			tmp = g_value_get_string(gval_tmp);
-			if (!strcmp(path, tmp)) {
+		tmp = g_hash_table_lookup(properties, "Path");
+		if (tmp) {
+			if (!strcmp(path, g_variant_get_string(tmp, NULL))) {
 				g_debug("found him - removing");
 				elm_genlist_item_del(it);
 				view.msg_end = view.msg_end > 1 ? view.msg_end-1 : 0;

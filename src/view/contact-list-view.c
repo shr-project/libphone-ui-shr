@@ -204,10 +204,10 @@ _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 	it = elm_genlist_selected_item_get(view.list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		GValue *gval_tmp;
-		gval_tmp = g_hash_table_lookup(properties, "Path");
-		if (gval_tmp) {
-			const char *path = g_value_get_string(gval_tmp);
+		GVariant *tmp;
+		tmp = g_hash_table_lookup(properties, "Path");
+		if (tmp) {
+			const char *path = g_variant_get_string(tmp, NULL);
 			ui_utils_contacts_contact_number_select(VIEW_PTR(view),
 				path, _list_call_number_callback, NULL);
 		}
@@ -227,31 +227,28 @@ static void
 _list_message_number_callback(const char *number, void *data)
 {
 	(void) data;
-	GValue *gval_tmp;
+	GVariant *tmp;
 	char *str;
-	const char *cstr;
 	GHashTable *properties = data;
 
 	if (!number)
 		return;
 
 	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, common_utils_gvalue_free);
+						NULL, NULL);
 	g_hash_table_insert(options, "Phone",
-			common_utils_new_gvalue_string(number));
+			g_variant_ref_sink(g_variant_new_string(number)));
 
 	str = phoneui_utils_contact_display_name_get(properties);
 	if (str) {
 		g_hash_table_insert(options, "Name",
-			common_utils_new_gvalue_string(str));
+			g_variant_ref_sink(g_variant_new_string(str)));
 		free(str);
 	}
 	/*FIXME: make sure it works */
-	gval_tmp = g_hash_table_lookup(properties, "Photo");
-	if (gval_tmp) {
-		cstr = g_value_get_string(gval_tmp);
-		g_hash_table_insert(options, "Photo",
-			common_utils_new_gvalue_string(str));
+	tmp = g_hash_table_lookup(properties, "Photo");
+	if (tmp) {
+		g_hash_table_insert(options, "Photo", g_variant_ref(tmp));
 	}
 
 	phoneui_messages_message_new(options);
@@ -272,10 +269,10 @@ _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 	it = elm_genlist_selected_item_get(view.list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		GValue *gval_tmp;
-		gval_tmp = g_hash_table_lookup(properties, "Path");
-		if (gval_tmp) {
-			const char *path = g_value_get_string(gval_tmp);
+		GVariant *tmp;
+		tmp = g_hash_table_lookup(properties, "Path");
+		if (tmp) {
+			const char *path = g_variant_get_string(tmp, NULL);
 			ui_utils_contacts_contact_number_select(VIEW_PTR(view),
 				path, _list_message_number_callback, properties);
 		}
@@ -298,10 +295,10 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 	}
 	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties != NULL) {
-		GValue *tmp;
+		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
 		if (tmp) {
-			phoneui_contacts_contact_show(g_value_get_string(tmp));
+			phoneui_contacts_contact_show(g_variant_get_string(tmp, NULL));
 		}
 	}
 }
@@ -376,7 +373,7 @@ _remove_contact(const char *path)
 {
 	Elm_Genlist_Item *it;
 	GHashTable *properties;
-	GValue *tmp;
+	GVariant *tmp;
 
 	g_debug("Removing contact %s from list", path);
 	it = elm_genlist_first_item_get(view.list_data.list);
@@ -384,7 +381,7 @@ _remove_contact(const char *path)
 		properties = (GHashTable *)elm_genlist_item_data_get(it);
 		tmp = g_hash_table_lookup(properties, "Path");
 		if (tmp) {
-			if (!strcmp(path, g_value_get_string(tmp))) {
+			if (!strcmp(path, g_variant_get_string(tmp, NULL))) {
 				g_debug("found him - removing");
 				elm_genlist_item_del(it);
 				break;

@@ -85,7 +85,7 @@ contact_view_init(char *path, GHashTable *properties)
 	struct ContactViewData *view;
 	Evas_Object *win;
 	int ret;
-	GValue *gval_tmp;
+	GVariant *tmp;
 
 	/* path MUST always be set! For new contacts to ""
 	and it will be freed by destroying the contactviews
@@ -130,20 +130,20 @@ contact_view_init(char *path, GHashTable *properties)
 	view->entryid = -1;
 	if (properties) {
 		view->properties = g_hash_table_ref(properties);
-		gval_tmp = g_hash_table_lookup(properties, "EntryId");
-		if (gval_tmp) {
-			view->entryid = g_value_get_int(gval_tmp);
+		tmp = g_hash_table_lookup(properties, "EntryId");
+		if (tmp) {
+			view->entryid = g_variant_get_int32(tmp);
 			phoneui_info_register_single_contact_changes
 				(view->entryid, _contact_changed_handler, view);
 		}
 	}
 	else {
 		view->properties = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, common_utils_gvalue_free);
+						NULL, NULL);
 		g_hash_table_insert(view->properties, "Phone",
-				    common_utils_new_gvalue_string(""));
+				      g_variant_ref_sink(g_variant_new_string("")));
 		g_hash_table_insert(view->properties, "Name",
-				    common_utils_new_gvalue_string(""));
+				      g_variant_ref_sink(g_variant_new_string("")));
 	}
 	view->changes = NULL;
 
@@ -305,7 +305,7 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 
 	value = g_hash_table_lookup(view->changes, field);
 	if (!value) {
-		GValue *prop;
+		GVariant *prop;
 		/* If we haven't already changed this field, we should first check the
 		 * the property hash to keep the values of the same field */
 		prop = g_hash_table_lookup(view->properties, field);
@@ -315,13 +315,13 @@ _update_changes_of_field(struct ContactViewData *view, const char *field, const 
 			value[0] = NULL;
 		}
 		else {
-			if (G_VALUE_HOLDS_STRING(prop)) {
+			if (g_variant_is_of_type(prop, G_VARIANT_TYPE_STRING)) {
 				value = calloc(2, sizeof(char *));
-				value[0] = strdup(g_value_get_string(prop));
+				value[0] = g_variant_dup_string(prop, NULL);
 				value[1] = NULL;
 			}
-			else if (G_VALUE_HOLDS_BOXED(prop)) {
-				value = g_strdupv((char **) g_value_get_boxed(prop));
+			else if (g_variant_is_of_type(prop, G_VARIANT_TYPE_STRING_ARRAY)) {
+				value = g_variant_dup_strv(prop, NULL);
 			}
 			else {
 				g_debug("We don't handle gvalues that are not boxed/strings yet");
@@ -489,7 +489,7 @@ _contact_call_clicked(void *_data, Evas_Object * obj, void *event_info)
 static void
 _contact_sms_number_callback(const char *number, void *data)
 {
-	GValue *gval_tmp;
+	GVariant *tmp;
 	char *str;
 	const char *cstr;
 	struct ContactViewData *view = data;
@@ -498,21 +498,21 @@ _contact_sms_number_callback(const char *number, void *data)
 		return;
 
 	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, common_utils_gvalue_free);
+						NULL, NULL);
 	g_hash_table_insert(options, "Phone",
-				common_utils_new_gvalue_string(number));
+			      g_variant_ref_sink(g_variant_new_string(number)));
 
 	str = phoneui_utils_contact_display_name_get(view->properties);
 	if (str) {
 		g_hash_table_insert(options, "Name",
-				common_utils_new_gvalue_string(str));
+				g_variant_ref_sink(g_variant_new_string(str)));
 		free(str);
 	}
-	gval_tmp = g_hash_table_lookup(view->properties, "Photo");
-	if (gval_tmp) {
-		cstr = g_value_get_string(gval_tmp);
+	tmp = g_hash_table_lookup(view->properties, "Photo");
+	if (tmp) {
+		cstr = g_variant_get_string(tmp, NULL);
 		g_hash_table_insert(options, "Photo",
-				common_utils_new_gvalue_string(cstr));
+				g_variant_ref_sink(g_variant_new_string(cstr)));
 	}
 
 	phoneui_messages_message_new(options);
@@ -605,27 +605,27 @@ _sanitize_changes_hash_foreach(void *key, void *value, void *data)
 {
 	GHashTable *target = data;
 	char **tmp = value;
-	GValue *gval;
+	GVariant *gtmp;
 	if (!tmp) {
 		g_warning("%s:%d - Got an empty value in the hash table (key = %s), shouldn't have happend", __FILE__, __LINE__, (char *) key);
 	}
 	if (!tmp || !*tmp || !**tmp) { /*If the only one we have is empty, don't put in a list */
-		gval = common_utils_new_gvalue_string(value);
+		gtmp = g_variant_new_string(value);
 	}
 	else if (g_strv_length(tmp) == 1) {
-		gval = common_utils_new_gvalue_string(tmp[0]);
+		gtmp = g_variant_new_string(tmp[0]);
 	}
 	else {
-		gval = common_utils_new_gvalue_boxed(G_TYPE_STRV, g_strdupv(value));
+		gtmp = g_variant_new_strv(value, g_strv_length(value));
 	}
-	g_hash_table_insert(target, strdup((char *)key), gval);
+	g_hash_table_insert(target, strdup((char *)key), g_variant_ref_sink(gtmp));
 }
 
 static GHashTable *
 _sanitize_changes_hash(GHashTable *source)
 {
 	GHashTable *target;
-	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
+	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
 	g_hash_table_foreach(source, _sanitize_changes_hash_foreach,target);
 	return target;
 }
@@ -973,14 +973,14 @@ static void
 _load_photo(struct ContactViewData *view)
 {
 	const char *s;
-	GValue *tmp = NULL;
+	GVariant *tmp = NULL;
 
 	g_debug("Loading photo");
 	if (view->properties) {
 		tmp = g_hash_table_lookup(view->properties, "Photo");
 	}
 	if (tmp) {
-		s = g_value_get_string(tmp);
+		s = g_variant_get_string(tmp, NULL);
 		g_debug("Found photo %s", s);
 	}
 	else {
@@ -1010,11 +1010,11 @@ _load_fields(struct ContactViewData *view)
 		g_hash_table_iter_init(&iter, view->properties);
 		while (g_hash_table_iter_next(&iter, &_key, &_val)) {
 			const char *key = (const char *)_key;
-			const GValue *val = (const GValue *) _val;
+			GVariant *val = (GVariant *) _val;
 			if (!strcmp(key, "Path") || !strcmp(key, "EntryId"))
 				continue;
-			if (G_VALUE_HOLDS_BOXED(val)) {
-				char **vl = (char **)g_value_get_boxed(val);
+			if (g_variant_is_of_type(val, G_VARIANT_TYPE_STRING_ARRAY)) {
+				const gchar **vl = g_variant_get_strv(val, NULL);
 				int i = 0;
 				while (vl[i]) {
 					g_debug("--- %s", vl[i]);
@@ -1025,11 +1025,11 @@ _load_fields(struct ContactViewData *view)
 					i++;
 				}
 			}
-			else if (G_VALUE_HOLDS_STRING(val)) {
-				_add_field(view, key, g_value_get_string(val),
+			else if (g_variant_is_of_type(val, G_VARIANT_TYPE_STRING)) {
+				_add_field(view, key, g_variant_get_string(val, NULL),
 					   isnew);
 				if (isnew) {
-					_update_changes_of_field(view, key, "", g_value_get_string(val));
+					_update_changes_of_field(view, key, "", g_variant_get_string(val, NULL));
 				}
 			}
 			else {

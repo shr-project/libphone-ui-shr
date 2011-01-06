@@ -55,7 +55,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	struct MessageShowViewData *view;
 	Evas_Object *win, *ico, *box, *obj;
 	int ret;
-	GValue *tmp;
+	GVariant *tmp;
 	const char *direction = NULL;
 	Eina_Bool in_msg = EINA_FALSE;
 
@@ -114,18 +114,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	for (; keys; keys = keys->next) {
 		tmp = g_hash_table_lookup(properties, keys->data);
 		if (tmp) {
-			if (G_VALUE_HOLDS_STRING(tmp)) {
-				g_debug("--- %s: '%s'", (char *)keys->data,
-					g_value_get_string(tmp));
-			}
-			else if (G_VALUE_HOLDS_INT(tmp)) {
-				g_debug("--- %s: %d", (char *)keys->data,
-					g_value_get_int(tmp));
-			}
-			else {
-				g_debug("--- %s: No string and no int!",
-					(char *)keys->data);
-			}
+			g_debug("--- %s: '%s'", (char *)keys->data, g_variant_print(tmp, TRUE));
 		}
 	}
 	tmp = g_hash_table_lookup(properties, "Peer");
@@ -136,7 +125,7 @@ message_show_view_init(char* path, GHashTable *properties)
 		tmp = g_hash_table_lookup(properties, "Recipient");
 	}
 	if (tmp) {
-		view->number = strdup(g_value_get_string(tmp));
+		view->number = g_variant_dup_string(tmp, NULL);
 		g_debug("Found number %s - starting lookup", view->number);
 		// FIXME: use new @Contacts feature from opimd whenever it is
 		//        clear how to do that :P
@@ -150,7 +139,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	tmp = g_hash_table_lookup(properties, "Timestamp");
 	if (tmp) {
 		char *date = common_utils_timestamp_to_date(
-					(long)g_value_get_int(tmp));
+					(long)g_variant_get_int32(tmp));
 		if (date) {
 			g_debug("Found date %s", date);
 			ui_utils_view_text_set(VIEW_PTR(*view), "text_date", date);
@@ -166,9 +155,9 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_show(view->photo);
 
 	ico = elm_icon_add(win);
-	tmp = (GValue *)g_hash_table_lookup(properties, "Direction");
+	tmp = g_hash_table_lookup(properties, "Direction");
 	if (tmp) {
-		direction = g_value_get_string(tmp);
+		direction = g_variant_get_string(tmp, NULL);
 		if (strcmp(direction, "in") == 0) {
 			g_debug("Setting status icon for an incoming message");
 			in_msg = EINA_TRUE;
@@ -188,8 +177,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	const char *content = NULL;
 	tmp = g_hash_table_lookup(properties, "Content");
 	if (tmp) {
-		content = elm_entry_utf8_to_markup(g_value_get_string(tmp));
-
+		content = elm_entry_utf8_to_markup(g_variant_get_string(tmp, NULL));
 	}
 
 	view->sc_content = elm_scroller_add(win);
@@ -374,20 +362,20 @@ _answer_clicked(void *_data, Evas_Object * obj,
 	g_debug("message_show_view_answer_clicked()");
 
 	options = g_hash_table_new_full(g_str_hash, g_str_equal,
-					NULL, common_utils_gvalue_free);
+					NULL, NULL);
         if (!view->number) {
 		g_warning("Trying to answer a message without number?!");
 		return;
 	}
 	g_hash_table_insert(options, "Phone",
-			    common_utils_new_gvalue_string(view->number));
+			      g_variant_ref_sink(g_variant_new_string(view->number)));
 	if (view->name) {
 		g_hash_table_insert(options, "Name",
-			    common_utils_new_gvalue_string(view->name));
+			    g_variant_ref_sink(g_variant_new_string(view->name)));
 	}
 	if (view->photopath) {
 		g_hash_table_insert(options, "Photo",
-			common_utils_new_gvalue_string(view->photopath));
+			g_variant_ref_sink(g_variant_new_string(view->photopath)));
 	}
 
 	phoneui_messages_message_new(options);
@@ -420,11 +408,11 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 	evas_object_hide(view->hv);
 
 	options = g_hash_table_new_full(g_str_hash, g_str_equal,
-					NULL, common_utils_gvalue_free);
+					NULL, NULL);
 	content = elm_entry_markup_to_utf8(elm_anchorblock_text_get(view->content));
 	if (content) {
 		g_hash_table_insert(options, "Content",
-		                    common_utils_new_gvalue_string(content));
+		                    g_variant_ref_sink(g_variant_new_string(content)));
 		free(content);
 	}
 
@@ -491,7 +479,7 @@ _common_name_callback(GError *error, GHashTable *contact, void *_data)
 {
 	struct MessageShowViewData *view = (struct MessageShowViewData *) _data;
 	char *tmp;
-	GValue *gval_tmp;
+	GVariant *gtmp;
 
 	// FIXME: show some nice notification
 	if (error || !contact)
@@ -511,10 +499,10 @@ _common_name_callback(GError *error, GHashTable *contact, void *_data)
 			view->add_contact_bt = NULL;
 		}
 	}
-	gval_tmp = g_hash_table_lookup(contact, "Photo");
-	if (gval_tmp) {
+	gtmp = g_hash_table_lookup(contact, "Photo");
+	if (gtmp) {
 		elm_icon_file_set(view->photo,
-				  g_value_get_string(gval_tmp), NULL);
+				  g_variant_get_string(gtmp, NULL), NULL);
 	}
 }
 
@@ -528,9 +516,9 @@ _new_contact_clicked(void *_data, Evas_Object * obj, void *event_info)
 	view = (struct MessageShowViewData *)_data;
 	evas_object_hide(view->hv);
 	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
-					       NULL, common_utils_gvalue_free);
+					       NULL, NULL);
 	g_hash_table_insert(options, "Phone",
-			common_utils_new_gvalue_string(view->number));
+			g_variant_ref_sink(g_variant_new_string(view->number)));
 
 	phoneui_contacts_contact_new(options);
 }
