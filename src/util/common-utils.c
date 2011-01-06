@@ -164,33 +164,7 @@ common_utils_debug_dump_hashtable(GHashTable* hasht)
 	g_hash_table_iter_init(&iter, hasht);
 	while (g_hash_table_iter_next(&iter, &_key, &_val)) {
 		const char *key = (const char *)_key;
-		g_debug("--| key = '%s'", key);
-		if (G_IS_VALUE(_val)) {
-			const GValue *val = (const GValue *) _val;
-			if (G_VALUE_HOLDS_BOXED(val)) {
-				char **vl = (char **)g_value_get_boxed(val);
-				int i = 0;
-				while (vl[i]) {
-					g_debug("----| '%s'", vl[i]);
-					i++;
-				}
-			}
-			else if (G_VALUE_HOLDS_STRING(val)) {
-				g_debug("----| '%s'", g_value_get_string(val));
-			}
-			else if (G_VALUE_HOLDS_INT(val)) {
-				g_debug("----| %d", g_value_get_int(val));
-			}
-			else if (G_VALUE_HOLDS_BOOLEAN(val)) {
-				g_debug("----| %s", g_value_get_boolean(val) ?
-							"TRUE" : "FALSE");
-			}
-			else {
-				g_debug("----| value is of unhandled type!");
-			}
-		}
-		else {
-			g_debug("----| not a gvalue");
-		}
+		GVariant *val = _val;
+		g_debug("--| %s: %s", key, g_variant_print(val, TRUE));
 	}
 }
