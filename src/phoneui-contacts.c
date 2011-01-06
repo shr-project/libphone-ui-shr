@@ -8,7 +8,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -60,6 +60,9 @@ _contact_get_cb(GError *error, GHashTable *content, gpointer data)
 void
 phoneui_backend_contacts_contact_show(const char *contact_path)
 {
+	if (!contact_path)
+		return;
+
 	g_debug("showing contact %s", contact_path);
 	if (!contact_view_is_init(contact_path)) {
 		phoneui_utils_contact_get(contact_path, _contact_get_cb,
