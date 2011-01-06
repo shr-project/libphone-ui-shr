@@ -114,7 +114,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	for (; keys; keys = keys->next) {
 		tmp = g_hash_table_lookup(properties, keys->data);
 		if (tmp) {
-			g_debug("--- %s: '%s'", (char *)keys->data, g_variant_print(tmp, TRUE));
+			g_debug("--- %s: %s", (char *)keys->data, g_variant_print(tmp, TRUE));
 		}
 	}
 	tmp = g_hash_table_lookup(properties, "Peer");

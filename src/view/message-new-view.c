@@ -763,7 +763,7 @@ _process_recipient(gpointer _properties, gpointer _data)
 	properties = (GHashTable *) _properties;
 	view = (struct MessageNewViewData *) _data;
 	pack = malloc(sizeof(struct _recipient_pack));
-        pack->recipient = properties;
+	pack->recipient = properties;
 	pack->view = view;
 	pack->it = elm_genlist_item_append(view->list_recipients, &itc, pack,
 					   NULL, ELM_GENLIST_ITEM_NONE,
