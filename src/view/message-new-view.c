@@ -567,7 +567,7 @@ _contacts_add_number_callback(const char *number, void *data)
 	struct MessageNewViewData *view = data;
 	if (number) {
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, NULL);
+						NULL, common_utils_variant_unref);
 		g_hash_table_insert(options, "Phone",
 				g_variant_ref_sink(g_variant_new_string(number)));
 		g_ptr_array_add(view->recipients, options);
@@ -634,7 +634,7 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 	if (phone_utils_sms_is_valid_number(view->number)) {
 		GHashTable *properties =
 			g_hash_table_new_full(g_str_hash, g_str_equal,
-					 NULL, NULL);
+					 NULL, common_utils_variant_unref);
 		g_hash_table_insert(properties, "Name",
 				g_variant_ref_sink(g_variant_new_string("Number")));
 		g_hash_table_insert(properties, "Phone",

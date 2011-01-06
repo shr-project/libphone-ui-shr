@@ -299,7 +299,7 @@ _answer_clicked(void *_data, Evas_Object * obj, void *event_info)
 		message = (GHashTable *)elm_genlist_item_data_get(it);
 
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, NULL);
+						NULL, common_utils_variant_unref);
 		tmp = g_hash_table_lookup(message, "Name");
 		if (tmp) {
 			g_hash_table_insert(options, "Name", g_variant_ref(tmp));
@@ -356,7 +356,7 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 		message = (GHashTable *)elm_genlist_item_data_get(it);
 
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, NULL);
+						NULL, common_utils_variant_unref);
 		tmp = g_hash_table_lookup(message, "Content");
 		if (tmp) {
 			g_hash_table_insert(options, "Content", g_variant_ref(tmp));
@@ -678,7 +678,8 @@ _process_message(gpointer _message, gpointer _data)
 
 	insert_mode = GPOINTER_TO_INT(_data);
 
-	rowdata = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+	rowdata = g_hash_table_new_full(g_str_hash, g_str_equal,
+					    NULL, common_utils_variant_unref);
 	g_hash_table_insert(rowdata, "Path", g_variant_ref(tmp));
 
 	tmp = g_hash_table_lookup(message, "Timestamp");

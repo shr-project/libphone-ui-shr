@@ -96,6 +96,12 @@ common_utils_object_get_ref(void *object)
 	return count;
 }
 
+void
+common_utils_variant_unref(void* value)
+{
+	g_variant_unref(value);
+}
+
 int
 common_utils_is_pin(const char *string)
 {

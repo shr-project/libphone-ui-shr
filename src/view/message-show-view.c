@@ -362,7 +362,7 @@ _answer_clicked(void *_data, Evas_Object * obj,
 	g_debug("message_show_view_answer_clicked()");
 
 	options = g_hash_table_new_full(g_str_hash, g_str_equal,
-					NULL, NULL);
+					NULL, common_utils_variant_unref);
         if (!view->number) {
 		g_warning("Trying to answer a message without number?!");
 		return;
@@ -408,7 +408,7 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 	evas_object_hide(view->hv);
 
 	options = g_hash_table_new_full(g_str_hash, g_str_equal,
-					NULL, NULL);
+					NULL, common_utils_variant_unref);
 	content = elm_entry_markup_to_utf8(elm_anchorblock_text_get(view->content));
 	if (content) {
 		g_hash_table_insert(options, "Content",
@@ -516,7 +516,7 @@ _new_contact_clicked(void *_data, Evas_Object * obj, void *event_info)
 	view = (struct MessageShowViewData *)_data;
 	evas_object_hide(view->hv);
 	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
-					       NULL, NULL);
+					       NULL, common_utils_variant_unref);
 	g_hash_table_insert(options, "Phone",
 			g_variant_ref_sink(g_variant_new_string(view->number)));
 

@@ -139,7 +139,7 @@ contact_view_init(char *path, GHashTable *properties)
 	}
 	else {
 		view->properties = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, NULL);
+						NULL, common_utils_variant_unref);
 		g_hash_table_insert(view->properties, "Phone",
 				      g_variant_ref_sink(g_variant_new_string("")));
 		g_hash_table_insert(view->properties, "Name",
@@ -498,7 +498,7 @@ _contact_sms_number_callback(const char *number, void *data)
 		return;
 
 	GHashTable *options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, NULL);
+						NULL, common_utils_variant_unref);
 	g_hash_table_insert(options, "Phone",
 			      g_variant_ref_sink(g_variant_new_string(number)));
 
@@ -625,7 +625,7 @@ static GHashTable *
 _sanitize_changes_hash(GHashTable *source)
 {
 	GHashTable *target;
-	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+	target = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, common_utils_variant_unref);
 	g_hash_table_foreach(source, _sanitize_changes_hash_foreach,target);
 	return target;
 }

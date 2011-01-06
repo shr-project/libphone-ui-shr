@@ -38,6 +38,9 @@ common_utils_object_unref_free(void *object);
 int
 common_utils_object_get_ref(void *object);
 
+void
+common_utils_variant_unref(void *value);
+
 int
 common_utils_is_pin(const char *string);
 int

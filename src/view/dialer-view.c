@@ -249,7 +249,7 @@ _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
+	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, common_utils_variant_unref);
 	g_hash_table_insert(contact, "Phone",
 			g_variant_ref_sink(g_variant_new_string(view.number)));
 	phoneui_contacts_contact_new(contact);
