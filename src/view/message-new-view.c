@@ -124,7 +124,7 @@ message_new_view_init(GHashTable *options)
 	if (options) {
 		tmp = g_hash_table_lookup(options, "Content");
 		if (tmp) {
-			view->content = g_variant_dup_string(tmp);
+			view->content = g_variant_dup_string(tmp, NULL);
 			g_hash_table_unref(options);
 		}
 		else {
@@ -780,7 +780,6 @@ static void
 _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
 	char *tmp;
-	const char *tmp2;
 	GVariant *gtmp;
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 

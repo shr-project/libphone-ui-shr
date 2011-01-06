@@ -226,30 +226,32 @@ _add_entry(GHashTable *entry)
 	it = elm_genlist_item_append(view.list_all, &itc,
 			g_hash_table_ref(entry),
 			NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-	g_hash_table_insert(entry, "_item_all",
-			common_utils_new_gvalue_pointer(it));
+	val = g_variant_new_int32(GPOINTER_TO_INT(it));
+	g_hash_table_insert(entry, "_item_all", g_variant_ref_sink(val));
 	if (received) {
 		if (answered) {
 			it = elm_genlist_item_append(view.list_in, &itc,
 					g_hash_table_ref(entry),
 					NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-			g_hash_table_insert(entry, "_item_in",
-					common_utils_new_gvalue_pointer(it));
+			val = g_variant_new_int32(GPOINTER_TO_INT(it));
+			g_hash_table_insert(entry, "_item_in", g_variant_ref_sink(val));
 		}
 		else {
 			it = elm_genlist_item_append(view.list_missed, &itc,
 					g_hash_table_ref(entry),
 					NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+			val = g_variant_new_int32(GPOINTER_TO_INT(it));
 			g_hash_table_insert(entry, "_item_missed",
-					common_utils_new_gvalue_pointer(it));
+					g_variant_ref_sink(val));
 		}
 	}
 	else {
 		it = elm_genlist_item_append(view.list_out, &itc,
 				g_hash_table_ref(entry),
 				NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
+		val = g_variant_new_int32(GPOINTER_TO_INT(it));
 		g_hash_table_insert(entry, "_item_out",
-				common_utils_new_gvalue_pointer(it));
+				g_variant_ref_sink(val));
 	}
 }
 
@@ -261,7 +263,7 @@ _update_entry(GHashTable *entry)
 
 	val = g_hash_table_lookup(entry, "_item_all");
 	if (val) {
-		it = (Elm_Genlist_Item *)GINT_TO_PONTER(g_variant_get_int32(val));
+		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
 		elm_genlist_item_update(it);
 	}
 	val = g_hash_table_lookup(entry, "_item_missed");
@@ -299,7 +301,7 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	}
 	else {
 		g_hash_table_insert(entry, "Name",
-				g_variant_ref_sink(g_variant_new_string(CONTACT_NAME_UNDEFINED_STRING));
+				g_variant_ref_sink(g_variant_new_string(CONTACT_NAME_UNDEFINED_STRING)));
 	}
 	_update_entry(entry);
 }

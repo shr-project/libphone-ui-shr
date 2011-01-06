@@ -249,9 +249,9 @@ _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, free);
+	GHashTable *contact = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, NULL);
 	g_hash_table_insert(contact, "Phone",
-			common_utils_new_gvalue_string(view.number));
+			g_variant_ref_sink(g_variant_new_string(view.number)));
 	phoneui_contacts_contact_new(contact);
 	g_hash_table_destroy(contact);
 
@@ -276,7 +276,8 @@ _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	GHashTable *options = g_hash_table_new(g_str_hash, g_str_equal);
-	g_hash_table_insert(options, "Phone", common_utils_new_gvalue_string(view.number));
+	g_hash_table_insert(options, "Phone",
+			      g_variant_ref_sink(g_variant_new_string(view.number)));
 
 	phoneui_messages_message_new(options);
 	//g_hash_table_destroy(options);

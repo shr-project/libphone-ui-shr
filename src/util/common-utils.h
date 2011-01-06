@@ -27,26 +27,6 @@
 
 #define LTR_STRING "\xE2\x80\x8E"
 
-GValue *
-common_utils_new_gvalue_string(const char *value);
-
-GValue *
-common_utils_new_gvalue_int(int value);
-
-GValue *
-common_utils_new_gvalue_boolean(int value);
-
-GValue *
-common_utils_new_gvalue_pointer(gpointer value);
-
-GValue *
-common_utils_new_gvalue_boxed(GType type, gpointer value);
-
-void
-common_utils_gvalue_free(gpointer val);
-
-GHashTable *
-common_utils_gvalue_ghashtable_clone(GHashTable *hash_table);
 
 void *
 common_utils_object_ref(void *object);

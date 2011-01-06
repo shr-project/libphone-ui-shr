@@ -8,7 +8,7 @@
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- * 
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
@@ -30,100 +30,6 @@
 
 static GHashTable *ref_counter = NULL;
 
-GValue *
-common_utils_new_gvalue_string(const char *value)
-{
-	GValue *val = calloc(1, sizeof(GValue));
-	if (!val) {
-		return NULL;
-	}
-	g_value_init(val, G_TYPE_STRING);
-	g_value_set_string(val, value);
-
-	return val;
-}
-
-GValue *
-common_utils_new_gvalue_int(int value)
-{
-	GValue *val = calloc(1, sizeof(GValue));
-	if (!val) {
-		return NULL;
-	}
-	g_value_init(val, G_TYPE_INT);
-	g_value_set_int(val, value);
-
-	return val;
-}
-
-GValue *
-common_utils_new_gvalue_boolean(int value)
-{
-	GValue *val = calloc(1, sizeof(GValue));
-	if (!val) {
-		return NULL;
-	}
-	g_value_init(val, G_TYPE_BOOLEAN);
-	g_value_set_boolean(val, value);
-
-	return val;
-}
-
-GValue *
-common_utils_new_gvalue_pointer(gpointer value)
-{
-	GValue *val = calloc(1, sizeof(GValue));
-	if (!val) {
-		return NULL;
-	}
-	g_value_init(val, G_TYPE_POINTER);
-	g_value_set_pointer(val, value);
-
-	return val;
-}
-
-GValue *
-common_utils_new_gvalue_boxed(GType type, gpointer value)
-{
-	GValue *val = calloc(1, sizeof(GValue));
-	if (!val) {
-		return NULL;
-	}
-	g_value_init(val, type);
-	g_value_set_boxed_take_ownership(val, value);
-
-	return val;
-}
-
-void
-common_utils_gvalue_free(gpointer val)
-{
-	GValue *value = (GValue *)val;
-	g_value_unset(value);
-	g_free(value);
-}
-
-static void
-_common_utils_gvalue_ghashtable_foreach_clone(void *k, void *v, void *data) {
-	GHashTable *tbl = ((GHashTable *)data);
-	char *key = (char *)k;
-	GValue *value = (GValue *)v;
-	GValue *new_value = malloc(sizeof(GValue));
-	bzero(new_value, sizeof(GValue));
-
-	g_value_init(new_value, G_VALUE_TYPE(value));
-	g_value_copy(value, new_value);
-	g_hash_table_insert(tbl, strdup(key), new_value);
-}
-
-GHashTable *common_utils_gvalue_ghashtable_clone(GHashTable *hash_table) {
-	GHashTable *tbl = g_hash_table_new_full(g_str_hash, g_str_equal, NULL,
-	                                        common_utils_gvalue_free);
-
-	g_hash_table_foreach(hash_table, _common_utils_gvalue_ghashtable_foreach_clone, tbl);
-
-	return tbl;
-}
 
 void *
 common_utils_object_ref(void *object)

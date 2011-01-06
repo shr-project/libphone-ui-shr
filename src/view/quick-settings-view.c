@@ -32,6 +32,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <fsoframework.h>
+#include <freesmartphone.h>
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-utils-sound.h>
 #include <phoneui/phoneui-info.h>
@@ -426,8 +427,8 @@ _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 static void
 _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state, GHashTable *attributes)
 {
-	const GVariant *tmp;
-	int policy;
+	GVariant *tmp;
+	FreeSmartphoneUsageResourcePolicy policy;
 	Evas_Object *toggle = NULL;
 	(void) userdata;
 	(void) state;
@@ -448,13 +449,15 @@ _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state
 	if (!tmp) {
 		goto clean;
 	}
-	policy = g_variant_get_int32(tmp);
+
+	policy = free_smartphone_usage_resource_policy_from_string
+					(g_variant_get_string(tmp, NULL));
 
 	/* policy enabled = 2 auto = 0 */
-	if (policy == 2) {
+	if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED) {
 		elm_toggle_state_set(toggle, 1);
 	}
-	else if (policy == 0) {
+	else if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO) {
 		elm_toggle_state_set(toggle, 0);
 	}
 

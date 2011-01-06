@@ -149,7 +149,6 @@ _contact_select_add(void *data, Evas_Object *obj, void *event_info)
 	Elm_Genlist_Item *it;
 	GHashTable *properties;
 	char *path = NULL;
-	const char *tmp;
 	GVariant *p;
 
 	it = elm_genlist_selected_item_get(pack->contact_list_data.list);

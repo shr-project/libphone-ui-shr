@@ -356,7 +356,7 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 		message = (GHashTable *)elm_genlist_item_data_get(it);
 
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, common_utils_gvalue_free);
+						NULL, NULL);
 		tmp = g_hash_table_lookup(message, "Content");
 		if (tmp) {
 			g_hash_table_insert(options, "Content", g_variant_ref(tmp));
