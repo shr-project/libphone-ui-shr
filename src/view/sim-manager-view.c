@@ -150,16 +150,15 @@ _contact_select_add(void *data, Evas_Object *obj, void *event_info)
 	GHashTable *properties;
 	char *path = NULL;
 	const char *tmp;
-	GValue *p;
-	
+	GVariant *p;
+
 	it = elm_genlist_selected_item_get(pack->contact_list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 
 	if (properties) {
 		p = g_hash_table_lookup(properties, "Path");
 		if (p) {
-			tmp = g_value_get_string(p);
-			path = g_strdup(tmp);
+			path = g_variant_dup_string(p, NULL);
 		}
 	}
 
@@ -607,7 +606,7 @@ _import_contact(Elm_Genlist_Item *it,
 		void (*callback)(GError *, char *, gpointer))
 {
 	g_debug("_import_contact()");
-	GValue *gval;
+	GVariant *tmp;
 
 	if (!it) {
 		return;
@@ -616,10 +615,10 @@ _import_contact(Elm_Genlist_Item *it,
 	if (cdata->entry) {
 		GHashTable *qry = g_hash_table_new_full
 		     (g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
-		gval = common_utils_new_gvalue_string(cdata->entry->name);
-		g_hash_table_insert(qry, "Name", gval);
-		gval = common_utils_new_gvalue_string(cdata->entry->number);
-		g_hash_table_insert(qry, "Phone", gval);
+		tmp = g_variant_new_string(cdata->entry->name);
+		g_hash_table_insert(qry, "Name", g_variant_ref_sink(tmp));
+		tmp = g_variant_new_string(cdata->entry->number);
+		g_hash_table_insert(qry, "Phone", g_variant_ref_sink(tmp));
 		phoneui_utils_contact_add(qry, callback, it);
 		g_hash_table_unref(qry);
 	}

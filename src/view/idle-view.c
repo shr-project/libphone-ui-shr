@@ -258,7 +258,7 @@ static void
 _network_status(void *data, GHashTable *properties)
 {
 	(void) data;
-	GValue *v;
+	GVariant *v;
 	const char *s = "";
 	const char *sig = "";
 
@@ -272,27 +272,27 @@ _network_status(void *data, GHashTable *properties)
 
 	v = g_hash_table_lookup(properties, "display");
 	if (v) {
-		s = g_value_get_string(v);
+		s = g_variant_get_string(v, NULL);
 	}
 	if (!s || !*s) {
 		v = g_hash_table_lookup(properties, "provider");
 		if (v) {
-			s = g_value_get_string(v);
+			s = g_variant_get_string(v, NULL);
 		}
 	}
 	g_debug("provider is '%s'", s);
 	ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", s);
 	v = g_hash_table_lookup(properties, "strength");
 	if (v) {
-		_update_signal_strength(g_value_get_int(v));
+		_update_signal_strength(g_variant_get_int32(v));
 	}
 	v = g_hash_table_lookup(properties, "pdp.registration");
 	if (v) {
-		s = g_value_get_string(v);
+		s = g_variant_get_string(v, NULL);
 		if (!strcmp(s, "home") || !strcmp(s, "roaming")) {
 			v = g_hash_table_lookup(properties, "act");
 			if (v) {
-				s = g_value_get_string(v);
+				s = g_variant_get_string(v, NULL);
 				g_debug("PDP Status: %s", s);
 				if (strcmp(s, "EDGE") == 0) {
 					sig = "E";

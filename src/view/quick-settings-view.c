@@ -426,7 +426,7 @@ _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 static void
 _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state, GHashTable *attributes)
 {
-	const GValue *tmp;
+	const GVariant *tmp;
 	int policy;
 	Evas_Object *toggle = NULL;
 	(void) userdata;
@@ -448,7 +448,7 @@ _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state
 	if (!tmp) {
 		goto clean;
 	}
-	policy = g_value_get_int(tmp);
+	policy = g_variant_get_int32(tmp);
 
 	/* policy enabled = 2 auto = 0 */
 	if (policy == 2) {

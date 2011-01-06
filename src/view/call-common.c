@@ -76,13 +76,13 @@ call_common_contact_callback(GError *error, GHashTable *contact, void *_data)
 	}
 	if (contact) {
 		g_debug("call_common_contact_callback... got a contact");
-		GValue *tmp;
+		GVariant *tmp;
 		const char *s;
 		char *s2;
 
 		tmp = g_hash_table_lookup(contact, "Photo");
 		if (tmp) {
-			s = g_value_get_string(tmp);
+			s = g_variant_get_string(tmp, NULL);
 			if (!strncmp(s, "file://", 7))
 				s += 7;
 		}

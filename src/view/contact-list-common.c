@@ -68,9 +68,9 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 
 	if (!strcmp(part, "elm.swallow.icon")) {
 		const char *photo_file = NULL;
-		GValue *tmp = g_hash_table_lookup(parameters, "Photo");
+		GVariant *tmp = g_hash_table_lookup(parameters, "Photo");
 		if (tmp) {
-			photo_file = g_value_get_string(tmp);
+			photo_file = g_variant_get_string(tmp, NULL);
 		}
 
 		if (!photo_file || !ecore_file_exists(photo_file))

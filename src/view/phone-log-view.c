@@ -201,12 +201,12 @@ static void
 _add_entry(GHashTable *entry)
 {
 	Elm_Genlist_Item *it;
-	GValue *val;
+	GVariant *val;
 	int received = 0, answered = 0;
 
 	val = g_hash_table_lookup(entry, "Direction");
 	if (val) {
-		const char *dir = g_value_get_string(val);
+		const char *dir = g_variant_get_string(val, NULL);
 		if (!strcmp(dir, "in")) {
 			received = 1;
 		}
@@ -218,7 +218,7 @@ _add_entry(GHashTable *entry)
 
 	val = g_hash_table_lookup(entry, "Answered");
 	if (val) {
-		if (g_value_get_boolean(val)) {
+		if (g_variant_get_boolean(val)) {
 			answered = 1;
 		}
 	}
@@ -257,26 +257,26 @@ static void
 _update_entry(GHashTable *entry)
 {
 	Elm_Genlist_Item *it;
-	GValue *val;
+	GVariant *val;
 
 	val = g_hash_table_lookup(entry, "_item_all");
 	if (val) {
-		it = (Elm_Genlist_Item *)g_value_get_pointer(val);
+		it = (Elm_Genlist_Item *)GINT_TO_PONTER(g_variant_get_int32(val));
 		elm_genlist_item_update(it);
 	}
 	val = g_hash_table_lookup(entry, "_item_missed");
 	if (val) {
-		it = (Elm_Genlist_Item *)g_value_get_pointer(val);
+		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
 		elm_genlist_item_update(it);
 	}
 	val = g_hash_table_lookup(entry, "_item_in");
 	if (val) {
-		it = (Elm_Genlist_Item *)g_value_get_pointer(val);
+		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
 		elm_genlist_item_update(it);
 	}
 	val = g_hash_table_lookup(entry, "_item_out");
 	if (val) {
-		it = (Elm_Genlist_Item *)g_value_get_pointer(val);
+		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
 		elm_genlist_item_update(it);
 	}
 }
@@ -294,13 +294,12 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	if (contact) {
 		char *s = phoneui_utils_contact_display_name_get(contact);
 		g_hash_table_insert(entry, "Name",
-				common_utils_new_gvalue_string(s));
+				g_variant_ref_sink(g_variant_new_string(s)));
 		free(s);
 	}
 	else {
 		g_hash_table_insert(entry, "Name",
-				common_utils_new_gvalue_string(
-					CONTACT_NAME_UNDEFINED_STRING));
+				g_variant_ref_sink(g_variant_new_string(CONTACT_NAME_UNDEFINED_STRING));
 	}
 	_update_entry(entry);
 }
@@ -318,7 +317,7 @@ static void
 _get_callback(GError* error, GHashTable** entry, int count, gpointer data)
 {
 	(void) data;
-	GValue *val;
+	GVariant *val;
         int i;
 
 	if (error) {
@@ -334,7 +333,7 @@ _get_callback(GError* error, GHashTable** entry, int count, gpointer data)
 		val = g_hash_table_lookup(entry[i], "Peer");
 		if (val) {
 			_add_entry(entry[i]);
-			phoneui_utils_contact_lookup(g_value_get_string(val),
+			phoneui_utils_contact_lookup(g_variant_get_string(val, NULL),
 						     _contact_lookup, entry[i]);
 		}
 		else {
@@ -349,13 +348,13 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *entry = (GHashTable *) data;
-	GValue *val;
+	GVariant *val;
 
 	g_debug("gl_label_get: %s", part);
 	if (!strcmp(part, "elm.text")) {
 		val = g_hash_table_lookup(entry, "Name");
 		if (val) {
-			return g_value_dup_string(val);
+			return g_variant_dup_string(val, NULL);
 		}
 		return strdup("");
 	}
@@ -363,7 +362,7 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 	if (!strcmp(part, "elm.text.sub")) {
 		val = g_hash_table_lookup(entry, "Peer");
 		if (val) {
-			return g_value_dup_string(val);
+			return g_variant_dup_string(val, NULL);
 		}
 		return strdup(CONTACT_PHONE_UNDEFINED_STRING);
 	}
@@ -372,14 +371,14 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 		val = g_hash_table_lookup(entry, "Timestamp");
 		if (val) {
 			return common_utils_timestamp_to_date
-						(g_value_get_int(val));
+						(g_variant_get_int32(val));
 		}
 	}
 
 	if (!strcmp(part, "elm.text.sub.2")) {
 		val = g_hash_table_lookup(entry, "Duration");
 		if (val) {
-			float duration = strtof(g_value_get_string(val), NULL);
+			float duration = strtof(g_variant_get_string(val, NULL), NULL);
 			int h = duration / 3600;
 			int m = duration / 60 - h * 60;
 			int s = duration - h * 3600 - m * 60;
@@ -416,8 +415,8 @@ gl_state_get(void *data, Evas_Object * obj, const char *part)
 	(void) obj;
 	(void) part;
 	GHashTable *entry = (GHashTable *) data;
-	GValue *tmp = g_hash_table_lookup(entry, "Direction");
-	if (tmp && g_value_get_int(tmp))
+	GVariant *tmp = g_hash_table_lookup(entry, "Direction");
+	if (tmp && g_variant_get_int32(tmp))
 		return (EINA_TRUE);
 	return (EINA_FALSE);
 }

@@ -88,7 +88,7 @@ message_new_view_init(GHashTable *options)
 {
 	struct MessageNewViewData *view;
 	int ret;
-	GValue *gval_tmp;
+	GVariant *tmp;
 	Evas_Object *win;
 
 	view = malloc(sizeof(struct MessageNewViewData));
@@ -122,9 +122,9 @@ message_new_view_init(GHashTable *options)
 	view->layout_number = NULL;
 	view->notify = NULL;
 	if (options) {
-		gval_tmp = g_hash_table_lookup(options, "Content");
-		if (gval_tmp) {
-			view->content = strdup(g_value_get_string(gval_tmp));
+		tmp = g_hash_table_lookup(options, "Content");
+		if (tmp) {
+			view->content = g_variant_dup_string(tmp);
 			g_hash_table_unref(options);
 		}
 		else {
@@ -204,9 +204,9 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 	if (!strcmp(part, "elm.swallow.icon")) {
 		const char *photo_file = NULL;
-		GValue *tmp = g_hash_table_lookup(pack->recipient, "Photo");
+		GVariant *tmp = g_hash_table_lookup(pack->recipient, "Photo");
 		if (tmp) {
-			photo_file = g_value_get_string(tmp);
+			photo_file = g_variant_get_string(tmp, NULL);
 		}
 
 		if (!photo_file || !ecore_file_exists(photo_file))
@@ -567,9 +567,9 @@ _contacts_add_number_callback(const char *number, void *data)
 	struct MessageNewViewData *view = data;
 	if (number) {
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
-						NULL, common_utils_gvalue_free);
+						NULL, NULL);
 		g_hash_table_insert(options, "Phone",
-				common_utils_new_gvalue_string(number));
+				g_variant_ref_sink(g_variant_new_string(number)));
 		g_ptr_array_add(view->recipients, options);
 		_process_recipient(options, view);
 	}
@@ -587,13 +587,13 @@ _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 	it = elm_genlist_selected_item_get(view->contact_list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
-		GValue *tmp;
+		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
 		if (!tmp) {
 			g_warning("Can't add contact without Path in properties !?!");
 			return;
 		}
-		const char *path = g_value_get_string(tmp);
+		const char *path = g_variant_get_string(tmp, NULL);
 		ui_utils_contacts_contact_number_select(VIEW_PTR(*view), path,
 					_contacts_add_number_callback, view);
 	}
@@ -634,13 +634,13 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 	if (phone_utils_sms_is_valid_number(view->number)) {
 		GHashTable *properties =
 			g_hash_table_new_full(g_str_hash, g_str_equal,
-					 NULL, common_utils_gvalue_free);
+					 NULL, NULL);
 		g_hash_table_insert(properties, "Name",
-				    common_utils_new_gvalue_string("Number"));
+				g_variant_ref_sink(g_variant_new_string("Number")));
 		g_hash_table_insert(properties, "Phone",
-				    common_utils_new_gvalue_string(view->number));
+				g_variant_ref_sink(g_variant_new_string(view->number)));
 		g_hash_table_insert(properties, "Photo",
-				common_utils_new_gvalue_string(CONTACT_NUMBER_PHOTO));
+				g_variant_ref_sink(g_variant_new_string(CONTACT_NUMBER_PHOTO)));
 		g_ptr_array_add(view->recipients, properties);
 		_process_recipient(properties, view);
 		view->number[0] = '\0';
@@ -758,7 +758,7 @@ _process_recipient(gpointer _properties, gpointer _data)
 	GHashTable *properties;
 	struct MessageNewViewData *view;
 	struct _recipient_pack *pack;
-	GValue *gval_tmp;
+	GVariant *tmp;
 
 	properties = (GHashTable *) _properties;
 	view = (struct MessageNewViewData *) _data;
@@ -769,9 +769,9 @@ _process_recipient(gpointer _properties, gpointer _data)
 					   NULL, ELM_GENLIST_ITEM_NONE,
 					   NULL, NULL);
 	/* try to resolve the number to a contact */
-	gval_tmp = g_hash_table_lookup(properties, "Phone");
-	if (gval_tmp) {
-		phoneui_utils_contact_lookup(g_value_get_string(gval_tmp),
+	tmp = g_hash_table_lookup(properties, "Phone");
+	if (tmp) {
+		phoneui_utils_contact_lookup(g_variant_get_string(tmp, NULL),
 					     _contact_lookup, pack);
 	}
 }
@@ -781,7 +781,7 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 {
 	char *tmp;
 	const char *tmp2;
-	GValue *gval_tmp;
+	GVariant *gtmp;
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 
 	if (error) {
@@ -799,14 +799,12 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
 		g_hash_table_insert(pack->recipient, "Name",
-				    common_utils_new_gvalue_string(tmp));
+				    g_variant_ref_sink(g_variant_new_string(tmp)));
 		free(tmp);
 	}
-	gval_tmp = g_hash_table_lookup(contact, "Photo");
-	if (gval_tmp) {
-		tmp2 = g_value_get_string(gval_tmp);
-		g_hash_table_insert(pack->recipient, "Photo",
-				    common_utils_new_gvalue_string(tmp2));
+	gtmp = g_hash_table_lookup(contact, "Photo");
+	if (gtmp) {
+		g_hash_table_insert(pack->recipient, "Photo", g_variant_ref(gtmp));
 	}
 	if (pack->view->layout_recipients) {
 		elm_genlist_item_update(pack->it);
