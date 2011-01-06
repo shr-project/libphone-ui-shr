@@ -99,19 +99,33 @@ common_utils_object_get_ref(void *object)
 GVariant*
 common_utils_new_variant_from_pointer(void* val)
 {
+	gint i;
+
+	i = GPOINTER_TO_INT(val);
 	if (sizeof(gint) == sizeof(gint64)) {
-		return g_variant_new_int64(GPOINTER_TO_INT(val));
+		return g_variant_new_int64(i);
 	}
-	return g_variant_new_int32(GPOINTER_TO_INT(val));
+	else if (sizeof(gint) == sizeof(gint32)) {
+		return g_variant_new_int32(i);
+	}
+	return g_variant_new_int16(i);
 }
 
 void*
 common_utils_pointer_from_variant(GVariant* val)
 {
+	gint i;
+
 	if (sizeof(gint) == sizeof(gint64)) {
-		return GINT_TO_POINTER(g_variant_get_int64(val));
+		i = g_variant_get_int64(val);
 	}
-	return GINT_TO_POINTER(g_variant_get_int32(val));
+	else if (sizeof(gint) == sizeof(gint32)) {
+		i = g_variant_get_int32(val);
+	}
+	else {
+		i = g_variant_get_int16(val);
+	}
+	return GINT_TO_POINTER(i);
 }
 
 void
