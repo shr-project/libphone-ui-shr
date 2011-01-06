@@ -614,7 +614,7 @@ _import_contact(Elm_Genlist_Item *it,
 	const struct SimContactData *cdata = elm_genlist_item_data_get(it);
 	if (cdata->entry) {
 		GHashTable *qry = g_hash_table_new_full
-		     (g_str_hash, g_str_equal, NULL, common_utils_gvalue_free);
+		     (g_str_hash, g_str_equal, NULL, NULL);
 		tmp = g_variant_new_string(cdata->entry->name);
 		g_hash_table_insert(qry, "Name", g_variant_ref_sink(tmp));
 		tmp = g_variant_new_string(cdata->entry->number);
