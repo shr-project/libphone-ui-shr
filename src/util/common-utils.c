@@ -96,6 +96,24 @@ common_utils_object_get_ref(void *object)
 	return count;
 }
 
+GVariant*
+common_utils_new_variant_from_pointer(void* val)
+{
+	if (sizeof(gint) == sizeof(gint64)) {
+		return g_variant_new_int64(GPOINTER_TO_INT(val));
+	}
+	return g_variant_new_int32(GPOINTER_TO_INT(val));
+}
+
+void*
+common_utils_pointer_from_variant(GVariant* val)
+{
+	if (sizeof(gint) == sizeof(gint64)) {
+		return GINT_TO_POINTER(g_variant_get_int64(val));
+	}
+	return GINT_TO_POINTER(g_variant_get_int32(val));
+}
+
 void
 common_utils_variant_unref(void* value)
 {

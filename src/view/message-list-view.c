@@ -755,7 +755,8 @@ _process_message(gpointer _message, gpointer _data)
 	}
 
 	/* Save also the genlist item pointer in the messsage data, to get them dobule-linked */
-	g_hash_table_insert(rowdata, "_GenlistItem", g_variant_new_int64(GPOINTER_TO_INT(it)));
+	g_hash_table_insert(rowdata, "_GenlistItem",
+			      common_utils_new_variant_from_pointer(it));
 
 	tmp = g_hash_table_lookup(message, "@Contacts");
 	if (tmp) {
@@ -808,7 +809,7 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 				if ((tmp = g_hash_table_lookup(message, "_GenlistItem"))) {
 					Elm_Genlist_Item *it;
 					it = (Elm_Genlist_Item *)
-						GINT_TO_POINTER(g_variant_get_int64(tmp));
+						common_utils_pointer_from_variant(tmp);
 					phoneui_utils_contact_lookup(number, _contact_lookup, it);
 				}
 

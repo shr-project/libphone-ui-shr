@@ -38,6 +38,10 @@ common_utils_object_unref_free(void *object);
 int
 common_utils_object_get_ref(void *object);
 
+GVariant *
+common_utils_new_variant_from_pointer(void *val);
+void *
+common_utils_pointer_from_variant(GVariant *val);
 void
 common_utils_variant_unref(void *value);
 
