@@ -759,7 +759,7 @@ _process_message(gpointer _message, gpointer _data)
 				insert_mode = LIST_INSERT_APPEND;
 
 			it = elm_genlist_item_insert_before(view.list, &itc,
-						rowdata, it,
+						rowdata, NULL, it,
 						ELM_GENLIST_ITEM_NONE,
 						NULL, NULL);
 		}
