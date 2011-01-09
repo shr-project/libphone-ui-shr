@@ -110,6 +110,7 @@ idle_screen_view_init()
 
 	elm_win_fullscreen_set(win, 1);
 	elm_win_layer_set(win, 200);
+	elm_win_keyboard_mode_set(win, ELM_WIN_KEYBOARD_OFF);
 	evas_object_show(view.wallpaper);
 
 	edje_object_signal_callback_add(ui_utils_view_layout_get(VIEW_PTR(view)), "unlockScreen",
