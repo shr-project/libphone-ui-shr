@@ -450,8 +450,9 @@ _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state
 		goto clean;
 	}
 
+	/* FIXME: Should rather honor the error instead of passing NULL */
 	policy = free_smartphone_usage_resource_policy_from_string
-					(g_variant_get_string(tmp, NULL));
+					(g_variant_get_string(tmp, NULL), NULL);
 
 	/* policy enabled = 2 auto = 0 */
 	if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED) {
