@@ -883,10 +883,12 @@ gl_state_get(void *data, Evas_Object *obj, const char *part)
 	GVariant *tmp;
 	Eina_Bool msg_out;
 	Eina_Bool new;
+	Eina_Bool unconfirmed;
 
 	message = (GHashTable *)data;
 	msg_out = EINA_FALSE;
 	new = EINA_FALSE;
+	unconfirmed = EINA_FALSE;
 
 	if ((tmp = g_hash_table_lookup(message, "Direction"))) {
 		msg_out = !strcmp(g_variant_get_string(tmp, NULL), "out");
@@ -896,11 +898,18 @@ gl_state_get(void *data, Evas_Object *obj, const char *part)
 		// FIXME: shouldn't be boolean?
 		new = (g_variant_get_int32(tmp) == 1);
 	}
+	
+	if ((tmp = g_hash_table_lookup(message, "SMS-delivered"))) {
+		unconfirmed = (g_variant_get_int32(tmp) == 0);
+	}
 
-	if (new && !msg_out && !strcmp(part, "new_incoming")) {
+	if (new && !msg_out && !unconfirmed && !strcmp(part, "new_incoming")) {
 		return EINA_TRUE;
 	}
-	else if (new && msg_out && !strcmp(part, "new_outgoing")) {
+	else if (new && msg_out && unconfirmed && !strcmp(part, "new_outgoing")) {
+		return EINA_TRUE;
+	}
+	else if (new && msg_out && !strcmp(part, "new_outgoing_unconfirmed")) {
 		return EINA_TRUE;
 	}
 	else if (!strcmp(part, "direction_out")) {

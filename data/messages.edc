@@ -5,7 +5,7 @@ group { name: "elm/genlist/item/message/default";
 	data.item: "selectraise" "on";
 	data.item: "labels" "elm.date elm.name elm.content";
 	data.item: "icons" "elm.photo";
-	data.item: "states" "direction_out new_outgoing new_incoming";
+	data.item: "states" "direction_out new_outgoing new_incoming new_outgoing_unconfirmed";
 
 	parts {
 		part { name: "event";
@@ -144,6 +144,12 @@ group { name: "elm/genlist/item/message/default";
 				text.font: "content-bold";
 				color: COLOR_DARK_GREEN;
 			}
+			description {
+				state: "new_unconfirmed_state" 0.0;
+				inherit: "default" 0.0;
+				text.font: "content-bold";
+				color: COLOR_DARK_GRAY;
+			}
 		}
 		part { name: "elm.date";
 			clip_to: "disclip";
@@ -182,6 +188,12 @@ group { name: "elm/genlist/item/message/default";
 				inherit: "default" 0.0;
 				text.font: "content-bold";
 				color: COLOR_DARK_GREEN;
+			}
+			description {
+				state: "new_unconfirmed_state" 0.0;
+				inherit: "default" 0.0;
+				text.font: "content-bold";
+				color: COLOR_DARK_GRAY;
 			}
 		}
 		part { name: "elm.name";
@@ -222,6 +234,12 @@ group { name: "elm/genlist/item/message/default";
 				inherit: "default" 0.0;
 				text.font: "content-bold";
 				color: COLOR_DARK_GREEN;
+			}
+			description {
+				state: "new_unconfirmed_state" 0.0;
+				inherit: "default" 0.0;
+				text.font: "content-bold";
+				color: COLOR_DARK_GRAY;
 			}
 		}
 		part { name: "disclip";
@@ -315,6 +333,26 @@ group { name: "elm/genlist/item/message/default";
 			signal:  "elm,state,new_outgoing,passive";
 			source:  "elm";
 			filter:  "elm.content" "new_outgoing_state" 0.0;
+			action:  STATE_SET "default" 0.0;
+			target:  "elm.name";
+			target:  "elm.date";
+			target:  "elm.content";
+		}
+		program {
+			name:    "go_unconfirmed";
+			signal:  "elm,state,new_outgoing_unconfirmed,passive";
+			source:  "elm";
+			filter:  "elm.content" "default" 0.0;
+			action:  STATE_SET "new_unconfirmed_state" 0.0;
+			target:  "elm.name";
+			target:  "elm.date";
+			target:  "elm.content";
+		}
+		program {
+			name:    "go_confirmed";
+			signal:  "elm,state,new_outgoing_unconfirmed,passive";
+			source:  "elm";
+			filter:  "elm.content" "new_unconfirmed_state" 0.0;
 			action:  STATE_SET "default" 0.0;
 			target:  "elm.name";
 			target:  "elm.date";
