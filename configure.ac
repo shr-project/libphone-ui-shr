@@ -54,6 +54,8 @@ AM_GNU_GETTEXT_VERSION([0.12.1])
 AC_OUTPUT([
 Makefile
 data/Makefile
+data/idle_screen/Makefile
+data/widgets/Makefile
 src/Makefile
 po/Makefile.in
 ])
