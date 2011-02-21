@@ -42,16 +42,17 @@
 struct ContactListViewData {
 	struct View view;
 	struct ContactListData list_data;
-	Evas_Object *bx, *hv;
+	Evas_Object *ctx,
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
+	Elm_Genlist_Item *selected;
 };
 static struct ContactListViewData view;
 
 static void _list_new_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_call_number_callback(const char *number, void *data);
 static void _list_call_clicked(void *data, Evas_Object *obj, void *event_info);
-static void _list_longpressed(void *data, Evas_Object *obj, void *event_info);
+static void _list_list_longpressed(void *data, Evas_Object *obj, void *event_info);
 static void _list_message_number_callback(const char *number, void *data);
 static void _list_message_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_edit_clicked(void *data, Evas_Object *obj, void *event_info);
@@ -76,12 +77,15 @@ contact_list_view_init()
 	}
 
 	view.list_data.view = VIEW_PTR(view);
+	view.selected = NULL;
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme, "phoneui/contacts/list");
 	elm_theme_extension_add(NULL, phoneui_theme);
 	view.list_data.layout = view.view.layout;
 	contact_list_add(&view.list_data);
+	evas_object_smart_callback_add(view.list_data.list, "longpressed",
+				       _list_list_longpressed, win);
 
 	view.bt1 = elm_button_add(win);
 	elm_button_label_set(view.bt1, D_("Call"));
@@ -104,8 +108,10 @@ contact_list_view_init()
 	ui_utils_view_swallow(VIEW_PTR(view), "button_options", view.bt_options);
 	evas_object_show(view.bt_options);
 
-	evas_object_smart_callback_add(view.list_data.list, "longpressed",
-				       _list_longpressed, win);
+
+	view.ctx = elm_ctxpopup_add(win);
+	elm_ctxpopup_item_append(view.ctx, D_("Edit"), NULL, _list_edit_clicked, NULL);
+	elm_ctxpopup_item_append(view.ctx, D_("Delete"), NULL, _list_delete_clicked, NULL);
 
 	contact_list_fill(&view.list_data);
 	phoneui_info_register_contact_changes(_contact_changed_cb, NULL);
@@ -182,31 +188,12 @@ _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 }
 
 static void
-_list_longpressed(void *data, Evas_Object *obj, void *gli)
+_list_list_longpressed(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
-	Evas_Object *win = (Evas_Object*)data, *ctx, *box, *bt;
 
-	ctx = elm_ctxpopup_add(win);
-
-	box = elm_box_add(win);
-
-	bt = elm_button_add(win);
-	elm_button_label_set(bt, D_("Show"));
-	evas_object_smart_callback_add(bt, "clicked", _list_edit_clicked, gli);
-	evas_object_show(bt);
-	elm_box_pack_end(box, bt);
-
-	bt = elm_button_add(win);
-	elm_button_label_set(bt, D_("Delete"));
-	evas_object_smart_callback_add(bt, "clicked", _list_delete_clicked, gli);
-	evas_object_show(bt);
-	elm_box_pack_end(box, bt);
-
-	evas_object_show(box);
-
-	elm_ctxpopup_content_set(ctx, box);
-	evas_object_show(ctx);
+	view.selected = event_info;
+	evas_object_show(view.ctx);
 }
 
 static void
@@ -270,18 +257,24 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
-	const Elm_Genlist_Item *it = (Elm_Genlist_Item*)data;
+	(void) event_info;
+	GHashTable *properties;
+	
+	g_debug("editing selected contact");
+	evas_object_hide(view.ctx);
 
-	if (event_info) {
-		it = (Elm_Genlist_Item *) event_info;
-	}
-	GHashTable *properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	if (!view.selected)
+		return;
+
+	properties = elm_genlist_item_data_get(view.selected);
 	if (properties != NULL) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
 		if (tmp) {
+			g_debug("with path %s", g_variant_get_string(tmp, NULL));
 			phoneui_contacts_contact_show(g_variant_get_string(tmp, NULL));
-		}
+		} else
+			g_warning("NO PATH for selected contact?!");
 	}
 }
 
