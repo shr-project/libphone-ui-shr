@@ -20,7 +20,7 @@
 
 
 #include "phoneui-dialer.h"
-#include "dialer-view.h"
+#include "view/dialer-view.h"
 
 void
 phoneui_backend_dialer_show()
