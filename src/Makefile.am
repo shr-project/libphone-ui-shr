@@ -29,13 +29,16 @@ shr_la_SOURCES = \
 	util/ui-utils.h util/ui-utils.c \
 	util/ui-utils-contacts.h util/ui-utils-contacts.c \
 	view/views.h \
+	view/dialer-view.h \
 	view/dialer-view.c \
+	view/idle-view.h \
 	view/idle-view.c \
 	view/dialog-view.c \
 	view/contact-list-common.h \
 	view/contact-list-common.c \
 	view/contact-view.c \
 	view/contact-view.h \
+	view/contact-list-view.h \
 	view/contact-list-view.c \
 	view/message-new-view.h \
 	view/message-new-view.c \
@@ -46,6 +49,7 @@ shr_la_SOURCES = \
 	view/call-common.h view/call-common.c \
 	view/call-incoming-view.c \
 	view/call-active-view.c \
+	view/sim-auth-input-view.h \
 	view/sim-auth-input-view.c \
 	util/common-utils.h util/common-utils.c \
 	view/ussd-view.c \
@@ -54,5 +58,6 @@ shr_la_SOURCES = \
 	view/phone-log-view.h \
 	view/phone-log-view.c \
 	view/sim-manager-view.h \
-	view/sim-manager-view.c
+	view/sim-manager-view.c \
+	phoneui-shr.h
 
