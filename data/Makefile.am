@@ -3,7 +3,24 @@ MAINTAINERCLEANFILES = Makefile.in
 filesdir = $(datadir)/libphone-ui-shr/
 files_DATA = default.edj widgets.edj idle_screen.edj edit-undo.png contact.png number-icon.png call-start.png call-stop.png
 
-EXTRA_DIST = default.edc
+EXTRA_DIST = \
+	widgets/contacts_slide_call.png \
+	widgets/contacts_slide_message.png \
+	widgets/contacts_slide_open.png \
+	widgets/widgets.edc \
+	default.edc \
+	call-management.edc \
+	keypad.edc \
+	phonelog.edc \
+	colors.edc \
+	dialer.edc \
+	messages.edc \
+	quick-settings.edc \
+	contacts.edc \
+	icons.edc \
+	notification.edc \
+	sim-manager.edc \
+	styles.edc
 
 clean-local:
 	rm -f *.edj
