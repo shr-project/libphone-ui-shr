@@ -265,7 +265,7 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 		return;
 
 	properties = elm_genlist_item_data_get(view.selected);
-	if (properties != NULL) {
+	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
 		if (tmp) {
@@ -288,11 +288,14 @@ _contact_delete_confirm_cb(int result, void *data)
 
 	properties = (GHashTable *) elm_genlist_item_data_get(view.selected);
 	if (properties) {
-
-		const char *path = g_value_get_string(
-				g_hash_table_lookup(properties, "Path"));
+		GVariant *tmp;
+		tmp = g_hash_table_lookup(properties, "Path");
+		if(tmp) {
+			g_debug("with path %s", g_variant_get_string(tmp, NULL));
+			phoneui_utils_contact_delete(g_variant_get_string(tmp, NULL), NULL, NULL);
+		} else
+			g_warning("NO PATH for selected contact?!");
 		// TODO: use a callback to show success/failure
-		phoneui_utils_contact_delete(path, NULL, NULL);
 	}
 }
 
