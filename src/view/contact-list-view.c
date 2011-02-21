@@ -42,7 +42,7 @@
 struct ContactListViewData {
 	struct View view;
 	struct ContactListData list_data;
-	Evas_Object *ctx,
+	Evas_Object *ctx;
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
 	Elm_Genlist_Item *selected;
@@ -134,7 +134,6 @@ contact_list_view_deinit()
 void
 contact_list_view_show()
 {
-	evas_object_hide(view.hv);
 	ui_utils_view_show(VIEW_PTR(view));
 }
 
@@ -190,6 +189,7 @@ _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 static void
 _list_list_longpressed(void *data, Evas_Object *obj, void *event_info)
 {
+	(void) data;
 	(void) obj;
 
 	view.selected = event_info;
@@ -237,8 +237,6 @@ _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 	Elm_Genlist_Item *it;
 	GHashTable *properties;
 
-	evas_object_hide(view.hv);
-
 	it = elm_genlist_selected_item_get(view.list_data.list);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
@@ -282,11 +280,12 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 static void
 _contact_delete_confirm_cb(int result, void *data)
 {
+	GHashTable *properties=NULL;
+
 	if (result != DIALOG_YES)
 		return;
 
-	Elm_Genlist_Item *it = (Elm_Genlist_Item *)data;
-	GHashTable *properties = (it) ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	properties = (GHashTable *) elm_genlist_item_data_get(view.selected);
 	if (properties) {
 
 		const char *path = g_value_get_string(
@@ -302,13 +301,14 @@ _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	Elm_Genlist_Item *it = (Elm_Genlist_Item*)data;
 
-	if (it) {
-		ui_utils_dialog(VIEW_PTR(view), D_("Really delete this contact?"),
-			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, it);
+	evas_object_hide(view.ctx);
 
-	}
+	if (!view.selected)
+		return;
+
+	ui_utils_dialog(VIEW_PTR(view), D_("Really delete this contact?"),
+			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, NULL);
 }
 
 static void
