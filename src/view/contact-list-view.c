@@ -280,6 +280,7 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 static void
 _contact_delete_confirm_cb(int result, void *data)
 {
+	(void) data;
 	GHashTable *properties=NULL;
 
 	if (result != DIALOG_YES)
