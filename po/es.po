@@ -1,378 +1,383 @@
-#: src/view/sim-auth-input-view.c:279
 # David Garabana Barro <david@garabana.com>, 2009.
 msgid ""
 msgstr ""
 "Project-Id-Version: libphone-ui-shr\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-12-01 21:15+0200\n"
+"POT-Creation-Date: 2011-02-23 23:50+0000\n"
 "PO-Revision-Date: 2009-12-19 14:06+0100\n"
 "Last-Translator: David Garabana Barro <david@garabana.com>\n"
 "Language-Team: Galician <>\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Lokalize 1.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: src/phoneui-call.c:132 src/view/contact-list-view.c:87
-#: src/view/contact-show-view.c:338 src/view/dialer-view.c:136
-#: src/view/message-show-view.c:335
+#: src/phoneui-call.c:140 src/view/contact-list-view.c:89
+#: src/view/contact-view.c:205 src/view/dialer-view.c:133
+#: src/view/message-list-view.c:140 src/view/message-show-view.c:235
 msgid "Call"
 msgstr "Llamar"
 
-#: src/phoneui-contacts.c:22 src/view/dialer-view.c:314
-msgid "Contacts"
-msgstr "Contactos"
-
-#: src/phoneui-contacts.c:46
-msgid "Contact"
-msgstr "Contacto"
-
-#: src/phoneui-contacts.c:69 src/view/contact-list-view.c:159
-msgid "New Contact"
-msgstr "Contacto nuevo"
-
-#: src/phoneui-dialer.c:22
-msgid "Dialer"
-msgstr "Marcador"
-
-#: src/phoneui-dialog.c:11
+#: src/phoneui-dialog.c:34
 msgid "Information"
 msgstr "Información"
 
-#: src/phoneui-incoming-message.c:12
-msgid "New Message"
-msgstr "Mensaje nuevo"
-
-#: src/phoneui-messages.c:23
-msgid "Messages"
-msgstr "Mensajes"
-
-#: src/phoneui-messages.c:32
-msgid "Message"
-msgstr "Mensaje"
-
-#: src/phoneui-sim-auth.c:20
-msgid "SIM Auth"
-msgstr "Identificación SIM"
-
-#: src/phoneui-ussd.c:12
+#: src/phoneui-ussd.c:35
 msgid "Service Data"
 msgstr "Datos del servicio"
 
-#: src/view/call-active-view.c:137 src/view/call-common.c:106
+#: src/view/call-active-view.c:160 src/view/call-common.c:144
 msgid "Speaker"
 msgstr "Altavoz"
 
-#: src/view/call-active-view.c:148
+#: src/view/call-active-view.c:171
 msgid "Mute"
 msgstr "Silenciar"
 
-#: src/view/call-active-view.c:158
+#: src/view/call-active-view.c:181
 msgid "Volume"
 msgstr "Volúmen"
 
-#: src/view/call-active-view.c:171
+#: src/view/call-active-view.c:194
 msgid "Mic"
 msgstr "Micrófono"
 
-#: src/view/call-active-view.c:182 src/view/call-common.c:169
+#: src/view/call-active-view.c:205 src/view/call-common.c:205
 msgid "Release"
 msgstr "Colgar"
 
-#: src/view/call-active-view.c:189 src/view/call-active-view.c:258
+#: src/view/call-active-view.c:212 src/view/call-active-view.c:261
 msgid "Keypad"
 msgstr "Teclado"
 
-#: src/view/call-active-view.c:263
+#: src/view/call-active-view.c:266
 msgid "Hide Keypad"
 msgstr "Ocultar"
 
-#: src/view/call-common.c:98
+#: src/view/call-common.c:129
+msgid "Bluetooth"
+msgstr ""
+
+#: src/view/call-common.c:132
 msgid "Handset"
 msgstr "Normal"
 
-#: src/view/call-common.c:147
+#: src/view/call-common.c:135
+#, fuzzy
+msgid "Headset"
+msgstr "Normal"
+
+#: src/view/call-common.c:183
 msgid "Pickup"
 msgstr "Descolgar"
 
-#: src/view/call-incoming-view.c:48
-msgid "Accept"
-msgstr "Responder"
+#: src/view/contact-list-view.c:71
+msgid "Contacts"
+msgstr "Contactos"
 
-#: src/view/call-incoming-view.c:60
-msgid "Reject"
-msgstr "Rechazar"
-
-#: src/view/contact-delete-view.c:89 src/view/message-delete-view.c:106
-msgid "Do you really want to delete it?"
-msgstr "¿Está seguro de que quiere eliminarlo?"
-
-#: src/view/contact-delete-view.c:94 src/view/contact-list-view.c:313
-#: src/view/contact-show-view.c:622 src/view/message-delete-view.c:109
-#: src/view/message-new-view.c:764
-msgid "Yes"
-msgstr "Sí"
-
-#: src/view/contact-delete-view.c:101 src/view/contact-list-view.c:318
-#: src/view/contact-show-view.c:626 src/view/message-delete-view.c:116
-#: src/view/message-new-view.c:771
-msgid "No"
-msgstr "No"
-
-#: src/view/contact-list-view.c:80 src/view/message-list-view.c:105
-msgid "New"
-msgstr "Nuevo"
-
-#: src/view/contact-list-view.c:94 src/view/message-list-view.c:115
-#: src/view/message-show-view.c:312
-msgid "Options"
-msgstr "Opciones"
-
-#: src/view/contact-list-view.c:112 src/view/contact-show-view.c:358
+#: src/view/contact-list-view.c:96 src/view/contact-view.c:212
 msgid "SMS"
 msgstr "SMS"
 
-#: src/view/contact-list-view.c:120 src/view/message-list-view.c:149
-msgid "Show"
-msgstr "Mostrar"
+#: src/view/contact-list-view.c:103 src/view/message-list-view.c:109
+msgid "New"
+msgstr "Nuevo"
 
-#: src/view/contact-list-view.c:128 src/view/message-list-view.c:138
-#: src/view/message-show-view.c:327 src/view/sim-auth-input-view.c:375
+#: src/view/contact-list-view.c:111 src/view/message-list-view.c:518
+#: src/view/message-list-view.c:523
+msgid "Edit"
+msgstr "Editar"
+
+#: src/view/contact-list-view.c:112 src/view/contact-view.c:219
+#: src/view/message-list-view.c:156 src/view/message-show-view.c:226
+#: src/view/sim-auth-input-view.c:101
 msgid "Delete"
 msgstr "Borrar"
 
-#: src/view/contact-list-view.c:230 src/view/dialer-view.c:242
-#: src/view/message-list-view.c:212 src/view/message-show-view.c:163
-msgid "Compose SMS"
-msgstr "Escribir SMS"
-
-#: src/view/contact-list-view.c:255
-msgid "Show Contact"
-msgstr "Mostrar el contacto"
-
-#: src/view/contact-list-view.c:324
-msgid "Really delete this contact?"
+#: src/view/contact-list-view.c:330
+#, fuzzy
+msgid "Really delete contact details?"
 msgstr "¿Borrar este contacto?"
 
-#: src/view/contact-show-view.c:298 src/view/dialer-view.c:122
-#: src/view/dialog-view.c:49 src/view/message-new-view.c:235
-#: src/view/message-show-view.c:301 src/view/ussd-view.c:71
-msgid "Close"
-msgstr "Cerrar"
+#: src/view/contact-list-view.c:347
+msgid "Failed adding contact."
+msgstr ""
 
-#: src/view/contact-show-view.c:305
-msgid "Add Field"
-msgstr "Añadir campo"
+#: src/view/contact-view.c:110 src/view/message-new-view.c:337
+msgid "Contact"
+msgstr "Contacto"
 
-#: src/view/contact-show-view.c:312
-msgid "Actions"
-msgstr "Acciones"
-
-#: src/view/contact-show-view.c:448 src/view/contact-show-view.c:455
-#: src/view/contact-show-view.c:462 src/view/contact-show-view.c:658
-#: src/view/message-new-view.c:377 src/view/message-new-view.c:561
-#: src/view/message-new-view.c:663
-msgid "Back"
-msgstr "Atrás"
-
-#: src/view/contact-show-view.c:632
-msgid "Really discard all changes?"
-msgstr "¿Descartar los cambios?"
-
-#: src/view/contact-show-view.c:655
-msgid "Edit Field"
-msgstr "Editar campo"
-
-#: src/view/contact-show-view.c:665 src/view/dialer-view.c:160
+#: src/view/contact-view.c:191 src/view/contact-view.c:806
+#: src/view/dialer-view.c:155
 msgid "Save"
 msgstr "Guardar"
 
-#: src/view/contact-show-view.c:672
-msgid "Field: "
-msgstr "Campo: "
+#: src/view/contact-view.c:198
+msgid "Cancel"
+msgstr ""
 
-#: src/view/contact-show-view.c:690
-msgid "Value: "
-msgstr "Valor: "
+#: src/view/contact-view.c:227
+msgid "Add Field"
+msgstr "Añadir campo"
 
-#: src/view/dialer-view.c:95
+#: src/view/contact-view.c:379
+#, fuzzy
+msgid "Deleting the contact failed!"
+msgstr "Borrar contacto"
+
+#: src/view/contact-view.c:408
+msgid "Really delete this contact?"
+msgstr "¿Borrar este contacto?"
+
+#: src/view/contact-view.c:719
+msgid "Updating contact failed."
+msgstr ""
+
+#: src/view/contact-view.c:734
+msgid "Adding the contact failed."
+msgstr ""
+
+#: src/view/contact-view.c:752
+msgid "Failed loading data of saved contact."
+msgstr ""
+
+#: src/view/contact-view.c:813 src/view/message-new-view.c:329
+#: src/view/message-new-view.c:385 src/view/message-new-view.c:421
+msgid "Back"
+msgstr "Atrás"
+
+#: src/view/contact-view.c:820
+msgid "Remove"
+msgstr "Suprimir"
+
+#: src/view/dialer-view.c:70
+msgid "Dialer"
+msgstr "Marcador"
+
+#: src/view/dialer-view.c:92
 msgid "Click to open contactlist."
 msgstr " Pulse para abrir la lista de contactos."
 
-#: src/view/dialer-view.c:129
+#: src/view/dialer-view.c:119 src/view/dialog-view.c:73
+#: src/view/message-new-view.c:277 src/view/message-show-view.c:201
+#: src/view/ussd-view.c:92
+msgid "Close"
+msgstr "Cerrar"
+
+#: src/view/dialer-view.c:126
 msgid "More"
 msgstr "Más"
 
-#: src/view/dialer-view.c:168
+#: src/view/dialer-view.c:163
 msgid "Send SMS"
 msgstr "Enviar SMS"
 
-#: src/view/dialog-view.c:41
-msgid ""
-"Your storage is full. Please delete some messages or you are not going to "
-"receive messages anymore!"
+#: src/view/dialer-view.c:409
+msgid "Cannot initiate call."
 msgstr ""
-"La memoria de mensajes SMS está llena. No podrá recibir mensajes hasta "
-"que "
+
+#: src/view/dialog-view.c:65
+#, fuzzy
+msgid ""
+"Your SIM storage is full. Please delete some messages or you may not receive "
+"them anymore!"
+msgstr ""
+"La memoria de mensajes SMS está llena. No podrá recibir mensajes hasta que "
 "no libere espacio."
 
-#: src/view/dialog-view.c:44
+#: src/view/dialog-view.c:68
 msgid "GSM is not available, because no SIM card is present."
 msgstr ""
-"La tarjeta SIM no está insertada o es incorrecta. La telefonía GSM no "
-"estará "
+"La tarjeta SIM no está insertada o es incorrecta. La telefonía GSM no estará "
 "disponible."
 
-#: src/view/dialog-view.c:46
+#: src/view/dialog-view.c:70
 msgid "Unknown message."
 msgstr "Mensaje desconocido."
 
-#: src/view/message-delete-view.c:173
-msgid "Deleting.."
-msgstr "Borrando.."
+#: src/view/message-list-view.c:95
+msgid "Messages"
+msgstr "Mensajes"
 
-#: src/view/message-list-view.c:102
-msgid "Inbox"
-msgstr "Bandeja de entrada"
+#: src/view/message-list-view.c:118 src/view/message-show-view.c:211
+msgid "Options"
+msgstr "Opciones"
 
-#: src/view/message-list-view.c:130 src/view/message-show-view.c:355
+#: src/view/message-list-view.c:132 src/view/message-show-view.c:264
 msgid "Answer"
 msgstr "Responder"
 
-#: src/view/message-list-view.c:250
-msgid "Show Message"
-msgstr "Mostrar el mensaje"
+#: src/view/message-list-view.c:148 src/view/message-list-view.c:534
+#: src/view/message-show-view.c:254
+msgid "Forward"
+msgstr ""
 
-#: src/view/message-list-view.c:278
-msgid "SMS Answer"
-msgstr "Respuesta al SMS"
+#: src/view/message-list-view.c:165 src/view/message-list-view.c:529
+msgid "Show"
+msgstr "Mostrar"
 
-#: src/view/message-list-view.c:310 src/view/message-show-view.c:193
-msgid "Delete Message"
+#: src/view/message-list-view.c:187 src/view/message-list-view.c:198
+#, fuzzy
+msgid "Loading..."
+msgstr "Cargando... "
+
+#: src/view/message-list-view.c:381 src/view/message-show-view.c:428
+#, fuzzy
+msgid "Deleting the message failed!"
 msgstr "Borrar el mensaje"
 
-#: src/view/message-new-view.c:242
+#: src/view/message-list-view.c:423 src/view/message-show-view.c:457
+#, fuzzy
+msgid "Really delete this message?"
+msgstr "¿Borrar este contacto?"
+
+#: src/view/message-list-view.c:551
+msgid "Error while trying to resolve the number"
+msgstr ""
+
+#: src/view/message-list-view.c:583
+msgid "Error while retrieving messages"
+msgstr ""
+
+#: src/view/message-list-view.c:591
+msgid "There are no messages"
+msgstr ""
+
+#: src/view/message-list-view.c:623
+msgid "Error while retrieving a message"
+msgstr ""
+
+#: src/view/message-new-view.c:104
+msgid "New Message"
+msgstr "Mensaje nuevo"
+
+#: src/view/message-new-view.c:263
+msgid "Enter your message"
+msgstr ""
+
+#: src/view/message-new-view.c:285
 msgid "Continue"
 msgstr "Continuar"
 
-#: src/view/message-new-view.c:321 src/view/message-new-view.c:352
+#: src/view/message-new-view.c:309
+msgid "Define Recipients"
+msgstr "Escoja destinatarios"
+
+#: src/view/message-new-view.c:346
+#, fuzzy
+msgid "Number"
+msgstr "Número: "
+
+#: src/view/message-new-view.c:355
+msgid "Send"
+msgstr "Enviar"
+
+#: src/view/message-new-view.c:379 src/view/message-show-view.c:244
+msgid "Add Contact"
+msgstr "Añadir contacto"
+
+#: src/view/message-new-view.c:392 src/view/message-new-view.c:428
+msgid "Add"
+msgstr "Añadir"
+
+#: src/view/message-new-view.c:418
+msgid "Add Number"
+msgstr "Añadir número"
+
+#: src/view/message-new-view.c:653
+msgid "You have entered<br>an invalid number."
+msgstr ""
+
+#: src/view/message-new-view.c:700 src/view/message-new-view.c:745
 #, c-format
 msgid "%d characters left [%d]"
 msgstr "Disponibles %d caracteres [%d]"
 
-#: src/view/message-new-view.c:374
-msgid "Define Recipients"
-msgstr "Escoja destinatarios"
+#: src/view/message-new-view.c:790
+msgid "Error will trying to resolve number."
+msgstr ""
 
-#: src/view/message-new-view.c:384
-msgid "Send"
-msgstr "Enviar"
+#: src/view/message-new-view.c:823
+msgid "Sending the message failed"
+msgstr ""
 
-#: src/view/message-new-view.c:391 src/view/message-show-view.c:343
-msgid "Add Contact"
-msgstr "Añadir contacto"
-
-#: src/view/message-new-view.c:399
-msgid "Add Number"
-msgstr "Añadir número"
-
-#: src/view/message-new-view.c:407
-msgid "Remove"
-msgstr "Suprimir"
-
-#: src/view/message-new-view.c:558
-msgid "Add a Contact"
-msgstr "Añadir un contacto"
-
-#: src/view/message-new-view.c:568 src/view/message-new-view.c:670
-msgid "Add"
-msgstr "Añadir"
-
-#: src/view/message-new-view.c:660
-msgid "Add a Number"
-msgstr "Añadir un número"
-
-#: src/view/message-new-view.c:759
-msgid "Do you really want to quit?"
+#: src/view/message-new-view.c:859
+#, fuzzy
+msgid "Do you really want to quit writing this message?"
 msgstr ""
 "Si sale ahora, perderá todos los cambios.<br>¿Está seguro de que quiere "
 "salir?"
 
-#: src/view/message-new-view.c:823
-msgid "Sending.."
-msgstr "Enviando.."
+#: src/view/message-show-view.c:81
+msgid "Message"
+msgstr "Mensaje"
 
-#: src/view/message-show-view.c:278
-msgid "From:"
-msgstr "De:"
+#: src/view/sim-auth-input-view.c:87
+msgid "SIM Auth"
+msgstr "Identificación SIM"
 
-#: src/view/message-show-view.c:279
-msgid "Date:"
-msgstr "Fecha:"
-
-#: src/view/message-show-view.c:280
-msgid "Status:"
-msgstr "Estado:"
-
-#: src/view/sim-auth-input-view.c:71
-msgid "Please enter your PIN"
-msgstr "Introduzca el PIN"
-
-#: src/view/sim-auth-input-view.c:76
-msgid "Please enter your PIN2"
-msgstr "Introduzca el PIN2"
-
-#: src/view/sim-auth-input-view.c:81
-msgid "Please enter your PUK"
-msgstr "Introduzca el PUK"
-
-#: src/view/sim-auth-input-view.c:86
-msgid "Please enter your PUK2"
-msgstr "Introduzca el PUK2"
-
-#: src/view/sim-auth-input-view.c:90 src/view/sim-auth-input-view.c:382
+#: src/view/sim-auth-input-view.c:108
 msgid "OK"
 msgstr "Aceptar"
 
-#: src/view/sim-auth-input-view.c:97
+#: src/view/sim-auth-input-view.c:162
+msgid "Please enter your PIN"
+msgstr "Introduzca el PIN"
+
+#: src/view/sim-auth-input-view.c:167
+msgid "Please enter your PIN2"
+msgstr "Introduzca el PIN2"
+
+#: src/view/sim-auth-input-view.c:172
+msgid "Please enter your PUK"
+msgstr "Introduzca el PUK"
+
+#: src/view/sim-auth-input-view.c:177
+msgid "Please enter your PUK2"
+msgstr "Introduzca el PUK2"
+
+#: src/view/sim-auth-input-view.c:183
+msgid "SIM unlocked"
+msgstr ""
+
+#: src/view/sim-auth-input-view.c:190
 msgid "Unknown error"
 msgstr "Error desconocido"
 
-#: src/view/sim-auth-input-view.c:182
-msgid "PIN correct"
-msgstr "PIN correcto"
-
-#: src/view/sim-auth-input-view.c:187
-msgid "Failed"
-msgstr "Falló"
-
-#: src/view/sim-auth-input-view.c:228 src/view/sim-auth-input-view.c:286
-#: src/view/sim-auth-input-view.c:418
-msgid "Checking"
-msgstr "Comprobando"
-
-#: src/view/sim-auth-input-view.c:237
+#: src/view/sim-auth-input-view.c:228
 msgid "PIN wrong"
 msgstr "PIN incorrecto"
 
-#: src/view/sim-auth-input-view.c:246
-msgid "Enter a NEW PIN"
-msgstr "Introduzca el nuevo PIN"
+#: src/view/sim-auth-input-view.c:234
+msgid "PIN Ok"
+msgstr ""
 
-#: src/view/sim-auth-input-view.c:254
-msgid "Confirm your NEW PIN"
-msgstr "Confirme el nuevo PIN"
+#: src/view/sim-auth-input-view.c:251
+msgid "PUK wrong"
+msgstr "PUK incorrecto"
 
-#: src/view/sim-auth-input-view.c:263
-msgid "PIN must be 4-8 chars long"
-msgstr "El PIN debe tener de 4 a 8 caracteres"
+#: src/view/sim-auth-input-view.c:257
+msgid "PUK Ok"
+msgstr ""
 
-#: src/view/sim-auth-input-view.c:271
-msgid "PIN confirmation wrong"
-msgstr "Los PIN no son iguales"
+#: src/view/sim-auth-input-view.c:273 src/view/sim-auth-input-view.c:292
+#, fuzzy
+msgid "Checking..."
+msgstr "Comprobando"
 
-#: src/view/ussd-view.c:67
+#: src/view/sim-auth-input-view.c:281
+#, fuzzy
+msgid "Please enter a new PIN"
+msgstr "Introduzca el PIN"
+
+#: src/view/sim-auth-input-view.c:287
+#, fuzzy
+msgid "Please confirm the new PIN"
+msgstr "Introduzca el PIN"
+
+#: src/view/ussd-view.c:88
 msgid "Data:"
 msgstr "Datos:"
 
@@ -405,26 +410,111 @@ msgid "TUV"
 msgstr "TUV"
 
 #: src/widget/elm_keypad.c:152
-msgid "XYZ"
-msgstr "WXYZ"
+msgid "WXYZ"
+msgstr ""
 
-#~ msgid "Edit"
-#~ msgstr "Editar"
+#, fuzzy
+#~ msgid "Really delete all of %s's details?"
+#~ msgstr "¿Borrar este contacto?"
+
+#~ msgid "New Contact"
+#~ msgstr "Contacto nuevo"
+
+#~ msgid "Accept"
+#~ msgstr "Responder"
+
+#~ msgid "Reject"
+#~ msgstr "Rechazar"
+
+#~ msgid "Do you really want to delete it?"
+#~ msgstr "¿Está seguro de que quiere eliminarlo?"
+
+#~ msgid "Yes"
+#~ msgstr "Sí"
+
+#~ msgid "No"
+#~ msgstr "No"
+
+#~ msgid "Compose SMS"
+#~ msgstr "Escribir SMS"
+
+#~ msgid "Show Contact"
+#~ msgstr "Mostrar el contacto"
+
+#~ msgid "Actions"
+#~ msgstr "Acciones"
+
+#~ msgid "Really discard all changes?"
+#~ msgstr "¿Descartar los cambios?"
+
+#~ msgid "Edit Field"
+#~ msgstr "Editar campo"
+
+#~ msgid "Field: "
+#~ msgstr "Campo: "
+
+#~ msgid "Value: "
+#~ msgstr "Valor: "
+
+#~ msgid "Deleting.."
+#~ msgstr "Borrando.."
+
+#~ msgid "Inbox"
+#~ msgstr "Bandeja de entrada"
+
+#~ msgid "Show Message"
+#~ msgstr "Mostrar el mensaje"
+
+#~ msgid "SMS Answer"
+#~ msgstr "Respuesta al SMS"
+
+#~ msgid "Add a Contact"
+#~ msgstr "Añadir un contacto"
+
+#~ msgid "Add a Number"
+#~ msgstr "Añadir un número"
+
+#~ msgid "Sending.."
+#~ msgstr "Enviando.."
+
+#~ msgid "From:"
+#~ msgstr "De:"
+
+#~ msgid "Date:"
+#~ msgstr "Fecha:"
+
+#~ msgid "Status:"
+#~ msgstr "Estado:"
+
+#~ msgid "PIN correct"
+#~ msgstr "PIN correcto"
+
+#~ msgid "Failed"
+#~ msgstr "Falló"
+
+#~ msgid "Enter a NEW PIN"
+#~ msgstr "Introduzca el nuevo PIN"
+
+#~ msgid "Confirm your NEW PIN"
+#~ msgstr "Confirme el nuevo PIN"
+
+#~ msgid "PIN must be 4-8 chars long"
+#~ msgstr "El PIN debe tener de 4 a 8 caracteres"
+
+#~ msgid "PIN confirmation wrong"
+#~ msgstr "Los PIN no son iguales"
+
+#~ msgid "XYZ"
+#~ msgstr "WXYZ"
 
 #~ msgid "Edit Contact"
 #~ msgstr "Editar contacto"
-
-#~ msgid "Delete Contact"
-#~ msgstr "Borrar contacto"
 
 #~ msgid "Incoming call"
 #~ msgstr "Llamada entrante"
 
 #~ msgid "New PIN saved"
 #~ msgstr "Se ha guardado el nuevo PIN"
-
-#~ msgid "PUK wrong"
-#~ msgstr "PUK incorrecto"
 
 #~ msgid "Active call"
 #~ msgstr "Llamada activa"
@@ -437,12 +527,6 @@ msgstr "WXYZ"
 
 #~ msgid "%d messages"
 #~ msgstr "%d mensajes"
-
-#~ msgid "Number: "
-#~ msgstr "Número: "
-
-#~ msgid "Loading... "
-#~ msgstr "Cargando... "
 
 #~ msgid "No Speaker"
 #~ msgstr "No Altavoz"

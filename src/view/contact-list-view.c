@@ -45,7 +45,6 @@ struct ContactListViewData {
 	Evas_Object *ctx;
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
-	Elm_Genlist_Item *selected;
 };
 static struct ContactListViewData view;
 
@@ -77,7 +76,6 @@ contact_list_view_init()
 	}
 
 	view.list_data.view = VIEW_PTR(view);
-	view.selected = NULL;
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme, "phoneui/contacts/list");
@@ -172,8 +170,13 @@ _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) event_info;
 	Elm_Genlist_Item *it;
 	GHashTable *properties;
+	const Eina_List *contacts;
 
-	it = elm_genlist_selected_item_get(view.list_data.list);
+	contacts = elm_genlist_selected_items_get(view.list_data.list);
+	if( !contacts || eina_list_count(contacts) > 1 )
+		return;
+
+	it = (Elm_Genlist_Item*)eina_list_data_get(contacts);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
 		GVariant *tmp;
@@ -191,8 +194,8 @@ _list_list_longpressed(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
+	(void) event_info;
 
-	view.selected = event_info;
 	evas_object_show(view.ctx);
 }
 
@@ -236,8 +239,14 @@ _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) event_info;
 	Elm_Genlist_Item *it;
 	GHashTable *properties;
+	const Eina_List *contacts;
 
-	it = elm_genlist_selected_item_get(view.list_data.list);
+	// FIXME: messages should support multiple destinations, but for now, they don't
+	contacts = elm_genlist_selected_items_get(view.list_data.list);
+	if( !contacts || eina_list_count(contacts) > 1 )
+		return;
+
+	it = (Elm_Genlist_Item*)eina_list_data_get(contacts);
 	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
 	if (properties) {
 		GVariant *tmp;
@@ -257,14 +266,16 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	GHashTable *properties;
+	const Eina_List *contacts;
 	
 	g_debug("editing selected contact");
 	evas_object_hide(view.ctx);
 
-	if (!view.selected)
+	contacts = elm_genlist_selected_items_get(view.list_data.list);
+	if( !contacts || eina_list_count(contacts) > 1 )
 		return;
 
-	properties = elm_genlist_item_data_get(view.selected);
+	properties = elm_genlist_item_data_get(eina_list_data_get(contacts));
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -280,13 +291,13 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 static void
 _contact_delete_confirm_cb(int result, void *data)
 {
-	(void) data;
 	GHashTable *properties=NULL;
+	Elm_Genlist_Item *contact = (Elm_Genlist_Item*)data;
 
 	if (result != DIALOG_YES)
 		return;
 
-	properties = (GHashTable *) elm_genlist_item_data_get(view.selected);
+	properties = (GHashTable *) elm_genlist_item_data_get(contact);
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -305,14 +316,19 @@ _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
+	const Eina_List *contacts, *c;
+	void *contact;
 
 	evas_object_hide(view.ctx);
 
-	if (!view.selected)
+	contacts = elm_genlist_selected_items_get(view.list_data.list);
+	if( !contacts )
 		return;
 
-	ui_utils_dialog(VIEW_PTR(view), D_("Really delete this contact?"),
-			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, NULL);
+	// FIXME: this should say what contact is being deleted, now...
+	EINA_LIST_FOREACH(contacts, c, contact)
+		ui_utils_dialog(VIEW_PTR(view), D_("Really delete contact details?"),
+				DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, contact);
 }
 
 static void

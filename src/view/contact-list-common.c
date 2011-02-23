@@ -275,6 +275,8 @@ contact_list_add(struct ContactListData *list_data)
 	list_data->index = NULL;
 	list_data->list = elm_genlist_add(win);
 	elm_genlist_horizontal_mode_set(list_data->list, ELM_LIST_LIMIT);
+	elm_genlist_longpress_timeout_set(list_data->list, 0.5);
+	elm_genlist_multi_select_set(list_data->list, EINA_TRUE);
 	evas_object_size_hint_align_set(list_data->list, 0.0, 0.0);
 	elm_object_scale_set(list_data->list, 1.0);
 	itc.item_style = "contact";
