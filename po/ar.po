@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-23 23:50+0000\n"
+"POT-Creation-Date: 2011-02-24 22:45+0000\n"
 "PO-Revision-Date: 2009-04-11 17:06+0200\n"
 "Last-Translator: gfather <mjfahmi@yahoo.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/phoneui-call.c:140 src/view/contact-list-view.c:89
+#: src/phoneui-call.c:140 src/view/contact-list-view.c:91
 #: src/view/contact-view.c:205 src/view/dialer-view.c:133
 #: src/view/message-list-view.c:140 src/view/message-show-view.c:235
 msgid "Call"
@@ -73,34 +73,42 @@ msgstr ""
 msgid "Pickup"
 msgstr ""
 
-#: src/view/contact-list-view.c:71
+#: src/view/contact-list-view.c:73
 msgid "Contacts"
 msgstr "الاسماء"
 
-#: src/view/contact-list-view.c:96 src/view/contact-view.c:212
+#: src/view/contact-list-view.c:98 src/view/contact-view.c:212
 msgid "SMS"
 msgstr "رسائل"
 
-#: src/view/contact-list-view.c:103 src/view/message-list-view.c:109
+#: src/view/contact-list-view.c:105 src/view/message-list-view.c:109
 msgid "New"
 msgstr "جديد"
 
-#: src/view/contact-list-view.c:111 src/view/message-list-view.c:518
+#: src/view/contact-list-view.c:210 src/view/message-list-view.c:518
 #: src/view/message-list-view.c:523
 msgid "Edit"
 msgstr "حرر"
 
-#: src/view/contact-list-view.c:112 src/view/contact-view.c:219
-#: src/view/message-list-view.c:156 src/view/message-show-view.c:226
-#: src/view/sim-auth-input-view.c:101
+#: src/view/contact-list-view.c:212 src/view/contact-list-view.c:224
+#: src/view/contact-view.c:219 src/view/message-list-view.c:156
+#: src/view/message-show-view.c:226 src/view/sim-auth-input-view.c:101
 msgid "Delete"
 msgstr "حذف "
 
-#: src/view/contact-list-view.c:330
+#: src/view/contact-list-view.c:213
+msgid "Unselect"
+msgstr ""
+
+#: src/view/contact-list-view.c:227
+msgid "Unselect all"
+msgstr ""
+
+#: src/view/contact-list-view.c:361
 msgid "Really delete contact details?"
 msgstr ""
 
-#: src/view/contact-list-view.c:347
+#: src/view/contact-list-view.c:397
 msgid "Failed adding contact."
 msgstr ""
 

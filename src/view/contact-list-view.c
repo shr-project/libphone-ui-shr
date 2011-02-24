@@ -43,7 +43,7 @@ struct ContactListViewData {
 	struct View view;
 	struct ContactListData list_data;
 	Evas_Object *ctx;
-	Elm_Ctxpopup_Item *action_edit, *action_del;
+	Elm_Ctxpopup_Item *action_edit, *action_del, *action_unsel;
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
 };
@@ -57,6 +57,7 @@ static void _list_message_number_callback(const char *number, void *data);
 static void _list_message_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_edit_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_delete_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _list_unselect_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType type);
 static void _hide_cb(struct View *view);
 static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
@@ -203,10 +204,13 @@ _list_list_longpressed(void *data, Evas_Object *obj, void *event_info)
 	{
 		if(view.action_del)
 			elm_ctxpopup_item_del(view.action_del);
+		if(view.action_unsel)
+			elm_ctxpopup_item_del(view.action_unsel);
 		if(!view.action_edit)
 			view.action_edit = elm_ctxpopup_item_append(view.ctx, D_("Edit"), NULL, _list_edit_clicked, NULL);
 
 		view.action_del = elm_ctxpopup_item_append(view.ctx, D_("Delete"), NULL, _list_delete_clicked, NULL);
+		view.action_unsel = elm_ctxpopup_item_append(view.ctx, D_("Unselect"), NULL, _list_unselect_clicked, NULL);
 	}
 
 	if(selected_items > 1)
@@ -218,6 +222,9 @@ _list_list_longpressed(void *data, Evas_Object *obj, void *event_info)
 		}
 		if(!view.action_del)
 			view.action_del = elm_ctxpopup_item_append(view.ctx, D_("Delete"), NULL, _list_delete_clicked, NULL);
+		if(view.action_unsel)
+			elm_ctxpopup_item_del(view.action_unsel);
+		view.action_unsel = elm_ctxpopup_item_append(view.ctx, D_("Unselect all"), NULL, _list_unselect_clicked, NULL);
 	}
 
 	evas_object_show(view.ctx);
@@ -353,6 +360,25 @@ _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 	EINA_LIST_FOREACH(contacts, c, contact)
 		ui_utils_dialog(VIEW_PTR(view), D_("Really delete contact details?"),
 				DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, contact);
+}
+
+static void
+_list_unselect_clicked(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) data;
+	(void) obj;
+	(void) event_info;
+	const Eina_List *contacts, *c;
+	void *contact;
+
+	evas_object_hide(view.ctx);
+
+	contacts = elm_genlist_selected_items_get(view.list_data.list);
+	if( !contacts )
+		return;
+
+	EINA_LIST_FOREACH(contacts, c, contact)
+		elm_genlist_item_selected_set(contact, EINA_FALSE);
 }
 
 static void
