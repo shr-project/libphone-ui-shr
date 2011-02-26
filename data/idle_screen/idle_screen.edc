@@ -1,18 +1,3 @@
-/*
-spectra {
-	spectrum {
-		name: "clock";
-		color: 166 166 166 255 0;
-		color: 20 20 20 255 0;
-		}
-	spectrum {
-		name: "bottom";
-		color: 20 20 20 255 0;
-		color: 166 166 166 255 0;
-		}
-	}
-*/
-
 collections {
 	images {
 		image: "background.png" COMP;
@@ -108,14 +93,12 @@ collections {
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				align: 0.0 0.0;
+                aspect: 1 1;
 				rel1 {
-					relative: 1.0 1.0;
-					offset: -148 -268;
+					relative: 0.82 0.6;
 				}
 				rel2 {
-					relative: 1.0 1.0;
-					offset: -20 -140;
+					relative: 0.82 0.78;
 				}
 				image {
 					normal, "logo.png";
@@ -129,22 +112,18 @@ collections {
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				align: 0.5 0.5;
 				color: 255 255 255 255;
 				rel1 {
 					relative: 0.1 0.25;
-					offset: 2 2;
 				}
 				rel2 {
 					relative: 0.5 0.5;
-					offset: -2 -2;
 				}
 				text {
-					text, "SHR";
-					font, "Miso";
-					size, 40;
+					text: "SHR";
+					font: "Miso";
+					size: 40;
 					fit: 1 1;
-					align: 0.0 0.0;
 				}
 			}
 
@@ -161,12 +140,34 @@ collections {
 				rel2 { relative: 1.0 0.0; offset: 0 30; }
 				}
 			description {
+				state: "hvga" 0.0;
+				color: 0 0 0 255;
+				rel1 { relative: 0.0 0.0; }
+				rel2 { relative: 1.0 0.0; offset: 0 25; }
+				}
+			description {
 				state: "hidden" 0.0;
 				inherit: "default" 0.0;
 				rel1 { offset: 0 -150; }
 				rel2 { offset: 0 -120; }
 				}
 			}
+
+        part {
+            name: "gsmContainer";
+            type: GROUP;
+            mouse_events: 0;
+            description {
+                state: "default" 0.0;
+                rel1 { to: "topbar"; relative: 0.0 0.0; offset: 5 5; }
+                rel2 { to: "topbar"; relative: 0.0 1.0; offset: 38 -5; }
+            }
+            description {
+                state: "hvga" 0.0;
+                rel1 { to: "topbar"; relative: 0.0 0.0; offset: 5 5; }
+                rel2 { to: "topbar"; relative: 0.0 1.0; offset: 32 -5; }
+            }
+        }
 
 		part {
 			name: "gsmStrength";
@@ -175,8 +176,8 @@ collections {
 			description {
 				state: "default" 0.0;
 				image { normal: "gsm_no.png"; }
-				rel1 { to: "topbar"; relative: 0.0 0.0; offset: 5 5; }
-				rel2 { to: "topbar"; relative: 0.0 1.0; offset: 38 -5; }
+				rel1 { to: "gsmContainer"; }
+				rel2 { to: "gsmContainer"; }
 				}
 			description {
 				state: "0" 0.0;
@@ -241,9 +242,9 @@ collections {
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				text { text: ""; font: "VeraBd"; size: 18; align: 0.0 0.5; }
-				rel1 { to: "gsmStrength"; relative: 1.0 0.0; offset: 5 0; }
-				rel2 { to: "gsmStrength"; relative: 1.0 1.0; offset: 170 0; }
+				text { text: ""; font: "VeraBd"; align: 0.0 0.5; fit: 0 1; }
+				rel1 { to: "gsmStrength"; relative: 1.0 0.0; offset: 5 1; }
+				rel2 { to: "gsmStrength"; relative: 1.0 1.0; offset: 170 -1; }
 				}
 			}
 
@@ -259,6 +260,23 @@ collections {
 				rel2 { to: "topbar"; relative: 0.0 0.0; offset: 22 22; }
 			}
 		}
+
+        part {
+            name: "batteryContainer";
+            type: GROUP;
+            mouse_events: 0;
+            description {
+                state: "default" 0.0;
+                rel1 { to: "topbar"; relative: 1.0 0.0; offset: -37 5; }
+				rel2 { to: "topbar"; relative: 1.0 1.0; offset: -5 -5; } 
+            }
+            description {
+                state: "hvga" 0.0;
+                rel1 { to: "topbar"; relative: 1.0 0.0; offset: -31 5; }
+				rel2 { to: "topbar"; relative: 1.0 1.0; offset: -5 -5; } 
+            }
+        }
+
 		part {
 			name: "batteryPower";
 			type: IMAGE;
@@ -266,8 +284,8 @@ collections {
 			description {
 				state: "default" 0.0;
 				image { normal: "bat_no.png"; }
-				rel1 { to: "topbar"; relative: 1.0 0.0; offset: -37 5; }
-				rel2 { to: "topbar"; relative: 1.0 1.0; offset: -5 -5; }
+				rel1 { to: "batteryContainer"; }
+				rel2 { to: "batteryContainer"; }
 				}
 			description {
 				state: "10" 0.0;
@@ -332,73 +350,47 @@ collections {
 				}
 			}
 
-#define RESOURCE(__name, __image, __relTo, __offset)							\
+#define RESOURCE(__name, __image, __relTo, __distance)							\
 part {																			\
-	name, __name;																\
-	type, IMAGE;																\
+	name: __name;																\
+	type: IMAGE;																\
 	mouse_events: 0;															\
 	description {																\
 		state: "default" 0.0;													\
+        aspect: 0 0;                                                            \
 		image { normal: __image; }												\
-		rel1 { to: __relTo; relative: 0.0 0.0; }								\
-		rel2 { to: __relTo; relative: 0.0 0.0; }								\
+		rel1 { to: __relTo; relative: __distance 0.0; }							\
+		rel2 { to: __relTo; relative: __distance 1.0; }							\
 		}																		\
 	description {																\
 		state: "active" 0.0;													\
 		inherit: "default" 0.0;													\
-		rel1 { offset: __offset 0; }											\
-		rel2 { offset: -5 20; }													\
+		aspect: 1 1;                											\
 		}																		\
-	}																\
-	program {												\
-		name: __name",active";											\
-		signal: __name",active";										\
-		source: "resourceStateChange";										\
-		action: STATE_SET "active" 0.0;										\
-		target: __name;												\
-	}													\
-	program {												\
-		name: __name",default";											\
-		signal: __name",default";										\
-		source: "resourceStateChange";										\
+	}																			\
+	program {																	\
+		name: __name",active";													\
+		signal: __name",active";												\
+		source: "resourceStateChange";											\
+		action: STATE_SET "active" 0.0;											\
+		target: __name;															\
+	}																			\
+	program {																	\
+		name: __name",default";													\
+		signal: __name",default";												\
+		source: "resourceStateChange";											\
 		action: STATE_SET "default" 0.0;										\
-		target: __name;												\
+		target: __name;															\
 	}
 
-RESOURCE("CPU", "cpu.png", "batteryPower", -25);
-RESOURCE("Display", "display.png", "CPU", -25);
-RESOURCE("Bluetooth", "bluetooth.png", "Display", -17);
-RESOURCE("WiFi", "wifi.png", "Bluetooth", -25);
-RESOURCE("GPS", "gps.png", "WiFi", -25);
-RESOURCE("alarm", "alarm.png", "GPS", -25);
+RESOURCE("CPU", "cpu.png", "batteryPower", -0.5);
+RESOURCE("Display", "display.png", "CPU", -0.6);
+RESOURCE("Bluetooth", "bluetooth.png", "Display", -0.6);
+RESOURCE("WiFi", "wifi.png", "Bluetooth", -0.6);
+RESOURCE("GPS", "gps.png", "WiFi", -0.6);
+RESOURCE("alarm", "alarm.png", "GPS", -0.6);
 
 ///////////////////////////////// CLOCK ////////////////////////////////////////
-
-/*
-		part {
-			name: "clock";
-			type: GRADIENT;
-			mouse_events: 0;
-			description {
-				state: "default" 0.0;
-				rel1 {  relative: 0.0 0.046875; offset: 0 0; }
-				rel2 {  relative: 1.0 0.234375; offset: 0 0; }
-				gradient {
-					type: "linear";
-					spectrum: "clock";
-					rel1 { relative: 0.0 0.0; offset: 0 0; }
-					rel2 { relative: 0.0 1.0; offset: 0 0; }
-					}
-				fill { spread: 0; angle: 0; }
-				}
-			description {
-				state: "hidden" 0.0;
-				inherit: "default" 0.0;
-				rel1 { offset: 0 -200; }
-				rel2 { offset: 0 -200; }
-				}
-			}
-*/
 
 		part {
 			name: "clock";
@@ -411,6 +403,12 @@ RESOURCE("alarm", "alarm.png", "GPS", -25);
 				rel2 {  to: "topbar"; relative: 1.0 1.0; offset: 0 120; }
 				}
 			description {
+				state: "hvga" 0.0;
+				image { normal: "clock.png"; }
+				rel1 {  to: "topbar"; relative: 0.0 1.0; }
+				rel2 {  to: "topbar"; relative: 1.0 1.0; offset: 0 90; }
+				}
+			description {
 				state: "hidden" 0.0;
 				inherit: "default" 0.0;
 				rel1 { offset: 0 -120; }
@@ -421,46 +419,37 @@ RESOURCE("alarm", "alarm.png", "GPS", -25);
 		part {
 			name: "time";
 			type: TEXT;
+            mouse_events: 0;
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				rel1 { to: "clock"; relative: 0.0 0.0; offset: 0 0; }
-				rel2 { to: "clock"; relative: 1.0 0.0; offset: 0 70; }
-				text {
-					text: "";
-					font: "Sans";
-					size: 80;
-					}
+				rel1 { to: "clock"; relative: 0.0 -0.15; }
+				rel2 { to: "clock"; relative: 1.0 0.7; }
+				text { text: "00:00"; font: "Sans"; fit: 0 1; }
 				}
 			}
 		part {
 			name: "date";
 			type: TEXT;
+            mouse_events: 0;
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				rel1 { to: "time"; relative: 0.0 1.0; offset: 0 0; }
-				rel2 { to: "time"; relative: 1.0 1.0; offset: 0 25; }
-				text {
-					text: "";
-					font: "Sans";
-					size: 24;
-					}
+				rel1 { to: "clock"; relative: 0.0 0.50; }
+				rel2 { to: "clock"; relative: 1.0 0.75; }
+				text { text: "DD.MM.YYYY"; font: "Sans"; fit: 0 1; }
 				}
 			}
 		part {
 			name: "profile";
 			type: TEXT;
+            mouse_events: 0;
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				rel1 { to: "date"; relative: 0.0 1.0; offset: 0 0; }
-				rel2 { to: "date"; relative: 1.0 1.0; offset: 0 15; }
-				text {
-					text: "";
-					font: "Sans";
-					size: "18";
-					}
+				rel1 { to: "clock"; relative: 0.0 0.75; }
+				rel2 { to: "clock"; relative: 1.0 0.9; }
+				text { text: ""; font: "Sans"; fit: 0 1; }
 				}
 			}
 
@@ -470,96 +459,65 @@ RESOURCE("alarm", "alarm.png", "GPS", -25);
 part {																			\
 	name: __name"Notification";													\
 	type: RECT;																	\
+    mouse_events: 0;															\
 	description {																\
 		state: "default" 0.0;													\
 		color: 20 20 20 255;													\
-		rel1 { to: __relTo; relative: 0.0 1.0; offset: 0 0; }					\
-		rel2 { to: __relTo; relative: 1.0 1.0; offset: 0 0; }					\
+		rel1 { to: __relTo; relative: 0.0 1.0; }					\
+		rel2 { to: __relTo; relative: 0.0 1.8; }					\
 		}																		\
 	description {																\
 		state: "active" 0.0;													\
 		inherit: "default" 0.0;													\
-		rel2 { offset: 0 85; }													\
+		rel1 { relative: 0.0 1.0; }											    \
+		rel2 { relative: 1.0 1.8; }											    \
 		}																		\
 	}																			\
 part {																			\
 	name: __name"HeadingBg";													\
 	type: RECT;																	\
+    mouse_events: 0;															\
 	description {																\
 		state: "default" 0.0;													\
-		fixed: 1 1;																\
 		color: 85 85 85 255;													\
-		rel1 { to: __name"Notification"; relative: 0.0 0.0; offset: 5 5; }		\
-		rel2 { to: __name"Notification"; relative: 1.0 0.0; offset: -10 0; }	\
-		}																		\
-	description {																\
-		state: "active" 0.0;													\
-		inherit: "default" 0.0;													\
-		rel1 { offset: 5 5; }													\
-		rel2 { offset: -10 35; }												\
+		rel1 { to: __name"Notification"; relative: 0.01 0.01; }		\
+		rel2 { to: __name"Notification"; relative: 0.99 0.4; }	\
 		}																		\
 	}																			\
 part {																			\
 	name: __name"Heading";														\
 	type: TEXT;																	\
+    mouse_events: 0;															\
 	description {																\
 		state: "default" 0.0;													\
 		color: 255 255 255 255;													\
-		rel1 { to: __name"HeadingBg"; relative: 0.0 0.0; offset: 5 0; }			\
-		rel2 { to: __name"HeadingBg"; relative: 1.0 1.0; offset: -10 0; }		\
-		text {																	\
-			text: "";															\
-			font: "Sans";													\
-			size:20;															\
-			align: 0.0 0.0;														\
-			}																	\
-		}																		\
-	description {																\
-		state: "active" 0.0;													\
-		inherit: "default" 0.0;													\
-		text { text: __heading; }												\
+		rel1 { to: __name"HeadingBg"; relative: 0.02 -0.1; }			\
+		rel2 { to: __name"HeadingBg"; relative: 0.98 1.1; }		\
+		text { text: __heading; font: "Sans"; fit: 0 1; align: 0.0 0.0; }			\
 		}																		\
 	}																			\
 part {																			\
 	name: __name"Line1";														\
 	type: TEXT;																	\
+    mouse_events: 0;															\
 	description {																\
 		state: "default" 0.0;													\
 		color: 255 255 255 255;													\
-		rel1 { to: __name"Heading"; relative: 0.0 1.0; offset: 0 0; }			\
-		rel2 { to: __name"Heading"; relative: 1.0 1.0; offset: 0 20; }			\
-		text {																	\
-			text: "";															\
-			font: "Sans";													\
-			size: 16;															\
-			align: 0.0 0.0;														\
-			}																	\
-		}																		\
-	description {																\
-		state: "active" 0.0;													\
-		inherit: "default" 0.0;													\
-		text { text: __line1; }													\
+		rel1 { to: __name"Notification"; relative: 0.02 0.4; }		\
+		rel2 { to: __name"Notification"; relative: 0.98 0.7; }			\
+		text { text: __line1; font: "Sans"; fit: 0 1; align: 0.0 0.0; }								\
 		}																		\
 	}																			\
 part {																			\
 	name: __name"Line2";														\
 	type: TEXT;																	\
+    mouse_events: 0;															\
 	description {																\
 		state: "default" 0.0;													\
 		color: 255 255 255 255;													\
-		rel1 { to: __name"Line1"; relative: 0.0 1.0; offset: 0 0; }				\
-		rel2 { to: __name"Line1"; relative: 1.0 1.0; offset: 0 20; }			\
-		text {																	\
-			text: "";															\
-			font: "Sans";													\
-			size: 16;															\
-			align: 0.0 0.0;														\
-			}																	\
-		}																		\
-	description {																\
-		state: "active" 0.0;													\
-		inherit: "default" 0.0;													\
-		text { text: __line2; }													\
+		rel1 { to: __name"Notification"; relative: 0.02 0.7; }				\
+		rel2 { to: __name"Notification"; relative: 0.98 1.0; }			\
+		text { text: __line2; font: "Sans"; fit: 0 1; align: 0.0 0.0; }			\
 		}																		\
 	}																			\
 program {																		\
@@ -568,10 +526,7 @@ program {																		\
 	source: "activate_"__name;													\
 	action: STATE_SET "active" 0.0;												\
 	target: __name"Notification";												\
-	target: __name"HeadingBg";													\
-	target: __name"Heading";													\
-	target: __name"Line1";														\
-	target: __name"Line2";														\
+    transition: LINEAR 0.5;                                                     \
 	}																			\
 program {																		\
 	name: "deactivate_"__name;													\
@@ -579,13 +534,10 @@ program {																		\
 	source: "deactivate_"__name;												\
 	action: STATE_SET "default" 0.0;											\
 	target: __name"Notification";												\
-	target: __name"HeadingBg";													\
-	target: __name"Heading";													\
-	target: __name"Line1";														\
-	target: __name"Line2";														\
+    transition: LINEAR 0.5;                                                     \
 	}
 
-// name, icon, heading, line1, line2, relative_to
+//            name,           icon,             heading, line1, line2, relative_to
 NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 
 //////////////////////////////// MIDDLE BOTTOM /////////////////////////////////
@@ -596,16 +548,14 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				fixed: 1 1;
 				image { normal: "unfinishedTasks.png"; }
-				rel1 { to: "bottom"; relative: 1.0 0.0; offset: 0 -75; }
-				rel2 { to: "bottom"; relative: 1.0 0.0; offset: -5 -5; }
+				rel1 { to: "bottomContainer"; relative: 0.9 -0.6; }
+				rel2 { to: "bottomContainer"; relative: 0.9 -0.05; }
 				}
 			description {
 				state: "active" 0.0;
 				inherit: "default" 0.0;
-				rel1 { offset: -75 -75; }
-				rel2 { offset: -5 -5; }
+				aspect: 1 1;
 				}
 			}
 
@@ -616,9 +566,9 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				rel1 { to: "unfinishedTasks"; relative: 0.0 0.0; offset: 0 10 ; }
-				rel2 { to: "unfinishedTasks"; relative: 1.0 0.0; offset: 0 20; }
-				text { text: ""; font: "Sans"; size: 25; }
+				rel1 { to: "unfinishedTasks"; relative: 0.0 -0.1; }
+				rel2 { to: "unfinishedTasks"; relative: 1.0 0.6; }
+				text { text: "0"; font: "Sans"; fit: 0 1; }
 				}
 			}
 
@@ -627,6 +577,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "show";
 			source: "unfinishedTasks";
 			action: STATE_SET "active" 0.0;
+            transition: LINEAR 0.5;
 			target: "unfinishedTasks";
 			}
 		program {
@@ -634,6 +585,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "hide";
 			source: "unfinishedTasks";
 			action: STATE_SET "default" 0.0;
+            transition: LINEAR 0.5;
 			target: "unfinishedTasks";
 			}
 
@@ -643,16 +595,14 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				fixed: 1 1;
 				image { normal: "unreadMessages.png"; }
-				rel1 { to: "unfinishedTasks"; relative: 0.0 0.0; offset: 0 0; }
-				rel2 { to: "unfinishedTasks"; relative: 0.0 0.0; offset: -5 70; }
+				rel1 { to: "unfinishedTasks"; relative: -0.6 0.0; }
+				rel2 { to: "unfinishedTasks"; relative: -0.6 1.0; }
 				}
 			description {
 				state: "active" 0.0;
 				inherit: "default" 0.0;
-				rel1 { offset: -75 0; }
-				rel2 { offset: -5 70; }
+				aspect: 1 1;
 				}
 			}
 
@@ -663,9 +613,9 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				rel1 { to: "unreadMessages"; relative: 0.0 0.0; offset: 0 10 ; }
-				rel2 { to: "unreadMessages"; relative: 1.0 0.0; offset: 0 20; }
-				text { text: ""; font: "Sans"; size: 25; }
+				rel1 { to: "unreadMessages"; relative: 0.0 -0.1; }
+				rel2 { to: "unreadMessages"; relative: 1.0 0.6; }
+				text { text: "0"; font: "Sans"; fit: 0 1; }
 				}
 			}
 
@@ -674,6 +624,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "show";
 			source: "unreadMessages";
 			action: STATE_SET "active" 0.0;
+            transition: LINEAR 0.5;
 			target: "unreadMessages";
 			}
 		program {
@@ -681,6 +632,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "hide";
 			source: "unreadMessages";
 			action: STATE_SET "default" 0.0;
+            transition: LINEAR 0.5;
 			target: "unreadMessages";
 			}
 
@@ -690,16 +642,14 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				fixed: 1 1;
 				image { normal: "missedCalls.png"; }
-				rel1 { to: "unreadMessages"; relative: 0.0 0.0; offset: 0 0; }
-				rel2 { to: "unreadMessages"; relative: 0.0 0.0; offset: -5 70; }
+				rel1 { to: "unreadMessages"; relative: -0.6 0.0; }
+				rel2 { to: "unreadMessages"; relative: -0.6 1.0; }
 				}
 			description {
 				state: "active" 0.0;
 				inherit: "default" 0.0;
-				rel1 { offset: -75 0; }
-				rel2 { offset: -5 70; }
+				aspect: 1 1;
 				}
 			}
 
@@ -710,9 +660,9 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			description {
 				state: "default" 0.0;
 				color: 255 255 255 255;
-				rel1 { to: "missedCalls"; relative: 0.0 0.0; offset: 0 10 ; }
-				rel2 { to: "missedCalls"; relative: 1.0 0.0; offset: 0 20; }
-				text { text: ""; font: "Sans"; size: 25; }
+				rel1 { to: "missedCalls"; relative: 0.0 -0.1; }
+				rel2 { to: "missedCalls"; relative: 1.0 0.6; }
+				text { text: "0"; font: "Sans"; fit: 0 1; }
 				}
 			}
 
@@ -721,6 +671,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "show";
 			source: "missedCalls";
 			action: STATE_SET "active" 0.0;
+            transition: LINEAR 0.5;
 			target: "missedCalls";
 			}
 		program {
@@ -728,36 +679,28 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "hide";
 			source: "missedCalls";
 			action: STATE_SET "default" 0.0;
+            transition: LINEAR 0.5;
 			target: "missedCalls";
 			}
 
 //////////////////////////////// BOTTOM ////////////////////////////////////////
-/*
 		part {
-			name: "bottom";
-			type: GRADIENT;
+			name: "bottomContainer";
+			type: RECT;
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				rel1 { relative: 0.0 0.8125; offset: 0 0; }
-				rel2 { relative: 1.0 1.0; offset: 0 0;}
-				gradient {
-					type: "linear";
-					spectrum: "bottom";
-					rel1 { relative: 0.0 0.0; offset: 0 0; }
-					rel2 { relative: 0.0 1.0; offset: 0 0; }
-					}
-				fill { spread: 0; angle: 0; }
+                color: 0 0 0 0;
+				rel1 { relative: 0.0 1.0; offset: 0 -120; }
+				rel2 { relative: 1.0 1.0; }
 				}
 			description {
-				state: "hidden" 0.0;
-				inherit: "default" 0.0;
-				color: 0 0 0 255;
-				rel1 { relative: 0.0 1.0; offset: 0 120; }
-				rel2 { relative: 1.0 1.0; offset: 0 0;}
+				state: "hvga" 0.0;
+                color: 0 0 0 0;
+				rel1 { relative: 0.0 1.0; offset: 0 -90; }
+				rel2 { relative: 1.0 1.0; }
 				}
 			}
-*/
 
 		part {
 			name: "bottom";
@@ -774,6 +717,12 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 				inherit: "default" 0.0;
 				rel1 { offset: 0 0; }
 				rel2 { offset: 0 120; }
+				}
+			description {
+				state: "hvga" 0.0;
+				image { normal: "bottom.png"; }
+				rel1 { relative: 0.0 1.0; offset: 0 -90; }
+				rel2 { relative: 1.0 1.0; }
 				}
 			}
 
@@ -813,10 +762,18 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 				rel1 { to: "slider-bg"; relative: 0.0 0.0; }
 				rel2 { to: "slider-bg"; relative: 1.0 1.0; }
 				}
+			description {
+				state: "hvga" 0.0;
+				fixed: 1 1;
+				min: 95 55;
+				color: 0 0 0 0;
+				rel1 { to: "slider-bg"; relative: 0.0 0.0; }
+				rel2 { to: "slider-bg"; relative: 1.0 1.0; }
+				}
 			dragable {
 				confine: "slider-bg";
 				events: "slider";
-				x: 1 1 0;
+				x: 1 7 100;
 				y: 0 0 0;
 				}
 			}
@@ -878,6 +835,34 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 
 	programs {
 		program {
+			name: "set_hvga";
+			signal: "set";
+			source: "hvga";
+			action: STATE_SET "hvga" 0.0;
+			target: "topbar";
+            target: "gsmContainer";
+            target: "batteryContainer";
+			target: "clock";
+			target: "bottomContainer";
+			target: "bottom";
+			target: "slider";
+        }
+
+		program {
+			name: "set_default";
+			signal: "set";
+			source: "default";
+			action: STATE_SET "default" 0.0;
+			target: "topbar";
+            target: "gsmContainer";
+            target: "batteryContainer";
+			target: "clock";
+			target: "bottomContainer";
+			target: "bottom";
+			target: "slider";
+        }
+
+		program {
 			name: "clock_init";
 			signal: "clock_init";
 			source: "";
@@ -904,10 +889,7 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 
 		program {
 			name: "unlock3";
-			action: STATE_SET "default" 0.0;
-			target: "bottom";
-			target: "topbar";
-			target: "clock";
+			action: SIGNAL_EMIT "set" "default";
 			}
 
 		program {
