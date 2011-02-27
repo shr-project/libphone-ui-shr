@@ -646,15 +646,19 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 	}
 
 	it = elm_genlist_first_item_get(view.list);
-	it_data = elm_genlist_item_data_get(it);
-	if ((gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
-		first_timestamp = (long) g_value_get_int(gval_tmp);
+	if (it) {
+		it_data = elm_genlist_item_data_get(it);
+		if (it_data && (gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
+			first_timestamp = (long) g_value_get_int(gval_tmp);
+		}
 	}
 
 	it = elm_genlist_last_item_get(view.list);
-	it_data = elm_genlist_item_data_get(it);
-	if ((gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
-		last_timestamp = (long) g_value_get_int(gval_tmp);
+	if (it) {
+		it_data = elm_genlist_item_data_get(it);
+		if (it_data && (gval_tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
+			last_timestamp = (long) g_value_get_int(gval_tmp);
+		}
 	}
 
 	if ((view.msg_start == 0 && new_timestamp >= first_timestamp) ||
