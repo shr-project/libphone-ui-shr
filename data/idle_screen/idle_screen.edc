@@ -884,12 +884,6 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 		program {
 			name: "unlock2";
 			action: SIGNAL_EMIT "unlockScreen" "slider";
-			after: "unlock3";
-			}
-
-		program {
-			name: "unlock3";
-			action: SIGNAL_EMIT "set" "default";
 			}
 
 		program {

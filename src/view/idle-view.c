@@ -24,6 +24,7 @@
 
 #include <Elementary.h>
 #include <Evas.h>
+#include <Ecore_X.h>
 #include <phoneui/phoneui-utils.h>
 #include <phoneui/phoneui-info.h>
 #include <phoneui/phoneui.h>
@@ -77,7 +78,26 @@ idle_screen_view_show()
 void
 idle_screen_view_hide()
 {
+    Evas_Object *win;
+    Ecore_X_Window root_window;
+    int width, height;
+
 	ui_utils_view_hide(VIEW_PTR(view));
+
+    win = ui_utils_view_window_get(VIEW_PTR(view));
+
+    /* get screensize */
+    root_window = ecore_x_window_root_get (elm_win_xwindow_get (win));
+    ecore_x_window_size_get (root_window, &width, &height);
+
+    if (height <= 480) {
+        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"set", "hvga");
+    }
+    else {
+        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"set", "default");
+    }
 }
 
 void
@@ -90,7 +110,8 @@ int
 idle_screen_view_init()
 {
 	Evas_Object *win;
-	int ret;
+    Ecore_X_Window root_window;
+	int ret, width, height;
 
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
 				NULL, NULL, NULL);
@@ -107,6 +128,19 @@ idle_screen_view_init()
 				"clock_init", "");
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
+
+    /* get screensize */
+    root_window = ecore_x_window_root_get (elm_win_xwindow_get (win));
+    ecore_x_window_size_get (root_window, &width, &height);
+
+    if (height <= 480) {
+        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"set", "hvga");
+    }
+    else {
+        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"set", "default");
+    }
 
 	elm_win_fullscreen_set(win, 1);
 	elm_win_layer_set(win, 200);
