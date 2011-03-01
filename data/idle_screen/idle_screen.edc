@@ -129,6 +129,22 @@ collections {
 
 /////////////////////////////////// TOPBAR /////////////////////////////////////
 		part {
+			name: "topbarContainer";
+			type: GROUP;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 { relative: 0.0 0.0; offset: 0 -150; }
+				rel2 { relative: 1.0 0.0; offset: 0 -120; }
+				}
+			description {
+				state: "hvga" 0.0;
+				rel1 { relative: 0.0 0.0; offset: 0 -115; }
+				rel2 { relative: 1.0 0.0; offset: 0 -90; }
+				}
+			}
+
+		part {
 			name: "topbar";
 			type: RECT;
 			mouse_events: 0;
@@ -147,8 +163,8 @@ collections {
 			description {
 				state: "hidden" 0.0;
 				inherit: "default" 0.0;
-				rel1 { offset: 0 -150; }
-				rel2 { offset: 0 -120; }
+				rel1 { to: "topbarContainer"; relative: 0.0 0.0; offset: 0 0; }
+				rel2 { to: "topbarContainer"; relative: 1.0 1.0; offset: 0 0; }
 				}
 			}
 
@@ -390,6 +406,21 @@ RESOURCE("GPS", "gps.png", "WiFi", -0.6);
 RESOURCE("alarm", "alarm.png", "GPS", -0.6);
 
 ///////////////////////////////// CLOCK ////////////////////////////////////////
+		part {
+			name: "clockContainer";
+			type: GROUP;
+			mouse_events: 0;
+			description {
+				state: "default" 0.0;
+				rel1 { relative: 0.0 0.0; offset: 0 -120; }
+				rel2 { relative: 1.0 0.0; offset: 0 0; }
+				}
+			description {
+				state: "hvga" 0.0;
+				rel1 { relative: 0.0 0.0; offset: 0 -90; }
+				rel2 { relative: 1.0 0.0; offset: 0 0; }
+				}
+			}
 
 		part {
 			name: "clock";
@@ -410,8 +441,8 @@ RESOURCE("alarm", "alarm.png", "GPS", -0.6);
 			description {
 				state: "hidden" 0.0;
 				inherit: "default" 0.0;
-				rel1 { offset: 0 -120; }
-				rel2 { offset: 0 0; }
+				rel1 { to: "clockContainer"; relative: 0.0 0.0; offset: 0 0; }
+				rel2 { to: "clockContainer"; relative: 1.0 1.0; offset: 0 0; }
 				}
 			}
 
@@ -548,8 +579,8 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			description {
 				state: "default" 0.0;
 				image { normal: "unfinishedTasks.png"; }
-				rel1 { to: "bottomContainer"; relative: 0.9 -0.6; }
-				rel2 { to: "bottomContainer"; relative: 0.9 -0.05; }
+				rel1 { to: "bottomContainer"; relative: 0.9 -1.6; }
+				rel2 { to: "bottomContainer"; relative: 0.9 -1.05; }
 				}
 			description {
 				state: "active" 0.0;
@@ -685,19 +716,17 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 //////////////////////////////// BOTTOM ////////////////////////////////////////
 		part {
 			name: "bottomContainer";
-			type: RECT;
+			type: GROUP;
 			mouse_events: 0;
 			description {
 				state: "default" 0.0;
-				color: 0 0 0 0;
-				rel1 { relative: 0.0 1.0; offset: 0 -120; }
-				rel2 { relative: 1.0 1.0; }
+				rel1 { relative: 0.0 1.0; }
+				rel2 { relative: 1.0 1.0; offset: 0 120; }
 				}
 			description {
 				state: "hvga" 0.0;
-				color: 0 0 0 0;
-				rel1 { relative: 0.0 1.0; offset: 0 -90; }
-				rel2 { relative: 1.0 1.0; }
+				rel1 { relative: 0.0 1.0; }
+				rel2 { relative: 1.0 1.0; offset: 0 90; }
 				}
 			}
 
@@ -714,8 +743,8 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			description {
 				state: "hidden" 0.0;
 				inherit: "default" 0.0;
-				rel1 { offset: 0 0; }
-				rel2 { offset: 0 120; }
+				rel1 { to: "bottomContainer"; relative: 0.0 0.0; offset: 0 0; }
+				rel2 { to: "bottomContainer"; relative: 1.0 1.0; offset: 0 0; }
 				}
 			description {
 				state: "hvga" 0.0;
@@ -829,7 +858,6 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 				rel2.to: "slider";
 				}
 			}
-
 		}
 
 	programs {
@@ -838,9 +866,11 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "set";
 			source: "hvga";
 			action: STATE_SET "hvga" 0.0;
+			target: "topbarContainer";
 			target: "topbar";
 			target: "gsmContainer";
 			target: "batteryContainer";
+			target: "clockContainer";
 			target: "clock";
 			target: "bottomContainer";
 			target: "bottom";
@@ -852,9 +882,11 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			signal: "set";
 			source: "default";
 			action: STATE_SET "default" 0.0;
+			target: "topbarContainer";
 			target: "topbar";
 			target: "gsmContainer";
 			target: "batteryContainer";
+			target: "clockContainer";
 			target: "clock";
 			target: "bottomContainer";
 			target: "bottom";
@@ -903,4 +935,4 @@ NOTIFICATION("incomingCall", "incomingCall.png", "", "", "", "clock");
 			}
 		}
 	}
-
+}
