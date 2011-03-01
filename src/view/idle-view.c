@@ -47,6 +47,7 @@ struct IdleScreenViewData {
 /* No need to pass the active window everywhere, as we don't allow multiple windows. */
 static struct IdleScreenViewData view;
 
+static void _set_edje_size();
 static void _resource_status(void *data, const char *resource, gboolean state, GHashTable *properties);
 static void _capacity_change(void *data, int capacity);
 static void _network_status(void *data, GHashTable *properties);
@@ -63,10 +64,10 @@ static void _update_signal_strength(int strength);
 static void
 _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 {
-        (void) view;
-        (void) win;
-        (void) event_info;
-        idle_screen_view_hide();
+	(void) view;
+	(void) win;
+	(void) event_info;
+	idle_screen_view_hide();
 }
 
 void
@@ -78,26 +79,8 @@ idle_screen_view_show()
 void
 idle_screen_view_hide()
 {
-    Evas_Object *win;
-    Ecore_X_Window root_window;
-    int width, height;
-
 	ui_utils_view_hide(VIEW_PTR(view));
-
-    win = ui_utils_view_window_get(VIEW_PTR(view));
-
-    /* get screensize */
-    root_window = ecore_x_window_root_get (elm_win_xwindow_get (win));
-    ecore_x_window_size_get (root_window, &width, &height);
-
-    if (height <= 480) {
-        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
-				"set", "hvga");
-    }
-    else {
-        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
-				"set", "default");
-    }
+	_set_edje_size();
 }
 
 void
@@ -110,8 +93,7 @@ int
 idle_screen_view_init()
 {
 	Evas_Object *win;
-    Ecore_X_Window root_window;
-	int ret, width, height;
+	int ret;
 
 	ret = ui_utils_view_init(VIEW_PTR(view), ELM_WIN_BASIC, D_("Idle_Screen"),
 				NULL, NULL, NULL);
@@ -122,25 +104,14 @@ idle_screen_view_init()
 
 	ui_utils_view_delete_callback_set(VIEW_PTR(view), _delete_cb);
 	ui_utils_view_layout_set(VIEW_PTR(view), IDLE_SCREEN_THEME,
-			  "phoneui/idle_screen/idle_screen");
+				"phoneui/idle_screen/idle_screen");
 
 	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"clock_init", "");
 
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 
-    /* get screensize */
-    root_window = ecore_x_window_root_get (elm_win_xwindow_get (win));
-    ecore_x_window_size_get (root_window, &width, &height);
-
-    if (height <= 480) {
-        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
-				"set", "hvga");
-    }
-    else {
-        edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
-				"set", "default");
-    }
+	_set_edje_size();
 
 	elm_win_fullscreen_set(win, 1);
 	elm_win_layer_set(win, 200);
@@ -226,6 +197,29 @@ idle_screen_view_update_alarm(const int alarm)
 			edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 						"alarm,default", "resourceStateChange");
 		}
+	}
+}
+
+static void
+_set_edje_size()
+{
+	Evas_Object *win;
+	Ecore_X_Window root_window;
+	int width, height;
+
+	win = ui_utils_view_window_get(VIEW_PTR(view));
+
+	/* get screensize */
+	root_window = ecore_x_window_root_get (elm_win_xwindow_get (win));
+	ecore_x_window_size_get (root_window, &width, &height);
+
+	if (height <= 480) {
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"set", "hvga");
+	}
+	else {
+		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
+				"set", "default");
 	}
 }
 
