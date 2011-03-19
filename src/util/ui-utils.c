@@ -369,7 +369,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 
-	if (strlen(label)  // workaround segfault
+	if (strlen(label))  // workaround segfault
 		tmp = g_strdup_printf("<font align=center>%s</font>", label);
 	else 
 		tmp = g_strdup_printf("<font align=center>Dialog</font>");
