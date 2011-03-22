@@ -1,0 +1,646 @@
+# Swedish translation for libphone-ui-shr.
+# This file is put in the public domain.
+# John Gustafsson <jamminjohn@users.sourceforge.net>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libphone-ui-shr\n"
+"Report-Msgid-Bugs-To: shr-devel@lists.shr-project.org\n"
+"POT-Creation-Date: 2011-03-22 21:31+0100\n"
+"PO-Revision-Date: 2011-03-23 00:25+0100\n"
+"Last-Translator: John Gustafsson <jamminjohn@users.sourceforge.net>\n"
+"Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/phoneui-dialog.c:34
+msgid "Information"
+msgstr "Information"
+
+#: src/phoneui-call.c:140
+#: src/view/message-list-view.c:140
+#: src/view/dialer-view.c:133
+#: src/view/message-show-view.c:235
+#: src/view/contact-view.c:205
+#: src/view/contact-list-view.c:91
+msgid "Call"
+msgstr "Ring"
+
+#: src/util/ui-utils-contacts.c:232
+#: src/util/ui-utils.c:433
+#: src/util/ui-utils.c:543
+#: src/view/contact-view.c:198
+#: src/view/sim-manager-view.c:198
+#: src/view/sim-manager-view.c:504
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: src/util/ui-utils.c:400
+#: src/util/ui-utils.c:669
+msgid "Ok"
+msgstr "Ok"
+
+#: src/util/ui-utils.c:411
+msgid "Yes"
+msgstr "Ja"
+
+#: src/util/ui-utils.c:422
+msgid "No"
+msgstr "Nej"
+
+#: src/view/quick-settings-view.c:90
+msgid "Quick-settings"
+msgstr "Snabbinställningar"
+
+#: src/view/quick-settings-view.c:119
+msgid "Profile/Power"
+msgstr "Profil/Ström"
+
+#: src/view/quick-settings-view.c:121
+msgid "Network"
+msgstr "Nätverk"
+
+#: src/view/quick-settings-view.c:183
+#: src/view/quick-settings-view.c:184
+msgid "Forbid"
+msgstr "Förbjud"
+
+#: src/view/quick-settings-view.c:183
+#: src/view/quick-settings-view.c:184
+msgid "Allow"
+msgstr "Tillåt"
+
+#: src/view/quick-settings-view.c:193
+msgid "Lock"
+msgstr "Lås"
+
+#: src/view/quick-settings-view.c:200
+msgid "Suspend"
+msgstr "Vänteläge"
+
+#: src/view/quick-settings-view.c:207
+msgid "Shutdown"
+msgstr "Stäng av"
+
+#: src/view/quick-settings-view.c:243
+msgid "Connected"
+msgstr "Ansluten"
+
+#: src/view/quick-settings-view.c:243
+msgid "Disconnected"
+msgstr "Frånkopplad"
+
+#: src/view/quick-settings-view.c:249
+msgid "Sharing"
+msgstr "Delar"
+
+#: src/view/quick-settings-view.c:249
+msgid "Not sharing"
+msgstr "Delar inte"
+
+#: src/view/quick-settings-view.c:277
+msgid "Failed setting the profile."
+msgstr "Misslyckades med att ställa in profil."
+
+#: src/view/quick-settings-view.c:357
+msgid "Failed to retrieve the current profile."
+msgstr "Misslyckades med att hämta nuvarande profil."
+
+#: src/view/quick-settings-view.c:403
+msgid "Do you really want to<br>shutdown the phone?"
+msgstr "Vill du verkligen<br>stänga av telefonen?"
+
+#: src/view/quick-settings-view.c:589
+msgid "Activating PDP failed."
+msgstr "Misslyckades med att aktivera PDP."
+
+#: src/view/quick-settings-view.c:603
+msgid "De-Activating PDP failed."
+msgstr "Misslyckades med att inaktivera PDP."
+
+#: src/view/ussd-view.c:88
+msgid "Data:"
+msgstr "Data:"
+
+#: src/view/ussd-view.c:92
+#: src/view/message-new-view.c:277
+#: src/view/dialer-view.c:119
+#: src/view/dialog-view.c:73
+#: src/view/message-show-view.c:201
+msgid "Close"
+msgstr "Stäng"
+
+#: src/view/message-new-view.c:104
+msgid "New Message"
+msgstr "Nytt meddelande"
+
+#: src/view/message-new-view.c:263
+msgid "Enter your message"
+msgstr "Skriv ditt meddelande"
+
+#: src/view/message-new-view.c:285
+msgid "Continue"
+msgstr "Fortsätt"
+
+#: src/view/message-new-view.c:309
+msgid "Define Recipients"
+msgstr "Ange mottagare"
+
+#: src/view/message-new-view.c:329
+#: src/view/message-new-view.c:385
+#: src/view/message-new-view.c:421
+#: src/view/contact-view.c:813
+msgid "Back"
+msgstr "Tillbaka"
+
+#: src/view/message-new-view.c:337
+#: src/view/contact-view.c:110
+msgid "Contact"
+msgstr "Kontakt"
+
+#: src/view/message-new-view.c:346
+msgid "Number"
+msgstr "Nummer"
+
+#: src/view/message-new-view.c:355
+msgid "Send"
+msgstr "Skicka"
+
+#: src/view/message-new-view.c:379
+#: src/view/message-show-view.c:244
+msgid "Add Contact"
+msgstr "Lägg till kontakt"
+
+#: src/view/message-new-view.c:392
+#: src/view/message-new-view.c:428
+msgid "Add"
+msgstr "Lägg till"
+
+#: src/view/message-new-view.c:418
+msgid "Add Number"
+msgstr "Lägg till nummer"
+
+#: src/view/message-new-view.c:653
+msgid "You have entered<br>an invalid number."
+msgstr "Du har angett<br>ett ogiltigt nummer."
+
+#: src/view/message-new-view.c:700
+#: src/view/message-new-view.c:745
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "%d tecken kvar [%d]"
+
+#: src/view/message-new-view.c:790
+msgid "Error will trying to resolve number."
+msgstr "Fel vid försök att slå upp nummer."
+
+#: src/view/message-new-view.c:823
+msgid "Sending the message failed"
+msgstr "Misslyckades med att skicka meddelandet"
+
+#: src/view/message-new-view.c:859
+msgid "Do you really want to quit writing this message?"
+msgstr "Vill du verkligen avsluta skrivandet av detta meddelande?"
+
+#: src/view/sim-auth-input-view.c:87
+msgid "SIM Auth"
+msgstr "SIM-autentisering"
+
+#: src/view/sim-auth-input-view.c:101
+#: src/view/message-list-view.c:156
+#: src/view/message-show-view.c:226
+#: src/view/contact-view.c:219
+#: src/view/sim-manager-view.c:870
+#: src/view/contact-list-view.c:212
+#: src/view/contact-list-view.c:224
+msgid "Delete"
+msgstr "Ta bort"
+
+#: src/view/sim-auth-input-view.c:108
+msgid "OK"
+msgstr "Ok"
+
+#: src/view/sim-auth-input-view.c:162
+msgid "Please enter your PIN"
+msgstr "Ange PIN"
+
+#: src/view/sim-auth-input-view.c:167
+msgid "Please enter your PIN2"
+msgstr "Ange din PIN2"
+
+#: src/view/sim-auth-input-view.c:172
+msgid "Please enter your PUK"
+msgstr "Ange PUK"
+
+#: src/view/sim-auth-input-view.c:177
+msgid "Please enter your PUK2"
+msgstr "Ange din PUK2"
+
+#: src/view/sim-auth-input-view.c:183
+msgid "SIM unlocked"
+msgstr "SIM upplåst"
+
+#: src/view/sim-auth-input-view.c:190
+msgid "Unknown error"
+msgstr "Okänt fel"
+
+#: src/view/sim-auth-input-view.c:228
+msgid "PIN wrong"
+msgstr "Felaktig PIN"
+
+#: src/view/sim-auth-input-view.c:234
+msgid "PIN Ok"
+msgstr "PIN ok"
+
+#: src/view/sim-auth-input-view.c:251
+msgid "PUK wrong"
+msgstr "Felaktig PUK"
+
+#: src/view/sim-auth-input-view.c:257
+msgid "PUK Ok"
+msgstr "PUK ok"
+
+#: src/view/sim-auth-input-view.c:273
+#: src/view/sim-auth-input-view.c:292
+msgid "Checking..."
+msgstr "Kontrollerar..."
+
+#: src/view/sim-auth-input-view.c:281
+msgid "Please enter a new PIN"
+msgstr "Ange en ny PIN"
+
+#: src/view/sim-auth-input-view.c:287
+msgid "Please confirm the new PIN"
+msgstr "Bekräfta den nya PIN-koden"
+
+#: src/view/contact-list-common.c:294
+#: src/view/message-list-view.c:187
+#: src/view/message-list-view.c:198
+#: src/view/sim-manager-view.c:882
+msgid "Loading..."
+msgstr "Hämtar..."
+
+#: src/view/message-list-view.c:95
+msgid "Messages"
+msgstr "Meddelanden"
+
+#: src/view/message-list-view.c:109
+#: src/view/contact-list-view.c:105
+msgid "New"
+msgstr "Ny"
+
+#: src/view/message-list-view.c:118
+#: src/view/message-show-view.c:211
+#: src/view/sim-manager-view.c:836
+msgid "Options"
+msgstr "Alternativ"
+
+#: src/view/message-list-view.c:132
+#: src/view/message-show-view.c:264
+msgid "Answer"
+msgstr "Svara"
+
+#: src/view/message-list-view.c:148
+#: src/view/message-list-view.c:534
+#: src/view/message-show-view.c:254
+msgid "Forward"
+msgstr "Vidarebefodra"
+
+#: src/view/message-list-view.c:165
+#: src/view/message-list-view.c:529
+msgid "Show"
+msgstr "Visa"
+
+#: src/view/message-list-view.c:381
+#: src/view/message-show-view.c:428
+msgid "Deleting the message failed!"
+msgstr "Misslyckades med att ta bort meddelandet!"
+
+#: src/view/message-list-view.c:423
+#: src/view/message-show-view.c:457
+msgid "Really delete this message?"
+msgstr "Verkligen ta bort detta meddelande?"
+
+#: src/view/message-list-view.c:518
+#: src/view/message-list-view.c:523
+#: src/view/sim-manager-view.c:862
+#: src/view/contact-list-view.c:210
+msgid "Edit"
+msgstr "Redigera"
+
+#: src/view/message-list-view.c:551
+msgid "Error while trying to resolve the number"
+msgstr "Fel vid försök att slå upp numret"
+
+#: src/view/message-list-view.c:583
+msgid "Error while retrieving messages"
+msgstr "Fel vid hämtning av meddelanden"
+
+#: src/view/message-list-view.c:591
+msgid "There are no messages"
+msgstr "Det finns inga meddelanden"
+
+#: src/view/message-list-view.c:623
+msgid "Error while retrieving a message"
+msgstr "Fel vid hämtning av ett meddelande"
+
+#: src/view/call-incoming-view.c:72
+msgid "Accept"
+msgstr "Ta emot"
+
+#: src/view/call-incoming-view.c:84
+msgid "Reject"
+msgstr "Avvisa"
+
+#: src/view/idle-view.c:98
+msgid "Idle_Screen"
+msgstr "Skärm vid inaktivitet"
+
+#: src/view/views.h:39
+msgid "(unknown)"
+msgstr "(okänd)"
+
+#: src/view/views.h:40
+msgid "(no number)"
+msgstr "(inget nummer)"
+
+#: src/view/call-common.c:129
+msgid "Bluetooth"
+msgstr "Blåtand"
+
+#: src/view/call-common.c:132
+msgid "Handset"
+msgstr "Handenhet"
+
+# http://www.datatermgruppen.se/fragor-och-svar.html#f152
+#: src/view/call-common.c:135
+msgid "Headset"
+msgstr "Mikrofonlur"
+
+#: src/view/call-common.c:144
+#: src/view/call-active-view.c:160
+msgid "Speaker"
+msgstr "Högtalare"
+
+#: src/view/call-common.c:183
+msgid "Pickup"
+msgstr "Ta upp"
+
+#: src/view/call-common.c:205
+#: src/view/call-active-view.c:205
+msgid "Release"
+msgstr "Lägg på"
+
+#: src/view/phone-log-view.c:81
+msgid "Phonelog"
+msgstr "Samtalslista"
+
+#: src/view/phone-log-view.c:124
+msgid "received"
+msgstr "mottagna"
+
+#: src/view/phone-log-view.c:127
+msgid "outgoing"
+msgstr "utgående"
+
+#: src/view/phone-log-view.c:131
+msgid "missed"
+msgstr "missade"
+
+#: src/view/phone-log-view.c:135
+msgid "all"
+msgstr "alla"
+
+#: src/view/phone-log-view.c:292
+msgid "Contact lookup error."
+msgstr "Fel vid uppslagning av kontakt."
+
+#: src/view/phone-log-view.c:328
+msgid "Cannot retrieve calls list."
+msgstr "Kan inte hämta samtalslista."
+
+#: src/view/dialer-view.c:70
+msgid "Dialer"
+msgstr "Telefon"
+
+#: src/view/dialer-view.c:92
+msgid "Click to open contactlist."
+msgstr "Klicka för att öppna kontaktlista."
+
+#: src/view/dialer-view.c:126
+msgid "More"
+msgstr "Mer"
+
+#: src/view/dialer-view.c:155
+#: src/view/contact-view.c:191
+#: src/view/contact-view.c:806
+#: src/view/sim-manager-view.c:494
+msgid "Save"
+msgstr "Spara"
+
+#: src/view/dialer-view.c:163
+msgid "Send SMS"
+msgstr "Skicka SMS"
+
+#: src/view/dialer-view.c:409
+msgid "Cannot initiate call."
+msgstr "Kan inte initiera samtal."
+
+#: src/view/dialog-view.c:65
+msgid "Your SIM storage is full. Please delete some messages or you may not receive them anymore!"
+msgstr "Ditt SIM-minne är fullt. Ta bort ett par meddelanden för annars kan du inte ta emot några längre!"
+
+#: src/view/dialog-view.c:68
+msgid "GSM is not available, because no SIM card is present."
+msgstr "GSM är inte tillgängligt, eftersom inget SIM-kort finnns."
+
+#: src/view/dialog-view.c:70
+msgid "Unknown message."
+msgstr "Okänt meddelande."
+
+#: src/view/message-show-view.c:81
+msgid "Message"
+msgstr "Meddelande"
+
+#: src/view/contact-view.c:212
+#: src/view/contact-list-view.c:98
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-view.c:227
+msgid "Add Field"
+msgstr "Lägg till fält"
+
+#: src/view/contact-view.c:379
+msgid "Deleting the contact failed!"
+msgstr "Misslyckades med att ta bort kontakt!"
+
+#: src/view/contact-view.c:408
+#: src/view/sim-manager-view.c:699
+msgid "Really delete this contact?"
+msgstr "Verkligen ta bort denna kontakt?"
+
+#: src/view/contact-view.c:719
+msgid "Updating contact failed."
+msgstr "Misslyckades med att uppdatera kontakt."
+
+#: src/view/contact-view.c:734
+msgid "Adding the contact failed."
+msgstr "Misslyckades med att lägga till kontakt."
+
+#: src/view/contact-view.c:752
+msgid "Failed loading data of saved contact."
+msgstr "Misslyckades med att hämta data för sparad kontakt."
+
+#: src/view/contact-view.c:820
+msgid "Remove"
+msgstr "Radera"
+
+#: src/view/call-active-view.c:171
+msgid "Mute"
+msgstr "Tyst"
+
+#: src/view/call-active-view.c:181
+msgid "Volume"
+msgstr "Volym"
+
+#: src/view/call-active-view.c:194
+msgid "Mic"
+msgstr "Mikrofon"
+
+#: src/view/call-active-view.c:212
+#: src/view/call-active-view.c:261
+msgid "Keypad"
+msgstr "Knappsats"
+
+#: src/view/call-active-view.c:266
+msgid "Hide Keypad"
+msgstr "Dölj knappsats"
+
+#: src/view/sim-manager-view.c:179
+msgid "Select Contact"
+msgstr "Välj kontakt"
+
+#: src/view/sim-manager-view.c:206
+msgid "Select"
+msgstr "Välj"
+
+#: src/view/sim-manager-view.c:296
+msgid "Failed to write to SIM."
+msgstr "Misslyckades med att skriva till SIM."
+
+#: src/view/sim-manager-view.c:357
+msgid "Failed retrieving Phonebook Info."
+msgstr "Misslyckades med att hämta telefonboksinformation."
+
+#: src/view/sim-manager-view.c:412
+msgid "Failed to retrieve contact."
+msgstr "Misslyckades med att hämta kontakt."
+
+#: src/view/sim-manager-view.c:435
+msgid "Name:"
+msgstr "Namn:"
+
+#: src/view/sim-manager-view.c:461
+msgid "Number:"
+msgstr "Nummer:"
+
+#: src/view/sim-manager-view.c:556
+msgid "Importing contact failed"
+msgstr "Misslyckades med att importera kontakt."
+
+#: src/view/sim-manager-view.c:563
+msgid "Contact successfully imported"
+msgstr "Kontakt har importerats"
+
+#: src/view/sim-manager-view.c:590
+msgid "Import had errors! Failed entries are marked."
+msgstr "Fel vid import! Misslyckade poster är markerade."
+
+#: src/view/sim-manager-view.c:596
+msgid "All contacts added succesfully"
+msgstr "Lyckades lägga till alla kontakter"
+
+#: src/view/sim-manager-view.c:663
+msgid "Error while deleting entry!"
+msgstr "Fel vid borttagning av post!"
+
+#: src/view/sim-manager-view.c:761
+msgid "Failed retrieving SIM Phonebook."
+msgstr "Misslyckades med att hämta SIM-telefonbok."
+
+#: src/view/sim-manager-view.c:802
+msgid "SIM Manager"
+msgstr "SIM-hanterare"
+
+#: src/view/sim-manager-view.c:820
+msgid "Import all"
+msgstr "Importera alla"
+
+#: src/view/sim-manager-view.c:828
+msgid "Copy to SIM"
+msgstr "Kopiera till SIM"
+
+#: src/view/sim-manager-view.c:854
+msgid "Import"
+msgstr "Importera"
+
+#: src/view/contact-list-view.c:73
+msgid "Contacts"
+msgstr "Kontakter"
+
+#: src/view/contact-list-view.c:213
+msgid "Unselect"
+msgstr "Avmarkera"
+
+#: src/view/contact-list-view.c:227
+msgid "Unselect all"
+msgstr "Avmarkera allt"
+
+#: src/view/contact-list-view.c:361
+msgid "Really delete contact details?"
+msgstr "Verkligen ta bort kontaktdetaljer?"
+
+#: src/view/contact-list-view.c:397
+msgid "Failed adding contact."
+msgstr "Misslyckades med att lägga till kontakt."
+
+#: src/widget/elm_keypad.c:145
+msgid "ABC"
+msgstr "ABC"
+
+#: src/widget/elm_keypad.c:146
+msgid "DEF"
+msgstr "DEF"
+
+#: src/widget/elm_keypad.c:147
+msgid "GHI"
+msgstr "GHI"
+
+#: src/widget/elm_keypad.c:148
+msgid "JKL"
+msgstr "JKL"
+
+#: src/widget/elm_keypad.c:149
+msgid "MNO"
+msgstr "MNO"
+
+#: src/widget/elm_keypad.c:150
+msgid "PQRS"
+msgstr "PQRS"
+
+#: src/widget/elm_keypad.c:151
+msgid "TUV"
+msgstr "TUV"
+
+#: src/widget/elm_keypad.c:152
+msgid "WXYZ"
+msgstr "WXYZ"
+
+#: src/phoneui-ussd.c:35
+msgid "Service Data"
+msgstr "Tjänstedata"
+
