@@ -113,44 +113,6 @@ call_common_contact_callback(GError *error, GHashTable *contact, void *_data)
 }
 
 
-
-void
-call_common_window_update_state(struct CallActiveViewData *win,
-				enum SoundState state, enum SoundStateType type)
-{
-	const char *state_string = "";
-	int speaker_state = 0;
-
-	switch (state) {
-	case SOUND_STATE_SPEAKER:
-		speaker_state = 1;
-		switch (type) {
-		case SOUND_STATE_TYPE_BLUETOOTH:
-			state_string = D_("Bluetooth");
-			break;
-		case SOUND_STATE_TYPE_HANDSET:
-			state_string = D_("Handset");
-			break;
-		case SOUND_STATE_TYPE_HEADSET:
-			state_string = D_("Headset");
-			break;
-		default:
-			speaker_state = 0; /*rollback*/
-			break;
-		}
-		break;
-	case SOUND_STATE_IDLE:
-	case SOUND_STATE_CALL:
-		state_string = D_("Speaker");
-		speaker_state = 0;
-		break;
-	default:
-		break;
-	}
-
-	elm_toggle_state_set(win->speaker_toggle, speaker_state);
-}
-
 static void
 _foreach_new_active(struct CallActiveViewData *win, int id)
 {
@@ -224,18 +186,6 @@ call_common_active_call_get_last_id()
 }
 
 int
-call_common_set_sound_state(enum SoundState state, enum SoundStateType type)
-{
-	phoneui_utils_sound_state_set(state, type);
-	if (active_calls_list) {
-		g_queue_foreach(active_calls_list,
-				(GFunc) call_common_window_update_state,
-				GINT_TO_POINTER(state));
-	}
-	return 0;
-}
-
-int
 call_common_active_call_add(struct CallActiveViewData *win)
 {
 	/* if it's not the first call, update all the windows */
@@ -246,7 +196,7 @@ call_common_active_call_add(struct CallActiveViewData *win)
 	/*init */
 	/* if first, init state */
 	else {
-		call_common_set_sound_state(SOUND_STATE_CALL, SOUND_STATE_TYPE_NULL);
+		phoneui_utils_sound_mode_set(FREE_SMARTPHONE_AUDIO_MODE_CALL, NULL, NULL);
 		g_debug("Initialized active calls list");
 		active_calls_list = g_queue_new();
 	}
@@ -301,7 +251,8 @@ call_common_active_call_remove(int id)
 		g_debug("Freed active calls list");
 		g_queue_free(active_calls_list);
 		active_calls_list = NULL;
-		call_common_set_sound_state(SOUND_STATE_IDLE, SOUND_STATE_TYPE_NULL);
+		phoneui_utils_sound_mode_set
+			(FREE_SMARTPHONE_AUDIO_MODE_NORMAL, NULL, NULL);
 	}
 	return 0;
 }
