@@ -764,10 +764,21 @@ _process_message(gpointer _message, gpointer _data)
 
 	tmp = g_hash_table_lookup(message, "@Contacts");
 	if (tmp) {
-		char *path = phoneui_utils_contact_get_dbus_path
-						(g_variant_get_int32(tmp));
-		phoneui_utils_contact_get(path, _contact_lookup, it);
-		free(path);
+	        if (g_variant_type_is_array(g_variant_get_type(tmp))) {
+		        /*use last the last contact*/
+			char *path = phoneui_utils_contact_get_dbus_path
+			            (g_variant_get_int32
+			            (g_variant_get_child_value
+			            (tmp,g_variant_n_children(tmp)-1)));
+			phoneui_utils_contact_get(path, _contact_lookup, it);
+	                free(path);	    
+		} else if (g_variant_is_of_type(tmp,G_VARIANT_TYPE_INT32)) {
+		        char *path = phoneui_utils_contact_get_dbus_path
+				    (g_variant_get_int32(tmp));
+		        phoneui_utils_contact_get(path, _contact_lookup, it);
+	                free(path);
+		}
+		
 	}
 
 	g_hash_table_destroy(message);
