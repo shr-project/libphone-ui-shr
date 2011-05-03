@@ -4,6 +4,7 @@
  *		Tom "TAsn" Hacohen <tom@stosb.com>
  *		Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
  *		David Kozub <zub@linux.fjfi.cvut.cz>
+ *		Christ van Willegen <x@ik.nu>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
