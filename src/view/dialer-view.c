@@ -23,25 +23,36 @@
 
 #include <phoneui/phoneui.h>
 #include <phoneui/phoneui-utils-calls.h>
+#include <phoneui-utils-contacts.h>
 #include <string.h>
+#include <glib.h>
 
 #include "views.h"
 #include "widget/elm_keypad.h"
 #include "common-utils.h"
 #include "util/ui-utils.h"
+#include "contact-list-common.h"
+
 
 /*TODO: remove the many hacks here
  * Fix the scale hack, shouldn't exist :|
  */
 #include "phoneui-shr.h"
 
+void fill_suggest(int *contacts, GList *suggest_data);
+static void _process_entry(void *_entry, void *_data);
+
+#define MAX_SUGGEST 7
 
 struct DialerViewData {
 	struct View parent;
+	GList *suggest_data;
+	int contacts;
 	char number[65]; /*FIXME this hackish copy */
+	char suggestions[MAX_SUGGEST][65];
 	int length; /*At least while this hack exists, cache length */
-	Evas_Object *keypad, *bt_options, *bt_call, *bt_exit, *hv, *bx,
-		*bt_save, *bt_message;
+	Evas_Object *keypad, *bt_options, *bt_suggest, *bt_call, *bt_exit, *hv, *hv2, *bx, *bx2,
+		*bt_save, *bt_message, *bt_suggest_contact[MAX_SUGGEST];
 	Evas_Object *text_number, *text_number_info, *delete_text_icon,
 		*delete_text_button;
 };
@@ -54,8 +65,10 @@ static void _dialer_delete_clicked_cb(void *_data, Evas_Object * o, void *event_
 static void _dialer_keypad_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_number_clicked_cb(void *_data, Evas_Object * o, const char *emission, const char *source);
+static void _dialer_suggest_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_options_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_call_clicked_cb(void *data, Evas_Object * obj, void *event_info);
+static void _dialer_suggest_contact_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_contact_add_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_message_clicked_cb(void *data, Evas_Object * obj, void *event_info);
 static void _dialer_call_initiated_cb(GError *error, int call_id, void *userdata);
@@ -89,7 +102,7 @@ dialer_view_init()
 
 	view.text_number_info = elm_label_add(win);
 	elm_label_label_set(view.text_number_info,
-			    D_("Click to open contactlist."));
+			    D_("Click to open contact list."));
 	ui_utils_view_swallow(VIEW_PTR(view), "text_number_info", view.text_number_info);
 	evas_object_show(view.text_number_info);
 
@@ -122,6 +135,13 @@ dialer_view_init()
 	ui_utils_view_swallow(VIEW_PTR(view), "button_exit", view.bt_exit);
 	evas_object_show(view.bt_exit);
 
+	view.bt_suggest = elm_button_add(win);
+	elm_button_label_set(view.bt_suggest, D_("Suggest"));
+	evas_object_smart_callback_add(view.bt_suggest, "clicked",
+				       _dialer_suggest_clicked_cb, NULL);
+	ui_utils_view_swallow(VIEW_PTR(view), "button_suggest", view.bt_suggest);
+	evas_object_show(view.bt_suggest);
+
 	view.bt_options = elm_button_add(win);
 	elm_button_label_set(view.bt_options, D_("More"));
 	evas_object_smart_callback_add(view.bt_options, "clicked",
@@ -140,6 +160,34 @@ dialer_view_init()
 					"number",
 					_dialer_number_clicked_cb,
 					NULL);
+
+	view.contacts = 0;
+	view.suggest_data = NULL;
+	fill_suggest(&view.contacts, view.suggest_data);
+
+	/* Suggest */
+	view.hv2 = elm_hover_add(win);
+	elm_hover_parent_set(view.hv2, win);
+	elm_hover_target_set(view.hv2, view.bt_suggest);
+
+	view.bx2 = elm_box_add(win);
+	elm_box_horizontal_set(view.bx2, 0);
+	elm_box_homogenous_set(view.bx2, 1);
+	evas_object_show(view.bx2);
+
+	int iSuggest;
+
+	for (iSuggest = MAX_SUGGEST - 1; iSuggest >= 0; --iSuggest) {
+		view.bt_suggest_contact[iSuggest] = elm_button_add(win);
+		elm_button_label_set(view.bt_suggest_contact[iSuggest], D_("Contact"));
+		evas_object_size_hint_min_set(view.bt_suggest_contact[iSuggest], 130, 80);
+		evas_object_smart_callback_add(view.bt_suggest_contact[iSuggest], "clicked",
+				_dialer_suggest_contact_clicked_cb, GINT_TO_POINTER(iSuggest));
+		evas_object_show(view.bt_suggest_contact[iSuggest]);
+		elm_box_pack_end(view.bx2, view.bt_suggest_contact[iSuggest]);
+	}
+
+	elm_hover_content_set(view.hv2, "top", view.bx2);
 
 	/* Options */
 	view.hv = elm_hover_add(win);
@@ -182,6 +230,21 @@ dialer_view_is_init()
 }
 
 void
+fill_suggest(int *contacts, GList *suggest_data)
+{
+	phoneui_utils_contacts_get(contacts, _process_entry, suggest_data);
+}
+
+static void
+_process_entry(void *_entry, void *_data)
+{
+	(void) _data;
+	GHashTable *entry = (GHashTable *)_entry;
+
+	view.suggest_data = g_list_prepend(view.suggest_data, entry);
+}
+
+void
 dialer_view_deinit()
 {
 	ui_utils_view_deinit(VIEW_PTR(view));
@@ -189,22 +252,31 @@ dialer_view_deinit()
 	evas_object_smart_callback_del(view.keypad, "clicked",
 				       _dialer_keypad_clicked_cb);
 	evas_object_del(view.keypad);
+	evas_object_del(view.bt_suggest);
 	evas_object_del(view.bt_options);
 	evas_object_del(view.bt_call);
 	evas_object_del(view.bt_exit);
 	evas_object_del(view.bt_message);
 	evas_object_del(view.bt_save);
+	int iSuggest;
+	for (iSuggest = 0; iSuggest < MAX_SUGGEST; ++iSuggest) {
+		evas_object_del(view.bt_suggest_contact[iSuggest]);
+	}
 	evas_object_del(view.bx);
+	evas_object_del(view.bx2);
 	evas_object_del(view.hv);
+	evas_object_del(view.hv2);
 	evas_object_del(view.text_number);
 	evas_object_del(view.text_number_info);
 	evas_object_del(view.delete_text_button);
+	g_list_free(view.suggest_data);
 }
 
 void
 dialer_view_show()
 {
 	evas_object_hide(view.hv);
+	evas_object_hide(view.hv2);
 	ui_utils_view_show(VIEW_PTR(view));
 }
 
@@ -226,6 +298,63 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 }
 
 static void
+_dialer_suggest_clicked_cb(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) data;
+	(void) obj;
+	(void) event_info;
+
+	int iSuggest;
+	for (iSuggest = 0; iSuggest < MAX_SUGGEST; ++iSuggest) {
+		elm_button_label_set(view.bt_suggest_contact[iSuggest], D_(""));
+		evas_object_hide(view.bt_suggest_contact[iSuggest]);
+	}
+
+	GList *it = g_list_first(view.suggest_data);
+	int cSuggest = 0;
+	while (it && cSuggest < MAX_SUGGEST) {
+		GHashTable *properties = (GHashTable *) it->data;
+		if (properties) {
+			GVariant *tmp;
+			const gchar *sPhone = NULL;
+			const gchar *sName = NULL;
+
+			tmp = g_hash_table_lookup(properties, "Mobile phone");
+			if(tmp) {
+				sPhone = g_variant_get_string(tmp, NULL);
+			}
+			tmp = g_hash_table_lookup(properties, "Phone");
+			if(tmp) {
+				sPhone = g_variant_get_string(tmp, NULL);
+			}
+
+			if (sPhone) {
+				if (strstr(sPhone, view.number) != NULL) {
+					strcpy(view.suggestions[cSuggest], sPhone);
+
+					tmp = g_hash_table_lookup(properties, "Name");
+					if(tmp) {
+						sName = g_variant_get_string(tmp, NULL);
+					}
+				}
+			}
+
+			if (sName) {
+				elm_button_label_set(view.bt_suggest_contact[cSuggest], sName);
+				evas_object_show(view.bt_suggest_contact[cSuggest]);
+				++cSuggest;
+			}
+		}
+
+		it = g_list_next(it);
+	}
+
+	if (cSuggest) {
+		evas_object_show(view.hv2);
+	}
+}
+
+static void
 _dialer_options_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
@@ -241,6 +370,20 @@ _dialer_exit_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	dialer_view_hide();
+}
+
+static void
+_dialer_suggest_contact_clicked_cb(void *data, Evas_Object * obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	int contact = GPOINTER_TO_INT(data);
+
+	strcpy(view.number, view.suggestions[contact]);
+	view.length = strlen(view.number);
+
+	_dialer_number_update();
+	evas_object_hide(view.hv2);
 }
 
 static void
