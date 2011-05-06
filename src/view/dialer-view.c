@@ -173,7 +173,7 @@ dialer_view_init()
 
 	view.bx2 = elm_box_add(win);
 	elm_box_horizontal_set(view.bx2, 0);
-	elm_box_homogenous_set(view.bx2, 1);
+	elm_box_homogeneous_set(view.bx2, 1);
 	evas_object_show(view.bx2);
 
 	int iSuggest;
@@ -197,7 +197,7 @@ dialer_view_init()
 
 	view.bx = elm_box_add(win);
 	elm_box_horizontal_set(view.bx, 0);
-	elm_box_homogenous_set(view.bx, 1);
+	elm_box_homogeneous_set(view.bx, 1);
 	evas_object_show(view.bx);
 
 	view.bt_save = elm_button_add(win);

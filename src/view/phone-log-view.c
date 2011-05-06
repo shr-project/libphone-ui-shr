@@ -114,7 +114,7 @@ int phone_log_view_init()
 
 	view.toolbar = elm_toolbar_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "toolbar", view.toolbar);
-	elm_toolbar_homogenous_set(view.toolbar, 1);
+	elm_toolbar_homogeneous_set(view.toolbar, 1);
 	elm_toolbar_mode_shrink_set(view.toolbar, ELM_TOOLBAR_SHRINK_NONE);
 	elm_toolbar_align_set(view.toolbar, 0.0);
 	elm_toolbar_icon_size_set(view.toolbar, 16);

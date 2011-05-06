@@ -301,7 +301,7 @@ window_inwin_dialog(struct Window *win, const char *label, GList * buttons,
 	Evas_Object *inwin = elm_win_inwin_add(window_evas_object_get(win));
 
 	Evas_Object *bx = elm_box_add(window_evas_object_get(win));
-	elm_box_homogenous_set(bx, 1);
+	elm_box_homogeneous_set(bx, 1);
 
 	Evas_Object *e = elm_label_add(window_evas_object_get(win));
 	elm_object_text_set(e, label);
@@ -310,7 +310,7 @@ window_inwin_dialog(struct Window *win, const char *label, GList * buttons,
 
 	Evas_Object *bx2 = elm_box_add(window_evas_object_get(win));
 	elm_box_horizontal_set(bx2, 1);
-	elm_box_homogenous_set(bx2, 1);
+	elm_box_homogeneous_set(bx2, 1);
 
 	for (buttons = g_list_first(buttons); buttons;
 	     buttons = g_list_next(buttons)) {

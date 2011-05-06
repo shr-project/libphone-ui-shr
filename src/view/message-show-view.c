@@ -219,7 +219,7 @@ message_show_view_init(char* path, GHashTable *properties)
 
 	box = elm_box_add(win);
 	elm_box_horizontal_set(box, 0);
-	elm_box_homogenous_set(box, 1);
+	elm_box_homogeneous_set(box, 1);
 	evas_object_show(box);
 
 	obj = elm_button_add(win);

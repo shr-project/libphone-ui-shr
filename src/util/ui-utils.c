@@ -285,7 +285,7 @@ ui_utils_view_inwin_dialog(struct View *view, const char *label, GList *buttons,
 	Evas_Object *inwin = elm_win_inwin_add(ui_utils_view_window_get(view));
 
 	Evas_Object *bx = elm_box_add(ui_utils_view_window_get(view));
-	elm_box_homogenous_set(bx, 1);
+	elm_box_homogeneous_set(bx, 1);
 
 	Evas_Object *e = elm_label_add(ui_utils_view_window_get(view));
 	elm_object_text_set(e, label);
@@ -294,7 +294,7 @@ ui_utils_view_inwin_dialog(struct View *view, const char *label, GList *buttons,
 
 	Evas_Object *bx2 = elm_box_add(ui_utils_view_window_get(view));
 	elm_box_horizontal_set(bx2, 1);
-	elm_box_homogenous_set(bx2, 1);
+	elm_box_homogeneous_set(bx2, 1);
 
 	for (buttons = g_list_first(buttons); buttons;
 	     buttons = g_list_next(buttons)) {
@@ -391,7 +391,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 
 	box2 = elm_box_add(win);
 	elm_box_horizontal_set(box2, EINA_TRUE);
-	elm_box_homogenous_set(box2, EINA_TRUE);
+	elm_box_homogeneous_set(box2, EINA_TRUE);
 	evas_object_size_hint_align_set(box2, EVAS_HINT_FILL, 0);
 
 	/* ok - yes - no - cancel */
@@ -513,7 +513,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
 	pack->inwin = elm_win_inwin_add(win);
 
 	box = elm_box_add(win);
-// 	elm_box_homogenous_set(box, EINA_TRUE);
+// 	elm_box_homogeneous_set(box, EINA_TRUE);
 	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND,
 					 EVAS_HINT_EXPAND);
 
@@ -636,7 +636,7 @@ ui_utils_error_message_show(struct View *parent, const char *error_msg, const ch
 	//evas_object_event_callback_add(inwin, EVAS_CALLBACK_DEL, error_message_del, NULL);
 
 	Evas_Object *box = elm_box_add(win);
-	elm_box_homogenous_set(box, EINA_FALSE);
+	elm_box_homogeneous_set(box, EINA_FALSE);
 	evas_object_size_hint_weight_set(box, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	evas_object_size_hint_align_set(box, EVAS_HINT_FILL, EVAS_HINT_FILL);
 
