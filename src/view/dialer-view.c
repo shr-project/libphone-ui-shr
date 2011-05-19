@@ -320,13 +320,24 @@ _dialer_suggest_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 			const gchar *sPhone = NULL;
 			const gchar *sName = NULL;
 
-			tmp = g_hash_table_lookup(properties, "Mobile phone");
-			if(tmp) {
-				sPhone = g_variant_get_string(tmp, NULL);
-			}
 			tmp = g_hash_table_lookup(properties, "Phone");
 			if(tmp) {
 				sPhone = g_variant_get_string(tmp, NULL);
+			} else {
+				tmp = g_hash_table_lookup(properties, "Mobile phone");
+				if(tmp) {
+					sPhone = g_variant_get_string(tmp, NULL);
+				} else {
+					tmp = g_hash_table_lookup(properties, "Home phone");
+					if(tmp) {
+						sPhone = g_variant_get_string(tmp, NULL);
+					} else {
+						tmp = g_hash_table_lookup(properties, "Work phone");
+						if(tmp) {
+							sPhone = g_variant_get_string(tmp, NULL);
+						}
+					}
+				}
 			}
 
 			if (sPhone) {
