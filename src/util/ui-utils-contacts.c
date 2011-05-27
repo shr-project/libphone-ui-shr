@@ -139,6 +139,9 @@ _add_number_to_list_real(struct _number_select_pack *pack,
 	elm_icon_scale_set(ico, 1, 1);
 	elm_icon_file_set(ico, phoneui_theme, "icon/phone");
 	it = elm_list_item_append(pack->list, entry->number, ico, NULL, NULL, entry);
+	if (!it) {
+		g_warning("Adding number to list failed!!!");
+	}
 }
 
 static void

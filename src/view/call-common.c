@@ -118,7 +118,6 @@ void
 call_common_window_update_state(struct CallActiveViewData *win,
 				enum SoundState state, enum SoundStateType type)
 {
-	const char *state_string = "";
 	int speaker_state = 0;
 
 	switch (state) {
@@ -126,13 +125,10 @@ call_common_window_update_state(struct CallActiveViewData *win,
 		speaker_state = 1;
 		switch (type) {
 		case SOUND_STATE_TYPE_BLUETOOTH:
-			state_string = D_("Bluetooth");
 			break;
 		case SOUND_STATE_TYPE_HANDSET:
-			state_string = D_("Handset");
 			break;
 		case SOUND_STATE_TYPE_HEADSET:
-			state_string = D_("Headset");
 			break;
 		default:
 			speaker_state = 0; /*rollback*/
@@ -141,7 +137,6 @@ call_common_window_update_state(struct CallActiveViewData *win,
 		break;
 	case SOUND_STATE_IDLE:
 	case SOUND_STATE_CALL:
-		state_string = D_("Speaker");
 		speaker_state = 0;
 		break;
 	default:
