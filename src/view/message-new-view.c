@@ -56,6 +56,7 @@ static void _init_content_page(struct MessageNewViewData *view);
 static void _init_recipient_page(struct MessageNewViewData *view);
 static void _init_contacts_page(struct MessageNewViewData *view);
 static void _init_number_page(struct MessageNewViewData *view);
+static void _content_button_insert_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _content_button_close_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _content_button_continue_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _content_changed(void *_data, Evas_Object * obj, void *event_info);
@@ -65,6 +66,9 @@ static void _recipients_button_add_number_clicked(void *data, Evas_Object *obj, 
 static void _recipients_button_send_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info);
 // static void _recipients_button_delete_clicked(void *_data, Evas_Object * obj, void *event_info);
+static void _insert_contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _insert_contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _insert_contacts_add_number_callback(const char *number, void *data);
 static void _contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _contacts_add_number_callback(const char *number, void *data);
 static void _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info);
@@ -274,6 +278,14 @@ _init_content_page(struct MessageNewViewData *view)
 	elm_object_focus(view->content_entry);
 
 	btn = elm_button_add(win);
+	elm_button_label_set(btn, D_("Insert"));
+	evas_object_smart_callback_add(btn, "clicked",
+				       _content_button_insert_clicked, view);
+	elm_layout_content_set(view->layout_content,
+			       "content_button_insert", btn);
+	evas_object_show(btn);
+
+	btn = elm_button_add(win);
 	elm_button_label_set(btn, D_("Close"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _content_button_close_clicked, view);
@@ -451,6 +463,106 @@ _init_number_page(struct MessageNewViewData *view)
 	evas_object_show(view->number_keypad);
 
 	elm_pager_content_push(view->pager, view->layout_number);
+}
+
+static void
+_content_button_insert_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+
+	Evas_Object *win, *btn;
+
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	win = ui_utils_view_window_get(VIEW_PTR(*view));
+
+	if (view->layout_contacts) {
+	//	elm_pager_content_promote(view->pager, view->layout_contacts);
+	}
+	else {
+		_init_contacts_page(view);
+	}
+
+	view->contact_list_data.layout = view->layout_contacts;
+	contact_list_add(&view->contact_list_data);
+
+	btn = elm_button_add(win);
+	elm_button_label_set(btn, D_("Back"));
+	evas_object_smart_callback_add(btn, "clicked",
+				       _insert_contacts_button_back_clicked, view);
+	elm_layout_content_set(view->layout_contacts, "contacts_button_back", btn);
+	evas_object_show(btn);
+
+	btn = elm_button_add(win);
+	elm_button_label_set(btn, D_("Add"));
+	evas_object_smart_callback_add(btn, "clicked",
+				       _insert_contacts_button_add_clicked, view);
+	elm_layout_content_set(view->layout_contacts, "contacts_button_add", btn);
+	evas_object_show(btn);
+
+	contact_list_fill(&view->contact_list_data);
+	elm_pager_content_push(view->pager, view->layout_contacts);
+}
+
+static void
+_insert_contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	elm_pager_content_promote(view->pager, view->layout_content);
+}
+
+static void
+_insert_contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
+{
+	(void) obj;
+	(void) event_info;
+	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
+	Elm_Genlist_Item *it;
+	GHashTable *properties;
+
+	it = elm_genlist_selected_item_get(view->contact_list_data.list);
+	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	if (properties) {
+		GVariant *tmp;
+		tmp = g_hash_table_lookup(properties, "Path");
+		if (!tmp) {
+			g_warning("Can't add contact without Path in properties !?!");
+			return;
+		}
+		const char *path = g_variant_get_string(tmp, NULL);
+		ui_utils_contacts_contact_number_select(VIEW_PTR(*view), path,
+					_insert_contacts_add_number_callback, view);
+	}
+	elm_pager_content_promote(view->pager, view->layout_recipients);
+}
+
+static void
+_insert_contacts_add_number_callback(const char *number, void *data)
+{
+	char *content;
+	struct MessageNewViewData *view;
+	int len;
+
+	view = (struct MessageNewViewData *)data;
+	content = elm_entry_markup_to_utf8(elm_scrolled_entry_entry_get(view->content_entry));
+	len = phone_utils_gsm_sms_strlen(content);
+
+	// Make space for text, number and ending null character
+	content = realloc(content, len + strlen(number) + 1);
+	// Add the number to the end of the content
+	sprintf(content + len, "%s ", number);
+
+	if (view->content) {
+		free(view->content);
+	}
+	view->content = content;
+
+	if (view->content != NULL) {
+		elm_scrolled_entry_entry_set(view->content_entry,
+				    elm_entry_utf8_to_markup(view->content));
+	}
 }
 
 static void
