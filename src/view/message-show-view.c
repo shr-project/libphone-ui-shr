@@ -189,7 +189,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_size_hint_weight_set(view->content, EVAS_HINT_EXPAND,
 					 EVAS_HINT_EXPAND);
 	if (content) {
-		elm_anchorblock_text_set(view->content, content);
+		elm_object_text_set(view->content, content);
 	}
 	elm_scroller_content_set(view->sc_content, view->content);
 	evas_object_show(view->content);
@@ -409,7 +409,7 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	options = g_hash_table_new_full(g_str_hash, g_str_equal,
 					NULL, common_utils_variant_unref);
-	content = elm_entry_markup_to_utf8(elm_anchorblock_text_get(view->content));
+	content = elm_entry_markup_to_utf8(elm_object_text_get(view->content));
 	if (content) {
 		g_hash_table_insert(options, "Content",
 		                    g_variant_ref_sink(g_variant_new_string(content)));

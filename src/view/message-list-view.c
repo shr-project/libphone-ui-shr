@@ -869,18 +869,18 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 			Evas_Object *txt = elm_anchorblock_add(win);
 			elm_anchorblock_hover_style_set(txt, "popout");
 			elm_anchorblock_hover_parent_set(txt, win);
-			elm_anchorblock_text_set(txt, g_variant_get_string(tmp, NULL));
+			elm_object_text_set(txt, g_variant_get_string(tmp, NULL));
 			evas_object_show(txt);
 			Evas_Object *bubble = elm_bubble_add(win);
 			elm_bubble_content_set(bubble, txt);
 			tmp = g_hash_table_lookup(message, "Date");
 			if (tmp) {
-				elm_bubble_label_set(bubble,
+				elm_object_text_set(bubble,
 						     g_variant_get_string(tmp, NULL));
 			}
 			tmp = g_hash_table_lookup(message, "Phone");
 			if (tmp) {
-				elm_bubble_info_set(bubble,
+				elm_object_text_part_set(bubble, "info",
 						    g_variant_get_string(tmp, NULL));
 			}
 			return bubble;
