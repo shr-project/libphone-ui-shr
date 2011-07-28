@@ -178,7 +178,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 
 	g_debug("adding the volume slider...");
 	data->volume_slider = elm_slider_add(window_evas_object_get(win));
-	elm_slider_label_set(data->volume_slider, D_("Volume"));
+	elm_object_text_set(data->volume_slider, D_("Volume"));
 	elm_slider_min_max_set(data->volume_slider, 0.0, 100.0);
 	elm_slider_value_set(data->volume_slider,
 			(double)phoneui_utils_sound_volume_get(
@@ -191,7 +191,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 
 	g_debug("adding the mic slider...");
 	data->mic_slider = elm_slider_add(window_evas_object_get(win));
-	elm_slider_label_set(data->mic_slider, D_("Mic"));
+	elm_object_text_set(data->mic_slider, D_("Mic"));
 	elm_slider_min_max_set(data->mic_slider, 0.0, 100.0);
 	elm_slider_value_set(data->mic_slider,
 			(double)phoneui_utils_sound_volume_get(
