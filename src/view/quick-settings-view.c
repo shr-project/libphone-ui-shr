@@ -357,7 +357,7 @@ _profile_get_current_cb(GError *error, char *profile, gpointer userdata)
 			D_("Failed to retrieve the current profile."), error);
 	}
 	else
-		elm_hoversel_label_set(view.profiles_combo, profile);
+		elm_object_text_set(view.profiles_combo, profile);
 
 	/* Whether we got the profile or not, enable it now. */
 	elm_object_disabled_set(view.profiles_combo, EINA_FALSE);
@@ -368,7 +368,7 @@ _profile_changed_signal_cb(void *userdata, const char *profile)
 {
 	/*FIXME: I should probably free this profile, but how?, CHECK DBUS*/
 	(void) userdata;
-	elm_hoversel_label_set(view.profiles_combo, profile);
+	elm_object_text_set(view.profiles_combo, profile);
 }
 
 static void
