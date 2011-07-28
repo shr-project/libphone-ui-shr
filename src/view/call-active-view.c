@@ -157,7 +157,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 
 	g_debug("adding the speaker toggle...");
 	data->speaker_toggle = elm_toggle_add(window_evas_object_get(win));
-	elm_toggle_label_set(data->speaker_toggle, D_("Speaker"));
+	elm_object_text_set(data->speaker_toggle, D_("Speaker"));
 	//elm_toggle_icon_set(data->speaker_toggle, ico);
 	elm_toggle_state_set(data->speaker_toggle, EINA_FALSE);
 	elm_object_scale_set(data->speaker_toggle, 1.2);
@@ -168,7 +168,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 
 	g_debug("adding the mute toggle...");
 	data->mute_toggle = elm_toggle_add(window_evas_object_get(win));
-	elm_toggle_label_set(data->mute_toggle, D_("Mute"));
+	elm_object_text_set(data->mute_toggle, D_("Mute"));
 	elm_toggle_state_set(data->mute_toggle, EINA_FALSE);
 	elm_object_scale_set(data->mute_toggle, 1.2);
 	evas_object_smart_callback_add(data->mute_toggle, "changed",
