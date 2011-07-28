@@ -190,21 +190,21 @@ _init_profiles_power_page()
 	evas_object_smart_callback_add(view.profiles_combo, "selected", _profile_selected_cb, NULL);
 
 	view.button_lock = elm_button_add(win);
-	elm_button_label_set(view.button_lock, D_("Lock"));
+	elm_object_text_set(view.button_lock, D_("Lock"));
 	elm_layout_content_set(view.layout1, "power-frame-lock-button", view.button_lock);
 	evas_object_smart_callback_add(view.button_lock, "clicked",
 				       _button_lock_clicked_cb, NULL);
 	evas_object_show(view.button_lock);
 
 	view.button_suspend = elm_button_add(win);
-	elm_button_label_set(view.button_suspend, D_("Suspend"));
+	elm_object_text_set(view.button_suspend, D_("Suspend"));
 	elm_layout_content_set(view.layout1, "power-frame-suspend-button", view.button_suspend);
 	evas_object_smart_callback_add(view.button_suspend, "clicked",
 				       _button_suspend_clicked_cb, NULL);
 	evas_object_show(view.button_suspend);
 
 	view.button_shutdown = elm_button_add(win);
-	elm_button_label_set(view.button_shutdown, D_("Shutdown"));
+	elm_object_text_set(view.button_shutdown, D_("Shutdown"));
 	elm_layout_content_set(view.layout1, "power-frame-shutdown-button", view.button_shutdown);
 	evas_object_smart_callback_add(view.button_shutdown, "clicked",
 				       _button_shutdown_clicked_cb, NULL);

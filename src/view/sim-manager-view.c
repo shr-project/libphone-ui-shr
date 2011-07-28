@@ -195,7 +195,7 @@ contact_select_view(void (*cb)(const char *, void *), void *data)
 	contact_list_add(&pack->contact_list_data);
 
 	pack->cbutton = elm_button_add(win);
-	elm_button_label_set(pack->cbutton, D_("Cancel"));
+	elm_object_text_set(pack->cbutton, D_("Cancel"));
 	evas_object_smart_callback_add(pack->cbutton, "clicked",
 				       _contact_select_cancel, pack);
 	ui_utils_view_swallow(VIEW_PTR(pack), "contacts_button_back",
@@ -203,7 +203,7 @@ contact_select_view(void (*cb)(const char *, void *), void *data)
 	evas_object_show(pack->cbutton);
 
 	pack->sbutton = elm_button_add(win);
-	elm_button_label_set(pack->sbutton, D_("Select"));
+	elm_object_text_set(pack->sbutton, D_("Select"));
 	evas_object_smart_callback_add(pack->sbutton, "clicked",
 				       _contact_select_add, pack);
 	ui_utils_view_swallow(VIEW_PTR(*pack), "contacts_button_add",
@@ -432,7 +432,7 @@ _number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
 	elm_win_resize_object_add(win, name_lb);
 	evas_object_size_hint_weight_set(name_lb, EVAS_HINT_EXPAND, 0.0);
 	evas_object_size_hint_align_set(name_lb, EVAS_HINT_FILL, 0.0);
-	elm_label_label_set(name_lb, D_("Name:"));
+	elm_object_text_set(name_lb, D_("Name:"));
 	evas_object_show(name_lb);
 	elm_box_pack_end(box, name_lb);
 
@@ -458,7 +458,7 @@ _number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
 	elm_win_resize_object_add(win, number_lb);
 	evas_object_size_hint_weight_set(number_lb, EVAS_HINT_EXPAND, 0.0);
 	evas_object_size_hint_align_set(number_lb, EVAS_HINT_FILL, 0.0);
-	elm_label_label_set(number_lb, D_("Number:"));
+	elm_object_text_set(number_lb, D_("Number:"));
 	evas_object_show(number_lb);
 	elm_box_pack_end(box, number_lb);
 
@@ -491,7 +491,7 @@ _number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
 	evas_object_size_hint_align_set(sbtn, EVAS_HINT_FILL, 0.0);
 	evas_object_smart_callback_add(sbtn, "clicked",
 				       _number_add_save, pack);
-	elm_button_label_set(sbtn, D_("Save"));
+	elm_object_text_set(sbtn, D_("Save"));
 	evas_object_show(sbtn);
 	elm_box_pack_start(box0, sbtn);
 
@@ -501,7 +501,7 @@ _number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
 	evas_object_size_hint_align_set(cbtn, EVAS_HINT_FILL, 0.0);
 	evas_object_smart_callback_add(cbtn, "clicked",
 				       _number_add_cancel, pack);
-	elm_button_label_set(cbtn, D_("Cancel"));
+	elm_object_text_set(cbtn, D_("Cancel"));
 	evas_object_show(cbtn);
 	elm_box_pack_end(box0, cbtn);
 
@@ -817,7 +817,7 @@ sim_manager_view_init()
 	sim_manager_list_add(&view.list_data);
 
 	view.bt_import_all = elm_button_add(win);
-	elm_button_label_set(view.bt_import_all, D_("Import all"));
+	elm_object_text_set(view.bt_import_all, D_("Import all"));
 	evas_object_smart_callback_add(view.bt_import_all, "clicked",
 				       _list_import_all_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_import_all",
@@ -825,7 +825,7 @@ sim_manager_view_init()
 	evas_object_show(view.bt_import_all);
 
 	view.bt_copy_to_sim = elm_button_add(win);
-	elm_button_label_set(view.bt_copy_to_sim, D_("Copy to SIM"));
+	elm_object_text_set(view.bt_copy_to_sim, D_("Copy to SIM"));
 	evas_object_smart_callback_add(view.bt_copy_to_sim, "clicked",
 				       _list_copy_to_sim_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_new",
@@ -833,7 +833,7 @@ sim_manager_view_init()
 	evas_object_show(view.bt_copy_to_sim);
 
 	view.bt_options = elm_button_add(win);
-	elm_button_label_set(view.bt_options, D_("Options"));
+	elm_object_text_set(view.bt_options, D_("Options"));
 	evas_object_smart_callback_add(view.bt_options, "clicked",
 				       _list_options_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_options",
@@ -851,7 +851,7 @@ sim_manager_view_init()
 	evas_object_show(view.bx);
 
 	view.bt_message = elm_button_add(win);
-	elm_button_label_set(view.bt_message, D_("Import"));
+	elm_object_text_set(view.bt_message, D_("Import"));
 	evas_object_size_hint_min_set(view.bt_message, 130, 80);
 	evas_object_smart_callback_add(view.bt_message, "clicked",
 				       _list_import_clicked, NULL);
@@ -859,7 +859,7 @@ sim_manager_view_init()
 	elm_box_pack_end(view.bx, view.bt_message);
 
 	view.bt_edit = elm_button_add(win);
-	elm_button_label_set(view.bt_edit, D_("Edit"));
+	elm_object_text_set(view.bt_edit, D_("Edit"));
 	evas_object_size_hint_min_set(view.bt_edit, 130, 80);
 	evas_object_smart_callback_add(view.bt_edit, "clicked",
 				       _list_edit_clicked, NULL);
@@ -867,7 +867,7 @@ sim_manager_view_init()
 	elm_box_pack_end(view.bx, view.bt_edit);
 
 	view.bt_delete = elm_button_add(win);
-	elm_button_label_set(view.bt_delete, D_("Delete"));
+	elm_object_text_set(view.bt_delete, D_("Delete"));
 	evas_object_size_hint_min_set(view.bt_delete, 130, 80);
 	evas_object_smart_callback_add(view.bt_delete, "clicked",
 				       _list_delete_clicked, NULL);
@@ -879,7 +879,7 @@ sim_manager_view_init()
 	/* loading indicator */
 	view.pb = elm_progressbar_add(win);
 	elm_object_style_set(view.pb, "wheel");
-	elm_progressbar_label_set(view.pb, D_("Loading..."));
+	elm_object_text_set(view.pb, D_("Loading..."));
 	evas_object_size_hint_align_set(view.pb, EVAS_HINT_FILL, 0.5);
 	evas_object_size_hint_weight_set(view.pb, EVAS_HINT_EXPAND,
 					 EVAS_HINT_EXPAND);

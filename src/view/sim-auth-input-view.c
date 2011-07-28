@@ -98,14 +98,14 @@ sim_auth_input_view_init()
 				 "phoneui/notification/sim_auth_input");
 
 	view.bt1 = elm_button_add(win);
-	elm_button_label_set(view.bt1, D_("Delete"));
+	elm_object_text_set(view.bt1, D_("Delete"));
 	evas_object_smart_callback_add(view.bt1, "clicked",
 				       _sim_auth_delete_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_delete", view.bt1);
 	evas_object_show(view.bt1);
 
 	view.bt2 = elm_button_add(win);
-	elm_button_label_set(view.bt2, D_("OK"));
+	elm_object_text_set(view.bt2, D_("OK"));
 	evas_object_smart_callback_add(view.bt2, "clicked",
 				       _sim_auth_ok_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_ok", view.bt2);

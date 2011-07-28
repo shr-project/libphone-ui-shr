@@ -198,7 +198,7 @@ message_show_view_init(char* path, GHashTable *properties)
 
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Close"));
+	elm_object_text_set(obj, D_("Close"));
 	evas_object_smart_callback_add(obj, "clicked",
 				       _close_clicked, view);
 	ui_utils_view_swallow(VIEW_PTR(*view), "button_close", obj);
@@ -208,7 +208,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	view->hv = elm_hover_add(win);
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Options"));
+	elm_object_text_set(obj, D_("Options"));
 	evas_object_smart_callback_add(obj, "clicked", _hover_bt_1,
 				       view->hv);
 	ui_utils_view_swallow(VIEW_PTR(*view), "button_options", obj);
@@ -223,7 +223,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_show(box);
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Delete"));
+	elm_object_text_set(obj, D_("Delete"));
 	evas_object_size_hint_min_set(obj, 140, 80);
 	evas_object_smart_callback_add(obj, "clicked",
 				       _delete_clicked, view);
@@ -232,7 +232,7 @@ message_show_view_init(char* path, GHashTable *properties)
 
 	if (in_msg) {
 		obj = elm_button_add(win);
-		elm_button_label_set(obj, D_("Call"));
+		elm_object_text_set(obj, D_("Call"));
 		evas_object_size_hint_min_set(obj, 140, 80);
 		evas_object_smart_callback_add(obj, "clicked",
 						   _call_clicked, view);
@@ -241,7 +241,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	}
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Add Contact"));
+	elm_object_text_set(obj, D_("Add Contact"));
 	evas_object_size_hint_min_set(obj, 140, 80);
 	evas_object_smart_callback_add(obj, "clicked",
 					   _new_contact_clicked,
@@ -251,7 +251,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	view->add_contact_bt = obj;
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Forward"));
+	elm_object_text_set(obj, D_("Forward"));
 	evas_object_size_hint_min_set(obj, 140, 80);
 	evas_object_smart_callback_add(obj, "clicked", _forward_clicked, view);
 	evas_object_show(obj);
@@ -261,7 +261,7 @@ message_show_view_init(char* path, GHashTable *properties)
 
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Answer"));
+	elm_object_text_set(obj, D_("Answer"));
 	evas_object_smart_callback_add(obj, "clicked",
 				       _answer_clicked, view);
 	ui_utils_view_swallow(VIEW_PTR(*view), "button_answer", obj);

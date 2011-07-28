@@ -405,7 +405,7 @@ gl_icon_get(void *data, Evas_Object * obj, const char *part)
 	(void) data;
 	if (!strcmp(part,"elm.swallow.end")) {
 		Evas_Object *btn = elm_button_add(obj);
-		elm_button_label_set(btn, "Action");
+		elm_object_text_set(btn, "Action");
 		return (btn);
 	}
 	return (NULL);

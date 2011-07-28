@@ -288,7 +288,7 @@ ui_utils_view_inwin_dialog(struct View *view, const char *label, GList *buttons,
 	elm_box_homogenous_set(bx, 1);
 
 	Evas_Object *e = elm_label_add(ui_utils_view_window_get(view));
-	elm_label_label_set(e, label);
+	elm_object_text_set(e, label);
 	evas_object_show(e);
 	elm_box_pack_end(bx, e);
 
@@ -299,7 +299,7 @@ ui_utils_view_inwin_dialog(struct View *view, const char *label, GList *buttons,
 	for (buttons = g_list_first(buttons); buttons;
 	     buttons = g_list_next(buttons)) {
 		e = elm_button_add(ui_utils_view_window_get(view));
-		elm_button_label_set(e,
+		elm_object_text_set(e,
 				     ((struct InwinButton *) buttons->data)->
 				     label);
 		evas_object_smart_callback_add(e, "clicked",
@@ -371,7 +371,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 
 	tmp = g_strdup_printf("<font align=center>%s</font>", label);
 	lbl = elm_label_add(win);
-	elm_label_label_set(lbl, tmp);
+	elm_object_text_set(lbl, tmp);
 	elm_label_line_wrap_set(lbl, EINA_TRUE);
 	evas_object_size_hint_align_set(lbl, EVAS_HINT_FILL, EVAS_HINT_FILL);
 	evas_object_size_hint_weight_set(lbl, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
@@ -382,7 +382,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 
 	if 	(check_label && strlen(check_label) && check_value) {
 		check = elm_check_add(win);
-		elm_check_label_set(check, check_label);
+		elm_object_text_set(check, check_label);
 		elm_check_state_set(check, *check_value);
 		elm_check_state_pointer_set(check, check_value);
 		elm_box_pack_end(box, check);
@@ -397,7 +397,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 	/* ok - yes - no - cancel */
 	if (buttonflags & DIALOG_OK) {
 		btn = elm_button_add(win);
-		elm_button_label_set(btn, D_("Ok"));
+		elm_object_text_set(btn, D_("Ok"));
 		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_OK));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
@@ -408,7 +408,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 	}
 	if (buttonflags & DIALOG_YES) {
 		btn = elm_button_add(win);
-		elm_button_label_set(btn, D_("Yes"));
+		elm_object_text_set(btn, D_("Yes"));
 		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_YES));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
@@ -419,7 +419,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 	}
 	if (buttonflags & DIALOG_NO) {
 		btn = elm_button_add(win);
-		elm_button_label_set(btn, D_("No"));
+		elm_object_text_set(btn, D_("No"));
 		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_NO));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
@@ -430,7 +430,7 @@ ui_utils_dialog_check(struct View *view, const char *label, const char *check_la
 	}
 	if (buttonflags & DIALOG_CANCEL) {
 		btn = elm_button_add(win);
-		elm_button_label_set(btn, D_("Cancel"));
+		elm_object_text_set(btn, D_("Cancel"));
 		evas_object_data_set(btn, "type", GINT_TO_POINTER(DIALOG_CANCEL));
 		evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 		evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
@@ -540,7 +540,7 @@ ui_utils_view_inwin_list(struct View *view, GList *list,
  	elm_box_pack_end(box, pack->list);
 
 	btn = elm_button_add(win);
-	elm_button_label_set(btn, D_("Cancel"));
+	elm_object_text_set(btn, D_("Cancel"));
 	evas_object_size_hint_weight_set(btn, EVAS_HINT_EXPAND, 0);
 	evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0);
 	evas_object_smart_callback_add(btn, "clicked",
@@ -581,12 +581,12 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	evas_object_show(bx);
 
 	lb = elm_label_add(parent);
-	elm_label_label_set(lb, label);
+	elm_object_text_set(lb, label);
 	elm_box_pack_end(bx, lb);
 	evas_object_show(lb);
 
 	bt = elm_button_add(parent);
-	elm_button_label_set(bt, "Close");
+	elm_object_text_set(bt, "Close");
 	evas_object_smart_callback_add(bt, "clicked", _notify_button_close_cb, notify);
 	elm_box_pack_end(bx, bt);
 	evas_object_show(bt);
@@ -642,7 +642,7 @@ ui_utils_error_message_show(struct View *parent, const char *error_msg, const ch
 
 	Evas_Object *heading = elm_label_add(win);
 	//elm_label_line_wrap_set(heading, EINA_TRUE);
-	elm_label_label_set(heading, error_msg);
+	elm_object_text_set(heading, error_msg);
 	evas_object_size_hint_weight_set(heading, 1.0, 1.0);
 	evas_object_size_hint_align_set(heading, 0.5, 0.5);
 	evas_object_show(heading);
@@ -651,7 +651,7 @@ ui_utils_error_message_show(struct View *parent, const char *error_msg, const ch
 	if (detail_msg) {
 		Evas_Object *lb = elm_label_add(win);
 		elm_label_line_wrap_set(lb, EINA_TRUE);
-		elm_label_label_set(lb, detail_msg);
+		elm_object_text_set(lb, detail_msg);
 		evas_object_size_hint_weight_set(lb, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 		evas_object_size_hint_align_set(lb, EVAS_HINT_FILL, EVAS_HINT_FILL);
 		evas_object_show(lb);
@@ -666,7 +666,7 @@ ui_utils_error_message_show(struct View *parent, const char *error_msg, const ch
 	}
 
 	Evas_Object *bt = elm_button_add(win);
-	elm_button_label_set(bt, D_("Ok"));
+	elm_object_text_set(bt, D_("Ok"));
 	evas_object_size_hint_weight_set(bt, EVAS_HINT_EXPAND, 0.0);
 	evas_object_size_hint_align_set(bt, EVAS_HINT_FILL, 1.0);
 	evas_object_smart_callback_add(bt, "clicked", error_message_ok_cb, inwin);

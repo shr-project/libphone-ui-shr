@@ -188,35 +188,35 @@ l contacts.edc emits*/
 	evas_object_show(view->fields);
 
 	view->btn_save = elm_button_add(win);
-	elm_button_label_set(view->btn_save, D_("Save"));
+	elm_object_text_set(view->btn_save, D_("Save"));
 	evas_object_smart_callback_add(view->btn_save, "clicked",
 				       _contact_save_clicked, view);
 	elm_layout_content_set(view->pager_layout, "button_save", view->btn_save);
 	evas_object_show(view->btn_save);
 
 	view->btn_cancel = elm_button_add(win);
-	elm_button_label_set(view->btn_cancel, D_("Cancel"));
+	elm_object_text_set(view->btn_cancel, D_("Cancel"));
 	evas_object_smart_callback_add(view->btn_cancel, "clicked",
 				       _contact_cancel_clicked, view);
 	elm_layout_content_set(view->pager_layout, "button_cancel", view->btn_cancel);
 	evas_object_show(view->btn_cancel);
 
 	view->btn_call = elm_button_add(win);
-	elm_button_label_set(view->btn_call, D_("Call"));
+	elm_object_text_set(view->btn_call, D_("Call"));
 	evas_object_smart_callback_add(view->btn_call, "clicked",
 				       _contact_call_clicked, view);
 	elm_layout_content_set(view->pager_layout, "button_call", view->btn_call);
 	evas_object_show(view->btn_call);
 
 	view->btn_sms = elm_button_add(win);
-	elm_button_label_set(view->btn_sms, D_("SMS"));
+	elm_object_text_set(view->btn_sms, D_("SMS"));
 	evas_object_smart_callback_add(view->btn_sms, "clicked",
 				       _contact_sms_clicked, view);
 	elm_layout_content_set(view->pager_layout, "button_sms", view->btn_sms);
 	evas_object_show(view->btn_sms);
 
 	view->btn_delete = elm_button_add(win);
-	elm_button_label_set(view->btn_delete, D_("Delete"));
+	elm_object_text_set(view->btn_delete, D_("Delete"));
 	evas_object_smart_callback_add(view->btn_delete, "clicked",
 				       _contact_delete_clicked, view);
 	evas_object_show(view->btn_delete);
@@ -224,7 +224,7 @@ l contacts.edc emits*/
 			      view->btn_delete);
 
 	view->btn_addfield = elm_button_add(win);
-	elm_button_label_set(view->btn_addfield, D_("Add Field"));
+	elm_object_text_set(view->btn_addfield, D_("Add Field"));
 	evas_object_smart_callback_add(view->btn_addfield, "clicked",
 				       _contact_add_field_clicked, view);
 	evas_object_show(view->btn_addfield);
@@ -557,7 +557,7 @@ _change_field_cb(const char *field, void *data)
 		_update_changes_of_field(fd->view, fd->name, fd->value, "");
 		_update_changes_of_field(fd->view, field, "", fd->value);
 		fd->name = strdup(field);
-		elm_button_label_set(fd->field_button, field);
+		elm_object_text_set(fd->field_button, field);
 		_set_modify(fd->view, 1);
 		phoneui_utils_contacts_field_type_get(fd->name, _change_field_type_cb, fd);
 	}
@@ -803,21 +803,21 @@ _field_edit_add_edit_page(struct ContactFieldData *fd, Evas_Object *content,
 
 	btn_save = elm_button_add(fd->view->pager);
 
-	elm_button_label_set(btn_save, D_("Save"));
+	elm_object_text_set(btn_save, D_("Save"));
 	evas_object_smart_callback_add(btn_save, "clicked",
 				       save_cb, fd);
 	elm_layout_content_set(layout, "button_save", btn_save);
 	evas_object_show(btn_save);
 
 	btn_back = elm_button_add(fd->view->pager);
-	elm_button_label_set(btn_back, D_("Back"));
+	elm_object_text_set(btn_back, D_("Back"));
 	evas_object_smart_callback_add(btn_back, "clicked",
 				       _field_edit_button_back_clicked_cb, fd);
 	elm_layout_content_set(layout, "button_back", btn_back);
 	evas_object_show(btn_back);
 
 	btn_remove = elm_button_add(fd->view->pager);
-	elm_button_label_set(btn_remove, D_("Remove"));
+	elm_object_text_set(btn_remove, D_("Remove"));
 	evas_object_smart_callback_add(btn_remove, "clicked",
 				       _field_edit_button_remove_clicked_cb, fd);
 	elm_layout_content_set(layout, "button_remove", btn_remove);
@@ -871,7 +871,7 @@ gl_field_icon_get(void *_data, Evas_Object * obj, const char *part)
 	struct ContactFieldData *fd = (struct ContactFieldData *) _data;
 	if (strcmp(part, "elm.swallow.field_button") == 0) {
 		Evas_Object *btn = elm_button_add(obj);
-		elm_button_label_set(btn, fd->name);
+		elm_object_text_set(btn, fd->name);
 		evas_object_smart_callback_add(btn, "clicked",
 					       _field_clicked, fd);
 		fd->field_button = btn;

@@ -291,7 +291,7 @@ contact_list_add(struct ContactListData *list_data)
 	}
 	list_data->progress = elm_progressbar_add(win);
 	elm_object_style_set(list_data->progress, "wheel");
-	elm_progressbar_label_set(list_data->progress, D_("Loading..."));
+	elm_object_text_set(list_data->progress, D_("Loading..."));
 	evas_object_size_hint_align_set(list_data->progress, EVAS_HINT_FILL, 0.5);
 	evas_object_size_hint_weight_set(list_data->progress, EVAS_HINT_EXPAND,
 	                                 EVAS_HINT_EXPAND);

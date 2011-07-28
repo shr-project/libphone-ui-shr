@@ -232,7 +232,7 @@ _fields_get_cb(GError *error, GHashTable *contact, gpointer data)
 	evas_object_size_hint_align_set(btn, EVAS_HINT_FILL, 0.0);
 	evas_object_smart_callback_add(btn, "clicked",
 				       _number_select_cancel, pack);
-	elm_button_label_set(btn, D_("Cancel"));
+	elm_object_text_set(btn, D_("Cancel"));
 	evas_object_show(btn);
 	elm_box_pack_end(box, btn);
 

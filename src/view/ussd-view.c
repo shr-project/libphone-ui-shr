@@ -89,7 +89,7 @@ frame_ussd_show(void *_data)
 	window_text_set(win, "message", data->message);
 
 	data->bt_close = elm_button_add(window_evas_object_get(win));
-	elm_button_label_set(data->bt_close, D_("Close"));
+	elm_object_text_set(data->bt_close, D_("Close"));
 	evas_object_smart_callback_add(data->bt_close, "clicked",
 				       frame_ussd_close_clicked, data);
 	window_swallow(win, "button_close", data->bt_close);

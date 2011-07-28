@@ -70,7 +70,7 @@ dialog_view_show(struct Window *win, void *_options)
 		window_text_set(win, "content", D_("Unknown message."));
 
 	data->bt_close = elm_button_add(win->win);
-	elm_button_label_set(data->bt_close, D_("Close"));
+	elm_object_text_set(data->bt_close, D_("Close"));
 	evas_object_smart_callback_add(data->bt_close, "clicked",
 				       dialog_view_close_clicked, data);
 	window_swallow(win, "button_close", data->bt_close);

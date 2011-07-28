@@ -106,7 +106,7 @@ message_list_view_init()
 	elm_theme_extension_add(NULL, phoneui_theme);
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("New"));
+	elm_object_text_set(obj, D_("New"));
 	evas_object_smart_callback_add(obj, "clicked", _new_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_new", obj);
 	evas_object_show(obj);
@@ -115,7 +115,7 @@ message_list_view_init()
 	view.hv = elm_hover_add(win);
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Options"));
+	elm_object_text_set(obj, D_("Options"));
 	evas_object_smart_callback_add(obj, "clicked", _hover_bt_1, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_options", obj);
 	evas_object_show(obj);
@@ -129,7 +129,7 @@ message_list_view_init()
 	evas_object_show(box);
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Answer"));
+	elm_object_text_set(obj, D_("Answer"));
 	evas_object_size_hint_min_set(obj, 130, 80);
 	evas_object_smart_callback_add(obj, "clicked", _answer_clicked, NULL);
 	evas_object_show(obj);
@@ -137,7 +137,7 @@ message_list_view_init()
 	view.answer_bt = obj;
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Call"));
+	elm_object_text_set(obj, D_("Call"));
 	evas_object_size_hint_min_set(obj, 130, 80);
 	evas_object_smart_callback_add(obj, "clicked", _call_clicked, NULL);
 	evas_object_show(obj);
@@ -145,7 +145,7 @@ message_list_view_init()
 	view.call_bt = obj;
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Forward"));
+	elm_object_text_set(obj, D_("Forward"));
 	evas_object_size_hint_min_set(obj, 130, 80);
 	evas_object_smart_callback_add(obj, "clicked", _forward_clicked, NULL);
 	evas_object_show(obj);
@@ -153,7 +153,7 @@ message_list_view_init()
 	view.forward_bt = obj;
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Delete"));
+	elm_object_text_set(obj, D_("Delete"));
 	evas_object_size_hint_min_set(obj, 130, 80);
 	evas_object_smart_callback_add(obj, "clicked", _delete_clicked, NULL);
 	evas_object_show(obj);
@@ -162,7 +162,7 @@ message_list_view_init()
 	elm_hover_content_set(view.hv, "top", box);
 
 	obj = elm_button_add(win);
-	elm_button_label_set(obj, D_("Show"));
+	elm_object_text_set(obj, D_("Show"));
 	evas_object_smart_callback_add(obj, "clicked", _show_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_show", obj);
 	evas_object_show(obj);
@@ -184,7 +184,7 @@ message_list_view_init()
 
 	view.top_pb = elm_progressbar_add(win);
 	elm_object_style_set(view.top_pb, "wheel");
-	elm_progressbar_label_set(view.top_pb, D_("Loading..."));
+	elm_object_text_set(view.top_pb, D_("Loading..."));
 	elm_progressbar_pulse(view.top_pb, EINA_TRUE);
 	evas_object_size_hint_align_set(view.top_pb, EVAS_HINT_FILL, 0.5);
 	evas_object_size_hint_weight_set(view.top_pb, EVAS_HINT_EXPAND,
@@ -195,7 +195,7 @@ message_list_view_init()
 
 	view.bottom_pb = elm_progressbar_add(win);
 	elm_object_style_set(view.bottom_pb, "wheel");
-	elm_progressbar_label_set(view.bottom_pb, D_("Loading..."));
+	elm_object_text_set(view.bottom_pb, D_("Loading..."));
 	elm_progressbar_pulse(view.bottom_pb, EINA_TRUE);
 	evas_object_size_hint_align_set(view.bottom_pb, EVAS_HINT_FILL, 0.5);
 	evas_object_size_hint_weight_set(view.bottom_pb, EVAS_HINT_EXPAND,
@@ -515,23 +515,23 @@ _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 	}
 
 	if (new && out) {
-		elm_button_label_set(view.right_bt, D_("Edit"));
+		elm_object_text_set(view.right_bt, D_("Edit"));
 		evas_object_smart_callback_del(view.right_bt, "clicked", _edit_clicked);
 		evas_object_smart_callback_del(view.right_bt, "clicked", _show_clicked);
 		evas_object_smart_callback_add(view.right_bt, "clicked", _edit_clicked, NULL);
 
-		elm_button_label_set(view.forward_bt, D_("Edit"));
+		elm_object_text_set(view.forward_bt, D_("Edit"));
 		evas_object_size_hint_min_set(view.forward_bt, 130, 80);
 		evas_object_smart_callback_del(view.forward_bt, "clicked", _edit_clicked);
 		evas_object_smart_callback_del(view.forward_bt, "clicked", _forward_clicked);
 		evas_object_smart_callback_add(view.forward_bt, "clicked", _edit_clicked, NULL);
 	} else {
-		elm_button_label_set(view.right_bt, D_("Show"));
+		elm_object_text_set(view.right_bt, D_("Show"));
 		evas_object_smart_callback_del(view.right_bt, "clicked", _edit_clicked);
 		evas_object_smart_callback_del(view.right_bt, "clicked", _show_clicked);
 		evas_object_smart_callback_add(view.right_bt, "clicked", _show_clicked, NULL);
 
-		elm_button_label_set(view.forward_bt, D_("Forward"));
+		elm_object_text_set(view.forward_bt, D_("Forward"));
 		evas_object_size_hint_min_set(view.forward_bt, 130, 80);
 		evas_object_smart_callback_del(view.forward_bt, "clicked", _edit_clicked);
 		evas_object_smart_callback_del(view.forward_bt, "clicked", _forward_clicked);

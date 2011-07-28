@@ -88,21 +88,21 @@ contact_list_view_init()
 				       _list_list_longpressed, win);
 
 	view.bt1 = elm_button_add(win);
-	elm_button_label_set(view.bt1, D_("Call"));
+	elm_object_text_set(view.bt1, D_("Call"));
 	evas_object_smart_callback_add(view.bt1, "clicked",
 				       _list_call_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_new", view.bt1);
 	evas_object_show(view.bt1);
 
 	view.bt2 = elm_button_add(win);
-	elm_button_label_set(view.bt2, D_("SMS"));
+	elm_object_text_set(view.bt2, D_("SMS"));
 	evas_object_smart_callback_add(view.bt2, "clicked",
 				       _list_message_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_call", view.bt2);
 	evas_object_show(view.bt2);
 
 	view.bt_options = elm_button_add(win);
-	elm_button_label_set(view.bt_options, D_("New"));
+	elm_object_text_set(view.bt_options, D_("New"));
 	evas_object_smart_callback_add(view.bt_options, "clicked",
 				       _list_new_clicked, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_options", view.bt_options);

@@ -96,13 +96,13 @@ dialer_view_init()
 				 "phoneui/dialer/dialer");
 
 	view.text_number = elm_label_add(win);
-	elm_label_label_set(view.text_number, "");
+	elm_object_text_set(view.text_number, "");
 	evas_object_size_hint_align_set(view.text_number, 0.0, 0.5);
 	ui_utils_view_swallow(VIEW_PTR(view), "text_number", view.text_number);
 	evas_object_show(view.text_number);
 
 	view.text_number_info = elm_label_add(win);
-	elm_label_label_set(view.text_number_info,
+	elm_object_text_set(view.text_number_info,
 			    D_("Click to open contact list."));
 	ui_utils_view_swallow(VIEW_PTR(view), "text_number_info", view.text_number_info);
 	evas_object_show(view.text_number_info);
@@ -130,28 +130,28 @@ dialer_view_init()
 	evas_object_show(view.keypad);
 
 	view.bt_exit = elm_button_add(win);
-	elm_button_label_set(view.bt_exit, D_("Close"));
+	elm_object_text_set(view.bt_exit, D_("Close"));
 	evas_object_smart_callback_add(view.bt_exit, "clicked",
 				       _dialer_exit_clicked_cb, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_exit", view.bt_exit);
 	evas_object_show(view.bt_exit);
 
 	view.bt_suggest = elm_button_add(win);
-	elm_button_label_set(view.bt_suggest, D_("Suggest"));
+	elm_object_text_set(view.bt_suggest, D_("Suggest"));
 	evas_object_smart_callback_add(view.bt_suggest, "clicked",
 				       _dialer_suggest_clicked_cb, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_suggest", view.bt_suggest);
 	evas_object_show(view.bt_suggest);
 
 	view.bt_options = elm_button_add(win);
-	elm_button_label_set(view.bt_options, D_("More"));
+	elm_object_text_set(view.bt_options, D_("More"));
 	evas_object_smart_callback_add(view.bt_options, "clicked",
 				       _dialer_options_clicked_cb, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_options", view.bt_options);
 	evas_object_show(view.bt_options);
 
 	view.bt_call = elm_button_add(win);
-	elm_button_label_set(view.bt_call, D_("Call"));
+	elm_object_text_set(view.bt_call, D_("Call"));
 	evas_object_smart_callback_add(view.bt_call, "clicked",
 				       _dialer_call_clicked_cb, NULL);
 	ui_utils_view_swallow(VIEW_PTR(view), "button_call", view.bt_call);
@@ -180,7 +180,7 @@ dialer_view_init()
 
 	for (iSuggest = MAX_SUGGEST - 1; iSuggest >= 0; --iSuggest) {
 		view.bt_suggest_contact[iSuggest] = elm_button_add(win);
-		elm_button_label_set(view.bt_suggest_contact[iSuggest], D_("Contact"));
+		elm_object_text_set(view.bt_suggest_contact[iSuggest], D_("Contact"));
 		evas_object_size_hint_min_set(view.bt_suggest_contact[iSuggest], 130, 80);
 		evas_object_smart_callback_add(view.bt_suggest_contact[iSuggest], "clicked",
 				_dialer_suggest_contact_clicked_cb, GINT_TO_POINTER(iSuggest));
@@ -201,7 +201,7 @@ dialer_view_init()
 	evas_object_show(view.bx);
 
 	view.bt_save = elm_button_add(win);
-	elm_button_label_set(view.bt_save, D_("Save"));
+	elm_object_text_set(view.bt_save, D_("Save"));
 	evas_object_size_hint_min_set(view.bt_save, 130, 80);
 	evas_object_smart_callback_add(view.bt_save, "clicked",
 				       _dialer_contact_add_clicked_cb, NULL);
@@ -209,7 +209,7 @@ dialer_view_init()
 	elm_box_pack_end(view.bx, view.bt_save);
 
 	view.bt_message = elm_button_add(win);
-	elm_button_label_set(view.bt_message, D_("Send SMS"));
+	elm_object_text_set(view.bt_message, D_("Send SMS"));
 	evas_object_size_hint_min_set(view.bt_message, 130, 80);
 	evas_object_smart_callback_add(view.bt_message, "clicked",
 				       _dialer_message_clicked_cb, NULL);
@@ -307,7 +307,7 @@ _dialer_suggest_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 
 	int iSuggest;
 	for (iSuggest = 0; iSuggest < MAX_SUGGEST; ++iSuggest) {
-		elm_button_label_set(view.bt_suggest_contact[iSuggest], D_(""));
+		elm_object_text_set(view.bt_suggest_contact[iSuggest], D_(""));
 		evas_object_hide(view.bt_suggest_contact[iSuggest]);
 	}
 
@@ -352,7 +352,7 @@ _dialer_suggest_clicked_cb(void *data, Evas_Object * obj, void *event_info)
 			}
 
 			if (sName) {
-				elm_button_label_set(view.bt_suggest_contact[cSuggest], sName);
+				elm_object_text_set(view.bt_suggest_contact[cSuggest], sName);
 				evas_object_show(view.bt_suggest_contact[cSuggest]);
 				++cSuggest;
 			}
@@ -528,7 +528,7 @@ _dialer_number_update()
 		}
 	}
 
-	elm_label_label_set(view.text_number, number);
+	elm_object_text_set(view.text_number, number);
 	if (length == 0) {
 		edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 					"number_empty", "elm");
