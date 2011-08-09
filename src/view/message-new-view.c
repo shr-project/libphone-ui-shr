@@ -276,7 +276,7 @@ _init_content_page(struct MessageNewViewData *view)
 	}
 	evas_object_show(view->content_entry);
 	elm_layout_content_set(view->layout_content, "content_entry", view->content_entry);
-	elm_object_focus(view->content_entry);
+	elm_object_focus_set(view->content_entry, EINA_TRUE);
 
 	btn = elm_button_add(win);
 	elm_object_text_set(btn, D_("Insert"));
@@ -593,7 +593,7 @@ _recipients_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	elm_pager_content_promote(view->pager, view->layout_content);
-	elm_object_focus(view->content_entry);
+	elm_object_focus_set(view->content_entry, EINA_TRUE);
 }
 
 static void
@@ -953,7 +953,7 @@ _delete_confirm_cb(int res, void *data)
 		_deinit_message_new_view(view);
 	}
 	else if (elm_pager_content_top_get(view->pager) == view->layout_content) {
-		elm_object_focus(view->content_entry);
+		elm_object_focus_set(view->content_entry, EINA_TRUE);
 	}
 }
 
