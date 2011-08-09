@@ -718,7 +718,7 @@ sim_manager_list_add(struct SimManagerListData *list_data)
 	win = ui_utils_view_window_get(VIEW_PTR(view));
 	list_data->index = NULL;
 	list_data->list = elm_genlist_add(win);
-	elm_genlist_horizontal_mode_set(list_data->list, ELM_LIST_LIMIT);
+	elm_genlist_horizontal_set(list_data->list, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(list_data->list, 0.0, 0.0);
 	elm_object_scale_set(list_data->list, 1.0);
 	itc.item_style = "sim-contact";

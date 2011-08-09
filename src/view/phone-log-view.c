@@ -190,7 +190,7 @@ static Evas_Object *
 _add_genlist(Evas_Object *win)
 {
 	Evas_Object *list = elm_genlist_add(win);
-	elm_genlist_horizontal_mode_set(list, ELM_LIST_LIMIT);
+	elm_genlist_horizontal_set(list, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(list, 0.0, 0.0);
 	evas_object_show(list);
 
