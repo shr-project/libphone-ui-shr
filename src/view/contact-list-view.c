@@ -43,7 +43,7 @@ struct ContactListViewData {
 	struct View view;
 	struct ContactListData list_data;
 	Evas_Object *ctx;
-	Elm_Ctxpopup_Item *action_edit, *action_del, *action_unsel;
+	Elm_Object_Item *action_edit, *action_del, *action_unsel;
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
 };
