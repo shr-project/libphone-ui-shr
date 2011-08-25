@@ -53,6 +53,7 @@ static void _capacity_change(void *data, int capacity);
 static void _network_status(void *data, GHashTable *properties);
 static void _pdp_context_status(void *data, FreeSmartphoneGSMContextStatus status, GHashTable *properties);
 static void _signal_strength(void *data, int strength);
+static void _backlight_power(void *data, int state);
 static void _profile_change(void *data, const char *profile);
 static void _missed_calls(void *data, int amount);
 static void _unread_messages(void *data, int amount);
@@ -73,8 +74,8 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 void
 idle_screen_view_show()
 {
-	edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_TRUE);
 	ui_utils_view_show(VIEW_PTR(view));
+	phoneui_info_request_backlight_power(_backlight_power, NULL);
 }
 
 void
@@ -132,6 +133,7 @@ idle_screen_view_init()
 	phoneui_info_register_and_request_resource_status(_resource_status, NULL);
 	phoneui_info_register_and_request_network_status(_network_status, NULL);
 	phoneui_info_register_and_request_signal_strength(_signal_strength, NULL);
+	phoneui_info_register_backlight_power(_backlight_power, NULL);
 	phoneui_info_register_and_request_pdp_context_status(_pdp_context_status, NULL);
 	phoneui_info_register_and_request_profile_changes(_profile_change, NULL);
 	phoneui_info_register_and_request_capacity_changes(_capacity_change, NULL);
@@ -369,6 +371,21 @@ _unfinished_tasks(void *data, int amount)
 {
 	(void) data;
 	_update_counter("unfinishedTasks", "unfinishedTasksLabel", amount);
+}
+
+static void
+_backlight_power(void *data, int state)
+{
+	(void) data;
+	g_debug("Backlight power %d", state);
+	if (ui_utils_view_is_visible(VIEW_PTR(view))) {
+		if (state) {
+			edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_TRUE);
+		}
+		else {
+			edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
+		}
+	}
 }
 
 static void
