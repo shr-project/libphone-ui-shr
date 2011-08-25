@@ -73,6 +73,7 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 void
 idle_screen_view_show()
 {
+	edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_TRUE);
 	ui_utils_view_show(VIEW_PTR(view));
 }
 
@@ -80,13 +81,19 @@ void
 idle_screen_view_hide()
 {
 	ui_utils_view_hide(VIEW_PTR(view));
+	edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
 	_set_edje_size();
 }
 
 void
 idle_screen_view_toggle()
 {
-	ui_utils_view_toggle(VIEW_PTR(view));
+	if (ui_utils_view_is_visible(VIEW_PTR(view))) {
+		idle_screen_view_hide();
+	}
+	else {
+		idle_screen_view_show();
+	}
 }
 
 int
