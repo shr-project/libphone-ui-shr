@@ -83,6 +83,7 @@ idle_screen_view_hide()
 {
 	ui_utils_view_hide(VIEW_PTR(view));
 	edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
+	edje_object_play_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
 	_set_edje_size();
 }
 
@@ -380,10 +381,12 @@ _backlight_power(void *data, int state)
 	g_debug("Backlight power %d", state);
 	if (ui_utils_view_is_visible(VIEW_PTR(view))) {
 		if (state) {
+			edje_object_play_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_TRUE);
 			edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_TRUE);
 		}
 		else {
 			edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
+			edje_object_play_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
 		}
 	}
 }
