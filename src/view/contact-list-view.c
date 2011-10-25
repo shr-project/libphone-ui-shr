@@ -378,7 +378,7 @@ _list_unselect_clicked(void *data, Evas_Object * obj, void *event_info)
 		return;
 
 	EINA_LIST_FOREACH(contacts, c, contact)
-		elm_genlist_item_selected_set(contact, EINA_FALSE);
+		elm_gen_item_selected_set(contact, EINA_FALSE);
 }
 
 static void
@@ -418,7 +418,7 @@ _remove_contact(const char *path)
 	GVariant *tmp;
 
 	g_debug("Removing contact %s from list", path);
-	it = elm_genlist_first_item_get(view.list_data.list);
+	it = elm_gen_first_item_get(view.list_data.list);
 	while (it) {
 		properties = (GHashTable *)elm_genlist_item_data_get(it);
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -429,7 +429,7 @@ _remove_contact(const char *path)
 				break;
 			}
 		}
-		it = elm_genlist_item_next_get(it);
+		it = elm_gen_item_next_get(it);
 	}
 }
 
@@ -457,7 +457,7 @@ _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType typ
 static void
 _hide_cb(struct View *view)
 {
-	elm_genlist_item_bring_in(elm_genlist_first_item_get(
+	elm_genlist_item_bring_in(elm_gen_first_item_get(
 		((struct ContactListViewData *)view)->list_data.list));
 }
 

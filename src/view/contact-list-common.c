@@ -151,12 +151,12 @@ contact_list_item_add(struct ContactListData *list_data,
 
 	if (sortin) {
 		/* find the correct position to insert the new one */
-		it = elm_genlist_first_item_get(list_data->list);
+		it = elm_gen_first_item_get(list_data->list);
 		while (it) {
 			other = (GHashTable *)elm_genlist_item_data_get(it);
 			if (phoneui_utils_contact_compare(entry, other) < 0)
 				break;
-			it = elm_genlist_item_next_get(it);
+			it = elm_gen_item_next_get(it);
 		}
 		if (it) {
 			return elm_genlist_item_insert_before(list_data->list,
@@ -199,7 +199,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 	limit = height / index_button_height;
 	init_index_count = list_data->count / (limit - 1); /* The number of indexes excluding the first */
 	index_count = 0; /* Add the first as well */
-	it = elm_genlist_first_item_get(list_data->list);
+	it = elm_gen_first_item_get(list_data->list);
 	while (it) {
 		entry = (GHashTable *)elm_genlist_item_data_get(it);
 		name = phoneui_utils_contact_display_name_get(entry);
@@ -226,7 +226,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 			}
 			index_count--;
 		}
-		it = elm_genlist_item_next_get(it);
+		it = elm_gen_item_next_get(it);
 	}
 	if (list_data->layout) {
 		elm_layout_content_set(list_data->layout, "contacts_index",

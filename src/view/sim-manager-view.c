@@ -296,7 +296,7 @@ _number_add_add_to_sim(GError *error, gpointer pack)
 			D_("Failed to write to SIM."), error);
 	} else {
 		/*
-		elm_genlist_clear(view.list_data.list);
+		elm_gen_clear(view.list_data.list);
 		sim_manager_list_fill(&view.list_data);
 		*/
 		_number_add_pack *cpack = (_number_add_pack *) pack;
@@ -326,11 +326,11 @@ _find_next_free_index(int max_index) {
 
 	for (i = 1; i <= max_index; i++) {
 		found = 0;
-		it = elm_genlist_first_item_get(view.list_data.list);
+		it = elm_gen_first_item_get(view.list_data.list);
 		entry = elm_genlist_item_data_get(it);
 		while (entry) {
 			if (entry->entry->index == i) found = 1;
-			it = elm_genlist_item_next_get(it);
+			it = elm_gen_item_next_get(it);
 			entry = elm_genlist_item_data_get(it);
 		}
 		if (found == 0) {
@@ -582,7 +582,7 @@ _import_all_contacts_cb(GError *error, char *path, void *data)
 	else {
 		cdata->state = 0;
 	}
-	if (it == elm_genlist_last_item_get(view.list_data.list)) {
+	if (it == elm_gen_last_item_get(view.list_data.list)) {
 		g_debug("import finished");
 		loading_indicator_stop();
 		if (view.import_error) {
@@ -646,10 +646,10 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 
 	loading_indicator_start();
 	view.import_error = EINA_FALSE;
-	it = elm_genlist_first_item_get(view.list_data.list);
+	it = elm_gen_first_item_get(view.list_data.list);
 	while (it) {
 		_import_contact(it, _import_all_contacts_cb);
-		it = elm_genlist_item_next_get(it);
+		it = elm_gen_item_next_get(it);
 	}
 }
 

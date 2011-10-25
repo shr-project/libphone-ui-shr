@@ -457,7 +457,7 @@ static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info)
 	edje_object_signal_emit(ui_utils_view_layout_get(VIEW_PTR(view)),
 				"start_bottom_loading","");
 
-	view.latest_it = elm_genlist_last_item_get(view.list);
+	view.latest_it = elm_gen_last_item_get(view.list);
 	phoneui_utils_messages_get_full("Timestamp", TRUE, view.msg_end, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_APPEND));
 }
 
@@ -478,7 +478,7 @@ static void _scroll_top(void *_data, Evas_Object * obj, void *event_info)
 
 	unsigned int start = view.msg_start > MSG_PER_UPDATE ? view.msg_start-MSG_PER_UPDATE : 0;
 
-	view.latest_it = elm_genlist_first_item_get(view.list);
+	view.latest_it = elm_gen_first_item_get(view.list);
 	phoneui_utils_messages_get_full("Timestamp", TRUE, start, MSG_PER_UPDATE, TRUE, NULL, _process_messages, GINT_TO_POINTER(LIST_INSERT_SORTED));
 }
 
@@ -637,7 +637,7 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 		new_timestamp = (long) g_variant_get_int32(tmp);
 	}
 
-	it = elm_genlist_first_item_get(view.list);
+	it = elm_gen_first_item_get(view.list);
 	if (it) {
 		it_data = elm_genlist_item_data_get(it);
 		if (it_data && (tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
@@ -645,7 +645,7 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 		}
 	}
 
-	it = elm_genlist_last_item_get(view.list);
+	it = elm_gen_last_item_get(view.list);
 	if (it) {
 		it_data = elm_genlist_item_data_get(it);
 		if (it_data && (tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
@@ -723,7 +723,7 @@ _process_message(gpointer _message, gpointer _data)
 	}
 
 	if (insert_mode == LIST_INSERT_SORTED) {
-		it = elm_genlist_first_item_get(view.list);
+		it = elm_gen_first_item_get(view.list);
 		while (it) {
 			other = (GHashTable *)elm_genlist_item_data_get(it);
 			tmp = g_hash_table_lookup(other, "Timestamp");
@@ -733,12 +733,12 @@ _process_message(gpointer _message, gpointer _data)
 			}
 			if (timestamp > other_timestamp)
 				break;
-			it = elm_genlist_item_next_get(it);
+			it = elm_gen_item_next_get(it);
 		}
 		if (it) {
-			if (it == elm_genlist_first_item_get(view.list))
+			if (it == elm_gen_first_item_get(view.list))
 				insert_mode = LIST_INSERT_PREPEND;
-			else if (it == elm_genlist_last_item_get(view.list))
+			else if (it == elm_gen_last_item_get(view.list))
 				insert_mode = LIST_INSERT_APPEND;
 
 			it = elm_genlist_item_insert_before(view.list, &itc,
@@ -787,10 +787,10 @@ _process_message(gpointer _message, gpointer _data)
 
 	if ((view.msg_end - view.msg_start) > MSG_PAGE_SIZE) {
 		if (insert_mode == LIST_INSERT_APPEND) {
-			it = elm_genlist_first_item_get(view.list);
+			it = elm_gen_first_item_get(view.list);
 			view.msg_start++;
 		} else {
-			it = elm_genlist_last_item_get(view.list);
+			it = elm_gen_last_item_get(view.list);
 			view.msg_start = view.msg_start > 1 ? view.msg_start-1 : 0;
 			view.msg_end = view.msg_end > 2 ? view.msg_end-2 : 0;
 		}
@@ -956,7 +956,7 @@ _remove_message(const char *path)
 	GVariant *tmp;
 
 	g_debug("Removing message %s from list", path);
-	it = elm_genlist_first_item_get(view.list);
+	it = elm_gen_first_item_get(view.list);
 	while (it) {
 		properties = (GHashTable *)elm_genlist_item_data_get(it);
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -968,7 +968,7 @@ _remove_message(const char *path)
 				break;
 			}
 		}
-		it = elm_genlist_item_next_get(it);
+		it = elm_gen_item_next_get(it);
 	}
 }
 
@@ -995,7 +995,7 @@ static void
 _hide_cb(struct View *view)
 {
 	g_debug("_hide_cb");
-	elm_genlist_item_bring_in(elm_genlist_first_item_get(
+	elm_genlist_item_bring_in(elm_gen_first_item_get(
 		((struct MessageListViewData *)view)->list));
 }
 
