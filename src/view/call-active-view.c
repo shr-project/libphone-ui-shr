@@ -37,7 +37,7 @@ _speaker_toggle_change(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
-	if (elm_toggle_state_get(obj))
+	if (elm_check_state_get(obj))
 		call_common_set_sound_state(SOUND_STATE_SPEAKER, SOUND_STATE_TYPE_NULL);
 	else
 		call_common_set_sound_state(SOUND_STATE_CALL, SOUND_STATE_TYPE_NULL);
@@ -49,7 +49,7 @@ _mute_toggle_change(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) event_info;
 	phoneui_utils_sound_volume_mute_set(CONTROL_MICROPHONE,
-			elm_toggle_state_get(obj));
+			elm_check_state_get(obj));
 }
 
 static void
@@ -96,7 +96,7 @@ _mute_changed(enum SoundControlType type, int mute, void *_data)
 	struct CallActiveViewData *data = (struct CallActiveViewData *)_data;
 	g_debug("Mute changed: type %d value %d", type, mute);
 	if (type == CONTROL_MICROPHONE) {
-		elm_toggle_state_set(data->mute_toggle, mute);
+		elm_check_state_set(data->mute_toggle, mute);
 	}
 }
 
@@ -156,10 +156,10 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	//evas_object_show(ico);
 
 	g_debug("adding the speaker toggle...");
-	data->speaker_toggle = elm_toggle_add(window_evas_object_get(win));
-	elm_object_text_set(data->speaker_toggle, D_("Speaker"));
-	//elm_toggle_icon_set(data->speaker_toggle, ico);
-	elm_toggle_state_set(data->speaker_toggle, EINA_FALSE);
+	data->speaker_toggle = elm_check_add(window_evas_object_get(win));
+	elm_object_style_set(data->speaker_toggle, "toggle");
+	elm_check_states_labels_set(data->speaker_toggle, D_("Speaker"), "");
+	elm_check_state_set(data->speaker_toggle, EINA_FALSE);
 	elm_object_scale_set(data->speaker_toggle, 1.2);
 	evas_object_smart_callback_add(data->speaker_toggle, "changed",
 			_speaker_toggle_change, data);
@@ -167,9 +167,10 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	evas_object_show(data->speaker_toggle);
 
 	g_debug("adding the mute toggle...");
-	data->mute_toggle = elm_toggle_add(window_evas_object_get(win));
-	elm_object_text_set(data->mute_toggle, D_("Mute"));
-	elm_toggle_state_set(data->mute_toggle, EINA_FALSE);
+	data->mute_toggle = elm_check_add(window_evas_object_get(win));
+	elm_object_style_set(data->mute_toggle, "toggle");
+	elm_check_states_labels_set(data->mute_toggle, D_("Mute"), "");
+	elm_check_state_set(data->mute_toggle, EINA_FALSE);
 	elm_object_scale_set(data->mute_toggle, 1.2);
 	evas_object_smart_callback_add(data->mute_toggle, "changed",
 			_mute_toggle_change, data);

@@ -143,7 +143,7 @@ call_common_window_update_state(struct CallActiveViewData *win,
 		break;
 	}
 
-	elm_toggle_state_set(win->speaker_toggle, speaker_state);
+	elm_check_state_set(win->speaker_toggle, speaker_state);
 }
 
 static void

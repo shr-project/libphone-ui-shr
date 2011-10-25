@@ -162,26 +162,30 @@ _init_profiles_power_page()
 			    "phoneui/settings/quick-settings/profile-power");
 	evas_object_show(view.layout1);
 
-	view.airplane_slide = elm_toggle_add(win);
+	view.airplane_slide = elm_check_add(win);
+	elm_object_style_set(view.airplane_slide, "toggle");
 	elm_layout_content_set(view.layout1, "profiles-frame-airplane-slide", view.airplane_slide);
 	evas_object_smart_callback_add(view.airplane_slide, "changed",
 				       _airplane_slide_changed_cb, NULL);
 	evas_object_show(view.airplane_slide);
 
-	view.dimming_slide = elm_toggle_add(win);
+	view.dimming_slide = elm_check_add(win);
+	elm_object_style_set(view.dimming_slide, "toggle");
 	elm_layout_content_set(view.layout1, "power-frame-auto-frame-dimming-slide", view.dimming_slide);
 	evas_object_smart_callback_add(view.dimming_slide, "changed",
 				       _dimming_slide_changed_cb, NULL);
 	evas_object_show(view.dimming_slide);
 
-	view.suspend_slide = elm_toggle_add(win);
+	view.suspend_slide = elm_check_add(win);
+	elm_object_style_set(view.suspend_slide, "toggle");
+
 	elm_layout_content_set(view.layout1, "power-frame-auto-frame-suspend-slide", view.suspend_slide);
 	evas_object_smart_callback_add(view.suspend_slide, "changed",
 				       _suspend_slide_changed_cb, NULL);
 	evas_object_show(view.suspend_slide);
 
-	elm_toggle_states_labels_set(view.suspend_slide, D_("Forbid"), D_("Allow"));
-	elm_toggle_states_labels_set(view.dimming_slide, D_("Forbid"), D_("Allow"));
+	elm_check_states_labels_set(view.suspend_slide, D_("Forbid"), D_("Allow"));
+	elm_check_states_labels_set(view.dimming_slide, D_("Forbid"), D_("Allow"));
 
 	view.profiles_combo = elm_hoversel_add(win);
 	elm_layout_content_set(view.layout1, "profiles-frame-profiles-combo", view.profiles_combo);
@@ -237,16 +241,18 @@ _init_network_page()
 			    "phoneui/settings/quick-settings/network");
 	evas_object_show(view.layout2);
 
-	view.gprs_slide = elm_toggle_add(win);
+	view.gprs_slide = elm_check_add(win);
+	elm_object_style_set(view.gprs_slide, "toggle");
 	elm_layout_content_set(view.layout2, "network-frame-auto-frame-gprs-slide", view.gprs_slide);
 	evas_object_smart_callback_add(view.gprs_slide, "changed", _gprs_slide_changed_cb, NULL);
-	elm_toggle_states_labels_set(view.gprs_slide, D_("Connected"), D_("Disconnected"));
+	elm_check_states_labels_set(view.gprs_slide, D_("Connected"), D_("Disconnected"));
 	evas_object_show(view.gprs_slide);
 
-	view.sharing_slide = elm_toggle_add(win);
+	view.sharing_slide = elm_check_add(win);
+	elm_object_style_set(view.sharing_slide, "toggle");
 	elm_layout_content_set(view.layout2, "network-frame-auto-frame-sharing-slide", view.sharing_slide);
 	evas_object_smart_callback_add(view.sharing_slide, "changed", _sharing_slide_changed_cb, NULL);
-	elm_toggle_states_labels_set(view.sharing_slide, D_("Sharing"), D_("Not sharing"));
+	elm_check_states_labels_set(view.sharing_slide, D_("Sharing"), D_("Not sharing"));
 	evas_object_show(view.sharing_slide);
 
 	// FIXME: until we implement it
@@ -299,7 +305,7 @@ _get_offline_mode_cb(GError *error, gboolean offline, gpointer data)
 		g_error_free(error);
 		return;
 	}
-	elm_toggle_state_set(view.airplane_slide, offline);
+	elm_check_state_set(view.airplane_slide, offline);
 }
 
 static gboolean
@@ -420,7 +426,7 @@ _airplane_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
-	int state = elm_toggle_state_get(obj);
+	int state = elm_check_state_get(obj);
 	// FIXME: Add callback with error handling
 	phoneui_utils_set_offline_mode(state, NULL, NULL);
 }
@@ -456,10 +462,10 @@ _resource_changed_signal_cb(void *userdata, const char *resource, gboolean state
 
 	/* policy enabled = 2 auto = 0 */
 	if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED) {
-		elm_toggle_state_set(toggle, 1);
+		elm_check_state_set(toggle, 1);
 	}
 	else if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO) {
-		elm_toggle_state_set(toggle, 0);
+		elm_check_state_set(toggle, 0);
 	}
 
 clean:
@@ -482,14 +488,14 @@ _pdp_context_status_signal_cb(void* data,
 	case FREE_SMARTPHONE_GSM_CONTEXT_STATUS_ACTIVE:
 		elm_object_disabled_set(view.sharing_slide, EINA_FALSE);
 	case FREE_SMARTPHONE_GSM_CONTEXT_STATUS_OUTGOING:
-		elm_toggle_state_set(view.gprs_slide, EINA_TRUE);
+		elm_check_state_set(view.gprs_slide, EINA_TRUE);
 		break;
 	default:
-		elm_toggle_state_set(view.gprs_slide, EINA_FALSE);
+		elm_check_state_set(view.gprs_slide, EINA_FALSE);
 		elm_object_disabled_set(view.sharing_slide, EINA_TRUE);
 		break;
 	}
-	elm_toggle_state_set(view.sharing_slide, EINA_FALSE);
+	elm_check_state_set(view.sharing_slide, EINA_FALSE);
 }
 
 static void
@@ -509,10 +515,10 @@ _cpu_get_policy_cb(GError* error, FreeSmartphoneUsageResourcePolicy policy,
 	}
 
 	if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED) {
-		elm_toggle_state_set(view.suspend_slide, 1);
+		elm_check_state_set(view.suspend_slide, 1);
 	}
 	else if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO) {
-		elm_toggle_state_set(view.suspend_slide, 0);
+		elm_check_state_set(view.suspend_slide, 0);
 	}
 }
 
@@ -533,10 +539,10 @@ _display_get_policy_cb(GError* error, FreeSmartphoneUsageResourcePolicy policy,
 	}
 
 	if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_ENABLED) {
-		elm_toggle_state_set(view.dimming_slide, 1);
+		elm_check_state_set(view.dimming_slide, 1);
 	}
 	else if (policy == FREE_SMARTPHONE_USAGE_RESOURCE_POLICY_AUTO) {
-		elm_toggle_state_set(view.dimming_slide, 0);
+		elm_check_state_set(view.dimming_slide, 0);
 	}
 }
 
@@ -545,7 +551,7 @@ _dimming_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
-	int state = elm_toggle_state_get(obj);
+	int state = elm_check_state_get(obj);
 	/*FIXME: Add error handling */
 	if (state) {
 		phoneui_utils_resources_set_resource_policy("Display",
@@ -563,7 +569,7 @@ _suspend_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
-	int state = elm_toggle_state_get(obj);
+	int state = elm_check_state_get(obj);
 	/*FIXME: Add error handling */
 	if (state) {
 		phoneui_utils_resources_set_resource_policy("CPU",
@@ -587,7 +593,7 @@ _pdp_activate_cb(GError *error, gpointer data)
 			  error->code, error->message);
 		ui_utils_error_message_from_gerror_show(VIEW_PTR(view),
 			D_("Activating PDP failed."), error);
-		elm_toggle_state_set(view.gprs_slide, EINA_FALSE);
+		elm_check_state_set(view.gprs_slide, EINA_FALSE);
 	}
 }
 
@@ -603,7 +609,7 @@ _pdp_deactivate_cb(GError *error, gpointer data)
 			D_("De-Activating PDP failed."), error);
 		/* FIXME: think about if this is right for the deactivate
 		          does not work case !!! */
-		elm_toggle_state_set(view.gprs_slide, EINA_TRUE);
+		elm_check_state_set(view.gprs_slide, EINA_TRUE);
 	}
 }
 
@@ -612,7 +618,7 @@ _gprs_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
-	int state = elm_toggle_state_get(obj);
+	int state = elm_check_state_get(obj);
 	/* disable the toggler until we get hit by the signal that
 	the PDP context actually really changed */
 	elm_object_disabled_set(obj, EINA_TRUE);
@@ -630,7 +636,7 @@ _sharing_slide_changed_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) event_info;
 	(void) obj;
-	int state = elm_toggle_state_get(obj);
+	int state = elm_check_state_get(obj);
 	if (state) {
 		phoneui_utils_network_start_connection_sharing("usb0", NULL, NULL);
 	}
