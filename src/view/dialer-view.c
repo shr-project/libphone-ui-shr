@@ -113,7 +113,7 @@ dialer_view_init()
 	elm_icon_file_set(view.delete_text_icon, DELETE_TEXT_ICON, NULL);
 
 	view.delete_text_button = elm_button_add(win);
-	elm_button_icon_set(view.delete_text_button, view.delete_text_icon);
+	elm_object_content_set(view.delete_text_button, view.delete_text_icon);
 	evas_object_smart_callback_add(view.delete_text_button, "clicked",
 				       _dialer_delete_clicked_cb, NULL);
 

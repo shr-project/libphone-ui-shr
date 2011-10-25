@@ -70,7 +70,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 
 	data->bt_accept = elm_button_add(window_evas_object_get(win));
 	elm_object_text_set(data->bt_accept, D_("Accept"));
-	elm_button_icon_set(data->bt_accept, ic);
+	elm_object_content_set(data->bt_accept, ic);
 	evas_object_smart_callback_add(data->bt_accept, "clicked",
 				       call_button_accept_clicked, data);
 	window_swallow(win, "button_accept", data->bt_accept);
@@ -82,7 +82,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
 	data->bt_reject = elm_button_add(window_evas_object_get(win));
 	elm_object_text_set(data->bt_reject, D_("Reject"));
-	elm_button_icon_set(data->bt_reject, ic);
+	elm_object_content_set(data->bt_reject, ic);
 	evas_object_smart_callback_add(data->bt_reject, "clicked",
 				       (Evas_Smart_Cb) call_button_release_clicked, data);
 	window_swallow(win, "button_release", data->bt_reject);

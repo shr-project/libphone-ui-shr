@@ -450,7 +450,7 @@ _init_number_page(struct MessageNewViewData *view)
 	evas_object_show(ico);
 
 	btn = elm_button_add(win);
-	elm_button_icon_set(btn, ico);
+	elm_object_content_set(btn, ico);
 	elm_layout_content_set(view->layout_number, "number_button_delete", btn);
 	evas_object_smart_callback_add(btn, "clicked",
 				       _number_button_delete_clicked, view);
