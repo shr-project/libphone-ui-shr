@@ -65,7 +65,7 @@ static void _load_photo(struct ContactViewData *view);
 static void _load_fields(struct ContactViewData *view);
 static void _add_field(struct ContactViewData *view, const char *key, const char *value, int isnew);
 
-static Evas_Object *gl_field_icon_get(void *_data, Evas_Object * obj, const char *part);
+static Evas_Object *gl_field_content_get(void *_data, Evas_Object * obj, const char *part);
 static void gl_field_del(void *_data, Evas_Object * obj);
 
 static void _delete_cb(struct View *view, Evas_Object * win, void *event_info);
@@ -177,7 +177,7 @@ contact_view_init(char *path, GHashTable *properties)
 
 	itc.item_style = "contactfield";
 	itc.func.label_get = NULL;
-	itc.func.icon_get = gl_field_icon_get;
+	itc.func.content_get = gl_field_content_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_field_del;
 	/*FIXME: Shouldn't be these signals,but the start_edit or whatever signa
@@ -865,9 +865,9 @@ _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 
 
 static Evas_Object *
-gl_field_icon_get(void *_data, Evas_Object * obj, const char *part)
+gl_field_content_get(void *_data, Evas_Object * obj, const char *part)
 {
-	g_debug("gl_field_icon_get (part=%s)", part);
+	g_debug("gl_field_content_get (part=%s)", part);
 	struct ContactFieldData *fd = (struct ContactFieldData *) _data;
 	if (strcmp(part, "elm.swallow.field_button") == 0) {
 		Evas_Object *btn = elm_button_add(obj);

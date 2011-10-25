@@ -57,7 +57,7 @@ static void _contact_changed_handler(void *data, const char *path, enum PhoneuiI
 
 
 static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
-static Evas_Object *gl_icon_get(void *data, Evas_Object * obj, const char *part);
+static Evas_Object *gl_content_get(void *data, Evas_Object * obj, const char *part);
 static Eina_Bool gl_state_get(void *data, Evas_Object * obj, const char *part);
 static void gl_del(void *data, Evas_Object * obj);
 
@@ -108,7 +108,7 @@ int phone_log_view_init()
 
 	itc.item_style = "phonelog";
 	itc.func.label_get = gl_label_get;
-	itc.func.icon_get = gl_icon_get;
+	itc.func.content_get = gl_content_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
 
@@ -400,7 +400,7 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 }
 
 static Evas_Object *
-gl_icon_get(void *data, Evas_Object * obj, const char *part)
+gl_content_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) data;
 	if (!strcmp(part,"elm.swallow.end")) {

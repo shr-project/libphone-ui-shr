@@ -81,7 +81,7 @@ static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info);
 static void _scroll_top(void *_data, Evas_Object * obj, void *event_info);
 static void _selected_changed(void *_data, Evas_Object * obj, void *event_info);
 static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
-static Evas_Object * gl_icon_get(void *data, Evas_Object * obj, const char *part);
+static Evas_Object * gl_content_get(void *data, Evas_Object * obj, const char *part);
 static Eina_Bool gl_state_get(void *data, Evas_Object *obj, const char *part);
 static void gl_del(void *data, Evas_Object * obj);
 
@@ -172,7 +172,7 @@ message_list_view_init()
 	ui_utils_view_swallow(VIEW_PTR(view), "list", view.list);
 	itc.item_style = "message";
 	itc.func.label_get = gl_label_get;
-	itc.func.icon_get = gl_icon_get;
+	itc.func.content_get = gl_content_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
 	evas_object_show(view.list);
@@ -850,7 +850,7 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 }
 
 static Evas_Object *
-gl_icon_get(void *data, Evas_Object * obj, const char *part)
+gl_content_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GVariant *tmp;

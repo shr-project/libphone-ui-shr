@@ -62,7 +62,7 @@ gl_label_get(void *data, Evas_Object * obj, const char *part)
 
 
 static Evas_Object *
-gl_icon_get(void *data, Evas_Object * obj, const char *part)
+gl_content_get(void *data, Evas_Object * obj, const char *part)
 {
 	GHashTable *parameters = (GHashTable *) data;
 
@@ -281,7 +281,7 @@ contact_list_add(struct ContactListData *list_data)
 	elm_object_scale_set(list_data->list, 1.0);
 	itc.item_style = "contact";
 	itc.func.label_get = gl_label_get;
-	itc.func.icon_get = gl_icon_get;
+	itc.func.content_get = gl_content_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_del;
 	evas_object_show(list_data->list);
