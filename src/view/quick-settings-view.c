@@ -184,10 +184,10 @@ _init_profiles_power_page()
 				       _suspend_slide_changed_cb, NULL);
 	evas_object_show(view.suspend_slide);
 
-	elm_check_label_set(view.suspend_slide, "on", D_("Forbid"));
-	elm_check_label_set(view.suspend_slide, "off", D_("Allow"));
-	elm_check_label_set(view.dimming_slide, "on", D_("Forbid"));
-	elm_check_label_set(view.dimming_slide, "off", D_("Allow"));
+	elm_object_text_part_set(view.suspend_slide, "on", D_("Forbid"));
+	elm_object_text_part_set(view.suspend_slide, "off", D_("Allow"));
+	elm_object_text_part_set(view.dimming_slide, "on", D_("Forbid"));
+	elm_object_text_part_set(view.dimming_slide, "off", D_("Allow"));
 
 	view.profiles_combo = elm_hoversel_add(win);
 	elm_layout_content_set(view.layout1, "profiles-frame-profiles-combo", view.profiles_combo);
@@ -247,16 +247,16 @@ _init_network_page()
 	elm_object_style_set(view.gprs_slide, "toggle");
 	elm_layout_content_set(view.layout2, "network-frame-auto-frame-gprs-slide", view.gprs_slide);
 	evas_object_smart_callback_add(view.gprs_slide, "changed", _gprs_slide_changed_cb, NULL);
-	elm_check_label_set(view.gprs_slide, "on", D_("Connected"));
-	elm_check_label_set(view.gprs_slide, "off", D_("Disconnected"));
+	elm_object_text_part_set(view.gprs_slide, "on", D_("Connected"));
+	elm_object_text_part_set(view.gprs_slide, "off", D_("Disconnected"));
 	evas_object_show(view.gprs_slide);
 
 	view.sharing_slide = elm_check_add(win);
 	elm_object_style_set(view.sharing_slide, "toggle");
 	elm_layout_content_set(view.layout2, "network-frame-auto-frame-sharing-slide", view.sharing_slide);
 	evas_object_smart_callback_add(view.sharing_slide, "changed", _sharing_slide_changed_cb, NULL);
-	elm_check_label_set(view.sharing_slide, "on", D_("Sharing"));
-	elm_check_label_set(view.sharing_slide, "off", D_("Not sharing"));
+	elm_object_text_part_set(view.sharing_slide, "on", D_("Sharing"));
+	elm_object_text_part_set(view.sharing_slide, "off", D_("Not sharing"));
 	evas_object_show(view.sharing_slide);
 
 	// FIXME: until we implement it
