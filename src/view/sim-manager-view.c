@@ -450,7 +450,7 @@ _number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
 	elm_entry_editable_set(pack->name_entry, EINA_TRUE);
 	elm_entry_entry_set(pack->name_entry,
 			    elm_entry_utf8_to_markup(pack->name));
-	elm_frame_content_set(fr0, pack->name_entry);
+	elm_object_content_set(fr0, pack->name_entry);
 	evas_object_show(pack->name_entry);
 
 	g_debug("add number label");
@@ -475,7 +475,7 @@ _number_add_contact_get_cb(GError *error, GHashTable *properties, gpointer data)
 	elm_entry_editable_set(pack->number_entry, EINA_TRUE);
 	elm_entry_entry_set(pack->number_entry,
 			    elm_entry_utf8_to_markup(pack->number));
-	elm_frame_content_set(fr1, pack->number_entry);
+	elm_object_content_set(fr1, pack->number_entry);
 	evas_object_show(pack->number_entry);
 
 	g_debug("add the bottom box");
