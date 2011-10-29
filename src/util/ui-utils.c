@@ -240,7 +240,7 @@ ui_utils_view_swallow(struct View *view, const char *key, Evas_Object * object)
 	/* What's this: ?
 	 * edje_object_part_swallow(elm_layout_edje_get(view->layout), key, object);
 	 */
-	elm_layout_content_set(view->layout, key, object);
+	elm_object_content_part_set(view->layout, key, object);
 }
 
 void

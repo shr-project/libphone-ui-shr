@@ -727,7 +727,7 @@ sim_manager_list_add(struct SimManagerListData *list_data)
 	itc.func.del = gl_del;
 	evas_object_show(list_data->list);
 	if (list_data->layout) {
-		elm_layout_content_set(list_data->layout, "contacts_list",
+		elm_object_content_part_set(list_data->layout, "contacts_list",
 				list_data->list);
 	}
 }
