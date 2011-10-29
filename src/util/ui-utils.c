@@ -576,7 +576,7 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	elm_notify_timeout_set(notify, timeout);
 
 	bx = elm_box_add(parent);
-	elm_notify_content_set(notify, bx);
+	elm_object_content_set(notify, bx);
 	elm_box_horizontal_set(bx, 1);
 	evas_object_show(bx);
 
