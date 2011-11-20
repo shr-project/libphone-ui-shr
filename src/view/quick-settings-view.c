@@ -164,14 +164,14 @@ _init_profiles_power_page()
 
 	view.airplane_slide = elm_check_add(win);
 	elm_object_style_set(view.airplane_slide, "toggle");
-	elm_object_content_part_set(view.layout1, "profiles-frame-airplane-slide", view.airplane_slide);
+	elm_object_part_content_set(view.layout1, "profiles-frame-airplane-slide", view.airplane_slide);
 	evas_object_smart_callback_add(view.airplane_slide, "changed",
 				       _airplane_slide_changed_cb, NULL);
 	evas_object_show(view.airplane_slide);
 
 	view.dimming_slide = elm_check_add(win);
 	elm_object_style_set(view.dimming_slide, "toggle");
-	elm_object_content_part_set(view.layout1, "power-frame-auto-frame-dimming-slide", view.dimming_slide);
+	elm_object_part_content_set(view.layout1, "power-frame-auto-frame-dimming-slide", view.dimming_slide);
 	evas_object_smart_callback_add(view.dimming_slide, "changed",
 				       _dimming_slide_changed_cb, NULL);
 	evas_object_show(view.dimming_slide);
@@ -179,39 +179,39 @@ _init_profiles_power_page()
 	view.suspend_slide = elm_check_add(win);
 	elm_object_style_set(view.suspend_slide, "toggle");
 
-	elm_object_content_part_set(view.layout1, "power-frame-auto-frame-suspend-slide", view.suspend_slide);
+	elm_object_part_content_set(view.layout1, "power-frame-auto-frame-suspend-slide", view.suspend_slide);
 	evas_object_smart_callback_add(view.suspend_slide, "changed",
 				       _suspend_slide_changed_cb, NULL);
 	evas_object_show(view.suspend_slide);
 
-	elm_object_text_part_set(view.suspend_slide, "on", D_("Forbid"));
-	elm_object_text_part_set(view.suspend_slide, "off", D_("Allow"));
-	elm_object_text_part_set(view.dimming_slide, "on", D_("Forbid"));
-	elm_object_text_part_set(view.dimming_slide, "off", D_("Allow"));
+	elm_object_part_text_set(view.suspend_slide, "on", D_("Forbid"));
+	elm_object_part_text_set(view.suspend_slide, "off", D_("Allow"));
+	elm_object_part_text_set(view.dimming_slide, "on", D_("Forbid"));
+	elm_object_part_text_set(view.dimming_slide, "off", D_("Allow"));
 
 	view.profiles_combo = elm_hoversel_add(win);
-	elm_object_content_part_set(view.layout1, "profiles-frame-profiles-combo", view.profiles_combo);
+	elm_object_part_content_set(view.layout1, "profiles-frame-profiles-combo", view.profiles_combo);
 	elm_hoversel_hover_parent_set(view.profiles_combo, win);
 	evas_object_show(view.profiles_combo);
 	evas_object_smart_callback_add(view.profiles_combo, "selected", _profile_selected_cb, NULL);
 
 	view.button_lock = elm_button_add(win);
 	elm_object_text_set(view.button_lock, D_("Lock"));
-	elm_object_content_part_set(view.layout1, "power-frame-lock-button", view.button_lock);
+	elm_object_part_content_set(view.layout1, "power-frame-lock-button", view.button_lock);
 	evas_object_smart_callback_add(view.button_lock, "clicked",
 				       _button_lock_clicked_cb, NULL);
 	evas_object_show(view.button_lock);
 
 	view.button_suspend = elm_button_add(win);
 	elm_object_text_set(view.button_suspend, D_("Suspend"));
-	elm_object_content_part_set(view.layout1, "power-frame-suspend-button", view.button_suspend);
+	elm_object_part_content_set(view.layout1, "power-frame-suspend-button", view.button_suspend);
 	evas_object_smart_callback_add(view.button_suspend, "clicked",
 				       _button_suspend_clicked_cb, NULL);
 	evas_object_show(view.button_suspend);
 
 	view.button_shutdown = elm_button_add(win);
 	elm_object_text_set(view.button_shutdown, D_("Shutdown"));
-	elm_object_content_part_set(view.layout1, "power-frame-shutdown-button", view.button_shutdown);
+	elm_object_part_content_set(view.layout1, "power-frame-shutdown-button", view.button_shutdown);
 	evas_object_smart_callback_add(view.button_shutdown, "clicked",
 				       _button_shutdown_clicked_cb, NULL);
 	evas_object_show(view.button_shutdown);
@@ -245,18 +245,18 @@ _init_network_page()
 
 	view.gprs_slide = elm_check_add(win);
 	elm_object_style_set(view.gprs_slide, "toggle");
-	elm_object_content_part_set(view.layout2, "network-frame-auto-frame-gprs-slide", view.gprs_slide);
+	elm_object_part_content_set(view.layout2, "network-frame-auto-frame-gprs-slide", view.gprs_slide);
 	evas_object_smart_callback_add(view.gprs_slide, "changed", _gprs_slide_changed_cb, NULL);
-	elm_object_text_part_set(view.gprs_slide, "on", D_("Connected"));
-	elm_object_text_part_set(view.gprs_slide, "off", D_("Disconnected"));
+	elm_object_part_text_set(view.gprs_slide, "on", D_("Connected"));
+	elm_object_part_text_set(view.gprs_slide, "off", D_("Disconnected"));
 	evas_object_show(view.gprs_slide);
 
 	view.sharing_slide = elm_check_add(win);
 	elm_object_style_set(view.sharing_slide, "toggle");
-	elm_object_content_part_set(view.layout2, "network-frame-auto-frame-sharing-slide", view.sharing_slide);
+	elm_object_part_content_set(view.layout2, "network-frame-auto-frame-sharing-slide", view.sharing_slide);
 	evas_object_smart_callback_add(view.sharing_slide, "changed", _sharing_slide_changed_cb, NULL);
-	elm_object_text_part_set(view.sharing_slide, "on", D_("Sharing"));
-	elm_object_text_part_set(view.sharing_slide, "off", D_("Not sharing"));
+	elm_object_part_text_set(view.sharing_slide, "on", D_("Sharing"));
+	elm_object_part_text_set(view.sharing_slide, "off", D_("Not sharing"));
 	evas_object_show(view.sharing_slide);
 
 	// FIXME: until we implement it

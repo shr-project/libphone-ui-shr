@@ -172,7 +172,7 @@ contact_view_init(char *path, GHashTable *properties)
 				ELM_SCROLLER_POLICY_AUTO);
 	elm_genlist_horizontal_set(view->fields, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(view->fields, 0.0, 0.0);
-	elm_object_content_part_set(view->pager_layout, "fields", view->fields);
+	elm_object_part_content_set(view->pager_layout, "fields", view->fields);
 
 
 	itc.item_style = "contactfield";
@@ -191,28 +191,28 @@ l contacts.edc emits*/
 	elm_object_text_set(view->btn_save, D_("Save"));
 	evas_object_smart_callback_add(view->btn_save, "clicked",
 				       _contact_save_clicked, view);
-	elm_object_content_part_set(view->pager_layout, "button_save", view->btn_save);
+	elm_object_part_content_set(view->pager_layout, "button_save", view->btn_save);
 	evas_object_show(view->btn_save);
 
 	view->btn_cancel = elm_button_add(win);
 	elm_object_text_set(view->btn_cancel, D_("Cancel"));
 	evas_object_smart_callback_add(view->btn_cancel, "clicked",
 				       _contact_cancel_clicked, view);
-	elm_object_content_part_set(view->pager_layout, "button_cancel", view->btn_cancel);
+	elm_object_part_content_set(view->pager_layout, "button_cancel", view->btn_cancel);
 	evas_object_show(view->btn_cancel);
 
 	view->btn_call = elm_button_add(win);
 	elm_object_text_set(view->btn_call, D_("Call"));
 	evas_object_smart_callback_add(view->btn_call, "clicked",
 				       _contact_call_clicked, view);
-	elm_object_content_part_set(view->pager_layout, "button_call", view->btn_call);
+	elm_object_part_content_set(view->pager_layout, "button_call", view->btn_call);
 	evas_object_show(view->btn_call);
 
 	view->btn_sms = elm_button_add(win);
 	elm_object_text_set(view->btn_sms, D_("SMS"));
 	evas_object_smart_callback_add(view->btn_sms, "clicked",
 				       _contact_sms_clicked, view);
-	elm_object_content_part_set(view->pager_layout, "button_sms", view->btn_sms);
+	elm_object_part_content_set(view->pager_layout, "button_sms", view->btn_sms);
 	evas_object_show(view->btn_sms);
 
 	view->btn_delete = elm_button_add(win);
@@ -220,7 +220,7 @@ l contacts.edc emits*/
 	evas_object_smart_callback_add(view->btn_delete, "clicked",
 				       _contact_delete_clicked, view);
 	evas_object_show(view->btn_delete);
-	elm_object_content_part_set(view->pager_layout, "button_delete",
+	elm_object_part_content_set(view->pager_layout, "button_delete",
 			      view->btn_delete);
 
 	view->btn_addfield = elm_button_add(win);
@@ -228,7 +228,7 @@ l contacts.edc emits*/
 	evas_object_smart_callback_add(view->btn_addfield, "clicked",
 				       _contact_add_field_clicked, view);
 	evas_object_show(view->btn_addfield);
-	elm_object_content_part_set(view->pager_layout, "button_addfield",
+	elm_object_part_content_set(view->pager_layout, "button_addfield",
 			      view->btn_addfield);
 
 	_load_name(view);
@@ -799,28 +799,28 @@ _field_edit_add_edit_page(struct ContactFieldData *fd, Evas_Object *content,
 	elm_layout_file_set(layout, phoneui_theme, "phoneui/contacts/edit_field");
 	/*Used for callbacks*/
 	fd->edit_widget = content;
-	elm_object_content_part_set(layout, "main", content);
+	elm_object_part_content_set(layout, "main", content);
 
 	btn_save = elm_button_add(fd->view->pager);
 
 	elm_object_text_set(btn_save, D_("Save"));
 	evas_object_smart_callback_add(btn_save, "clicked",
 				       save_cb, fd);
-	elm_object_content_part_set(layout, "button_save", btn_save);
+	elm_object_part_content_set(layout, "button_save", btn_save);
 	evas_object_show(btn_save);
 
 	btn_back = elm_button_add(fd->view->pager);
 	elm_object_text_set(btn_back, D_("Back"));
 	evas_object_smart_callback_add(btn_back, "clicked",
 				       _field_edit_button_back_clicked_cb, fd);
-	elm_object_content_part_set(layout, "button_back", btn_back);
+	elm_object_part_content_set(layout, "button_back", btn_back);
 	evas_object_show(btn_back);
 
 	btn_remove = elm_button_add(fd->view->pager);
 	elm_object_text_set(btn_remove, D_("Remove"));
 	evas_object_smart_callback_add(btn_remove, "clicked",
 				       _field_edit_button_remove_clicked_cb, fd);
-	elm_object_content_part_set(layout, "button_remove", btn_remove);
+	elm_object_part_content_set(layout, "button_remove", btn_remove);
 	evas_object_show(btn_remove);
 
 	elm_pager_content_push(fd->view->pager, layout);

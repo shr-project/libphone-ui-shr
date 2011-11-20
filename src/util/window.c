@@ -160,7 +160,7 @@ window_swallow(struct Window *win, const char *key, Evas_Object * object)
 		return;
 	}
 	//edje_object_part_swallow(elm_layout_edje_get(win->layout), key, object);
-	elm_object_content_part_set(win->layout, key, object);
+	elm_object_part_content_set(win->layout, key, object);
 }
 
 void

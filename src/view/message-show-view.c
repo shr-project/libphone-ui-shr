@@ -191,7 +191,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	if (content) {
 		elm_object_text_set(view->content, content);
 	}
-	elm_scroller_content_set(view->sc_content, view->content);
+	elm_object_content_set(view->sc_content, view->content);
 	evas_object_show(view->content);
 	ui_utils_view_swallow(VIEW_PTR(*view), "text_content", view->sc_content);
 	evas_object_show(view->sc_content);

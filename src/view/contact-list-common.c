@@ -229,7 +229,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 		it = elm_gen_item_next_get(it);
 	}
 	if (list_data->layout) {
-		elm_object_content_part_set(list_data->layout, "contacts_index",
+		elm_object_part_content_set(list_data->layout, "contacts_index",
 				list_data->index);
 	}
 	evas_object_show(list_data->index);
@@ -286,7 +286,7 @@ contact_list_add(struct ContactListData *list_data)
 	itc.func.del = gl_del;
 	evas_object_show(list_data->list);
 	if (list_data->layout) {
-		elm_object_content_part_set(list_data->layout, "contacts_list",
+		elm_object_part_content_set(list_data->layout, "contacts_list",
 				list_data->list);
 	}
 	list_data->progress = elm_progressbar_add(win);
@@ -295,7 +295,7 @@ contact_list_add(struct ContactListData *list_data)
 	evas_object_size_hint_align_set(list_data->progress, EVAS_HINT_FILL, 0.5);
 	evas_object_size_hint_weight_set(list_data->progress, EVAS_HINT_EXPAND,
 	                                 EVAS_HINT_EXPAND);
-	elm_object_content_part_set(list_data->layout, "loading_indicator", list_data->progress);
+	elm_object_part_content_set(list_data->layout, "loading_indicator", list_data->progress);
 	evas_object_show(list_data->progress);
 }
 

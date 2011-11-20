@@ -240,7 +240,7 @@ ui_utils_view_swallow(struct View *view, const char *key, Evas_Object * object)
 	/* What's this: ?
 	 * edje_object_part_swallow(elm_layout_edje_get(view->layout), key, object);
 	 */
-	elm_object_content_part_set(view->layout, key, object);
+	elm_object_part_content_set(view->layout, key, object);
 }
 
 void
@@ -659,7 +659,7 @@ ui_utils_error_message_show(struct View *parent, const char *error_msg, const ch
 		Evas_Object *scroller = elm_scroller_add(win);
 		evas_object_size_hint_weight_set(scroller, EVAS_HINT_EXPAND, 1.0);
 		evas_object_size_hint_align_set(scroller, EVAS_HINT_FILL, EVAS_HINT_FILL);
-		elm_scroller_content_set(scroller, lb);
+		elm_object_content_set(scroller, lb);
 		evas_object_show(scroller);
 
 		elm_box_pack_end(box, scroller);

@@ -275,14 +275,14 @@ _init_content_page(struct MessageNewViewData *view)
 				    elm_entry_utf8_to_markup(view->content));
 	}
 	evas_object_show(view->content_entry);
-	elm_object_content_part_set(view->layout_content, "content_entry", view->content_entry);
+	elm_object_part_content_set(view->layout_content, "content_entry", view->content_entry);
 	elm_object_focus_set(view->content_entry, EINA_TRUE);
 
 	btn = elm_button_add(win);
 	elm_object_text_set(btn, D_("Insert"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _content_button_insert_clicked, view);
-	elm_object_content_part_set(view->layout_content,
+	elm_object_part_content_set(view->layout_content,
 			       "content_button_insert", btn);
 	evas_object_show(btn);
 
@@ -290,7 +290,7 @@ _init_content_page(struct MessageNewViewData *view)
 	elm_object_text_set(btn, D_("Close"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _content_button_close_clicked, view);
-	elm_object_content_part_set(view->layout_content,
+	elm_object_part_content_set(view->layout_content,
 			       "content_button_close", btn);
 	evas_object_show(btn);
 
@@ -298,7 +298,7 @@ _init_content_page(struct MessageNewViewData *view)
 	elm_object_text_set(btn, D_("Continue"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _content_button_continue_clicked, view);
-	elm_object_content_part_set(view->layout_content,
+	elm_object_part_content_set(view->layout_content,
 			       "content_button_continue", btn);
 	evas_object_show(btn);
 
@@ -327,7 +327,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	evas_object_size_hint_weight_set(view->list_recipients,
 					 EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
 	elm_object_scale_set(view->list_recipients, 1.0);
-	elm_object_content_part_set(view->layout_recipients, "recipients_list",
+	elm_object_part_content_set(view->layout_recipients, "recipients_list",
 			       view->list_recipients);
 	itc.item_style = "contact";
 	itc.func.label_get = gl_label_get;
@@ -342,7 +342,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	elm_object_text_set(btn, D_("Back"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _recipients_button_back_clicked, view);
-	elm_object_content_part_set(view->layout_recipients,
+	elm_object_part_content_set(view->layout_recipients,
 			       "recipients_button_back", btn);
 	evas_object_show(btn);
 
@@ -351,7 +351,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	evas_object_smart_callback_add(btn, "clicked",
 				       _recipients_button_add_contact_clicked,
 				       view);
-	elm_object_content_part_set(view->layout_recipients,
+	elm_object_part_content_set(view->layout_recipients,
 			       "recipients_button_add_contact", btn);
 	evas_object_show(btn);
 
@@ -360,7 +360,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	evas_object_smart_callback_add(btn, "clicked",
 				       _recipients_button_add_number_clicked,
 				       view);
-	elm_object_content_part_set(view->layout_recipients,
+	elm_object_part_content_set(view->layout_recipients,
 			       "recipients_button_add_number", btn);
 	evas_object_show(btn);
 
@@ -368,7 +368,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	elm_object_text_set(btn, D_("Send"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _recipients_button_send_clicked, view);
-	elm_object_content_part_set(view->layout_recipients,
+	elm_object_part_content_set(view->layout_recipients,
 			       "recipients_button_send", btn);
 	evas_object_show(btn);
 
@@ -398,14 +398,14 @@ _init_contacts_page(struct MessageNewViewData *view)
 	elm_object_text_set(btn, D_("Back"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _contacts_button_back_clicked, view);
-	elm_object_content_part_set(view->layout_contacts, "contacts_button_back", btn);
+	elm_object_part_content_set(view->layout_contacts, "contacts_button_back", btn);
 	evas_object_show(btn);
 
 	btn = elm_button_add(win);
 	elm_object_text_set(btn, D_("Add"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _contacts_button_add_clicked, view);
-	elm_object_content_part_set(view->layout_contacts, "contacts_button_add", btn);
+	elm_object_part_content_set(view->layout_contacts, "contacts_button_add", btn);
 	evas_object_show(btn);
 
 	contact_list_fill(&view->contact_list_data);
@@ -434,14 +434,14 @@ _init_number_page(struct MessageNewViewData *view)
 	elm_object_text_set(btn, D_("Back"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _number_button_back_clicked, view);
-	elm_object_content_part_set(view->layout_number, "number_button_back", btn);
+	elm_object_part_content_set(view->layout_number, "number_button_back", btn);
 	evas_object_show(btn);
 
 	btn = elm_button_add(win);
 	elm_object_text_set(btn, D_("Add"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _number_button_add_clicked, view);
-	elm_object_content_part_set(view->layout_number, "number_button_add", btn);
+	elm_object_part_content_set(view->layout_number, "number_button_add", btn);
 	evas_object_show(btn);
 
 	ico = elm_icon_add(win);
@@ -451,7 +451,7 @@ _init_number_page(struct MessageNewViewData *view)
 
 	btn = elm_button_add(win);
 	elm_object_content_set(btn, ico);
-	elm_object_content_part_set(view->layout_number, "number_button_delete", btn);
+	elm_object_part_content_set(view->layout_number, "number_button_delete", btn);
 	evas_object_smart_callback_add(btn, "clicked",
 				       _number_button_delete_clicked, view);
 	evas_object_show(btn);
@@ -459,7 +459,7 @@ _init_number_page(struct MessageNewViewData *view)
 	view->number_keypad = (Evas_Object *) elm_keypad_add(win);
 	evas_object_smart_callback_add(view->number_keypad, "clicked",
 				       _number_keypad_clicked, view);
-	elm_object_content_part_set(view->layout_number, "number_keypad",
+	elm_object_part_content_set(view->layout_number, "number_keypad",
 			       view->number_keypad);
 	evas_object_show(view->number_keypad);
 
@@ -491,14 +491,14 @@ _content_button_insert_clicked(void *data, Evas_Object *obj, void *event_info)
 	elm_object_text_set(btn, D_("Back"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _insert_contacts_button_back_clicked, view);
-	elm_object_content_part_set(view->layout_contacts, "contacts_button_back", btn);
+	elm_object_part_content_set(view->layout_contacts, "contacts_button_back", btn);
 	evas_object_show(btn);
 
 	btn = elm_button_add(win);
 	elm_object_text_set(btn, D_("Add"));
 	evas_object_smart_callback_add(btn, "clicked",
 				       _insert_contacts_button_add_clicked, view);
-	elm_object_content_part_set(view->layout_contacts, "contacts_button_add", btn);
+	elm_object_part_content_set(view->layout_contacts, "contacts_button_add", btn);
 	evas_object_show(btn);
 
 	contact_list_fill(&view->contact_list_data);

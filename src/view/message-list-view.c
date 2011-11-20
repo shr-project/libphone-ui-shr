@@ -872,7 +872,7 @@ gl_content_get(void *data, Evas_Object * obj, const char *part)
 			elm_object_text_set(txt, g_variant_get_string(tmp, NULL));
 			evas_object_show(txt);
 			Evas_Object *bubble = elm_bubble_add(win);
-			elm_bubble_content_set(bubble, txt);
+			elm_object_content_set(bubble, txt);
 			tmp = g_hash_table_lookup(message, "Date");
 			if (tmp) {
 				elm_object_text_set(bubble,
@@ -880,7 +880,7 @@ gl_content_get(void *data, Evas_Object * obj, const char *part)
 			}
 			tmp = g_hash_table_lookup(message, "Phone");
 			if (tmp) {
-				elm_object_text_part_set(bubble, "info",
+				elm_object_part_text_set(bubble, "info",
 						    g_variant_get_string(tmp, NULL));
 			}
 			return bubble;
