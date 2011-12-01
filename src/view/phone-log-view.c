@@ -36,7 +36,7 @@ struct PhoneLogViewData {
 	struct View parent;
 	Evas_Object *toolbar, *pager;
 	Evas_Object *list_in, *list_out, *list_missed, *list_all;
-	Elm_Toolbar_Item *toolbar_missed;
+	Elm_Object_Item *toolbar_missed;
 	int count;
 	GPtrArray *calls;
 };

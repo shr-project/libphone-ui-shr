@@ -115,7 +115,7 @@ quick_settings_view_init()
 	evas_object_size_hint_weight_set(view.toolbar, 0.0, 0.0);
 	evas_object_size_hint_align_set(view.toolbar, EVAS_HINT_FILL, 0.0);
 
-	Elm_Toolbar_Item *tbitem = elm_toolbar_item_append(view.toolbar,
+	Elm_Object_Item *tbitem = elm_toolbar_item_append(view.toolbar,
 		"icon/profile", D_("Profile/Power"), _toolbar_clicked, view.layout1);
 
 	elm_toolbar_item_append(view.toolbar, "icon/network", D_("Network"),
