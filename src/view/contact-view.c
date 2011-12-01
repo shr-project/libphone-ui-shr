@@ -1005,7 +1005,7 @@ _load_fields(struct ContactViewData *view)
 
 	common_utils_debug_dump_hashtable(view->properties);
 
-	elm_gen_clear(view->fields);
+	elm_genlist_clear(view->fields);
 	if (view->properties) {
 		g_hash_table_iter_init(&iter, view->properties);
 		while (g_hash_table_iter_next(&iter, &_key, &_val)) {
