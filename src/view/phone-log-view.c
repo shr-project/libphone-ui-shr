@@ -56,7 +56,7 @@ static void _call_changed_handler(void * data, const char *path, enum PhoneuiInf
 static void _contact_changed_handler(void *data, const char *path, enum PhoneuiInfoChangeType);
 
 
-static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
+static char *gl_text_get(void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_content_get(void *data, Evas_Object * obj, const char *part);
 static Eina_Bool gl_state_get(void *data, Evas_Object * obj, const char *part);
 static void gl_del(void *data, Evas_Object * obj);
@@ -107,7 +107,7 @@ int phone_log_view_init()
 	elm_pager_content_push(view.pager, view.list_missed);
 
 	itc.item_style = "phonelog";
-	itc.func.label_get = gl_label_get;
+	itc.func.text_get = gl_text_get;
 	itc.func.content_get = gl_content_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
@@ -346,13 +346,13 @@ _get_callback(GError* error, GHashTable** entry, int count, gpointer data)
 
 /* --- genlist callbacks --- */
 static char *
-gl_label_get(void *data, Evas_Object * obj, const char *part)
+gl_text_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *entry = (GHashTable *) data;
 	GVariant *val;
 
-	g_debug("gl_label_get: %s", part);
+	g_debug("gl_text_get: %s", part);
 	if (!strcmp(part, "elm.text")) {
 		val = g_hash_table_lookup(entry, "Name");
 		if (val) {

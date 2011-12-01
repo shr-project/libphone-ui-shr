@@ -31,7 +31,7 @@ static Elm_Genlist_Item_Class itc;
 
 /* --- genlist callbacks --- */
 static char *
-gl_label_get(void *data, Evas_Object * obj, const char *part)
+gl_text_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *parameters = (GHashTable *) data;
@@ -280,7 +280,7 @@ contact_list_add(struct ContactListData *list_data)
 	evas_object_size_hint_align_set(list_data->list, 0.0, 0.0);
 	elm_object_scale_set(list_data->list, 1.0);
 	itc.item_style = "contact";
-	itc.func.label_get = gl_label_get;
+	itc.func.text_get = gl_text_get;
 	itc.func.content_get = gl_content_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_del;

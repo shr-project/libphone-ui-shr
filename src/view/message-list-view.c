@@ -80,7 +80,7 @@ static Eina_Bool _release_scroll_lock(void *_data);
 static void _scroll_bottom(void *_data, Evas_Object * obj, void *event_info);
 static void _scroll_top(void *_data, Evas_Object * obj, void *event_info);
 static void _selected_changed(void *_data, Evas_Object * obj, void *event_info);
-static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
+static char *gl_text_get(void *data, Evas_Object * obj, const char *part);
 static Evas_Object * gl_content_get(void *data, Evas_Object * obj, const char *part);
 static Eina_Bool gl_state_get(void *data, Evas_Object *obj, const char *part);
 static void gl_del(void *data, Evas_Object * obj);
@@ -171,7 +171,7 @@ message_list_view_init()
 	view.list = elm_genlist_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "list", view.list);
 	itc.item_style = "message";
-	itc.func.label_get = gl_label_get;
+	itc.func.text_get = gl_text_get;
 	itc.func.content_get = gl_content_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
@@ -802,7 +802,7 @@ _process_message(gpointer _message, gpointer _data)
 }
 
 static char *
-gl_label_get(void *data, Evas_Object * obj, const char *part)
+gl_text_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	GHashTable *message = (GHashTable *)data;

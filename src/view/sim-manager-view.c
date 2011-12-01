@@ -218,7 +218,7 @@ contact_select_view(void (*cb)(const char *, void *), void *data)
 
 /* --- genlist callbacks --- */
 static char *
-gl_label_get(void *data, Evas_Object * obj, const char *part)
+gl_text_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	const struct SimContactData *cdata = data;
@@ -722,7 +722,7 @@ sim_manager_list_add(struct SimManagerListData *list_data)
 	evas_object_size_hint_align_set(list_data->list, 0.0, 0.0);
 	elm_object_scale_set(list_data->list, 1.0);
 	itc.item_style = "sim-contact";
-	itc.func.label_get = gl_label_get;
+	itc.func.text_get = gl_text_get;
 	itc.func.state_get = gl_state_get;
 	itc.func.del = gl_del;
 	evas_object_show(list_data->list);

@@ -80,7 +80,7 @@ static void _number_update_number(struct MessageNewViewData* view);
 static void _process_recipient(gpointer _properties, gpointer _data);
 static void _contact_lookup(GError *error, GHashTable *contact, gpointer data);
 static void _message_send_callback(GError *error, int reference, const char *timestamp, gpointer data);
-static char *gl_label_get(void *data, Evas_Object * obj, const char *part);
+static char *gl_text_get(void *data, Evas_Object * obj, const char *part);
 static Evas_Object *gl_content_get(void *data, Evas_Object * obj, const char *part);
 static void gl_del(void *data, Evas_Object *obj);
 
@@ -184,7 +184,7 @@ message_new_view_show(struct MessageNewViewData *view)
 
 
 static char *
-gl_label_get(void *data, Evas_Object * obj, const char *part)
+gl_text_get(void *data, Evas_Object * obj, const char *part)
 {
 	(void) obj;
 	char *label = NULL;
@@ -330,7 +330,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 	elm_object_part_content_set(view->layout_recipients, "recipients_list",
 			       view->list_recipients);
 	itc.item_style = "contact";
-	itc.func.label_get = gl_label_get;
+	itc.func.text_get = gl_text_get;
 	itc.func.content_get = gl_content_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_del;

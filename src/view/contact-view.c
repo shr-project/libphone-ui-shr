@@ -176,7 +176,7 @@ contact_view_init(char *path, GHashTable *properties)
 
 
 	itc.item_style = "contactfield";
-	itc.func.label_get = NULL;
+	itc.func.text_get = NULL;
 	itc.func.content_get = gl_field_content_get;
 	itc.func.state_get = NULL;
 	itc.func.del = gl_field_del;
