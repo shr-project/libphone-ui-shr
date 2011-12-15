@@ -134,7 +134,7 @@ group { name: "elm/genlist/item/sim-contact/default";
 	alias: "elm/genlist/item_odd/sim-contact/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
-	data.item: "labels" "elm.text elm.text.sub";
+	data.item: "texts" "elm.text elm.text.sub";
 	//data.item: "treesize" "20";
 	// data.item: "states" "";
 

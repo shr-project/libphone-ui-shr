@@ -3,7 +3,7 @@ group { name: "elm/genlist/item/contact/default";
 	alias: "elm/genlist/item_odd/contact/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
-	data.item: "labels" "elm.text elm.text.sub";
+	data.item: "texts" "elm.text elm.text.sub";
 	data.item: "icons" "elm.swallow.icon elm.swallow.end";
 	//data.item: "treesize" "20";
 	// data.item: "states" "";
@@ -339,7 +339,7 @@ group { name: "elm/genlist/item/contactfield/default";
 	alias: "elm/genlist/item_odd/contactfield/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
-	data.item: "labels" "";
+	data.item: "texts" "";
 	data.item: "icons" "elm.swallow.field_button elm.swallow.value_entry elm.swallow.button_delfield elm.swallow.button_actions";
 
 	parts {
