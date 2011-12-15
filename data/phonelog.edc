@@ -29,7 +29,7 @@ group { name: "elm/genlist/item/phonelog/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
 	data.item: "texts" "elm.text elm.text.2 elm.text.sub elm.text.sub.2";
-	data.item: "icons" "elm.swallow.icon elm.swallow.end";
+	data.item: "contents" "elm.swallow.icon elm.swallow.end";
 
 	parts {
 		part {

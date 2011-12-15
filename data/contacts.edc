@@ -4,7 +4,7 @@ group { name: "elm/genlist/item/contact/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
 	data.item: "texts" "elm.text elm.text.sub";
-	data.item: "icons" "elm.swallow.icon elm.swallow.end";
+	data.item: "contents" "elm.swallow.icon elm.swallow.end";
 	//data.item: "treesize" "20";
 	// data.item: "states" "";
 
@@ -340,7 +340,7 @@ group { name: "elm/genlist/item/contactfield/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
 	data.item: "texts" "";
-	data.item: "icons" "elm.swallow.field_button elm.swallow.value_entry elm.swallow.button_delfield elm.swallow.button_actions";
+	data.item: "contents" "elm.swallow.field_button elm.swallow.value_entry elm.swallow.button_delfield elm.swallow.button_actions";
 
 	parts {
 		part {

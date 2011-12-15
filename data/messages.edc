@@ -4,7 +4,7 @@ group { name: "elm/genlist/item/message/default";
 	data.item: "stacking" "above";
 	data.item: "selectraise" "on";
 	data.item: "texts" "elm.date elm.name elm.content";
-	data.item: "icons" "elm.photo";
+	data.item: "contents" "elm.photo";
 	data.item: "states" "direction_out new_outgoing new_incoming new_outgoing_unconfirmed";
 
 	parts {
