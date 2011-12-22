@@ -294,7 +294,7 @@ _profile_selected_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) obj;
 	const char *profile;
-	profile = elm_hoversel_item_label_get(event_info);
+	profile = elm_object_item_text_get(event_info);
 	phoneui_utils_sound_profile_set(profile, _set_profile_cb, NULL);
 }
 
