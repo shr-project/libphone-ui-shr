@@ -111,7 +111,7 @@ contact_list_view_init()
 
 	contact_list_fill(&view.list_data);
 
-	view.ctx = elm_ctxpopup_add(win);
+	view.ctx = elm_ctxpopup_add(view.list_data.list);
 
 	phoneui_info_register_contact_changes(_contact_changed_cb, NULL);
 
@@ -200,32 +200,17 @@ _list_list_longpressed(void *data, Evas_Object *obj, void *event_info)
 
 	selected_items = eina_list_count(elm_genlist_selected_items_get(obj));
 
-	if(selected_items == 1)
-	{
-		if(view.action_del)
-			elm_ctxpopup_item_del(view.action_del);
-		if(view.action_unsel)
-			elm_ctxpopup_item_del(view.action_unsel);
-		if(!view.action_edit)
-			view.action_edit = elm_ctxpopup_item_append(view.ctx, D_("Edit"), NULL, _list_edit_clicked, NULL);
 
-		view.action_del = elm_ctxpopup_item_append(view.ctx, D_("Delete"), NULL, _list_delete_clicked, NULL);
+	elm_ctxpopup_clear(view.ctx);
+	view.action_edit = NULL;
+	view.action_del = NULL;
+	view.action_unsel = NULL;
+
+	if (selected_items < 2)
+		view.action_edit = elm_ctxpopup_item_append(view.ctx, D_("Edit"), NULL, _list_edit_clicked, NULL);
+	view.action_del = elm_ctxpopup_item_append(view.ctx, D_("Delete"), NULL, _list_delete_clicked, NULL);
+	if (selected_items > 0)
 		view.action_unsel = elm_ctxpopup_item_append(view.ctx, D_("Unselect"), NULL, _list_unselect_clicked, NULL);
-	}
-
-	if(selected_items > 1)
-	{
-		if(view.action_edit)
-		{
-			elm_ctxpopup_item_del(view.action_edit);
-			view.action_edit = NULL;
-		}
-		if(!view.action_del)
-			view.action_del = elm_ctxpopup_item_append(view.ctx, D_("Delete"), NULL, _list_delete_clicked, NULL);
-		if(view.action_unsel)
-			elm_ctxpopup_item_del(view.action_unsel);
-		view.action_unsel = elm_ctxpopup_item_append(view.ctx, D_("Unselect all"), NULL, _list_unselect_clicked, NULL);
-	}
 
 	evas_object_show(view.ctx);
 }
