@@ -106,9 +106,9 @@ _number_select_select(void *data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	struct _number_entry *entry = NULL;
 	struct _number_select_pack *pack = data;
-	Elm_List_Item *it = elm_list_selected_item_get(obj);
+	Elm_Object_Item *it = (Elm_Object_Item *) elm_list_selected_item_get(obj);
 	if (it) {
-		entry = elm_list_item_data_get(it);
+		entry = elm_object_item_data_get(it);
 	}
 
 	if (entry) {
@@ -130,7 +130,7 @@ _add_number_to_list_real(struct _number_select_pack *pack,
 			 const char *field, const char *number)
 {
 	Evas_Object *ico;
-	Elm_List_Item *it;
+	Elm_Object_Item *it;
 	struct _number_entry *entry = malloc(sizeof(struct _number_entry));
 	entry->field = strdup(field);
 	entry->number = strdup(number);
@@ -138,7 +138,7 @@ _add_number_to_list_real(struct _number_select_pack *pack,
 	ico = elm_icon_add(ui_utils_view_window_get(pack->view));
 	elm_icon_scale_set(ico, 1, 1);
 	elm_icon_file_set(ico, phoneui_theme, "icon/phone");
-	it = elm_list_item_append(pack->list, entry->number, ico, NULL, NULL, entry);
+	it = (Elm_Object_Item *) elm_list_item_append(pack->list, entry->number, ico, NULL, NULL, entry);
 	if (!it) {
 		g_warning("Adding number to list failed!!!");
 	}
