@@ -99,7 +99,7 @@ gl_index_changed(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
-	elm_genlist_item_top_bring_in(event_info);
+	elm_genlist_item_top_bring_in(elm_object_item_data_get(event_info));
 }
 
 
