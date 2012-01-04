@@ -323,7 +323,12 @@ _network_status(void *data, GHashTable *properties)
 	ui_utils_view_text_set(VIEW_PTR(view), "gsmProvider", s);
 	v = g_hash_table_lookup(properties, "strength");
 	if (v) {
-		_update_signal_strength(g_variant_get_int32(v));
+		if (g_variant_is_of_type(v, G_VARIANT_TYPE_INT32)) {
+			_update_signal_strength(g_variant_get_int32(v));
+		}
+		else {
+			g_warning("ignoring signal strength which is not int32");
+		}
 	}
 	v = g_hash_table_lookup(properties, "pdp.registration");
 	if (v) {
