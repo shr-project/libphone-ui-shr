@@ -42,8 +42,6 @@
 struct ContactListViewData {
 	struct View view;
 	struct ContactListData list_data;
-	Evas_Object *ctx;
-	Elm_Object_Item *action_edit, *action_del, *action_unsel;
 	Evas_Object *bt1, *bt2, *bt_options, *bt_message, *bt_edit, *bt_delete;
 	Evas_Object *inwin;
 };
@@ -57,7 +55,7 @@ static void _list_message_number_callback(const char *number, void *data);
 static void _list_message_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_edit_clicked(void *data, Evas_Object *obj, void *event_info);
 static void _list_delete_clicked(void *data, Evas_Object *obj, void *event_info);
-static void _list_unselect_clicked(void *data, Evas_Object *obj, void *event_info);
+static void _ctx_dismissed(void *data, Evas_Object *obj, void *event_info);
 static void _contact_changed_cb(void *data, const char *path, enum PhoneuiInfoChangeType type);
 static void _hide_cb(struct View *view);
 static void _delete_cb(struct View *data, Evas_Object *obj, void *event_info);
@@ -110,8 +108,6 @@ contact_list_view_init()
 
 
 	contact_list_fill(&view.list_data);
-
-	view.ctx = elm_ctxpopup_add(view.list_data.list);
 
 	phoneui_info_register_contact_changes(_contact_changed_cb, NULL);
 
@@ -196,23 +192,17 @@ _list_list_longpressed(void *data, Evas_Object *obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	unsigned int selected_items=0;
+	Evas_Object *ctx;
+	Evas_Coord x, y;
 
-	selected_items = eina_list_count(elm_genlist_selected_items_get(obj));
-
-
-	elm_ctxpopup_clear(view.ctx);
-	view.action_edit = NULL;
-	view.action_del = NULL;
-	view.action_unsel = NULL;
-
-	if (selected_items < 2)
-		view.action_edit = elm_ctxpopup_item_append(view.ctx, D_("Edit"), NULL, _list_edit_clicked, NULL);
-	view.action_del = elm_ctxpopup_item_append(view.ctx, D_("Delete"), NULL, _list_delete_clicked, NULL);
-	if (selected_items > 0)
-		view.action_unsel = elm_ctxpopup_item_append(view.ctx, D_("Unselect"), NULL, _list_unselect_clicked, NULL);
-
-	evas_object_show(view.ctx);
+	ctx = elm_ctxpopup_add(view.list_data.list);
+	evas_object_smart_callback_add(ctx, "dismissed", _ctx_dismissed, NULL);
+	elm_ctxpopup_item_append(ctx, D_("Edit"), NULL, _list_edit_clicked, event_info);
+	elm_ctxpopup_item_append(ctx, D_("Delete"), NULL, _list_delete_clicked, event_info);
+	evas_pointer_canvas_xy_get(evas_object_evas_get(obj), &x, &y);
+	elm_genlist_item_selected_set((Elm_Genlist_Item*)event_info, EINA_TRUE);
+	evas_object_move(ctx, x, y);
+	evas_object_show(ctx);
 }
 
 static void
@@ -278,20 +268,17 @@ _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 static void
 _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 {
-	(void) data;
 	(void) obj;
 	(void) event_info;
 	GHashTable *properties;
-	const Eina_List *contacts;
-	
-	g_debug("editing selected contact");
-	evas_object_hide(view.ctx);
 
-	contacts = elm_genlist_selected_items_get(view.list_data.list);
-	if( !contacts || eina_list_count(contacts) > 1 )
+	g_debug("editing selected contact");
+	evas_object_del(obj);
+
+	if (!data)
 		return;
 
-	properties = elm_genlist_item_data_get(eina_list_data_get(contacts));
+	properties = elm_genlist_item_data_get(data);
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -329,41 +316,32 @@ _contact_delete_confirm_cb(int result, void *data)
 static void
 _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 {
-	(void) data;
 	(void) obj;
 	(void) event_info;
-	const Eina_List *contacts, *c;
-	void *contact;
 
-	evas_object_hide(view.ctx);
+	evas_object_del(obj);
 
-	contacts = elm_genlist_selected_items_get(view.list_data.list);
-	if( !contacts )
+	if (!data)
 		return;
 
+	ui_utils_dialog(VIEW_PTR(view), D_("Really delete contact details?"), 
+			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, data);
 	// FIXME: this should say what contact is being deleted, now...
-	EINA_LIST_FOREACH(contacts, c, contact)
-		ui_utils_dialog(VIEW_PTR(view), D_("Really delete contact details?"),
-				DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, contact);
+	//EINA_LIST_FOREACH(contacts, c, contact)
+	//	ui_utils_dialog(VIEW_PTR(view), D_("Really delete contact details?"),
+	//			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, contact);
 }
 
 static void
-_list_unselect_clicked(void *data, Evas_Object * obj, void *event_info)
+_ctx_dismissed(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	const Eina_List *contacts, *c;
-	void *contact;
 
-	evas_object_hide(view.ctx);
+	g_debug("ctx popup dismissed");
 
-	contacts = elm_genlist_selected_items_get(view.list_data.list);
-	if( !contacts )
-		return;
-
-	EINA_LIST_FOREACH(contacts, c, contact)
-		elm_genlist_item_selected_set(contact, EINA_FALSE);
+	evas_object_del(obj);
 }
 
 static void
