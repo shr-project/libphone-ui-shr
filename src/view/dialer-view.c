@@ -188,7 +188,7 @@ dialer_view_init()
 		elm_box_pack_end(view.bx2, view.bt_suggest_contact[iSuggest]);
 	}
 
-	elm_hover_content_set(view.hv2, "top", view.bx2);
+	elm_object_part_content_set(view.hv2, "top", view.bx2);
 
 	/* Options */
 	view.hv = elm_hover_add(win);
@@ -216,7 +216,7 @@ dialer_view_init()
 	evas_object_show(view.bt_message);
 	elm_box_pack_end(view.bx, view.bt_message);
 
-	elm_hover_content_set(view.hv, "top", view.bx);
+	elm_object_part_content_set(view.hv, "top", view.bx);
 
 	view.number[0] = '\0';
 	view.length = 0;

@@ -159,7 +159,7 @@ message_list_view_init()
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
 
-	elm_hover_content_set(view.hv, "top", box);
+	elm_object_part_content_set(view.hv, "top", box);
 
 	obj = elm_button_add(win);
 	elm_object_text_set(obj, D_("Show"));

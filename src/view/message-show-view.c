@@ -257,7 +257,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	evas_object_show(obj);
 	elm_box_pack_end(box, obj);
 
-	elm_hover_content_set(view->hv, "top", box);
+	elm_object_part_content_set(view->hv, "top", box);
 
 
 	obj = elm_button_add(win);

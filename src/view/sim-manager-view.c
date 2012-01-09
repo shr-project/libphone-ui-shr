@@ -874,7 +874,7 @@ sim_manager_view_init()
 	evas_object_show(view.bt_delete);
 	elm_box_pack_end(view.bx, view.bt_delete);
 
-	elm_hover_content_set(view.hv, "top", view.bx);
+	elm_object_part_content_set(view.hv, "top", view.bx);
 
 	/* loading indicator */
 	view.pb = elm_progressbar_add(win);
