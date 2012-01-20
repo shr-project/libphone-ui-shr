@@ -46,7 +46,7 @@ enum MessageNewModes {
 struct _recipient_pack {
 	struct MessageNewViewData *view;
 	GHashTable *recipient;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 };
 
 static Elm_Genlist_Item_Class itc;
@@ -520,11 +520,11 @@ _insert_contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_in
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 	GHashTable *properties;
 
-	it = elm_genlist_selected_item_get(view->contact_list_data.list);
-	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	glit = elm_genlist_selected_item_get(view->contact_list_data.list);
+	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -633,7 +633,7 @@ _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info
 	(void) event_info;
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 	g_ptr_array_remove(pack->view->recipients, pack->recipient);
-	elm_genlist_item_del(pack->it);
+	elm_genlist_item_del(pack->glit);
 }
 
 // static void
@@ -643,12 +643,12 @@ _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info
 // 	(void) event_info;
 // 	struct MessageNewViewData *data = (struct MessageNewViewData *) _data;
 //
-// 	Elm_Genlist_Item *it =
+// 	Elm_Object_Item *glit =
 // 			elm_genlist_selected_item_get(data->list_recipients);
-// 	if (it) {
-// 		GHashTable *parameters = (GHashTable *) elm_genlist_item_data_get(it);
+// 	if (glit) {
+// 		GHashTable *parameters = (GHashTable *) elm_genlist_item_data_get(glit);
 // 		g_ptr_array_remove(data->recipients, parameters);
-// 		elm_genlist_item_del(it);
+// 		elm_genlist_item_del(glit);
 // 	}
 // }
 
@@ -694,11 +694,11 @@ _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 	GHashTable *properties;
 
-	it = elm_genlist_selected_item_get(view->contact_list_data.list);
-	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	glit = elm_genlist_selected_item_get(view->contact_list_data.list);
+	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -878,7 +878,7 @@ _process_recipient(gpointer _properties, gpointer _data)
 	pack = malloc(sizeof(struct _recipient_pack));
 	pack->recipient = properties;
 	pack->view = view;
-	pack->it = elm_genlist_item_append(view->list_recipients, &itc, pack,
+	pack->glit = elm_genlist_item_append(view->list_recipients, &itc, pack,
 					   NULL, ELM_GENLIST_ITEM_NONE,
 					   NULL, NULL);
 	/* try to resolve the number to a contact */
@@ -919,7 +919,7 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 		g_hash_table_insert(pack->recipient, "Photo", g_variant_ref(gtmp));
 	}
 	if (pack->view->layout_recipients) {
-		elm_genlist_item_update(pack->it);
+		elm_genlist_item_update(pack->glit);
 	}
 }
 

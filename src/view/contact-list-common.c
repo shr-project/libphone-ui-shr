@@ -142,25 +142,25 @@ _new_get_index(const char *_string)
 	return string;
 }
 
-Elm_Genlist_Item *
+Elm_Object_Item *
 contact_list_item_add(struct ContactListData *list_data,
 		      GHashTable *entry, int sortin)
 {
 	GHashTable *other;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 
 	if (sortin) {
 		/* find the correct position to insert the new one */
-		it = elm_genlist_first_item_get(list_data->list);
-		while (it) {
-			other = (GHashTable *)elm_genlist_item_data_get(it);
+		glit = elm_genlist_first_item_get(list_data->list);
+		while (glit) {
+			other = (GHashTable *)elm_genlist_item_data_get(glit);
 			if (phoneui_utils_contact_compare(entry, other) < 0)
 				break;
-			it = elm_genlist_item_next_get(it);
+			glit = elm_genlist_item_next_get(glit);
 		}
-		if (it) {
+		if (glit) {
 			return elm_genlist_item_insert_before(list_data->list,
-					&itc, g_hash_table_ref(entry), NULL, it,
+					&itc, g_hash_table_ref(entry), NULL, glit,
 					ELM_GENLIST_ITEM_NONE, NULL, NULL);
 		}
 	}
@@ -175,7 +175,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 	static const int index_button_height = 25; /*FIXME: get actual size*/
 	int limit = 1;
 	Evas_Object *win;
-	Elm_Genlist_Item *it, *current_index_item = NULL;
+	Elm_Object_Item *glit, *current_index_item = NULL;
 	GHashTable *entry;
 	char *idx, *current_index = NULL;
 	char *name;
@@ -199,9 +199,9 @@ contact_list_fill_index(struct ContactListData *list_data)
 	limit = height / index_button_height;
 	init_index_count = list_data->count / (limit - 1); /* The number of indexes excluding the first */
 	index_count = 0; /* Add the first as well */
-	it = elm_genlist_first_item_get(list_data->list);
-	while (it) {
-		entry = (GHashTable *)elm_genlist_item_data_get(it);
+	glit = elm_genlist_first_item_get(list_data->list);
+	while (glit) {
+		entry = (GHashTable *)elm_genlist_item_data_get(glit);
 		name = phoneui_utils_contact_display_name_get(entry);
 		idx = _new_get_index(name);
 		if (idx) {
@@ -210,7 +210,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 					free(current_index);
 				}
 				current_index = idx;
-				current_index_item = it;
+				current_index_item = glit;
 				new_index = TRUE;
 			}
 			else {
@@ -226,7 +226,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 			}
 			index_count--;
 		}
-		it = elm_genlist_item_next_get(it);
+		glit = elm_genlist_item_next_get(glit);
 	}
 	if (list_data->layout) {
 		elm_object_part_content_set(list_data->layout, "contacts_index",
@@ -238,11 +238,11 @@ contact_list_fill_index(struct ContactListData *list_data)
 static void
 _process_entry(void *_entry, void *_data)
 {
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 	GHashTable *entry = (GHashTable *)_entry;
 	struct ContactListData *list_data = (struct ContactListData *) _data;
-	it = contact_list_item_add(list_data, entry, 0);
-	if (!it) {
+	glit = contact_list_item_add(list_data, entry, 0);
+	if (!glit) {
 		g_warning("Failed adding a contact to the list");
 		return;
 	}

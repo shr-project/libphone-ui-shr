@@ -146,13 +146,13 @@ _contact_select_add(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	_contact_select_pack *pack = data;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 	GHashTable *properties;
 	char *path = NULL;
 	GVariant *p;
 
-	it = elm_genlist_selected_item_get(pack->contact_list_data.list);
-	properties = it ? (GHashTable *) elm_genlist_item_data_get(it) : NULL;
+	glit = elm_genlist_selected_item_get(pack->contact_list_data.list);
+	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
 
 	if (properties) {
 		p = g_hash_table_lookup(properties, "Path");
@@ -321,17 +321,17 @@ _number_add_add_to_sim(GError *error, gpointer pack)
 int
 _find_next_free_index(int max_index) {
 	int i, found;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 	const struct SimContactData *entry;
 
 	for (i = 1; i <= max_index; i++) {
 		found = 0;
-		it = elm_genlist_first_item_get(view.list_data.list);
-		entry = elm_genlist_item_data_get(it);
+		glit = elm_genlist_first_item_get(view.list_data.list);
+		entry = elm_genlist_item_data_get(glit);
 		while (entry) {
 			if (entry->entry->index == i) found = 1;
-			it = elm_genlist_item_next_get(it);
-			entry = elm_genlist_item_data_get(it);
+			glit = elm_genlist_item_next_get(glit);
+			entry = elm_genlist_item_data_get(glit);
 		}
 		if (found == 0) {
 			return i;
@@ -545,9 +545,9 @@ _import_one_contact_cb(GError *error, char *path, void *data)
 	(void) path;
 	(void) data;
 	loading_indicator_stop();
-	Elm_Genlist_Item *it = data;
+	Elm_Object_Item *glit = data;
 	struct SimContactData *cdata =
-			(struct SimContactData *)elm_genlist_item_data_get(it);
+			(struct SimContactData *)elm_genlist_item_data_get(glit);
 	if (error) {
 		g_warning("importing one contact failed: (%d) %s",
 			  error->code, error->message);
@@ -570,9 +570,9 @@ static void
 _import_all_contacts_cb(GError *error, char *path, void *data)
 {
 	(void) path;
-	Elm_Genlist_Item *it = data;
+	Elm_Object_Item *glit = data;
 	struct SimContactData *cdata =
-			(struct SimContactData *)elm_genlist_item_data_get(it);
+			(struct SimContactData *)elm_genlist_item_data_get(glit);
 	if (error) {
 		cdata->state = 1;
 		view.import_error = EINA_TRUE;
@@ -582,7 +582,7 @@ _import_all_contacts_cb(GError *error, char *path, void *data)
 	else {
 		cdata->state = 0;
 	}
-	if (it == elm_genlist_last_item_get(view.list_data.list)) {
+	if (glit == elm_genlist_last_item_get(view.list_data.list)) {
 		g_debug("import finished");
 		loading_indicator_stop();
 		if (view.import_error) {
@@ -601,16 +601,16 @@ _import_all_contacts_cb(GError *error, char *path, void *data)
 }
 
 static void
-_import_contact(Elm_Genlist_Item *it,
+_import_contact(Elm_Object_Item *glit,
 		void (*callback)(GError *, char *, gpointer))
 {
 	g_debug("_import_contact()");
 	GVariant *tmp;
 
-	if (!it) {
+	if (!glit) {
 		return;
 	}
-	const struct SimContactData *cdata = elm_genlist_item_data_get(it);
+	const struct SimContactData *cdata = elm_genlist_item_data_get(glit);
 	if (cdata->entry) {
 		GHashTable *qry = g_hash_table_new_full
 		     (g_str_hash, g_str_equal, NULL, common_utils_variant_unref);
@@ -618,7 +618,7 @@ _import_contact(Elm_Genlist_Item *it,
 		g_hash_table_insert(qry, "Name", g_variant_ref_sink(tmp));
 		tmp = g_variant_new_string(cdata->entry->number);
 		g_hash_table_insert(qry, "Phone", g_variant_ref_sink(tmp));
-		phoneui_utils_contact_add(qry, callback, it);
+		phoneui_utils_contact_add(qry, callback, glit);
 		g_hash_table_unref(qry);
 	}
 }
@@ -642,14 +642,14 @@ _list_import_all_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 
 	loading_indicator_start();
 	view.import_error = EINA_FALSE;
-	it = elm_genlist_first_item_get(view.list_data.list);
-	while (it) {
-		_import_contact(it, _import_all_contacts_cb);
-		it = elm_genlist_item_next_get(it);
+	glit = elm_genlist_first_item_get(view.list_data.list);
+	while (glit) {
+		_import_contact(glit, _import_all_contacts_cb);
+		glit = elm_genlist_item_next_get(glit);
 	}
 }
 
@@ -664,8 +664,8 @@ _contact_delete_confirmiation_cb(GError *error, gpointer data)
 			DIALOG_OK, NULL, NULL);
 	}
 	else {
-		Elm_Genlist_Item *it = data;
-		elm_genlist_item_del(it);
+		Elm_Object_Item *glit = data;
+		elm_genlist_item_del(glit);
 	}
 }
 
@@ -675,11 +675,11 @@ _contact_delete_confirm_cb(int result, void *data)
 	if (!data || result != DIALOG_YES)
 		return;
 
-	Elm_Genlist_Item *it = data;
-	const struct SimContactData *cdata = elm_genlist_item_data_get(it);
+	Elm_Object_Item *glit = data;
+	const struct SimContactData *cdata = elm_genlist_item_data_get(glit);
 	if (cdata->entry) {
 		phoneui_utils_sim_contact_delete(SIM_CONTACTS_CATEGORY,
-			cdata->entry->index, _contact_delete_confirmiation_cb, it);
+			cdata->entry->index, _contact_delete_confirmiation_cb, glit);
 	}
 }
 
@@ -689,15 +689,15 @@ _list_delete_clicked(void *data, Evas_Object * obj, void *event_info)
 	(void) data;
 	(void) obj;
 	(void) event_info;
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 
 	evas_object_hide(view.hv);
 
-	it = elm_genlist_selected_item_get(view.list_data.list);
-	if (it) {
+	glit = elm_genlist_selected_item_get(view.list_data.list);
+	if (glit) {
 		ui_utils_dialog(VIEW_PTR(view),
 			D_("Really delete this contact?"),
-			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, it);
+			DIALOG_YES|DIALOG_NO, _contact_delete_confirm_cb, glit);
 	}
 }
 
@@ -732,7 +732,7 @@ sim_manager_list_add(struct SimManagerListData *list_data)
 	}
 }
 
-Elm_Genlist_Item *
+Elm_Object_Item *
 sim_manager_list_item_add(struct SimManagerListData *list_data,
 			  FreeSmartphoneGSMSIMEntry *entry)
 {

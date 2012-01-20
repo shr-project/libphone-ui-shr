@@ -38,7 +38,7 @@ struct ContactListData {
 void contact_list_fill_index(struct ContactListData *list_data);
 void contact_list_fill(struct ContactListData *list_data);
 void contact_list_add(struct ContactListData *list_data);
-Elm_Genlist_Item *contact_list_item_add(struct ContactListData *list_data, GHashTable *entry, int sortin);
+Elm_Object_Item *contact_list_item_add(struct ContactListData *list_data, GHashTable *entry, int sortin);
 
 
 #endif

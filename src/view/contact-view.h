@@ -42,7 +42,7 @@ struct ContactFieldData {
 	char *name;
 	char *value;
 	Evas_Object *field_button, *value_entry, *slide_buttons;
-	Elm_Genlist_Item *item;
+	Elm_Object_Item *item;
 	struct ContactViewData *view;
 /*temporary*/
 	Evas_Object *edit_widget;

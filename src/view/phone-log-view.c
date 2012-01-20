@@ -200,7 +200,7 @@ _add_genlist(Evas_Object *win)
 static void
 _add_entry(GHashTable *entry)
 {
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 	GVariant *val;
 	int received = 0, answered = 0;
 
@@ -223,33 +223,33 @@ _add_entry(GHashTable *entry)
 		}
 	}
 
-	it = elm_genlist_item_append(view.list_all, &itc,
+	glit = elm_genlist_item_append(view.list_all, &itc,
 			g_hash_table_ref(entry),
 			NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-	val = g_variant_new_int32(GPOINTER_TO_INT(it));
+	val = g_variant_new_int32(GPOINTER_TO_INT(glit));
 	g_hash_table_insert(entry, "_item_all", g_variant_ref_sink(val));
 	if (received) {
 		if (answered) {
-			it = elm_genlist_item_append(view.list_in, &itc,
+			glit = elm_genlist_item_append(view.list_in, &itc,
 					g_hash_table_ref(entry),
 					NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-			val = g_variant_new_int32(GPOINTER_TO_INT(it));
+			val = g_variant_new_int32(GPOINTER_TO_INT(glit));
 			g_hash_table_insert(entry, "_item_in", g_variant_ref_sink(val));
 		}
 		else {
-			it = elm_genlist_item_append(view.list_missed, &itc,
+			glit = elm_genlist_item_append(view.list_missed, &itc,
 					g_hash_table_ref(entry),
 					NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-			val = g_variant_new_int32(GPOINTER_TO_INT(it));
+			val = g_variant_new_int32(GPOINTER_TO_INT(glit));
 			g_hash_table_insert(entry, "_item_missed",
 					g_variant_ref_sink(val));
 		}
 	}
 	else {
-		it = elm_genlist_item_append(view.list_out, &itc,
+		glit = elm_genlist_item_append(view.list_out, &itc,
 				g_hash_table_ref(entry),
 				NULL, ELM_GENLIST_ITEM_NONE, NULL, NULL);
-		val = g_variant_new_int32(GPOINTER_TO_INT(it));
+		val = g_variant_new_int32(GPOINTER_TO_INT(glit));
 		g_hash_table_insert(entry, "_item_out",
 				g_variant_ref_sink(val));
 	}
@@ -258,28 +258,28 @@ _add_entry(GHashTable *entry)
 static void
 _update_entry(GHashTable *entry)
 {
-	Elm_Genlist_Item *it;
+	Elm_Object_Item *glit;
 	GVariant *val;
 
 	val = g_hash_table_lookup(entry, "_item_all");
 	if (val) {
-		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
-		elm_genlist_item_update(it);
+		glit = (Elm_Object_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
+		elm_genlist_item_update(glit);
 	}
 	val = g_hash_table_lookup(entry, "_item_missed");
 	if (val) {
-		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
-		elm_genlist_item_update(it);
+		glit = (Elm_Object_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
+		elm_genlist_item_update(glit);
 	}
 	val = g_hash_table_lookup(entry, "_item_in");
 	if (val) {
-		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
-		elm_genlist_item_update(it);
+		glit = (Elm_Object_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
+		elm_genlist_item_update(glit);
 	}
 	val = g_hash_table_lookup(entry, "_item_out");
 	if (val) {
-		it = (Elm_Genlist_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
-		elm_genlist_item_update(it);
+		glit = (Elm_Object_Item *)GINT_TO_POINTER(g_variant_get_int32(val));
+		elm_genlist_item_update(glit);
 	}
 }
 
