@@ -170,7 +170,7 @@ contact_view_init(char *path, GHashTable *properties)
 	view->fields = elm_genlist_add(win);
 	elm_scroller_policy_set(view->fields, ELM_SCROLLER_POLICY_OFF,
 				ELM_SCROLLER_POLICY_AUTO);
-	elm_genlist_horizontal_set(view->fields, ELM_LIST_LIMIT);
+	elm_genlist_mode_set(view->fields, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(view->fields, 0.0, 0.0);
 	elm_object_part_content_set(view->pager_layout, "fields", view->fields);
 

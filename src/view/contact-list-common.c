@@ -274,7 +274,7 @@ contact_list_add(struct ContactListData *list_data)
 	win = ui_utils_view_window_get(list_data->view);
 	list_data->index = NULL;
 	list_data->list = elm_genlist_add(win);
-	elm_genlist_horizontal_set(list_data->list, ELM_LIST_LIMIT);
+	elm_genlist_mode_set(list_data->list, ELM_LIST_LIMIT);
 	elm_genlist_longpress_timeout_set(list_data->list, 0.5);
 	//elm_genlist_multi_select_set(list_data->list, EINA_TRUE);
 	evas_object_size_hint_align_set(list_data->list, 0.0, 0.0);

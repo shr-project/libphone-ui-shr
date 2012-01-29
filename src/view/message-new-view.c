@@ -322,7 +322,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 			"recipients_title", D_("Define Recipients"));
 
 	view->list_recipients = elm_genlist_add(win);
-	elm_genlist_horizontal_set(view->list_recipients, ELM_LIST_LIMIT);
+	elm_genlist_mode_set(view->list_recipients, ELM_LIST_LIMIT);
 	evas_object_size_hint_align_set(view->list_recipients, 0.0, 0.0);
 	evas_object_size_hint_weight_set(view->list_recipients,
 					 EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
