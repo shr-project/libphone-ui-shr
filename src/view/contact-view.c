@@ -581,7 +581,7 @@ _field_remove_clicked(void *_data, Evas_Object *obj, void *event_info)
 	g_debug("_field_remove_clicked");
 	struct ContactFieldData *fd = (struct ContactFieldData *)_data;
 	_change_value(fd, "");
-	elm_genlist_item_del(fd->item);
+	elm_object_item_del(fd->item);
 }
 
 static void
@@ -785,7 +785,7 @@ _field_edit_button_remove_clicked_cb(void *data, Evas_Object *obj, void *event_i
        struct ContactFieldData *fd = data;
        elm_pager_content_pop(fd->view->pager);
        _change_value(fd, "");
-       elm_genlist_item_del(fd->item);
+       elm_object_item_del(fd->item);
 }
 
 static void

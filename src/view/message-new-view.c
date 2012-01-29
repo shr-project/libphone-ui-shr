@@ -633,7 +633,7 @@ _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info
 	(void) event_info;
 	struct _recipient_pack *pack = (struct _recipient_pack *)data;
 	g_ptr_array_remove(pack->view->recipients, pack->recipient);
-	elm_genlist_item_del(pack->glit);
+	elm_object_item_del(pack->glit);
 }
 
 // static void
@@ -648,7 +648,7 @@ _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info
 // 	if (glit) {
 // 		GHashTable *parameters = (GHashTable *) elm_genlist_item_data_get(glit);
 // 		g_ptr_array_remove(data->recipients, parameters);
-// 		elm_genlist_item_del(glit);
+// 		elm_object_item_del(glit);
 // 	}
 // }
 

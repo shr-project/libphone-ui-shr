@@ -388,7 +388,7 @@ _remove_contact(const char *path)
 		if (tmp) {
 			if (!strcmp(path, g_variant_get_string(tmp, NULL))) {
 				g_debug("found him - removing");
-				elm_genlist_item_del(glit);
+				elm_object_item_del(glit);
 				break;
 			}
 		}

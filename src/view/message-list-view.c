@@ -796,7 +796,7 @@ _process_message(gpointer _message, gpointer _data)
 		}
 
 		if (glit) {
-			elm_genlist_item_del(glit);
+			elm_object_item_del(glit);
 		}
 	}
 }
@@ -963,7 +963,7 @@ _remove_message(const char *path)
 		if (tmp) {
 			if (!strcmp(path, g_variant_get_string(tmp, NULL))) {
 				g_debug("found him - removing");
-				elm_genlist_item_del(glit);
+				elm_object_item_del(glit);
 				view.msg_end = view.msg_end > 1 ? view.msg_end-1 : 0;
 				break;
 			}

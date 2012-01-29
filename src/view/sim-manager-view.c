@@ -665,7 +665,7 @@ _contact_delete_confirmiation_cb(GError *error, gpointer data)
 	}
 	else {
 		Elm_Object_Item *glit = data;
-		elm_genlist_item_del(glit);
+		elm_object_item_del(glit);
 	}
 }
 
