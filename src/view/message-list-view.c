@@ -266,7 +266,7 @@ _show_clicked(void *_data, Evas_Object * obj, void *event_info)
 	glit = elm_genlist_selected_item_get(view.list);
 	if (glit) {
 		g_debug("found the selected item");
-		message = (GHashTable *)elm_genlist_item_data_get(glit);
+		message = (GHashTable *)elm_object_item_data_get(glit);
 		if (!message) {
 			g_warning("message has NO PROPERTIES!!!!");
 			return;
@@ -296,7 +296,7 @@ _answer_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	glit = elm_genlist_selected_item_get(view.list);
 	if (glit) {
-		message = (GHashTable *)elm_genlist_item_data_get(glit);
+		message = (GHashTable *)elm_object_item_data_get(glit);
 
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
 						NULL, common_utils_variant_unref);
@@ -329,7 +329,7 @@ _call_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	glit = elm_genlist_selected_item_get(view.list);
 	if (glit) {
-		message = (GHashTable *)elm_genlist_item_data_get(glit);
+		message = (GHashTable *)elm_object_item_data_get(glit);
 
 		tmp = g_hash_table_lookup(message, "Phone");
 		if (tmp) {
@@ -353,7 +353,7 @@ _forward_clicked(void *_data, Evas_Object * obj, void *event_info)
 
 	glit = elm_genlist_selected_item_get(view.list);
 	if (glit) {
-		message = (GHashTable *)elm_genlist_item_data_get(glit);
+		message = (GHashTable *)elm_object_item_data_get(glit);
 
 		options = g_hash_table_new_full(g_str_hash, g_str_equal,
 						NULL, common_utils_variant_unref);
@@ -394,7 +394,7 @@ _delete_confirm_cb(int result, void *data)
 
 	glit = (Elm_Object_Item *)data;
 	if (result == DIALOG_YES) {
-		message = (GHashTable *)elm_genlist_item_data_get(glit);
+		message = (GHashTable *)elm_object_item_data_get(glit);
 		tmp = g_hash_table_lookup(message, "Path");
 		if (tmp) {
 			phoneui_utils_message_delete
@@ -493,7 +493,7 @@ _selected_changed(void *_data, Evas_Object * obj, void *event_info) {
 	Elm_Object_Item *glit = (Elm_Object_Item *)event_info;
 	if (!glit) return;
 
-	GHashTable *message = (GHashTable *)elm_genlist_item_data_get(glit);
+	GHashTable *message = (GHashTable *)elm_object_item_data_get(glit);
 	if (!message) return;
 
 	if ((tmp = g_hash_table_lookup(message, "Direction"))) {
@@ -562,7 +562,7 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 	glit = (Elm_Object_Item *)data;
 	tmp = phoneui_utils_contact_display_name_get(contact);
 	if (tmp) {
-		message = (GHashTable *)elm_genlist_item_data_get(glit);
+		message = (GHashTable *)elm_object_item_data_get(glit);
 		g_hash_table_insert(message, "Name",
 				      g_variant_ref_sink(g_variant_new_string(tmp)));
 		Evas_Object *obj = (Evas_Object *)elm_genlist_item_object_get(glit);
@@ -639,7 +639,7 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 
 	glit = elm_genlist_first_item_get(view.list);
 	if (glit) {
-		it_data = elm_genlist_item_data_get(glit);
+		it_data = elm_object_item_data_get(glit);
 		if (it_data && (tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
 			first_timestamp = (long) g_variant_get_int32(tmp);
 		}
@@ -647,7 +647,7 @@ _process_message_get(GError *error, GHashTable *message, gpointer data)
 
 	glit = elm_genlist_last_item_get(view.list);
 	if (glit) {
-		it_data = elm_genlist_item_data_get(glit);
+		it_data = elm_object_item_data_get(glit);
 		if (it_data && (tmp = g_hash_table_lookup(it_data, "Timestamp"))) {
 			last_timestamp = (long) g_variant_get_int32(tmp);
 		}
@@ -725,7 +725,7 @@ _process_message(gpointer _message, gpointer _data)
 	if (insert_mode == LIST_INSERT_SORTED) {
 		glit = elm_genlist_first_item_get(view.list);
 		while (glit) {
-			other = (GHashTable *)elm_genlist_item_data_get(glit);
+			other = (GHashTable *)elm_object_item_data_get(glit);
 			tmp = g_hash_table_lookup(other, "Timestamp");
 			if (tmp) {
 				other_timestamp =
@@ -958,7 +958,7 @@ _remove_message(const char *path)
 	g_debug("Removing message %s from list", path);
 	glit = elm_genlist_first_item_get(view.list);
 	while (glit) {
-		properties = (GHashTable *)elm_genlist_item_data_get(glit);
+		properties = (GHashTable *)elm_object_item_data_get(glit);
 		tmp = g_hash_table_lookup(properties, "Path");
 		if (tmp) {
 			if (!strcmp(path, g_variant_get_string(tmp, NULL))) {

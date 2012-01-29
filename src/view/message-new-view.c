@@ -524,7 +524,7 @@ _insert_contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_in
 	GHashTable *properties;
 
 	glit = elm_genlist_selected_item_get(view->contact_list_data.list);
-	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
+	properties = glit ? (GHashTable *) elm_object_item_data_get(glit) : NULL;
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -646,7 +646,7 @@ _recipients_button_remove_clicked(void *data, Evas_Object *obj, void *event_info
 // 	Elm_Object_Item *glit =
 // 			elm_genlist_selected_item_get(data->list_recipients);
 // 	if (glit) {
-// 		GHashTable *parameters = (GHashTable *) elm_genlist_item_data_get(glit);
+// 		GHashTable *parameters = (GHashTable *) elm_object_item_data_get(glit);
 // 		g_ptr_array_remove(data->recipients, parameters);
 // 		elm_object_item_del(glit);
 // 	}
@@ -698,7 +698,7 @@ _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 	GHashTable *properties;
 
 	glit = elm_genlist_selected_item_get(view->contact_list_data.list);
-	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
+	properties = glit ? (GHashTable *) elm_object_item_data_get(glit) : NULL;
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");

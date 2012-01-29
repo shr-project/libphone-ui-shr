@@ -644,7 +644,7 @@ _contact_save_clicked(void *_data, Evas_Object *obj, void *event_info)
 	/* check if the selected field is still in edit mode */
 	glit = elm_genlist_selected_item_get(view->fields);
 	if (glit) {
-		fd = (struct ContactFieldData *)elm_genlist_item_data_get(glit);
+		fd = (struct ContactFieldData *)elm_object_item_data_get(glit);
 		if (fd->edit_on) {
 			s = ui_utils_entry_utf8_get(fd->value_entry);
 			_change_value(fd, s);
@@ -1144,7 +1144,7 @@ _contact_changed_handler(void *data, int entryid, enum PhoneuiInfoChangeType typ
 static void
 _field_unselected_cb(void *data, Evas_Object *obj, void *event_info)
 {
-	struct ContactFieldData *fd = (struct ContactFieldData *) elm_genlist_item_data_get(event_info);
+	struct ContactFieldData *fd = (struct ContactFieldData *) elm_object_item_data_get(event_info);
 	(void) obj;
 	(void) data;
 	if (!fd->edit_on) {

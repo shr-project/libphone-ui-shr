@@ -152,7 +152,7 @@ _contact_select_add(void *data, Evas_Object *obj, void *event_info)
 	GVariant *p;
 
 	glit = elm_genlist_selected_item_get(pack->contact_list_data.list);
-	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
+	properties = glit ? (GHashTable *) elm_object_item_data_get(glit) : NULL;
 
 	if (properties) {
 		p = g_hash_table_lookup(properties, "Path");
@@ -327,11 +327,11 @@ _find_next_free_index(int max_index) {
 	for (i = 1; i <= max_index; i++) {
 		found = 0;
 		glit = elm_genlist_first_item_get(view.list_data.list);
-		entry = elm_genlist_item_data_get(glit);
+		entry = elm_object_item_data_get(glit);
 		while (entry) {
 			if (entry->entry->index == i) found = 1;
 			glit = elm_genlist_item_next_get(glit);
-			entry = elm_genlist_item_data_get(glit);
+			entry = elm_object_item_data_get(glit);
 		}
 		if (found == 0) {
 			return i;
@@ -547,7 +547,7 @@ _import_one_contact_cb(GError *error, char *path, void *data)
 	loading_indicator_stop();
 	Elm_Object_Item *glit = data;
 	struct SimContactData *cdata =
-			(struct SimContactData *)elm_genlist_item_data_get(glit);
+			(struct SimContactData *)elm_object_item_data_get(glit);
 	if (error) {
 		g_warning("importing one contact failed: (%d) %s",
 			  error->code, error->message);
@@ -572,7 +572,7 @@ _import_all_contacts_cb(GError *error, char *path, void *data)
 	(void) path;
 	Elm_Object_Item *glit = data;
 	struct SimContactData *cdata =
-			(struct SimContactData *)elm_genlist_item_data_get(glit);
+			(struct SimContactData *)elm_object_item_data_get(glit);
 	if (error) {
 		cdata->state = 1;
 		view.import_error = EINA_TRUE;
@@ -610,7 +610,7 @@ _import_contact(Elm_Object_Item *glit,
 	if (!glit) {
 		return;
 	}
-	const struct SimContactData *cdata = elm_genlist_item_data_get(glit);
+	const struct SimContactData *cdata = elm_object_item_data_get(glit);
 	if (cdata->entry) {
 		GHashTable *qry = g_hash_table_new_full
 		     (g_str_hash, g_str_equal, NULL, common_utils_variant_unref);
@@ -676,7 +676,7 @@ _contact_delete_confirm_cb(int result, void *data)
 		return;
 
 	Elm_Object_Item *glit = data;
-	const struct SimContactData *cdata = elm_genlist_item_data_get(glit);
+	const struct SimContactData *cdata = elm_object_item_data_get(glit);
 	if (cdata->entry) {
 		phoneui_utils_sim_contact_delete(SIM_CONTACTS_CATEGORY,
 			cdata->entry->index, _contact_delete_confirmiation_cb, glit);

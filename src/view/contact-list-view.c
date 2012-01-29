@@ -174,7 +174,7 @@ _list_call_clicked(void *data, Evas_Object * obj, void *event_info)
 		return;
 
 	glit = eina_list_data_get(contacts);
-	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
+	properties = glit ? (GHashTable *) elm_object_item_data_get(glit) : NULL;
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -253,7 +253,7 @@ _list_message_clicked(void *data, Evas_Object * obj, void *event_info)
 		return;
 
 	glit = eina_list_data_get(contacts);
-	properties = glit ? (GHashTable *) elm_genlist_item_data_get(glit) : NULL;
+	properties = glit ? (GHashTable *) elm_object_item_data_get(glit) : NULL;
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -278,7 +278,7 @@ _list_edit_clicked(void *data, Evas_Object * obj, void *event_info)
 	if (!data)
 		return;
 
-	properties = elm_genlist_item_data_get(data);
+	properties = elm_object_item_data_get(data);
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -300,7 +300,7 @@ _contact_delete_confirm_cb(int result, void *data)
 	if (result != DIALOG_YES)
 		return;
 
-	properties = (GHashTable *) elm_genlist_item_data_get(contact);
+	properties = (GHashTable *) elm_object_item_data_get(contact);
 	if (properties) {
 		GVariant *tmp;
 		tmp = g_hash_table_lookup(properties, "Path");
@@ -383,7 +383,7 @@ _remove_contact(const char *path)
 	g_debug("Removing contact %s from list", path);
 	glit = elm_genlist_first_item_get(view.list_data.list);
 	while (glit) {
-		properties = (GHashTable *)elm_genlist_item_data_get(glit);
+		properties = (GHashTable *)elm_object_item_data_get(glit);
 		tmp = g_hash_table_lookup(properties, "Path");
 		if (tmp) {
 			if (!strcmp(path, g_variant_get_string(tmp, NULL))) {

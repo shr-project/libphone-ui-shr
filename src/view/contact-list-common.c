@@ -153,7 +153,7 @@ contact_list_item_add(struct ContactListData *list_data,
 		/* find the correct position to insert the new one */
 		glit = elm_genlist_first_item_get(list_data->list);
 		while (glit) {
-			other = (GHashTable *)elm_genlist_item_data_get(glit);
+			other = (GHashTable *)elm_object_item_data_get(glit);
 			if (phoneui_utils_contact_compare(entry, other) < 0)
 				break;
 			glit = elm_genlist_item_next_get(glit);
@@ -201,7 +201,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 	index_count = 0; /* Add the first as well */
 	glit = elm_genlist_first_item_get(list_data->list);
 	while (glit) {
-		entry = (GHashTable *)elm_genlist_item_data_get(glit);
+		entry = (GHashTable *)elm_object_item_data_get(glit);
 		name = phoneui_utils_contact_display_name_get(entry);
 		idx = _new_get_index(name);
 		if (idx) {
