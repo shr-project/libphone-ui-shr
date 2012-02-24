@@ -161,7 +161,7 @@ contact_view_init(char *path, GHashTable *properties)
 	ui_utils_view_swallow(VIEW_PTR(*view), "photo", view->photo);
 	evas_object_show(view->photo);
 
-	view->pager = elm_pager_add(win);
+	view->pager = elm_naviframe_add(win);
 	ui_utils_view_swallow(VIEW_PTR(*view), "main", view->pager);
 
 	view->pager_layout = elm_layout_add(win);
@@ -236,7 +236,7 @@ l contacts.edc emits*/
 	_load_photo(view);
 	_load_fields(view);
 
-	elm_pager_content_push(view->pager, view->pager_layout);
+	elm_naviframe_item_simple_push(view->pager, view->pager_layout);
 	/* show save and cancel buttons when this is a new one */
 	if (!*view->path)
 		_set_modify(view, 1);
@@ -774,7 +774,7 @@ _field_edit_button_back_clicked_cb(void *data, Evas_Object *obj, void *event_inf
        (void) obj;
        (void) event_info;
        struct ContactFieldData *fd = data;
-       elm_pager_content_pop(fd->view->pager);
+       elm_naviframe_item_pop(fd->view->pager);
 }
 
 static void
@@ -783,7 +783,7 @@ _field_edit_button_remove_clicked_cb(void *data, Evas_Object *obj, void *event_i
        (void) obj;
        (void) event_info;
        struct ContactFieldData *fd = data;
-       elm_pager_content_pop(fd->view->pager);
+       elm_naviframe_item_pop(fd->view->pager);
        _change_value(fd, "");
        elm_object_item_del(fd->item);
 }
@@ -823,7 +823,7 @@ _field_edit_add_edit_page(struct ContactFieldData *fd, Evas_Object *content,
 	elm_object_part_content_set(layout, "button_remove", btn_remove);
 	evas_object_show(btn_remove);
 
-	elm_pager_content_push(fd->view->pager, layout);
+	elm_naviframe_item_simple_push(fd->view->pager, layout);
 }
 
 static void
@@ -833,7 +833,7 @@ _field_edit_fileselector_save_cb(void *data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	const char *selected;
 	struct ContactFieldData *fd = data;
-	elm_pager_content_pop(fd->view->pager);
+	elm_naviframe_item_pop(fd->view->pager);
 	selected = elm_fileselector_selected_get(fd->edit_widget);
 	if (selected) {
 		elm_entry_entry_set(fd->value_entry, selected);

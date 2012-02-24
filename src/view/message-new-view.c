@@ -142,7 +142,7 @@ message_new_view_init(GHashTable *options)
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 	ui_utils_view_delete_callback_set(VIEW_PTR(*view), _delete_cb);
 
-	view->pager = elm_pager_add(win);
+	view->pager = elm_naviframe_add(win);
 	elm_win_resize_object_add(win, view->pager);
 	evas_object_show(view->pager);
 
@@ -302,7 +302,7 @@ _init_content_page(struct MessageNewViewData *view)
 			       "content_button_continue", btn);
 	evas_object_show(btn);
 
-	elm_pager_content_push(view->pager, view->layout_content);
+	elm_naviframe_item_simple_push(view->pager, view->layout_content);
 }
 
 static void
@@ -372,7 +372,7 @@ _init_recipient_page(struct MessageNewViewData *view)
 			       "recipients_button_send", btn);
 	evas_object_show(btn);
 
-	elm_pager_content_push(view->pager, view->layout_recipients);
+	elm_naviframe_item_simple_push(view->pager, view->layout_recipients);
 }
 
 static void
@@ -409,7 +409,7 @@ _init_contacts_page(struct MessageNewViewData *view)
 	evas_object_show(btn);
 
 	contact_list_fill(&view->contact_list_data);
-	elm_pager_content_push(view->pager, view->layout_contacts);
+	elm_naviframe_item_simple_push(view->pager, view->layout_contacts);
 }
 
 static void
@@ -463,7 +463,7 @@ _init_number_page(struct MessageNewViewData *view)
 			       view->number_keypad);
 	evas_object_show(view->number_keypad);
 
-	elm_pager_content_push(view->pager, view->layout_number);
+	elm_naviframe_item_simple_push(view->pager, view->layout_number);
 }
 
 static void
@@ -478,7 +478,7 @@ _content_button_insert_clicked(void *data, Evas_Object *obj, void *event_info)
 	win = ui_utils_view_window_get(VIEW_PTR(*view));
 
 	if (view->layout_contacts) {
-	//	elm_pager_content_promote(view->pager, view->layout_contacts);
+	//	elm_naviframe_item_simple_promote(view->pager, view->layout_contacts);
 	}
 	else {
 		_init_contacts_page(view);
@@ -502,7 +502,7 @@ _content_button_insert_clicked(void *data, Evas_Object *obj, void *event_info)
 	evas_object_show(btn);
 
 	contact_list_fill(&view->contact_list_data);
-	elm_pager_content_push(view->pager, view->layout_contacts);
+	elm_naviframe_item_simple_push(view->pager, view->layout_contacts);
 }
 
 static void
@@ -511,7 +511,7 @@ _insert_contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_i
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	elm_pager_content_promote(view->pager, view->layout_content);
+	elm_naviframe_item_simple_promote(view->pager, view->layout_content);
 }
 
 static void
@@ -536,7 +536,7 @@ _insert_contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_in
 		ui_utils_contacts_contact_number_select(VIEW_PTR(*view), path,
 					_insert_contacts_add_number_callback, view);
 	}
-	elm_pager_content_promote(view->pager, view->layout_recipients);
+	elm_naviframe_item_simple_promote(view->pager, view->layout_recipients);
 }
 
 static void
@@ -579,7 +579,7 @@ _content_button_continue_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	if (view->layout_recipients) {
-		elm_pager_content_promote(view->pager, view->layout_recipients);
+		elm_naviframe_item_simple_promote(view->pager, view->layout_recipients);
 	}
 	else {
 		_init_recipient_page(view);
@@ -592,7 +592,7 @@ _recipients_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	elm_pager_content_promote(view->pager, view->layout_content);
+	elm_naviframe_item_simple_promote(view->pager, view->layout_content);
 	elm_object_focus_set(view->content_entry, EINA_TRUE);
 }
 
@@ -604,7 +604,7 @@ _recipients_button_add_contact_clicked(void *data, Evas_Object *obj,
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	if (view->layout_contacts) {
-		elm_pager_content_promote(view->pager, view->layout_contacts);
+		elm_naviframe_item_simple_promote(view->pager, view->layout_contacts);
 	}
 	else {
 		_init_contacts_page(view);
@@ -619,7 +619,7 @@ _recipients_button_add_number_clicked(void *data, Evas_Object *obj,
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
 	if (view->layout_number) {
-		elm_pager_content_promote(view->pager, view->layout_number);
+		elm_naviframe_item_simple_promote(view->pager, view->layout_number);
 	}
 	else {
 		_init_number_page(view);
@@ -670,7 +670,7 @@ _contacts_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	elm_pager_content_promote(view->pager, view->layout_recipients);
+	elm_naviframe_item_simple_promote(view->pager, view->layout_recipients);
 }
 
 static void
@@ -710,7 +710,7 @@ _contacts_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 		ui_utils_contacts_contact_number_select(VIEW_PTR(*view), path,
 					_contacts_add_number_callback, view);
 	}
-	elm_pager_content_promote(view->pager, view->layout_recipients);
+	elm_naviframe_item_simple_promote(view->pager, view->layout_recipients);
 }
 
 static void
@@ -734,7 +734,7 @@ _number_button_back_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	struct MessageNewViewData *view = (struct MessageNewViewData *)data;
-	elm_pager_content_promote(view->pager, view->layout_recipients);
+	elm_naviframe_item_simple_promote(view->pager, view->layout_recipients);
 }
 
 static void
@@ -759,7 +759,7 @@ _number_button_add_clicked(void *data, Evas_Object *obj, void *event_info)
 		view->number[0] = '\0';
 		view->number_length = 0;
 		_number_update_number(view);
-		elm_pager_content_promote(view->pager, view->layout_recipients);
+		elm_naviframe_item_simple_promote(view->pager, view->layout_recipients);
 	}
 	else {
 		if (!view->notify) {
@@ -952,7 +952,7 @@ _delete_confirm_cb(int res, void *data)
 	if (res == DIALOG_YES) {
 		_deinit_message_new_view(view);
 	}
-	else if (elm_pager_content_top_get(view->pager) == view->layout_content) {
+	else if (((Evas_Object *)elm_naviframe_top_item_get(view->pager)) == view->layout_content) {
 		elm_object_focus_set(view->content_entry, EINA_TRUE);
 	}
 }

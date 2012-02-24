@@ -93,18 +93,18 @@ int phone_log_view_init()
 				 "phoneui/phonelog/phonelog");
 	elm_theme_extension_add(NULL, phoneui_theme);
 
-	view.pager = elm_pager_add(win);
+	view.pager = elm_naviframe_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "pager", view.pager);
 	evas_object_show(view.pager);
 
 	view.list_in = _add_genlist(win);
-	elm_pager_content_push(view.pager, view.list_in);
+	elm_naviframe_item_simple_push(view.pager, view.list_in);
 	view.list_out = _add_genlist(win);
-	elm_pager_content_push(view.pager, view.list_out);
+	elm_naviframe_item_simple_push(view.pager, view.list_out);
 	view.list_all = _add_genlist(win);
-	elm_pager_content_push(view.pager, view.list_all);
+	elm_naviframe_item_simple_push(view.pager, view.list_all);
 	view.list_missed = _add_genlist(win);
-	elm_pager_content_push(view.pager, view.list_missed);
+	elm_naviframe_item_simple_push(view.pager, view.list_missed);
 
 	itc.item_style = "phonelog";
 	itc.func.text_get = gl_text_get;
@@ -183,7 +183,7 @@ _toolbar_changed(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) obj;
 	(void) event_info;
-	elm_pager_content_promote(view.pager, data);
+	elm_naviframe_item_simple_promote(view.pager, data);
 }
 
 static Evas_Object *
@@ -435,7 +435,7 @@ static void
 _hide_cb(struct View *_view)
 {
 	struct PhoneLogViewData *view = (struct PhoneLogViewData *)_view;
-	elm_pager_content_promote(view->pager, view->list_missed);
+	elm_naviframe_item_simple_promote(view->pager, view->list_missed);
 	elm_toolbar_item_selected_set(view->toolbar_missed, EINA_TRUE);
 }
 

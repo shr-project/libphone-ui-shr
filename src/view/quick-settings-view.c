@@ -100,7 +100,7 @@ quick_settings_view_init()
 	ui_utils_view_layout_set(VIEW_PTR(view), phoneui_theme,
 				 "phoneui/settings/quick-settings");
 
-	view.pager = elm_pager_add(win);
+	view.pager = elm_naviframe_add(win);
 	ui_utils_view_swallow(VIEW_PTR(view), "pager", view.pager);
 	_init_network_page();
 	_init_profiles_power_page();
@@ -216,7 +216,7 @@ _init_profiles_power_page()
 				       _button_shutdown_clicked_cb, NULL);
 	evas_object_show(view.button_shutdown);
 
-	elm_pager_content_push(view.pager, view.layout1);
+	elm_naviframe_item_simple_push(view.pager, view.layout1);
 
 	/* Disabled until we get the list + current profile. */
 	elm_object_disabled_set(view.profiles_combo, EINA_TRUE);
@@ -262,7 +262,7 @@ _init_network_page()
 	// FIXME: until we implement it
 	elm_object_disabled_set(view.sharing_slide, 1);
 
-	elm_pager_content_push(view.pager, view.layout2);
+	elm_naviframe_item_simple_push(view.pager, view.layout2);
 
 	phoneui_info_register_and_request_pdp_context_status(_pdp_context_status_signal_cb, NULL);
 }
@@ -655,5 +655,5 @@ _toolbar_clicked(void *data, Evas_Object *obj, void *event_info)
 	(void) obj;
 	(void) event_info;
 	Evas_Object *ly = data;
-	elm_pager_content_promote(view.pager, ly);
+	elm_naviframe_item_simple_promote(view.pager, ly);
 }
