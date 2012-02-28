@@ -565,7 +565,7 @@ _contact_lookup(GError *error, GHashTable *contact, gpointer data)
 		message = (GHashTable *)elm_object_item_data_get(glit);
 		g_hash_table_insert(message, "Name",
 				      g_variant_ref_sink(g_variant_new_string(tmp)));
-		Evas_Object *obj = (Evas_Object *)elm_genlist_item_object_get(glit);
+		Evas_Object *obj = (Evas_Object *)elm_object_item_widget_get(glit);
 		edje_object_part_text_set(obj, "elm.name", tmp);
 		free(tmp);
 	}

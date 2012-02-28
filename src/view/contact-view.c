@@ -855,7 +855,7 @@ _field_edit_clicked(void *data, Evas_Object *obj, void *event_info)
 		_field_edit_add_edit_page(fd, content, _field_edit_fileselector_save_cb);
 	}
 	else {
-		edje_object_signal_emit((Evas_Object *) elm_genlist_item_object_get(fd->item), "start_edit", "elm");
+		edje_object_signal_emit((Evas_Object *) elm_object_item_widget_get(fd->item), "start_edit", "elm");
 		elm_entry_editable_set(fd->value_entry, EINA_TRUE);
 		elm_object_focus_set(fd->value_entry, EINA_FALSE);
 	}
