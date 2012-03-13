@@ -183,9 +183,9 @@ message_show_view_init(char* path, GHashTable *properties)
 	view->sc_content = elm_scroller_add(win);
 	elm_scroller_bounce_set(view->sc_content, EINA_FALSE, EINA_FALSE);
 
-	view->content = elm_anchorblock_add(win);
-	elm_anchorblock_hover_style_set(view->content, "popout");
-	elm_anchorblock_hover_parent_set(view->content, win);
+	view->content = elm_entry_add(win);
+	elm_entry_anchor_hover_style_set(view->content, "popout");
+	elm_entry_anchor_hover_parent_set(view->content, win);
 	evas_object_size_hint_weight_set(view->content, EVAS_HINT_EXPAND,
 					 EVAS_HINT_EXPAND);
 	if (content) {

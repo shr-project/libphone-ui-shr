@@ -866,9 +866,9 @@ gl_content_get(void *data, Evas_Object * obj, const char *part)
 		if (tmp) {
 			Evas_Object *win =
 				ui_utils_view_window_get(VIEW_PTR(view));
-			Evas_Object *txt = elm_anchorblock_add(win);
-			elm_anchorblock_hover_style_set(txt, "popout");
-			elm_anchorblock_hover_parent_set(txt, win);
+			Evas_Object *txt = elm_entry_add(win);
+			elm_entry_anchor_hover_style_set(txt, "popout");
+			elm_entry_anchor_hover_parent_set(txt, win);
 			elm_object_text_set(txt, g_variant_get_string(tmp, NULL));
 			evas_object_show(txt);
 			Evas_Object *bubble = elm_bubble_add(win);
