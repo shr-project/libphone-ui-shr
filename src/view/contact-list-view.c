@@ -363,7 +363,7 @@ _add_contact_cb(GError *error, GHashTable *properties, gpointer data)
 	g_debug("Adding contact to the list");
 	glit = contact_list_item_add(&view.list_data, properties, 1);
 	if (glit) {
-		elm_genlist_item_bring_in(glit);
+		elm_genlist_item_bring_in(glit, ELM_GENLIST_ITEM_SCROLLTO_IN);
 	}
 }
 
@@ -421,7 +421,7 @@ static void
 _hide_cb(struct View *view)
 {
 	elm_genlist_item_bring_in(elm_genlist_first_item_get(
-		((struct ContactListViewData *)view)->list_data.list));
+		((struct ContactListViewData *)view)->list_data.list), ELM_GENLIST_ITEM_SCROLLTO_IN);
 }
 
 static void

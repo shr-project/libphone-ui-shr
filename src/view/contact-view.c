@@ -1072,7 +1072,7 @@ _add_field_type_cb(GError *error, char *type, gpointer data)
 	if (fd->isnew) {
 		fd->item = elm_genlist_item_prepend(pack->view->fields, &itc, fd, NULL,
 				ELM_GENLIST_ITEM_NONE, NULL, NULL);
-		elm_genlist_item_bring_in(fd->item);
+		elm_genlist_item_bring_in(fd->item, ELM_GENLIST_ITEM_SCROLLTO_IN);
 	}
 	else {
 		fd->item = elm_genlist_item_append(pack->view->fields, &itc, fd, NULL,

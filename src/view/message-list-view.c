@@ -599,7 +599,7 @@ _process_messages(GError* error, GHashTable** messages, int count, gpointer data
 	}
 
 	if (view.latest_it) {
-		elm_genlist_item_middle_show(view.latest_it);
+		elm_genlist_item_show(view.latest_it, ELM_GENLIST_ITEM_SCROLLTO_MIDDLE);
 		view.latest_it = NULL;
 	}
 
@@ -996,7 +996,7 @@ _hide_cb(struct View *view)
 {
 	g_debug("_hide_cb");
 	elm_genlist_item_bring_in(elm_genlist_first_item_get(
-		((struct MessageListViewData *)view)->list));
+		((struct MessageListViewData *)view)->list), ELM_GENLIST_ITEM_SCROLLTO_IN);
 }
 
 static void

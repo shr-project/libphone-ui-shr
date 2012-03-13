@@ -99,7 +99,7 @@ gl_index_changed(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
-	elm_genlist_item_top_bring_in(elm_object_item_data_get(event_info));
+	elm_genlist_item_bring_in(elm_object_item_data_get(event_info), ELM_GENLIST_ITEM_SCROLLTO_TOP);
 }
 
 
@@ -108,7 +108,7 @@ gl_index_selected(void *data, Evas_Object * obj, void *event_info)
 {
 	(void) data;
 	(void) obj;
-	elm_genlist_item_top_bring_in(event_info);
+	elm_genlist_item_bring_in(event_info, ELM_GENLIST_ITEM_SCROLLTO_TOP);
 }
 
 /* allocates space and returns the index part of a string */
