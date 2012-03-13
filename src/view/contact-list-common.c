@@ -221,6 +221,7 @@ contact_list_fill_index(struct ContactListData *list_data)
 				g_debug("Adding index %s", current_index);
 				elm_index_item_append(list_data->index,
 						      current_index,
+						      NULL,
 						      current_index_item);
 				index_count = init_index_count;
 			}
