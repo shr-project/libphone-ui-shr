@@ -140,7 +140,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	}
 	else {
 		window_text_set(win, "name", data->parent.name);
-		elm_icon_file_set(data->parent.elmphoto, data->parent.photo, NULL);
+		elm_image_file_set(data->parent.elmphoto, data->parent.photo, NULL);
 	}
 
 	//g_debug("adding the hangup toggle...");
@@ -152,7 +152,7 @@ call_active_view_show(struct Window *win, GHashTable * options)
 	//evas_object_show(data->hangup_toggle);
 
 	//Evas_Object *ico = elm_icon_add(window_evas_object_get(win));
-	//elm_icon_file_set(ico, "speaker.png", "phoneui/images");
+	//elm_image_file_set(ico, "speaker.png", "phoneui/images");
 	//evas_object_show(ico);
 
 	g_debug("adding the speaker toggle...");

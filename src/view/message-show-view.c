@@ -150,7 +150,7 @@ message_show_view_init(char* path, GHashTable *properties)
 	view->photo = elm_icon_add(win);
 	evas_object_size_hint_aspect_set(view->photo,
 					 EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
-	elm_icon_file_set(view->photo, phoneui_theme, "icon/contact");
+	elm_image_file_set(view->photo, phoneui_theme, "icon/contact");
 	ui_utils_view_swallow(VIEW_PTR(*view), "photo", view->photo);
 	evas_object_show(view->photo);
 
@@ -161,13 +161,13 @@ message_show_view_init(char* path, GHashTable *properties)
 		if (strcmp(direction, "in") == 0) {
 			g_debug("Setting status icon for an incoming message");
 			in_msg = EINA_TRUE;
-			elm_icon_file_set(ico, phoneui_theme,
+			elm_image_file_set(ico, phoneui_theme,
 					  "icon/phonelog-incoming");
 		}
 		else {
 			g_debug("Setting status icon for a sent message");
 			in_msg = EINA_FALSE;
-			elm_icon_file_set(ico, phoneui_theme,
+			elm_image_file_set(ico, phoneui_theme,
 					  "icon/phonelog-outgoing");
 		}
 	}
@@ -501,7 +501,7 @@ _common_name_callback(GError *error, GHashTable *contact, void *_data)
 	}
 	gtmp = g_hash_table_lookup(contact, "Photo");
 	if (gtmp) {
-		elm_icon_file_set(view->photo,
+		elm_image_file_set(view->photo,
 				  g_variant_get_string(gtmp, NULL), NULL);
 	}
 }

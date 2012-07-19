@@ -136,8 +136,8 @@ _add_number_to_list_real(struct _number_select_pack *pack,
 	entry->number = strdup(number);
 	g_debug("Adding %s=%s", entry->field, entry->number);
 	ico = elm_icon_add(ui_utils_view_window_get(pack->view));
-	elm_icon_resizable_set(ico, EINA_TRUE, EINA_TRUE);
-	elm_icon_file_set(ico, phoneui_theme, "icon/phone");
+	elm_image_resizable_set(ico, EINA_TRUE, EINA_TRUE);
+	elm_image_file_set(ico, phoneui_theme, "icon/phone");
 	it = (Elm_Object_Item *) elm_list_item_append(pack->list, entry->number, ico, NULL, NULL, entry);
 	if (!it) {
 		g_warning("Adding number to list failed!!!");

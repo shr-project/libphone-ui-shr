@@ -106,7 +106,7 @@ call_common_contact_callback(GError *error, GHashTable *contact, void *_data)
 		data->name = g_strdup(CONTACT_NAME_UNDEFINED_STRING);
 	}
 
-	elm_icon_file_set(data->elmphoto, data->photo, NULL);
+	elm_image_file_set(data->elmphoto, data->photo, NULL);
 	window_text_set(data->win, "name", data->name);
 	data->number_state = CALL_NUMBER_CONTACT;
 	common_utils_object_unref_free(data);

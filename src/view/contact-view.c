@@ -987,7 +987,7 @@ _load_photo(struct ContactViewData *view)
 		g_debug("No photo found");
 		s = CONTACT_DEFAULT_PHOTO;
 	}
-	elm_icon_file_set(view->photo, s, NULL);
+	elm_image_file_set(view->photo, s, NULL);
 }
 
 static void

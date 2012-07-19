@@ -65,7 +65,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 						(struct CallViewData *) data));
 
 	Evas_Object *ic = elm_icon_add(win->win);
-	elm_icon_file_set(ic, ICON_CALL_ACCEPT, NULL);
+	elm_image_file_set(ic, ICON_CALL_ACCEPT, NULL);
 	evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
 
 	data->bt_accept = elm_button_add(window_evas_object_get(win));
@@ -78,7 +78,7 @@ call_incoming_view_show(struct Window *win, GHashTable * options)
 	evas_object_show(ic);
 
 	ic = elm_icon_add(win->win);
-	elm_icon_file_set(ic, ICON_CALL_REJECT, NULL);
+	elm_image_file_set(ic, ICON_CALL_REJECT, NULL);
 	evas_object_size_hint_aspect_set(ic, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
 	data->bt_reject = elm_button_add(window_evas_object_get(win));
 	elm_object_text_set(data->bt_reject, D_("Reject"));

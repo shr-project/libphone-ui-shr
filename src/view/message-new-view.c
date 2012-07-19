@@ -217,7 +217,7 @@ gl_content_get(void *data, Evas_Object * obj, const char *part)
 			photo_file = CONTACT_DEFAULT_PHOTO;
 
 		Evas_Object *photo = elm_icon_add(obj);
-		elm_icon_file_set(photo, photo_file, NULL);
+		elm_image_file_set(photo, photo_file, NULL);
 		evas_object_size_hint_aspect_set(photo,
 						 EVAS_ASPECT_CONTROL_VERTICAL,
 						 1, 1);
@@ -446,7 +446,7 @@ _init_number_page(struct MessageNewViewData *view)
 
 	ico = elm_icon_add(win);
 	evas_object_size_hint_aspect_set(ico, EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
-	elm_icon_file_set(ico, phoneui_theme, "icon/edit-undo");
+	elm_image_file_set(ico, phoneui_theme, "icon/edit-undo");
 	evas_object_show(ico);
 
 	btn = elm_button_add(win);

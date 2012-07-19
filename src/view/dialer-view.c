@@ -110,7 +110,7 @@ dialer_view_init()
 	view.delete_text_icon = elm_icon_add(win);
 	evas_object_size_hint_aspect_set(view.delete_text_icon,
 					 EVAS_ASPECT_CONTROL_VERTICAL, 1, 1);
-	elm_icon_file_set(view.delete_text_icon, DELETE_TEXT_ICON, NULL);
+	elm_image_file_set(view.delete_text_icon, DELETE_TEXT_ICON, NULL);
 
 	view.delete_text_button = elm_button_add(win);
 	elm_object_content_set(view.delete_text_button, view.delete_text_icon);
