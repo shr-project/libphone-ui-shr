@@ -33,7 +33,7 @@ void         elm_widget_data_set(Evas_Object *obj, void *data);
 void        *elm_widget_data_get(const Evas_Object *obj);
 void         elm_widget_del_hook_set(Evas_Object *obj, void (*func) (Evas_Object *obj));
 void         elm_widget_resize_object_set(Evas_Object *obj, Evas_Object *sobj);
-Evas_Object *elm_widget_add(Evas *evas);
+EAPI Evas_Object     *elm_widget_compat_add(Evas *evas);
 #endif
 
 typedef struct _Widget_Data Widget_Data;
@@ -129,7 +129,7 @@ elm_keypad_add(Evas_Object * parent)
 
 	wd = calloc(1, sizeof(Widget_Data));
 	e = evas_object_evas_get(parent);
-	wd->widget = elm_widget_add(e);
+	wd->widget = elm_widget_compat_add(e);
 	elm_widget_data_set(wd->widget, wd);
 	elm_widget_del_hook_set(wd->widget, _del_hook);
 
