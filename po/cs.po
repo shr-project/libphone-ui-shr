@@ -1,0 +1,535 @@
+# Czech translations for libphone-ui-shr
+# This file is put in the public domain.
+# Jakob Simeth <jakob_simeth@gmx.net>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libphone-ui-shr\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-08-13 19:05+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Krystof Celba <kristofc97@gmail.com>\n"
+"Language-Team: Czech\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/phoneui-call.c:140 src/view/contact-list-view.c:91
+#: src/view/contact-view.c:205 src/view/dialer-view.c:133
+#: src/view/message-list-view.c:140 src/view/message-show-view.c:235
+msgid "Call"
+msgstr "Volat"
+
+#: src/phoneui-dialog.c:34
+msgid "Information"
+msgstr "Informace"
+
+#: src/phoneui-ussd.c:35
+msgid "Service Data"
+msgstr "Servisní Data"
+
+#: src/view/call-active-view.c:160 src/view/call-common.c:144
+msgid "Speaker"
+msgstr "Reproduktor"
+
+#: src/view/call-active-view.c:171
+msgid "Mute"
+msgstr "Ztlumit"
+
+#: src/view/call-active-view.c:181
+msgid "Volume"
+msgstr "Hlasitost"
+
+#: src/view/call-active-view.c:194
+msgid "Mic"
+msgstr "Mikrofon"
+
+#: src/view/call-active-view.c:205 src/view/call-common.c:205
+msgid "Release"
+msgstr "Zavěsit"
+
+#: src/view/call-active-view.c:212 src/view/call-active-view.c:261
+msgid "Keypad"
+msgstr "Klávesnice"
+
+#: src/view/call-active-view.c:266
+msgid "Hide Keypad"
+msgstr "Skrýt klávesnici"
+
+#: src/view/call-common.c:129
+msgid "Bluetooth"
+msgstr ""
+
+#: src/view/call-common.c:132
+msgid "Handset"
+msgstr ""
+
+#: src/view/call-common.c:135
+msgid "Headset"
+msgstr ""
+
+#: src/view/call-common.c:183
+msgid "Pickup"
+msgstr ""
+
+#: src/view/contact-list-view.c:73
+msgid "Contacts"
+msgstr "Kontakty"
+
+#: src/view/contact-list-view.c:98 src/view/contact-view.c:212
+msgid "SMS"
+msgstr "SMS"
+
+#: src/view/contact-list-view.c:105 src/view/message-list-view.c:109
+msgid "New"
+msgstr "Nový"
+
+#: src/view/contact-list-view.c:210 src/view/message-list-view.c:518
+#: src/view/message-list-view.c:523
+msgid "Edit"
+msgstr "Upravit"
+
+#: src/view/contact-list-view.c:212 src/view/contact-list-view.c:224
+#: src/view/contact-view.c:219 src/view/message-list-view.c:156
+#: src/view/message-show-view.c:226 src/view/sim-auth-input-view.c:101
+msgid "Delete"
+msgstr "Smazat"
+
+#: src/view/contact-list-view.c:213
+msgid "Unselect"
+msgstr "Odznačit"
+
+#: src/view/contact-list-view.c:227
+msgid "Unselect all"
+msgstr "Odznačit všechny"
+
+#: src/view/contact-list-view.c:361
+msgid "Really delete contact details?"
+msgstr "Opravdu smazat údaje kontaktu?"
+
+#: src/view/contact-list-view.c:397
+msgid "Failed adding contact."
+msgstr "Selhalo přidání kontaktu."
+
+#: src/view/contact-view.c:110 src/view/message-new-view.c:337
+#, fuzzy
+msgid "Contact"
+msgstr "Kontakt"
+
+#: src/view/contact-view.c:191 src/view/contact-view.c:806
+#: src/view/dialer-view.c:155
+msgid "Save"
+msgstr "Uložit"
+
+#: src/view/contact-view.c:198
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/view/contact-view.c:227
+msgid "Add Field"
+msgstr "Přidat pole"
+
+#: src/view/contact-view.c:379
+#, fuzzy
+msgid "Deleting the contact failed!"
+msgstr "Odstranění kontaktu se nezdařilo!"
+
+#: src/view/contact-view.c:408
+msgid "Really delete this contact?"
+msgstr "Opravdu smazat tento kontakt?"
+
+#: src/view/contact-view.c:719
+msgid "Updating contact failed."
+msgstr "Aktualizace kontaktu se nezdařila."
+
+#: src/view/contact-view.c:734
+msgid "Adding the contact failed."
+msgstr "Přidání kontaktu se nezdařilo."
+
+#: src/view/contact-view.c:752
+msgid "Failed loading data of saved contact."
+msgstr "Selhalo načítání dat uloženého kontaktu."
+
+#: src/view/contact-view.c:813 src/view/message-new-view.c:329
+#: src/view/message-new-view.c:385 src/view/message-new-view.c:421
+msgid "Back"
+msgstr "Zpět"
+
+#: src/view/contact-view.c:820
+msgid "Remove"
+msgstr "Smazat"
+
+#: src/view/dialer-view.c:70
+msgid "Dialer"
+msgstr ""
+
+#: src/view/dialer-view.c:92
+msgid "Click to open contactlist."
+msgstr "Kliknutím otevřete seznam kontaktů."
+
+#: src/view/dialer-view.c:119 src/view/dialog-view.c:73
+#: src/view/message-new-view.c:277 src/view/message-show-view.c:201
+#: src/view/ussd-view.c:92
+msgid "Close"
+msgstr "Zavřít"
+
+#: src/view/dialer-view.c:126
+msgid "More"
+msgstr "Více"
+
+#: src/view/dialer-view.c:163
+msgid "Send SMS"
+msgstr "Odeslat SMS"
+
+#: src/view/dialer-view.c:409
+msgid "Cannot initiate call."
+msgstr "Nemůžu zahájit hovor."
+
+#: src/view/dialog-view.c:65
+#, fuzzy
+msgid ""
+"Your SIM storage is full. Please delete some messages or you may not receive "
+"them anymore!"
+msgstr "Paměť Vaší SIM karty je plná. Prosím smažte nějak zprávy nebo nebude možné přijmout nové zprávy!."
+
+#: src/view/dialog-view.c:68
+msgid "GSM is not available, because no SIM card is present."
+msgstr "GSM není k dispozici, protože SIM karta není k dispozici."
+
+#: src/view/dialog-view.c:70
+msgid "Unknown message."
+msgstr "Neznámá zpráva."
+
+#: src/view/message-list-view.c:95
+msgid "Messages"
+msgstr "Zprávy"
+
+#: src/view/message-list-view.c:118 src/view/message-show-view.c:211
+msgid "Options"
+msgstr "Možnosti"
+
+#: src/view/message-list-view.c:132 src/view/message-show-view.c:264
+msgid "Answer"
+msgstr "Odpověď"
+
+#: src/view/message-list-view.c:148 src/view/message-list-view.c:534
+#: src/view/message-show-view.c:254
+msgid "Forward"
+msgstr "Přeposlat"
+
+#: src/view/message-list-view.c:165 src/view/message-list-view.c:529
+msgid "Show"
+msgstr "Zobrazit"
+
+#: src/view/message-list-view.c:187 src/view/message-list-view.c:198
+#, fuzzy
+msgid "Loading..."
+msgstr "Načítání... "
+
+#: src/view/message-list-view.c:381 src/view/message-show-view.c:428
+#, fuzzy
+msgid "Deleting the message failed!"
+msgstr "Odstranění zprávy selhalo!"
+
+#: src/view/message-list-view.c:423 src/view/message-show-view.c:457
+msgid "Really delete this message?"
+msgstr "Opravdu smazat tuto zprávu?"
+
+#: src/view/message-list-view.c:551
+msgid "Error while trying to resolve the number"
+msgstr "Chyba při pokusu o vyřešení čísla"
+
+#: src/view/message-list-view.c:583
+msgid "Error while retrieving messages"
+msgstr "Chyba při načítání zpráv"
+
+#: src/view/message-list-view.c:591
+msgid "There are no messages"
+msgstr "Nejsou zde žádné zprávy"
+
+#: src/view/message-list-view.c:623
+msgid "Error while retrieving a message"
+msgstr "Chyba při načítání zprávy"
+
+#: src/view/message-new-view.c:104
+msgid "New Message"
+msgstr "Nová zpráva"
+
+#: src/view/message-new-view.c:263
+msgid "Enter your message"
+msgstr "Napište vaši zprávu"
+
+#: src/view/message-new-view.c:285
+msgid "Continue"
+msgstr "Pokračovat"
+
+#: src/view/message-new-view.c:309
+msgid "Define Recipients"
+msgstr "Definovat příjemce"
+
+#: src/view/message-new-view.c:346
+#, fuzzy
+msgid "Number"
+msgstr "Číslo"
+
+#: src/view/message-new-view.c:355
+msgid "Send"
+msgstr "Odeslat"
+
+#: src/view/message-new-view.c:379 src/view/message-show-view.c:244
+msgid "Add Contact"
+msgstr "Přidat kontakt"
+
+#: src/view/message-new-view.c:392 src/view/message-new-view.c:428
+msgid "Add"
+msgstr "Přidat"
+
+#: src/view/message-new-view.c:418
+msgid "Add Number"
+msgstr "Přidat číslo"
+
+#: src/view/message-new-view.c:653
+msgid "You have entered<br>an invalid number."
+msgstr "Zadal jste neplatné číslo."
+
+#: src/view/message-new-view.c:700 src/view/message-new-view.c:745
+#, c-format
+msgid "%d characters left [%d]"
+msgstr "%d znaků zbývá [%d]"
+
+#: src/view/message-new-view.c:790
+msgid "Error will trying to resolve number."
+msgstr "Chyba při pokusu o vyřešení čísla"
+
+#: src/view/message-new-view.c:823
+msgid "Sending the message failed"
+msgstr "Odesílání zprávy se nezdařilo"
+
+#: src/view/message-new-view.c:859
+#, fuzzy
+msgid "Do you really want to quit writing this message?"
+msgstr "Opravdu chcete opustit psaní zprávy?"
+
+#: src/view/message-show-view.c:81
+#, fuzzy
+msgid "Message"
+msgstr "Zpráva"
+
+#: src/view/sim-auth-input-view.c:87
+msgid "SIM Auth"
+msgstr ""
+
+#: src/view/sim-auth-input-view.c:108
+msgid "OK"
+msgstr "OK"
+
+#: src/view/sim-auth-input-view.c:162
+msgid "Please enter your PIN"
+msgstr "Prosím zadejte Váš PIN"
+
+#: src/view/sim-auth-input-view.c:167
+#, fuzzy
+msgid "Please enter your PIN2"
+msgstr "Prosím zadejte Váš PIN2"
+
+#: src/view/sim-auth-input-view.c:172
+msgid "Please enter your PUK"
+msgstr "Prosím zadejte Váš PUK"
+
+#: src/view/sim-auth-input-view.c:177
+#, fuzzy
+msgid "Please enter your PUK2"
+msgstr "Prosím zadejte Váš PUK2"
+
+#: src/view/sim-auth-input-view.c:183
+msgid "SIM unlocked"
+msgstr "SIM odemčena"
+
+#: src/view/sim-auth-input-view.c:190
+#, fuzzy
+msgid "Unknown error"
+msgstr "Neznámá chyba"
+
+#: src/view/sim-auth-input-view.c:228
+msgid "PIN wrong"
+msgstr "Nesprávné PIN"
+
+#: src/view/sim-auth-input-view.c:234
+msgid "PIN Ok"
+msgstr ""
+
+#: src/view/sim-auth-input-view.c:251
+msgid "PUK wrong"
+msgstr "Nesprávné PUK"
+
+#: src/view/sim-auth-input-view.c:257
+msgid "PUK Ok"
+msgstr ""
+
+#: src/view/sim-auth-input-view.c:273 src/view/sim-auth-input-view.c:292
+#, fuzzy
+msgid "Checking..."
+msgstr "Ověřování"
+
+#: src/view/sim-auth-input-view.c:281
+#, fuzzy
+msgid "Please enter a new PIN"
+msgstr "Prosím zadejte nový PIN"
+
+#: src/view/sim-auth-input-view.c:287
+#, fuzzy
+msgid "Please confirm the new PIN"
+msgstr "Prosím zadejte Váš nový PIN znovu"
+
+#: src/view/ussd-view.c:88
+#, fuzzy
+msgid "Data:"
+msgstr "Datum:"
+
+#: src/widget/elm_keypad.c:145
+msgid "ABC"
+msgstr ""
+
+#: src/widget/elm_keypad.c:146
+msgid "DEF"
+msgstr ""
+
+#: src/widget/elm_keypad.c:147
+msgid "GHI"
+msgstr ""
+
+#: src/widget/elm_keypad.c:148
+msgid "JKL"
+msgstr ""
+
+#: src/widget/elm_keypad.c:149
+msgid "MNO"
+msgstr ""
+
+#: src/widget/elm_keypad.c:150
+msgid "PQRS"
+msgstr ""
+
+#: src/widget/elm_keypad.c:151
+msgid "TUV"
+msgstr ""
+
+#: src/widget/elm_keypad.c:152
+msgid "WXYZ"
+msgstr ""
+
+#~ msgid "New Contact"
+#~ msgstr "Neuer Kontakt"
+
+#~ msgid "Accept"
+#~ msgstr "Annehmen"
+
+#~ msgid "Do you really want to delete it?"
+#~ msgstr "Wirklich löschen?"
+
+#~ msgid "Yes"
+#~ msgstr "Ja"
+
+#~ msgid "No"
+#~ msgstr "Nein"
+
+#~ msgid "Compose SMS"
+#~ msgstr "SMS erstellen"
+
+#, fuzzy
+#~ msgid "Show Contact"
+#~ msgstr "Neuer Kontakt"
+
+#, fuzzy
+#~ msgid "Actions"
+#~ msgstr "Optionen"
+
+#, fuzzy
+#~ msgid "Value: "
+#~ msgstr "Name: "
+
+#~ msgid "Deleting.."
+#~ msgstr "Löschen..."
+
+#~ msgid "Inbox"
+#~ msgstr "Eingang"
+
+#~ msgid "Show Message"
+#~ msgstr "Nachricht anzeigen"
+
+#~ msgid "SMS Answer"
+#~ msgstr "SMS beantworten"
+
+#~ msgid "Add a Contact"
+#~ msgstr "Kontakt hinzufügen"
+
+#~ msgid "Add a Number"
+#~ msgstr "Nummer hinzufügen"
+
+#~ msgid "Sending.."
+#~ msgstr "Sende..."
+
+#~ msgid "From:"
+#~ msgstr "Von:"
+
+#~ msgid "Date:"
+#~ msgstr "Datum:"
+
+#~ msgid "Status:"
+#~ msgstr "Status:"
+
+#~ msgid "PIN correct"
+#~ msgstr "PIN korrekt"
+
+#~ msgid "Enter a NEW PIN"
+#~ msgstr "Neue PIN eingeben"
+
+#~ msgid "Confirm your NEW PIN"
+#~ msgstr "Neue PIN bestätigen"
+
+#~ msgid "PIN must be 4-8 chars long"
+#~ msgstr "PIN muss 4-8 Zeichen lang sein"
+
+#~ msgid "PIN confirmation wrong"
+#~ msgstr "PIN-Bestätigung falsch"
+
+#~ msgid "Modify"
+#~ msgstr "Ändern"
+
+#~ msgid "Modify Contact"
+#~ msgstr "Kontakt ändern"
+
+#~ msgid ""
+#~ "Your storage is full. Before adding new contacts, you have to delete some "
+#~ "old ones."
+#~ msgstr ""
+#~ "Speicher voll. Um neue Kontakte hinzuzufügen, müssen erst alte gelöscht "
+#~ "werden."
+
+#~ msgid "No Speaker"
+#~ msgstr "Lautsprecher aus"
+
+#~ msgid "Show Keypad"
+#~ msgstr "Tastatur anzeigen"
+
+#~ msgid "Edit Contact"
+#~ msgstr "Kontakt bearbeiten"
+
+#~ msgid "Active call"
+#~ msgstr "Aktives Gespräch"
+
+#~ msgid "Incoming call"
+#~ msgstr "Eingehender Anruf"
+
+#~ msgid "Loading.."
+#~ msgstr "Lade..."
+
+#~ msgid "Folders"
+#~ msgstr "Ordner"
+
+#~ msgid "%d messages"
+#~ msgstr "%d Nachrichten"
+
+#~ msgid "New PIN saved"
+#~ msgstr "Neue PIN gespeichert"
