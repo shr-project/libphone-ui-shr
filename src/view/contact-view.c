@@ -889,19 +889,23 @@ gl_field_content_get(void *_data, Evas_Object * obj, const char *part)
 		return entry;
 	}
 	else if (strcmp(part, "elm.swallow.button_delfield") == 0) {
+		Evas_Object *btn = elm_button_add(obj);
 		Evas_Object *ico = elm_icon_add(obj);
+		elm_object_part_content_set(btn, "icon", ico);
 		elm_icon_standard_set(ico, "delete");
-		evas_object_smart_callback_add(ico, "clicked",
+		evas_object_smart_callback_add(btn, "clicked",
 					       _field_remove_clicked, fd);
-		return ico;
+		return btn;
 	}
 	else if (strcmp(part, "elm.swallow.button_actions") == 0) {
+		Evas_Object *btn = elm_button_add(obj);
 		Evas_Object *ico = elm_icon_add(obj);
 		elm_icon_standard_set(ico, "edit");
-     		evas_object_smart_callback_add(ico, "clicked",
+		elm_object_part_content_set(btn, "icon", ico);
+		evas_object_smart_callback_add(btn, "clicked",
 					      _field_edit_clicked, fd);
-		fd->slide_buttons = ico;
-		return ico;
+		fd->slide_buttons = btn;
+		return btn;
 	}
 	return NULL;
 }
