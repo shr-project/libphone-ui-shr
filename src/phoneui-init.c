@@ -60,7 +60,12 @@ phoneui_backend_init(int argc, char **argv, int (*idle_cb) (void *))
 	phoneui_argc = argc;
 	phoneui_argv = argv;
 
+// g_type_init will be deprecated in 2.36. 2.35 is the development
+// version for 2.36, hence do not call g_type_init starting 2.35.
+// http://developer.gnome.org/gobject/unstable/gobject-Type-Information.html#g-type-init
+#if !GLIB_CHECK_VERSION(2, 35, 0)
 	g_type_init();
+#endif
 
 	keyfile = g_key_file_new();
 	flags = G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS;
