@@ -3,6 +3,7 @@
  *      Authors (alphabetical) :
  *		Tom "TAsn" Hacohen <tom@stosb.com>
  *		Klaus 'mrmoku' Kurzmann <mok@fluxnetz.de>
+ *		Thomas 'Thamos' Munker
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -57,8 +58,8 @@ _volume_slider_change(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
-	int vol = (int)elm_slider_value_get(obj);
-	g_debug("volume changed to %d", vol);
+	int vol = (int)round(elm_slider_value_get(obj));
+	g_debug("volume changed to %f, -> %d %%", elm_slider_value_get(obj), vol);
 	phoneui_utils_sound_volume_set(CONTROL_SPEAKER, vol);
 }
 
@@ -67,8 +68,8 @@ _mic_slider_change(void *data, Evas_Object *obj, void *event_info)
 {
 	(void) data;
 	(void) event_info;
-	int vol = (int)elm_slider_value_get(obj);
-	g_debug("mic changed to %d", vol);
+	int vol = (int)round(elm_slider_value_get(obj));
+	g_debug("mic changed to %f -> %d %%", elm_slider_value_get(obj), vol);
 	phoneui_utils_sound_volume_set(CONTROL_MICROPHONE, vol);
 }
 
