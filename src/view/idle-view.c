@@ -74,6 +74,7 @@ _delete_cb(struct View *view, Evas_Object * win, void *event_info)
 void
 idle_screen_view_show()
 {
+	_set_edje_size();
 	ui_utils_view_show(VIEW_PTR(view));
 	phoneui_info_request_backlight_power(_backlight_power, NULL);
 }
@@ -84,7 +85,6 @@ idle_screen_view_hide()
 	ui_utils_view_hide(VIEW_PTR(view));
 	edje_object_animation_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
 	edje_object_play_set(ui_utils_view_layout_get(VIEW_PTR(view)), EINA_FALSE);
-	_set_edje_size();
 }
 
 void
