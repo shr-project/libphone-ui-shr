@@ -572,7 +572,7 @@ ui_utils_notify(Evas_Object *parent, const char *label, int timeout)
 	Evas_Object *notify, *bx, *bt, *lb;
 	notify = elm_notify_add(parent);
 	evas_object_size_hint_weight_set(notify, EVAS_HINT_EXPAND, EVAS_HINT_EXPAND);
-	elm_notify_orient_set(notify, ELM_NOTIFY_ORIENT_CENTER);
+	elm_notify_align_set(notify, 0.5, 0.5);
 	elm_notify_timeout_set(notify, timeout);
 
 	bx = elm_box_add(parent);
